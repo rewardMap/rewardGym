@@ -54,7 +54,7 @@ class BaseEnv(gym.Env):
         # We need the following line to seed self.np_random
         super().reset(seed=seed)
 
-        self.agent_location, _ = self.condition_logic()
+        self.agent_location, self.condition = self.condition_logic()
 
         # Needs some condition logic
         observation = self._get_obs()
@@ -89,7 +89,7 @@ class BaseEnv(gym.Env):
             terminated = False
 
         if terminated:
-            reward = self.reward_locations[self.agent_location]()
+            reward = self.reward_locations[self.agent_location](self.condition)
         else:
             reward = 0
 
