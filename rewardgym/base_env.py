@@ -16,6 +16,7 @@ class BaseEnv(gym.Env):
         reward_locations,
         render_mode=None,
         info_dict=defaultdict(int),
+        seed=1000,
     ):
 
         # It should be posssible to use wrapper for one-hot, so no box and other handling necessary.
@@ -27,6 +28,11 @@ class BaseEnv(gym.Env):
         )  # Assuming nodes are states (different from neuro-nav)
         self.action_space = spaces.Discrete(self.n_actions)
         self.observation_space = spaces.Discrete(self.n_states)
+
+        if isinstance(seed, np.random.Generator):
+            self.rng = seed
+        else:
+            self.rng = np.random.default_rng(seed)
 
         self.reward_locations = reward_locations
         self.condition_logic = condition_logic
@@ -52,8 +58,6 @@ class BaseEnv(gym.Env):
 
     def reset(self, seed=None, options=None):
         # We need the following line to seed self.np_random
-        super().reset(seed=seed)
-
         self.agent_location, self.condition = self.condition_logic()
 
         # Needs some condition logic
@@ -72,12 +76,12 @@ class BaseEnv(gym.Env):
         if isinstance(self.graph[self.agent_location], tuple):
             stochasticiy = self.graph[self.agent_location][1]
 
-            if np.random.rand() <= stochasticiy:
+            if self.rng.rand() <= stochasticiy:
                 next_position = self.graph[self.agent_location][0][action]
             else:
                 possible_locs = self.graph[self.agent_location][0][:]
                 possible_locs.pop(action)
-                next_position = np.random.choice(possible_locs)
+                next_position = self.rng.choice(possible_locs)
         else:
             next_position = self.graph[self.agent_location][action]
 

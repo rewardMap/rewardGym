@@ -14,10 +14,16 @@ class RenderEnv(BaseEnv):
         render_mode=None,
         info_dict=defaultdict(int),
         window_size=255,
+        seed=1000,
     ):
 
         super().__init__(
-            environment_graph, condition_logic, reward_locations, render_mode, info_dict
+            environment_graph,
+            condition_logic,
+            reward_locations,
+            render_mode,
+            info_dict,
+            seed,
         )
         self.window_size = window_size
 
