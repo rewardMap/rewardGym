@@ -11,10 +11,10 @@ class BaseEnv(gym.Env):
 
     def __init__(
         self,
-        environment_graph,
-        reward_locations,
-        render_mode=None,
-        info_dict=defaultdict(int),
+        environment_graph: dict,
+        reward_locations: dict,
+        render_mode: str = None,
+        info_dict: dict = defaultdict(int),
         seed=1000,
     ):
 
@@ -48,15 +48,17 @@ class BaseEnv(gym.Env):
         self.window = None
         self.clock = None
 
-    def _get_obs(self):
+    def _get_obs(self) -> int:
         return (
             self.agent_location
         )  # needs to have some other implementation for one hot, I fear
 
-    def _get_info(self):
+    def _get_info(self) -> dict:
         return self.info_dict[self.agent_location]
 
-    def reset(self, agent_location=None, condition=None):
+    def reset(
+        self, agent_location: int = None, condition: int = None
+    ) -> tuple[int | np.array, dict]:
         # We need the following line to seed self.np_random
         self.agent_location = agent_location
         self.condition = condition  # Needs some condition logic
@@ -69,7 +71,7 @@ class BaseEnv(gym.Env):
 
         return observation, info
 
-    def step(self, action=None):
+    def step(self, action: int = None) -> tuple[int | np.array, int, bool, bool, dict]:
 
         # Can do jumps now, if probabilistic end positions
         if isinstance(self.graph[self.agent_location], tuple):
@@ -107,5 +109,5 @@ class BaseEnv(gym.Env):
 
         return observation, reward, terminated, False, info
 
-    def _render_frame(self, info):
+    def _render_frame(self, info: dict):
         raise NotImplementedError("Not implemented in Basic Agents")
