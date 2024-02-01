@@ -1,10 +1,17 @@
 import sys
+from typing import Tuple
 
 import pygame
 
 
 class BaseDisplay:
-    def __init__(self, image, time, name=None, background=(127, 127, 127)):
+    def __init__(
+        self,
+        image: str,
+        time: int,
+        name: str = None,
+        background: Tuple[int] = (127, 127, 127),
+    ) -> None:
         self.image_path = image
         self.time = time
         self.image = None
@@ -12,7 +19,13 @@ class BaseDisplay:
         self.display_type = "image"
         self.background = background
 
-    def __call__(self, window, clock=None, condition=None, **kwargs):
+    def __call__(
+        self,
+        window: type[pygame.surface.Surface],
+        clock: type[pygame.time.Clock] = None,
+        condition: int = None,
+        **kwargs
+    ) -> None:
 
         window.fill(self.background)
 
@@ -32,13 +45,21 @@ class BaseDisplay:
 
 
 class BaseAction:
-    def __init__(self, action_map={pygame.K_LEFT: 0, pygame.K_RIGHT: 1}, name=None):
+    def __init__(
+        self, action_map: dict = {pygame.K_LEFT: 0, pygame.K_RIGHT: 1}, name: str = None
+    ):
         self.action_map = action_map
         self.allowed_keys = action_map.keys()
         self.display_type = "action"
         self.name = name
 
-    def __call__(self, window=None, clock=None, condition=None, **kwargs):
+    def __call__(
+        self,
+        window: type[pygame.surface.Surface],
+        clock: type[pygame.time.Clock] = None,
+        condition: int = None,
+        **kwargs
+    ) -> int:
 
         pygame.event.clear()
         while True:
@@ -62,13 +83,13 @@ class BaseAction:
 class BaseText:
     def __init__(
         self,
-        text,
-        time,
-        name=None,
-        background=(127, 127, 127),
-        fontcolor=(0, 0, 0),
-        fontsize=36,
-        textposition=(0, 0),
+        text: str,
+        time: int,
+        name: str = None,
+        background: Tuple[int, int, int] = (127, 127, 127),
+        fontcolor: Tuple[int, int, int] = (0, 0, 0),
+        fontsize: int = 36,
+        textposition: Tuple[int, int] = (0, 0),
     ):
         self.font = None
         self.text = text
@@ -81,7 +102,13 @@ class BaseText:
         self.text_surface = None
         self.fontcolor = fontcolor
 
-    def __call__(self, window, clock=None, condition=None, **kwargs):
+    def __call__(
+        self,
+        window: type[pygame.surface.Surface],
+        clock: type[pygame.time.Clock] = None,
+        condition: int = None,
+        **kwargs
+    ) -> None:
 
         window.fill(self.background)
 
