@@ -9,7 +9,6 @@ class RenderEnv(BaseEnv):
     def __init__(
         self,
         environment_graph,
-        condition_logic,
         reward_locations,
         render_mode=None,
         info_dict=defaultdict(int),
@@ -19,7 +18,6 @@ class RenderEnv(BaseEnv):
 
         super().__init__(
             environment_graph,
-            condition_logic,
             reward_locations,
             render_mode,
             info_dict,
@@ -39,13 +37,18 @@ class RenderEnv(BaseEnv):
         self.human_reward_modifier = 1
 
         if self.render_mode == "human":
+
             for disp in info["human"]:
-                print(disp)
-                out = disp(self.window, self.clock, self.condition)
-                print(out)
+                out = disp(
+                    self.window,
+                    self.clock,
+                    self.condition,
+                    reward=self.cumulative_reward,
+                )
 
                 if disp.display_type == "action":
                     self.human_action = out
+
         else:
             raise NotImplementedError("Render should only be called in human mode")
 
