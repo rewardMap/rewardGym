@@ -12,7 +12,6 @@ class BaseEnv(gym.Env):
     def __init__(
         self,
         environment_graph,
-        condition_logic,
         reward_locations,
         render_mode=None,
         info_dict=defaultdict(int),
@@ -35,12 +34,13 @@ class BaseEnv(gym.Env):
             self.rng = np.random.default_rng(seed)
 
         self.reward_locations = reward_locations
-        self.condition_logic = condition_logic
 
         self.info_dict = info_dict
 
         self.graph = environment_graph
         self.agent_location = None
+
+        self.cumulative_reward = 0
 
         assert render_mode is None or render_mode in self.metadata["render_modes"]
 
@@ -54,19 +54,18 @@ class BaseEnv(gym.Env):
         )  # needs to have some other implementation for one hot, I fear
 
     def _get_info(self):
-        return [self.info_dict[self.agent_location]]
+        return self.info_dict[self.agent_location]
 
-    def reset(self, seed=None, options=None):
+    def reset(self, agent_location=None, condition=None):
         # We need the following line to seed self.np_random
-        self.agent_location, self.condition = self.condition_logic()
-
-        # Needs some condition logic
+        self.agent_location = agent_location
+        self.condition = condition  # Needs some condition logic
         observation = self._get_obs()
 
         info = self._get_info()
 
         if self.render_mode == "human":
-            self.human_action, self.human_reward_modifier = self._render_frame(info)
+            self._render_frame(info)
 
         return observation, info
 
@@ -100,8 +99,10 @@ class BaseEnv(gym.Env):
         observation = self._get_obs()
         info = self._get_info()
 
+        self.cumulative_reward += reward
+
         if self.render_mode == "human":
-            self.human_action, self.human_reward_modifier = self._render_frame(info)
+            self._render_frame(info)
             reward = reward * self.human_reward_modifier
 
         return observation, reward, terminated, False, info
