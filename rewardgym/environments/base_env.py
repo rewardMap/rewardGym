@@ -15,7 +15,7 @@ class BaseEnv(gym.Env):
         reward_locations: dict,
         render_mode: str = None,
         info_dict: dict = defaultdict(int),
-        seed=1000,
+        seed: int | np.random.Generator = 1000,
     ):
 
         # It should be posssible to use wrapper for one-hot, so no box and other handling necessary.

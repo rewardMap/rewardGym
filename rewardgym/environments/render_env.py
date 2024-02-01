@@ -1,5 +1,6 @@
 from collections import defaultdict
 
+import numpy as np
 import pygame
 
 from .base_env import BaseEnv
@@ -8,12 +9,12 @@ from .base_env import BaseEnv
 class RenderEnv(BaseEnv):
     def __init__(
         self,
-        environment_graph,
-        reward_locations,
-        render_mode=None,
-        info_dict=defaultdict(int),
-        window_size=255,
-        seed=1000,
+        environment_graph: dict,
+        reward_locations: dict,
+        render_mode: str = None,
+        info_dict: dict = defaultdict(int),
+        window_size: int = 255,
+        seed: int | np.random.Generator = 1000,
     ):
 
         super().__init__(
@@ -25,7 +26,7 @@ class RenderEnv(BaseEnv):
         )
         self.window_size = window_size
 
-    def _render_frame(self, info):
+    def _render_frame(self, info: dict) -> None:
         if self.window is None and self.render_mode == "human":
             pygame.init()
             pygame.display.init()
@@ -52,7 +53,7 @@ class RenderEnv(BaseEnv):
         else:
             raise NotImplementedError("Render should only be called in human mode")
 
-    def close(self):
+    def close(self) -> None:
         if self.window is not None:
             pygame.display.quit()
             pygame.quit()
