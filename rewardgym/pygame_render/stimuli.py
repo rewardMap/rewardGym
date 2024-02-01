@@ -1,5 +1,4 @@
 import sys
-from typing import Tuple
 
 import pygame
 
@@ -10,7 +9,7 @@ class BaseDisplay:
         image: str,
         time: int,
         name: str = None,
-        background: Tuple[int] = (127, 127, 127),
+        background: tuple[int] = (127, 127, 127),
     ) -> None:
         self.image_path = image
         self.time = time
@@ -86,10 +85,10 @@ class BaseText:
         text: str,
         time: int,
         name: str = None,
-        background: Tuple[int, int, int] = (127, 127, 127),
-        fontcolor: Tuple[int, int, int] = (0, 0, 0),
+        background: tuple[int, int, int] = (127, 127, 127),
+        fontcolor: tuple[int, int, int] = (0, 0, 0),
         fontsize: int = 36,
-        textposition: Tuple[int, int] = (0, 0),
+        textposition: tuple[int, int] = (0, 0),
     ):
         self.font = None
         self.text = text
