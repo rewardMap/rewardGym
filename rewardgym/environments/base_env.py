@@ -1,4 +1,5 @@
 from collections import defaultdict
+from typing import Union
 
 import gymnasium as gym
 import numpy as np
@@ -58,7 +59,7 @@ class BaseEnv(gym.Env):
 
     def reset(
         self, agent_location: int = None, condition: int = None
-    ) -> tuple[int | np.array, dict]:
+    ) -> tuple[Union[int, np.array], dict]:
         # We need the following line to seed self.np_random
         self.agent_location = agent_location
         self.condition = condition  # Needs some condition logic
@@ -71,7 +72,9 @@ class BaseEnv(gym.Env):
 
         return observation, info
 
-    def step(self, action: int = None) -> tuple[int | np.array, int, bool, bool, dict]:
+    def step(
+        self, action: int = None
+    ) -> tuple[Union[int, np.array], int, bool, bool, dict]:
 
         # Can do jumps now, if probabilistic end positions
         if isinstance(self.graph[self.agent_location], tuple):
