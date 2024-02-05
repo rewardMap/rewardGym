@@ -3,6 +3,13 @@ import numpy as np
 
 class BaseReward:
     def __init__(self, reward, p=1, seed=1234):
+
+        if not isinstance(reward, (list, tuple, np.ndarray)):
+            reward = [reward]
+
+        if not isinstance(p, (list, tuple, np.ndarray)):
+            p = [p]
+
         self.reward = reward
         self.p = p
 
