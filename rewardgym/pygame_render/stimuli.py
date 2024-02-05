@@ -123,3 +123,51 @@ class BaseText:
         pygame.time.delay(self.time)
 
         return None
+
+
+class TimedAction:
+    def __init__(
+        self,
+        time: int,
+        action_map: dict = {pygame.K_SPACE: 0},
+        timeout_action: int = 1,
+        name: str = None,
+    ):
+        self.action_map = action_map
+        self.allowed_keys = action_map.keys()
+        self.display_type = "action"
+        self.time = time
+        self.name = name
+        self.timeout_action = timeout_action
+
+    def __call__(
+        self,
+        window: type[pygame.surface.Surface],
+        clock: type[pygame.time.Clock] = None,
+        **kwargs
+    ) -> int:
+
+        pygame.event.clear()
+        current_time = pygame.time.get_ticks()
+        response = None
+
+        while current_time + self.time >= pygame.time.get_ticks():
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.display.quit()
+                    pygame.quit()
+                    sys.exit()
+
+                if event.type == pygame.KEYDOWN:
+
+                    if event.key == pygame.K_q:
+                        pygame.display.quit()
+                        pygame.quit()
+                        sys.exit()
+
+                    elif event.key in self.allowed_keys:
+                        response = True
+                        return self.action_map[event.key]
+
+        if response is None:
+            return self.timeout_action
