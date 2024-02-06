@@ -33,7 +33,13 @@ def get_task(
         )
 
     elif task_name == "two-step":
-        pass
+        from .two_step import get_two_step
+
+        environment_graph, reward_structure, condition_out, info_dict = get_two_step(
+            conditions=conditions,
+            render_backend=render_backend,
+            window_size=window_size,
+        )
     elif task_name == "risk-sensitive":
         pass
     elif task_name == "posner":

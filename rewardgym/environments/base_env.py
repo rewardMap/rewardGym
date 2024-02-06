@@ -80,7 +80,7 @@ class BaseEnv(gym.Env):
         if isinstance(self.graph[self.agent_location], tuple):
             stochasticiy = self.graph[self.agent_location][1]
 
-            if self.rng.rand() <= stochasticiy:
+            if self.rng.random() <= stochasticiy:
                 next_position = self.graph[self.agent_location][0][action]
             else:
                 possible_locs = self.graph[self.agent_location][0][:]
