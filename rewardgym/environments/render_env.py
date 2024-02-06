@@ -44,7 +44,8 @@ class RenderEnv(BaseEnv):
                     window=self.window,
                     clock=self.clock,
                     condition=self.condition,
-                    reward=self.cumulative_reward,
+                    total_reward=self.cumulative_reward,
+                    reward=self.reward,
                     location=self.agent_location,
                 )
 

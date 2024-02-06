@@ -48,6 +48,7 @@ class BaseEnv(gym.Env):
         self.render_mode = render_mode
         self.window = None
         self.clock = None
+        self.reward = None
 
     def _get_obs(self) -> int:
         return (
@@ -98,19 +99,19 @@ class BaseEnv(gym.Env):
 
         if terminated:
             reward = self.reward_locations[self.agent_location](self.condition)
+            self.reward = reward
         else:
-            reward = 0
+            self.reward = 0
 
         observation = self._get_obs()
         info = self._get_info()
 
-        self.cumulative_reward += reward
+        self.cumulative_reward += self.reward
 
         if self.render_mode == "human":
             self._render_frame(info)
-            reward = reward * self.human_reward_modifier
 
-        return observation, reward, terminated, False, info
+        return observation, self.reward, terminated, False, info
 
     def _render_frame(self, info: dict):
         raise NotImplementedError("Not implemented in Basic Agents")
@@ -163,8 +164,9 @@ class MultiChoiceEnv(BaseEnv):
 
             if terminated:
                 reward = self.reward_locations[self.agent_location](self.condition)
+                self.reward = reward
             else:
-                reward = 0
+                self.reward = 0
 
             observation = self._get_obs()
             info = self._get_info()
@@ -173,7 +175,6 @@ class MultiChoiceEnv(BaseEnv):
 
             if self.render_mode == "human":
                 self._render_frame(info)
-                reward = reward * self.human_reward_modifier
 
         return observation, reward, terminated, False, info
 
