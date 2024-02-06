@@ -26,7 +26,7 @@ def get_task(
     elif task_name == "risk-sensitive":
         pass
     elif task_name == "posner":
-        pass
+        from .posner import get_posner as get_task_func
     elif task_name == "gonogo":
         from .gonogo import get_gonogo as get_task_func
     else:
