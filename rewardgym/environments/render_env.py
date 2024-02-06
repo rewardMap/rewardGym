@@ -61,7 +61,7 @@ class RenderEnv(BaseEnv):
             pygame.quit()
 
 
-class RenderEnvMultiChoice(MultiChoiceEnv, RenderEnv):
+class RenderEnvMultiChoice(MultiChoiceEnv):
     def __init__(
         self,
         environment_graph: dict,
@@ -73,7 +73,7 @@ class RenderEnvMultiChoice(MultiChoiceEnv, RenderEnv):
         window_size: int = 255,
     ):
 
-        super(MultiChoiceEnv).__init__(
+        super().__init__(
             environment_graph=environment_graph,
             reward_locations=reward_locations,
             condition_dict=condition_dict,
@@ -81,4 +81,8 @@ class RenderEnvMultiChoice(MultiChoiceEnv, RenderEnv):
             info_dict=info_dict,
             seed=seed,
         )
-        super(RenderEnv).__init__(window_size)
+
+        self.window_size = window_size
+
+    _render_frame = RenderEnv.__dict__["_render_frame"]
+    close = RenderEnv.__dict__["close"]
