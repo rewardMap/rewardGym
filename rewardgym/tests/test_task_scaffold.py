@@ -38,7 +38,7 @@ def run_task_base(task, n_episodes=10):
 
 
 def test_smoke_screen_task_base_init():
-    for task in ["hcp", "mid", "two-step"]:
+    for task in ["hcp", "mid", "two-step", "gonogo"]:
         get_env(task, conditions=None, render_mode=None, render_backend=None)
 
 
@@ -54,5 +54,5 @@ def test_smoke_screen_task_render_init():
 
 
 def test_smoke_screen_run_base():
-    for task in ["hcp", "mid", "two-step"]:
+    for task in ["hcp", "mid", "two-step", "gonogo"]:
         run_task_base(task, n_episodes=10)

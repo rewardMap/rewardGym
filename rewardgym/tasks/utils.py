@@ -15,39 +15,28 @@ def get_task(
 ):
 
     if task_name == "hcp":
-        from .hcp import get_hcp
-
-        environment_graph, reward_structure, condition_out, info_dict = get_hcp(
-            conditions=conditions,
-            render_backend=render_backend,
-            window_size=window_size,
-        )
+        from .hcp import get_hcp as get_task_func
 
     elif task_name == "mid":
-        from .mid import get_mid
-
-        environment_graph, reward_structure, condition_out, info_dict = get_mid(
-            conditions=conditions,
-            render_backend=render_backend,
-            window_size=window_size,
-        )
+        from .mid import get_mid as get_task_func
 
     elif task_name == "two-step":
-        from .two_step import get_two_step
+        from .two_step import get_two_step as get_task_func
 
-        environment_graph, reward_structure, condition_out, info_dict = get_two_step(
-            conditions=conditions,
-            render_backend=render_backend,
-            window_size=window_size,
-        )
     elif task_name == "risk-sensitive":
         pass
     elif task_name == "posner":
         pass
     elif task_name == "gonogo":
-        pass
+        from .gonogo import get_gonogo as get_task_func
     else:
         raise NotImplementedError(f"Task {task_name} is not implemented.")
+
+    environment_graph, reward_structure, condition_out, info_dict = get_task_func(
+        conditions=conditions,
+        render_backend=render_backend,
+        window_size=window_size,
+    )
 
     return environment_graph, reward_structure, condition_out, info_dict
 
