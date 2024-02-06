@@ -22,7 +22,7 @@ class FormatText(BaseText):
 
         self.condition_text = condition_text
 
-    def __call__(self, window, clock=None, condition=None, reward=None, **kwargs):
+    def __call__(self, window, clock=None, condition=None, total_reward=None, **kwargs):
 
         window.fill(self.background)
 
@@ -31,6 +31,35 @@ class FormatText(BaseText):
 
         if self.condition_text is not None:
             card = np.random.choice(self.condition_text[condition])
+            display_text = self.text.format(card)
+
+        elif total_reward is not None:
+            display_text = self.text.format(total_reward)
+
+        self.text_surface = self.font.render(display_text, True, self.fontcolor)
+        self.text_rect = self.text_surface.get_rect(center=self.textposition)
+
+        window.blit(self.text_surface, self.text_rect)
+
+        pygame.event.pump()
+        pygame.display.update()
+        pygame.time.delay(self.time)
+
+        return None
+
+
+class FormatTextMid(FormatText):
+    def __call__(
+        self, window, clock=None, condition=None, reward=None, location=None, **kwargs
+    ):
+
+        window.fill(self.background)
+
+        if self.font is None:
+            self.font = pygame.font.Font(pygame.font.get_default_font(), self.fontsize)
+
+        if self.condition_text is not None:
+            card = np.random.choice(self.condition_text[location])
             display_text = self.text.format(card)
 
         elif reward is not None:
@@ -48,20 +77,20 @@ class FormatText(BaseText):
         return None
 
 
-class FormatTextMid(FormatText):
-    def __call__(self, window, clock=None, condition=None, reward=None, location=None):
+class FormatTextReward(FormatText):
+    def __call__(
+        self, window, clock=None, condition=None, reward=None, location=None, **kwargs
+    ):
 
         window.fill(self.background)
 
         if self.font is None:
             self.font = pygame.font.Font(pygame.font.get_default_font(), self.fontsize)
 
-        if self.condition_text is not None:
-            card = np.random.choice(self.condition_text[location])
-            display_text = self.text.format(card)
-
-        elif reward is not None:
+        if reward is not None:
             display_text = self.text.format(reward)
+        else:
+            display_text = ""
 
         self.text_surface = self.font.render(display_text, True, self.fontcolor)
         self.text_rect = self.text_surface.get_rect(center=self.textposition)
