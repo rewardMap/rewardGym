@@ -24,7 +24,7 @@ def get_hcp(conditions=None, render_backend=None, window_size=None, reward=HCPRe
     reward_structure = {1: reward, 2: reward}
 
     if conditions is None:
-        condition_out = ([0, 1, 2], [0.45, 0.1, 0.45])
+        condition_out = (([0, 1, 2], [0.45, 0.1, 0.45]), [0])
 
     if render_backend is None:
         info_dict = {}
