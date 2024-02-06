@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 from ..reward_classes import BaseReward
 
 
@@ -28,7 +30,7 @@ def get_mid(conditions=None, render_backend=None, window_size=None):
         condition_out = (None, ([0, 1, 2, 3, 4]))
 
     if render_backend is None:
-        info_dict = {}
+        info_dict = defaultdict(int)
 
     elif render_backend == "pygame":
 

@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 from ..reward_classes import BaseReward
 
 
@@ -27,7 +29,7 @@ def get_hcp(conditions=None, render_backend=None, window_size=None, reward=HCPRe
         condition_out = (([0, 1, 2], [0.45, 0.1, 0.45]), [0])
 
     if render_backend is None:
-        info_dict = {}
+        info_dict = defaultdict(int)
 
     elif render_backend == "pygame":
 
