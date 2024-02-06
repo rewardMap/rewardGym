@@ -114,3 +114,68 @@ class BaseEnv(gym.Env):
 
     def _render_frame(self, info: dict):
         raise NotImplementedError("Not implemented in Basic Agents")
+
+
+class MultiChoiceEnv(BaseEnv):
+
+    metadata = {"render_modes": ["human"]}
+
+    def __init__(
+        self,
+        environment_graph: dict,
+        reward_locations: dict,
+        condition_dict: dict,
+        render_mode: str = None,
+        info_dict: dict = defaultdict(int),
+        seed: int | np.random.Generator = 1000,
+    ):
+
+        super().__init__(
+            environment_graph=environment_graph,
+            reward_locations=reward_locations,
+            render_mode=render_mode,
+            info_dict=info_dict,
+            seed=seed,
+        )
+
+        self.condition_dict = condition_dict
+
+    def step(
+        self, action: int = None
+    ) -> tuple[Union[int, np.array], int, bool, bool, dict]:
+
+        if action not in self.condition_dict[self.condition].keys():
+            observation = self._get_obs()
+            reward = 0
+            terminated = False
+            info = self._get_info()
+
+        else:
+            action = self.condition_dict[self.condition][action]
+            next_position = self.graph[self.agent_location][action]
+
+            self.agent_location = next_position
+
+            if len(self.graph[next_position]) == 0:
+                terminated = True
+            else:
+                terminated = False
+
+            if terminated:
+                reward = self.reward_locations[self.agent_location](self.condition)
+            else:
+                reward = 0
+
+            observation = self._get_obs()
+            info = self._get_info()
+
+            self.cumulative_reward += reward
+
+            if self.render_mode == "human":
+                self._render_frame(info)
+                reward = reward * self.human_reward_modifier
+
+        return observation, reward, terminated, False, info
+
+    def _render_frame(self, info: dict):
+        raise NotImplementedError("Not implemented in Basic Agents")

@@ -3,7 +3,7 @@ from collections import defaultdict
 import numpy as np
 import pygame
 
-from .base_env import BaseEnv
+from .base_env import BaseEnv, MultiChoiceEnv
 
 
 class RenderEnv(BaseEnv):
@@ -58,3 +58,26 @@ class RenderEnv(BaseEnv):
         if self.window is not None:
             pygame.display.quit()
             pygame.quit()
+
+
+class RenderEnvMultiChoice(MultiChoiceEnv, RenderEnv):
+    def __init__(
+        self,
+        environment_graph: dict,
+        reward_locations: dict,
+        condition_dict: dict,
+        render_mode: str = None,
+        info_dict: dict = defaultdict(int),
+        seed: int | np.random.Generator = 1000,
+        window_size: int = 255,
+    ):
+
+        super(MultiChoiceEnv).__init__(
+            environment_graph=environment_graph,
+            reward_locations=reward_locations,
+            condition_dict=condition_dict,
+            render_mode=render_mode,
+            info_dict=info_dict,
+            seed=seed,
+        )
+        super(RenderEnv).__init__(window_size)

@@ -2,7 +2,7 @@ from typing import Literal, Union
 
 import numpy as np
 
-from ..environments import BaseEnv, RenderEnv
+from ..environments import BaseEnv, MultiChoiceEnv, RenderEnv, RenderEnvMultiChoice
 
 # TODO Maybe enums are the way to go, for now staying with literal.
 
@@ -24,9 +24,11 @@ def get_task(
         from .two_step import get_two_step as get_task_func
 
     elif task_name == "risk-sensitive":
-        pass
+        from .risk_sensitive import get_risk_sensitive as get_task_func
+
     elif task_name == "posner":
         from .posner import get_posner as get_task_func
+
     elif task_name == "gonogo":
         from .gonogo import get_gonogo as get_task_func
     else:
@@ -55,19 +57,40 @@ def get_env(
 
     if (render_mode is None) and (render_backend is None):
 
-        env = BaseEnv(
-            environment_graph=environment_graph,
-            reward_locations=reward_structure,
-            render_mode=render_mode,
-            info_dict=info_dict,
-        )
+        if task_name == "risk-sensitive":
+            env = MultiChoiceEnv(
+                environment_graph=environment_graph,
+                condition_dict=condition_out[1],
+                reward_locations=reward_structure,
+                render_mode=render_mode,
+                info_dict=info_dict,
+            )
+            condition_out = condition_out[0]
+        else:
+            env = BaseEnv(
+                environment_graph=environment_graph,
+                reward_locations=reward_structure,
+                render_mode=render_mode,
+                info_dict=info_dict,
+            )
     else:
-        env = RenderEnv(
-            environment_graph=environment_graph,
-            reward_locations=reward_structure,
-            render_mode=render_mode,
-            info_dict=info_dict,
-            window_size=window_size,
-        )
+        if task_name == "risk-sensitive":
+            env = RenderEnvMultiChoice(
+                environment_graph=environment_graph,
+                condition_dict=condition_out[1],
+                reward_locations=reward_structure,
+                render_mode=render_mode,
+                info_dict=info_dict,
+                window_size=window_size,
+            )
+            condition_out = condition_out[0]
+        else:
+            env = RenderEnv(
+                environment_graph=environment_graph,
+                reward_locations=reward_structure,
+                render_mode=render_mode,
+                info_dict=info_dict,
+                window_size=window_size,
+            )
 
     return env, condition_out
