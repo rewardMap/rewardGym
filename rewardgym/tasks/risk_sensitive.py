@@ -42,7 +42,60 @@ def get_risk_sensitive(conditions=None, render_backend=None, window_size=None):
         if window_size is None:
             return ValueError("window_size needs to be defined!")
 
-        raise NotImplementedError("Pygame implementation still ongoing")
+        from ..pygame_render.stimuli import BaseAction, BaseDisplay, BaseText
+        from ..pygame_render.task_stims import (
+            FormatText,
+            FormatTextReward,
+            FormatTextRiskSensitive,
+        )
+
+        base_postion = (window_size // 2, window_size // 2)
+
+        reward_disp = FormatTextReward("You gain: {0}", 1000, textposition=base_postion)
+
+        earnings_text = FormatText(
+            "You have gained: {0}", 500, condition_text=None, textposition=base_postion
+        )
+
+        stim = FormatTextRiskSensitive(
+            "{0} --------- {1}",
+            50,
+            condition_text=action_map,
+            textposition=base_postion,
+        )
+
+        info_dict = {
+            0: {
+                "human": [
+                    BaseDisplay(None, 1),
+                    BaseText("+", 500, textposition=base_postion),
+                    BaseDisplay(None, 1),
+                    stim,
+                    BaseAction(),
+                ]
+            },
+            1: {
+                "human": [
+                    BaseDisplay(None, 1),
+                    reward_disp,
+                    earnings_text,
+                ]
+            },
+            2: {
+                "human": [
+                    BaseDisplay(None, 1),
+                    reward_disp,
+                    earnings_text,
+                ]
+            },
+            3: {
+                "human": [
+                    BaseDisplay(None, 1),
+                    reward_disp,
+                    earnings_text,
+                ]
+            },
+        }
 
     elif render_backend == "psychopy":
         raise NotImplementedError("Psychopy integration still under deliberation.")

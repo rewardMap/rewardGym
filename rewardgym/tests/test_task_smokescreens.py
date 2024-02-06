@@ -43,7 +43,7 @@ def test_smoke_screen_task_base_init():
 
 
 def test_smoke_screen_task_render_init():
-    for task in ["hcp", "mid", "gonogo", "posner", "two-step"]:
+    for task in ["hcp", "mid", "gonogo", "posner", "two-step", "risk-sensitive"]:
         get_env(
             task,
             conditions=None,

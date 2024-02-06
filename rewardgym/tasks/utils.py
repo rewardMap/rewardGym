@@ -31,6 +31,7 @@ def get_task(
 
     elif task_name == "gonogo":
         from .gonogo import get_gonogo as get_task_func
+
     else:
         raise NotImplementedError(f"Task {task_name} is not implemented.")
 
