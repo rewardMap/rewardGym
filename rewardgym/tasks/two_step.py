@@ -77,8 +77,74 @@ def get_two_step(conditions=None, render_backend=None, window_size=None):
 
         if window_size is None:
             return ValueError("window_size needs to be defined!")
+        from ..pygame_render.stimuli import BaseAction, BaseDisplay, BaseText
+        from ..pygame_render.task_stims import FormatText, FormatTextReward
 
-        raise NotImplementedError("Pygame implementation still ongoing")
+        base_postion = (window_size // 2, window_size // 2)
+
+        reward_disp = FormatTextReward("You gain: {0}", 1000, textposition=base_postion)
+
+        earnings_text = FormatText(
+            "You have gained: {0}", 500, condition_text=None, textposition=base_postion
+        )
+
+        info_dict = {
+            0: {
+                "human": [
+                    BaseDisplay(None, 1),
+                    BaseText("+", 500, textposition=base_postion),
+                    BaseDisplay(None, 1),
+                    BaseText("A ===== or ==== B", 50, textposition=base_postion),
+                    BaseAction(),
+                ]
+            },
+            1: {
+                "human": [
+                    BaseDisplay(None, 1),
+                    BaseText("+", 500, textposition=base_postion),
+                    BaseDisplay(None, 1),
+                    BaseText("C ===== or ==== D", 50, textposition=base_postion),
+                    BaseAction(),
+                ]
+            },
+            2: {
+                "human": [
+                    BaseDisplay(None, 1),
+                    BaseText("+", 500, textposition=base_postion),
+                    BaseDisplay(None, 1),
+                    BaseText("E ===== or ==== F", 50, textposition=base_postion),
+                    BaseAction(),
+                ]
+            },
+            3: {
+                "human": [
+                    BaseDisplay(None, 1),
+                    reward_disp,
+                    earnings_text,
+                ]
+            },
+            4: {
+                "human": [
+                    BaseDisplay(None, 1),
+                    reward_disp,
+                    earnings_text,
+                ]
+            },
+            5: {
+                "human": [
+                    BaseDisplay(None, 1),
+                    reward_disp,
+                    earnings_text,
+                ]
+            },
+            6: {
+                "human": [
+                    BaseDisplay(None, 1),
+                    reward_disp,
+                    earnings_text,
+                ]
+            },
+        }
 
     elif render_backend == "psychopy":
         raise NotImplementedError("Psychopy integration still under deliberation.")
