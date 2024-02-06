@@ -41,10 +41,11 @@ class RenderEnv(BaseEnv):
 
             for disp in info["human"]:
                 out = disp(
-                    self.window,
-                    self.clock,
-                    self.condition,
+                    window=self.window,
+                    clock=self.clock,
+                    condition=self.condition,
                     reward=self.cumulative_reward,
+                    location=self.agent_location,
                 )
 
                 if disp.display_type == "action":
