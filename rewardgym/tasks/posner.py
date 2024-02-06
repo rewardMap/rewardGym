@@ -33,7 +33,79 @@ def get_posner(conditions=None, render_backend=None, window_size=None):
         if window_size is None:
             return ValueError("window_size needs to be defined!")
 
-        raise NotImplementedError("Pygame implementation still ongoing")
+        from ..pygame_render.stimuli import BaseAction, BaseDisplay, BaseText
+        from ..pygame_render.task_stims import FormatText, FormatTextReward
+
+        base_postion = (window_size // 2, window_size // 2)
+        left_position = (window_size // 2 - window_size // 4, window_size // 2)
+        right_position = (window_size // 2 + window_size // 4, window_size // 2)
+
+        reward_disp = FormatTextReward("You gain: {0}", 1000, textposition=base_postion)
+
+        earnings_text = FormatText(
+            "You have gained: {0}", 500, condition_text=None, textposition=base_postion
+        )
+
+        info_dict = {
+            0: {
+                "human": [
+                    BaseDisplay(None, 1),
+                    BaseText("+", 1000, textposition=base_postion),
+                    BaseDisplay(None, 1),
+                    BaseText("<", 500, textposition=base_postion),
+                    BaseDisplay(None, 1),
+                    BaseText("x", 500, textposition=left_position),
+                    BaseAction(),
+                ]
+            },
+            1: {
+                "human": [
+                    BaseDisplay(None, 1),
+                    BaseText("+", 1000, textposition=base_postion),
+                    BaseDisplay(None, 1),
+                    BaseText("<", 500, textposition=base_postion),
+                    BaseDisplay(None, 1),
+                    BaseText("x", 500, textposition=right_position),
+                    BaseAction(),
+                ]
+            },
+            2: {
+                "human": [
+                    BaseDisplay(None, 1),
+                    BaseText("+", 1000, textposition=base_postion),
+                    BaseDisplay(None, 1),
+                    BaseText(">", 500, textposition=base_postion),
+                    BaseDisplay(None, 1),
+                    BaseText("x", 500, textposition=left_position),
+                    BaseAction(),
+                ]
+            },
+            3: {
+                "human": [
+                    BaseDisplay(None, 1),
+                    BaseText("+", 1000, textposition=base_postion),
+                    BaseDisplay(None, 1),
+                    BaseText(">", 500, textposition=base_postion),
+                    BaseDisplay(None, 1),
+                    BaseText("x", 500, textposition=right_position),
+                    BaseAction(),
+                ]
+            },
+            4: {
+                "human": [
+                    BaseDisplay(None, 1),
+                    reward_disp,
+                    earnings_text,
+                ]
+            },
+            5: {
+                "human": [
+                    BaseDisplay(None, 1),
+                    reward_disp,
+                    earnings_text,
+                ]
+            },
+        }
 
     elif render_backend == "psychopy":
         raise NotImplementedError("Psychopy integration still under deliberation.")
