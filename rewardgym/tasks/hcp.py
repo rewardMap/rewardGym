@@ -34,8 +34,8 @@ def get_hcp(conditions=None, render_backend=None, window_size=None, reward=HCPRe
         if window_size is None:
             return ValueError("window_size needs to be defined!")
 
-        from ..pygame_render.hcp_stims import FormatText
         from ..pygame_render.stimuli import BaseAction, BaseDisplay, BaseText
+        from ..pygame_render.task_stims import FormatText
 
         base_postion = (window_size // 2, window_size // 2)
 
