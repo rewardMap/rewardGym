@@ -5,6 +5,7 @@ from typing import Union
 import numpy as np
 
 from ..reward_classes import BaseReward
+from ..utils import check_seed
 
 
 class DriftingReward(BaseReward):
@@ -20,10 +21,7 @@ class DriftingReward(BaseReward):
         if not isinstance(reward, (list, tuple, np.ndarray)):
             reward = [reward]
 
-        if isinstance(seed, np.random.Generator):
-            self.rng = seed
-        else:
-            self.rng = np.random.default_rng(seed)
+        self.rng = check_seed(seed)
 
         if p is None:
             p = self.rng.uniform(*borders)

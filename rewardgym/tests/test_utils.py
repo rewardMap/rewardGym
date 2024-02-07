@@ -1,8 +1,14 @@
 import types
 
+import numpy as np
 import pytest
 
-from ..utils import check_elements_in_list, get_condition_state, unpack_conditions
+from ..utils import (
+    check_elements_in_list,
+    check_seed,
+    get_condition_state,
+    unpack_conditions,
+)
 
 
 def test_check_element_list_all_elements_present():
@@ -88,3 +94,27 @@ def test_unpack_conditions_tuple():
     assert unpack_conditions((l2, l1), 1) == (None, 1)
     assert unpack_conditions((l1, l1), 1) == (1, 1)
     assert unpack_conditions((l3, l1), 1) == (0, 1)
+
+
+def test_check_seed_with_int():
+    seed = 5678
+    rng = check_seed(seed)
+    assert isinstance(rng, np.random.Generator)
+    assert rng.bit_generator.seed_seq.entropy == seed
+
+
+def test_check_seed_with_generator():
+    generator = np.random.default_rng(9876)
+    rng = check_seed(generator)
+    assert rng == generator
+
+
+def test_check_seed_with_default():
+    rng = check_seed()
+    assert isinstance(rng, np.random.Generator)
+    assert rng.bit_generator.seed_seq.entropy == 1234
+
+
+def test_check_seed_with_invalid_input():
+    with pytest.raises(TypeError):
+        check_seed("invalid_seed")

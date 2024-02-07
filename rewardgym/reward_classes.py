@@ -1,5 +1,7 @@
 import numpy as np
 
+from .utils import check_seed
+
 
 class BaseReward:
     def __init__(self, reward, p=1, seed=1234):
@@ -13,10 +15,7 @@ class BaseReward:
         self.reward = reward
         self.p = p
 
-        if isinstance(seed, np.random.Generator):
-            self.rng = seed
-        else:
-            self.rng = np.random.default_rng(seed)
+        self.rng = check_seed(seed)
 
     def _reward_function(self, condition=None):
         reward = self.rng.choice(self.reward, p=self.p)

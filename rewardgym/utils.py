@@ -31,3 +31,11 @@ def get_condition_state(
             current_condition = np.random.choice(conditions[0])
 
     return current_condition
+
+
+def check_seed(seed: Union[np.random.Generator, int] = 1234):
+
+    if isinstance(seed, np.random.Generator):
+        return seed
+    else:
+        return np.random.default_rng(seed)

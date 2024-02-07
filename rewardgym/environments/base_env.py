@@ -5,6 +5,8 @@ import gymnasium as gym
 import numpy as np
 from gymnasium import spaces
 
+from ..utils import check_seed
+
 
 class BaseEnv(gym.Env):
 
@@ -29,10 +31,7 @@ class BaseEnv(gym.Env):
         self.action_space = spaces.Discrete(self.n_actions)
         self.observation_space = spaces.Discrete(self.n_states)
 
-        if isinstance(seed, np.random.Generator):
-            self.rng = seed
-        else:
-            self.rng = np.random.default_rng(seed)
+        self.rng = check_seed(seed)
 
         self.reward_locations = reward_locations
 
