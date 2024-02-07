@@ -15,6 +15,8 @@ class RenderEnv(BaseEnv):
         info_dict: dict = defaultdict(int),
         window_size: int = 255,
         seed: int | np.random.Generator = 1000,
+        window: pygame.Surface = None,
+        clock: pygame.time.Clock = None,
     ):
 
         super().__init__(
@@ -25,6 +27,8 @@ class RenderEnv(BaseEnv):
             seed,
         )
         self.window_size = window_size
+        self.window = window
+        self.clock = clock
 
     def _render_frame(self, info: dict) -> None:
         if self.window is None and self.render_mode == "human":
@@ -71,6 +75,8 @@ class RenderEnvMultiChoice(MultiChoiceEnv):
         info_dict: dict = defaultdict(int),
         seed: int | np.random.Generator = 1000,
         window_size: int = 255,
+        window: pygame.Surface = None,
+        clock: pygame.time.Clock = None,
     ):
 
         super().__init__(
@@ -83,6 +89,8 @@ class RenderEnvMultiChoice(MultiChoiceEnv):
         )
 
         self.window_size = window_size
+        self.window = window
+        self.clock = clock
 
     _render_frame = RenderEnv.__dict__["_render_frame"]
     close = RenderEnv.__dict__["close"]
