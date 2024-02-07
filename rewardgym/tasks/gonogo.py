@@ -40,7 +40,7 @@ def get_gonogo(
 
     elif render_backend == "pygame":
 
-        from ..pygame_render.stimuli import BaseDisplay, TimedAction
+        from ..pygame_render.stimuli import BaseDisplay, BaseText, TimedAction
         from ..pygame_render.task_stims import FormatText, FormatTextReward
 
         if window_size is None:
@@ -60,36 +60,36 @@ def get_gonogo(
             0: {
                 "human": [
                     BaseDisplay(None, 500),
-                    BaseDisplay("template_stimuli/F000.png", 1000),
+                    BaseText("A", 1000, textposition=base_position),
                     BaseDisplay(None, 500),
-                    BaseDisplay("stimuli/WinProbe.BMP", 200),
+                    BaseText("x", 100, textposition=base_position),
                     TimedAction(500),
                 ]
             },
             1: {
                 "human": [
                     BaseDisplay(None, 500),
-                    BaseDisplay("template_stimuli/F001.png", 1000),
+                    BaseText("B", 1000, textposition=base_position),
                     BaseDisplay(None, 500),
-                    BaseDisplay("stimuli/WinProbe.BMP", 200),
+                    BaseText("x", 100, textposition=base_position),
                     TimedAction(500),
                 ]
             },
             2: {
                 "human": [
                     BaseDisplay(None, 500),
-                    BaseDisplay("template_stimuli/F002.png", 1000),
+                    BaseText("C", 1000, textposition=base_position),
                     BaseDisplay(None, 500),
-                    BaseDisplay("stimuli/WinProbe.BMP", 200),
+                    BaseText("x", 100, textposition=base_position),
                     TimedAction(500),
                 ]
             },
             3: {
                 "human": [
                     BaseDisplay(None, 500),
-                    BaseDisplay("template_stimuli/F003.png", 1000),
+                    BaseText("D", 1000, textposition=base_position),
                     BaseDisplay(None, 500),
-                    BaseDisplay("stimuli/WinProbe.BMP", 200),
+                    BaseText("x", 100, textposition=base_position),
                     TimedAction(500),
                 ]
             },

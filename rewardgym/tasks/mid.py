@@ -44,7 +44,7 @@ def get_mid(
         if window_size is None:
             return ValueError("window_size needs to be defined!")
 
-        from ..pygame_render.stimuli import BaseDisplay, TimedAction
+        from ..pygame_render.stimuli import BaseDisplay, BaseText, TimedAction
         from ..pygame_render.task_stims import FormatText, FormatTextMid
 
         base_position = (window_size // 2, window_size // 2)
@@ -65,45 +65,45 @@ def get_mid(
             0: {
                 "human": [
                     BaseDisplay(None, 500),
-                    BaseDisplay("stimuli/LoseBig.BMP", 1000),
+                    BaseText("LL", 1000, textposition=base_position),
                     BaseDisplay(None, 500),
-                    BaseDisplay("stimuli/LoseProbe.BMP", 200),
+                    BaseText("x", 200, textposition=base_position),
                     TimedAction(500),
                 ]
             },
             1: {
                 "human": [
                     BaseDisplay(None, 500),
-                    BaseDisplay("stimuli/LoseSmall.BMP", 1000),
+                    BaseText("L", 1000, textposition=base_position),
                     BaseDisplay(None, 500),
-                    BaseDisplay("stimuli/LoseProbe.BMP", 200),
+                    BaseText("x", 200, textposition=base_position),
                     TimedAction(500),
                 ]
             },
             2: {
                 "human": [
                     BaseDisplay(None, 500),
-                    BaseDisplay("stimuli/Neutral.BMP", 1000),
+                    BaseText("O", 1000, textposition=base_position),
                     BaseDisplay(None, 500),
-                    BaseDisplay("stimuli/NeutralProbe.BMP", 200),
+                    BaseText("o", 200, textposition=base_position),
                     TimedAction(500),
                 ]
             },
             3: {
                 "human": [
                     BaseDisplay(None, 500),
-                    BaseDisplay("stimuli/WinSmall.BMP", 1000),
+                    BaseText("W", 1000, textposition=base_position),
                     BaseDisplay(None, 500),
-                    BaseDisplay("stimuli/WinProbe.BMP", 200),
+                    BaseText("+", 200, textposition=base_position),
                     TimedAction(500),
                 ]
             },
             4: {
                 "human": [
                     BaseDisplay(None, 500),
-                    BaseDisplay("stimuli/WinBig.BMP", 1000),
+                    BaseText("W", 1000, textposition=base_position),
                     BaseDisplay(None, 500),
-                    BaseDisplay("stimuli/WinProbe.BMP", 200),
+                    BaseText("+", 200, textposition=base_position),
                     TimedAction(500),
                 ]
             },
