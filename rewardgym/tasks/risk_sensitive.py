@@ -36,9 +36,9 @@ def get_risk_sensitive(
             action_map[n] = {0: ii - 1}
 
     if conditions is None:
-        condition_out = ((list(action_map.keys()), ([0])), action_map)
+        condition_out = (((list(action_map.keys()),), ([0],)), action_map)
     else:
-        condition_out = ((conditions, ([0])), action_map)
+        condition_out = ((conditions, ([0],)), action_map)
 
     if render_backend is None:
         info_dict = defaultdict(int)

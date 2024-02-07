@@ -33,9 +33,9 @@ def get_hcp(
     reward_structure = {1: reward, 2: reward}
 
     if conditions is None:
-        condition_out = (([0, 1, 2], [0.45, 0.1, 0.45]), [0])
+        condition_out = (([0, 1, 2], [0.45, 0.1, 0.45]), ([0],))
     else:
-        condition_out = ((conditions), [0])
+        condition_out = (conditions, ([0],))
 
     if render_backend is None:
         info_dict = defaultdict(int)

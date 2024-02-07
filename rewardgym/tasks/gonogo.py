@@ -31,7 +31,7 @@ def get_gonogo(
     }
 
     if starting_positions is None:
-        condition_out = (None, ([0, 1, 2, 3]))
+        condition_out = (None, ([0, 1, 2, 3],))
     else:
         condition_out = (None, (starting_positions))
 
