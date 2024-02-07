@@ -4,6 +4,7 @@ import pytest
 from rewardgym.tasks import get_env
 
 from ..tasks import get_env
+from ..utils import unpack_conditions
 
 
 def run_task_base(task, n_episodes=10):
@@ -12,23 +13,7 @@ def run_task_base(task, n_episodes=10):
 
     for _ in range(n_episodes):
 
-        if conditions[0] is not None:
-            if len(conditions[0]) == 2:
-                condition = np.random.choice(conditions[0][0], p=conditions[0][1])
-            else:
-                condition = np.random.choice(conditions[0])
-        else:
-            condition = None
-
-        if conditions[1] is not None:
-            if len(conditions[1]) == 2:
-                starting_position = np.random.choice(
-                    conditions[1][0], p=conditions[1][1]
-                )
-            else:
-                starting_position = np.random.choice(conditions[1])
-        else:
-            starting_position = None
+        condition, starting_position = unpack_conditions(conditions, None)
 
         obs, info = env.reset(starting_position, condition=condition)
         done = False
