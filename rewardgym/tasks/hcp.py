@@ -48,39 +48,42 @@ def get_hcp(
         from ..pygame_render.stimuli import BaseAction, BaseDisplay, BaseText
         from ..pygame_render.task_stims import FormatText
 
-        base_postion = (window_size // 2, window_size // 2)
+        base_position = (window_size // 2, window_size // 2)
 
         left_text = {1: [5], 2: [1, 2, 3, 4], 0: [6, 7, 8, 9]}
         right_text = {1: [5], 0: [1, 2, 3, 4], 2: [6, 7, 8, 9]}
 
         reward_text = {0: [-0.5], 1: [0], 2: [1]}
         reward_disp = FormatText(
-            "You gain: {0}", 1000, condition_text=reward_text, textposition=base_postion
+            "You gain: {0}",
+            1000,
+            condition_text=reward_text,
+            textposition=base_position,
         )
 
         earnings_text = FormatText(
-            "You have gained: {0}", 500, condition_text=None, textposition=base_postion
+            "You have gained: {0}", 500, condition_text=None, textposition=base_position
         )
 
         info_dict = {
             0: {
                 "human": [
                     BaseDisplay(None, 1),
-                    BaseText("+", 1000, textposition=base_postion),
+                    BaseText("+", 1000, textposition=base_position),
                     BaseDisplay(None, 1),
-                    BaseText("< or >", 500, textposition=base_postion),
+                    BaseText("< or >", 500, textposition=base_position),
                     BaseAction(),
                 ]
             },
             1: {
                 "human": [
                     BaseDisplay(None, 1),
-                    BaseText("<", 1000, textposition=base_postion),
+                    BaseText("<", 1000, textposition=base_position),
                     FormatText(
                         "Card: {0}",
                         1000,
                         condition_text=left_text,
-                        textposition=base_postion,
+                        textposition=base_position,
                     ),
                     reward_disp,
                     earnings_text,
@@ -89,12 +92,12 @@ def get_hcp(
             2: {
                 "human": [
                     BaseDisplay(None, 1),
-                    BaseText(">", 1000, textposition=base_postion),
+                    BaseText(">", 1000, textposition=base_position),
                     FormatText(
                         "Card: {0}",
                         1000,
                         condition_text=right_text,
-                        textposition=base_postion,
+                        textposition=base_position,
                     ),
                     reward_disp,
                     earnings_text,

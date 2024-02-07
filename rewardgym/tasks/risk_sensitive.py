@@ -55,26 +55,28 @@ def get_risk_sensitive(
             FormatTextRiskSensitive,
         )
 
-        base_postion = (window_size // 2, window_size // 2)
+        base_position = (window_size // 2, window_size // 2)
 
-        reward_disp = FormatTextReward("You gain: {0}", 1000, textposition=base_postion)
+        reward_disp = FormatTextReward(
+            "You gain: {0}", 1000, textposition=base_position
+        )
 
         earnings_text = FormatText(
-            "You have gained: {0}", 500, condition_text=None, textposition=base_postion
+            "You have gained: {0}", 500, condition_text=None, textposition=base_position
         )
 
         stim = FormatTextRiskSensitive(
             "{0} --------- {1}",
             50,
             condition_text=action_map,
-            textposition=base_postion,
+            textposition=base_position,
         )
 
         info_dict = {
             0: {
                 "human": [
                     BaseDisplay(None, 1),
-                    BaseText("+", 500, textposition=base_postion),
+                    BaseText("+", 500, textposition=base_position),
                     BaseDisplay(None, 1),
                     stim,
                     BaseAction(),

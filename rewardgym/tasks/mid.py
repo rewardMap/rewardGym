@@ -47,15 +47,18 @@ def get_mid(
         from ..pygame_render.stimuli import BaseDisplay, TimedAction
         from ..pygame_render.task_stims import FormatText, FormatTextMid
 
-        base_postion = (window_size // 2, window_size // 2)
+        base_position = (window_size // 2, window_size // 2)
 
         reward_text = {5: [-5], 6: [-1], 7: [0], 8: [1], 9: [5]}
         reward_disp = FormatTextMid(
-            "You gain: {0}", 1000, condition_text=reward_text, textposition=base_postion
+            "You gain: {0}",
+            1000,
+            condition_text=reward_text,
+            textposition=base_position,
         )
 
         earnings_text = FormatText(
-            "You have gained: {0}", 500, condition_text=None, textposition=base_postion
+            "You have gained: {0}", 500, condition_text=None, textposition=base_position
         )
 
         info_dict = {

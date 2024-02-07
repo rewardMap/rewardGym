@@ -42,23 +42,25 @@ def get_posner(
         from ..pygame_render.stimuli import BaseAction, BaseDisplay, BaseText
         from ..pygame_render.task_stims import FormatText, FormatTextReward
 
-        base_postion = (window_size // 2, window_size // 2)
+        base_position = (window_size // 2, window_size // 2)
         left_position = (window_size // 2 - window_size // 4, window_size // 2)
         right_position = (window_size // 2 + window_size // 4, window_size // 2)
 
-        reward_disp = FormatTextReward("You gain: {0}", 1000, textposition=base_postion)
+        reward_disp = FormatTextReward(
+            "You gain: {0}", 1000, textposition=base_position
+        )
 
         earnings_text = FormatText(
-            "You have gained: {0}", 500, condition_text=None, textposition=base_postion
+            "You have gained: {0}", 500, condition_text=None, textposition=base_position
         )
 
         info_dict = {
             0: {
                 "human": [
                     BaseDisplay(None, 1),
-                    BaseText("+", 1000, textposition=base_postion),
+                    BaseText("+", 1000, textposition=base_position),
                     BaseDisplay(None, 1),
-                    BaseText("<", 500, textposition=base_postion),
+                    BaseText("<", 500, textposition=base_position),
                     BaseDisplay(None, 1),
                     BaseText("x", 500, textposition=left_position),
                     BaseAction(),
@@ -67,9 +69,9 @@ def get_posner(
             1: {
                 "human": [
                     BaseDisplay(None, 1),
-                    BaseText("+", 1000, textposition=base_postion),
+                    BaseText("+", 1000, textposition=base_position),
                     BaseDisplay(None, 1),
-                    BaseText("<", 500, textposition=base_postion),
+                    BaseText("<", 500, textposition=base_position),
                     BaseDisplay(None, 1),
                     BaseText("x", 500, textposition=right_position),
                     BaseAction(),
@@ -78,9 +80,9 @@ def get_posner(
             2: {
                 "human": [
                     BaseDisplay(None, 1),
-                    BaseText("+", 1000, textposition=base_postion),
+                    BaseText("+", 1000, textposition=base_position),
                     BaseDisplay(None, 1),
-                    BaseText(">", 500, textposition=base_postion),
+                    BaseText(">", 500, textposition=base_position),
                     BaseDisplay(None, 1),
                     BaseText("x", 500, textposition=left_position),
                     BaseAction(),
@@ -89,9 +91,9 @@ def get_posner(
             3: {
                 "human": [
                     BaseDisplay(None, 1),
-                    BaseText("+", 1000, textposition=base_postion),
+                    BaseText("+", 1000, textposition=base_position),
                     BaseDisplay(None, 1),
-                    BaseText(">", 500, textposition=base_postion),
+                    BaseText(">", 500, textposition=base_position),
                     BaseDisplay(None, 1),
                     BaseText("x", 500, textposition=right_position),
                     BaseAction(),

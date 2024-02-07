@@ -81,39 +81,41 @@ def get_two_step(conditions=None, render_backend=None, window_size=None):
         from ..pygame_render.stimuli import BaseAction, BaseDisplay, BaseText
         from ..pygame_render.task_stims import FormatText, FormatTextReward
 
-        base_postion = (window_size // 2, window_size // 2)
+        base_position = (window_size // 2, window_size // 2)
 
-        reward_disp = FormatTextReward("You gain: {0}", 1000, textposition=base_postion)
+        reward_disp = FormatTextReward(
+            "You gain: {0}", 1000, textposition=base_position
+        )
 
         earnings_text = FormatText(
-            "You have gained: {0}", 500, condition_text=None, textposition=base_postion
+            "You have gained: {0}", 500, condition_text=None, textposition=base_position
         )
 
         info_dict = {
             0: {
                 "human": [
                     BaseDisplay(None, 1),
-                    BaseText("+", 500, textposition=base_postion),
+                    BaseText("+", 500, textposition=base_position),
                     BaseDisplay(None, 1),
-                    BaseText("A ===== or ==== B", 50, textposition=base_postion),
+                    BaseText("A ===== or ==== B", 50, textposition=base_position),
                     BaseAction(),
                 ]
             },
             1: {
                 "human": [
                     BaseDisplay(None, 1),
-                    BaseText("+", 500, textposition=base_postion),
+                    BaseText("+", 500, textposition=base_position),
                     BaseDisplay(None, 1),
-                    BaseText("C ===== or ==== D", 50, textposition=base_postion),
+                    BaseText("C ===== or ==== D", 50, textposition=base_position),
                     BaseAction(),
                 ]
             },
             2: {
                 "human": [
                     BaseDisplay(None, 1),
-                    BaseText("+", 500, textposition=base_postion),
+                    BaseText("+", 500, textposition=base_position),
                     BaseDisplay(None, 1),
-                    BaseText("E ===== or ==== F", 50, textposition=base_postion),
+                    BaseText("E ===== or ==== F", 50, textposition=base_position),
                     BaseAction(),
                 ]
             },

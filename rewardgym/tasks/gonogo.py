@@ -46,14 +46,14 @@ def get_gonogo(
         if window_size is None:
             return ValueError("window_size needs to be defined!")
 
-        base_postion = (window_size // 2, window_size // 2)
+        base_position = (window_size // 2, window_size // 2)
 
         reward_disp = FormatTextReward(
-            "You gain: {0}", 1000, condition_text=None, textposition=base_postion
+            "You gain: {0}", 1000, condition_text=None, textposition=base_position
         )
 
         earnings_text = FormatText(
-            "You have gained: {0}", 500, condition_text=None, textposition=base_postion
+            "You have gained: {0}", 500, condition_text=None, textposition=base_position
         )
 
         info_dict = {
