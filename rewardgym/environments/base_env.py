@@ -177,6 +177,3 @@ class MultiChoiceEnv(BaseEnv):
                 self._render_frame(info)
 
         return observation, reward, terminated, False, info
-
-    def _render_frame(self, info: dict):
-        raise NotImplementedError("Not implemented in Basic Agents")
