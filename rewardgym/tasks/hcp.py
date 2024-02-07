@@ -1,4 +1,5 @@
 from collections import defaultdict
+from typing import Literal
 
 from ..reward_classes import BaseReward
 
@@ -15,7 +16,11 @@ class HCPReward(BaseReward):
         return self._reward_function(condition)
 
 
-def get_hcp(conditions=None, render_backend=None, window_size=None, reward=HCPReward()):
+def get_hcp(
+    conditions: list = None,
+    render_backend: Literal["pygame", "psychopy"] = None,
+    window_size: int = None,
+):
 
     environment_graph = {
         0: [1, 2],  # go - win
@@ -23,10 +28,14 @@ def get_hcp(conditions=None, render_backend=None, window_size=None, reward=HCPRe
         2: [],  # go - no punish
     }
 
+    reward = HCPReward()
+
     reward_structure = {1: reward, 2: reward}
 
     if conditions is None:
         condition_out = (([0, 1, 2], [0.45, 0.1, 0.45]), [0])
+    else:
+        condition_out = ((conditions), [0])
 
     if render_backend is None:
         info_dict = defaultdict(int)

@@ -1,3 +1,4 @@
+import warnings
 from collections import defaultdict
 from typing import Union
 
@@ -69,6 +70,8 @@ def get_two_step(conditions=None, render_backend=None, window_size=None):
 
     if conditions is None:
         condition_out = (None, ([0]))
+    else:
+        warnings.warn("Two-step does not use conditions.")
 
     if render_backend is None:
         info_dict = defaultdict(int)

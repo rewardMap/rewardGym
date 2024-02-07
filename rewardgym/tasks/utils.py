@@ -36,7 +36,7 @@ def get_task(
         raise NotImplementedError(f"Task {task_name} is not implemented.")
 
     environment_graph, reward_structure, condition_out, info_dict = get_task_func(
-        conditions=conditions,
+        conditions,
         render_backend=render_backend,
         window_size=window_size,
     )

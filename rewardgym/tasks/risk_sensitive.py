@@ -1,13 +1,17 @@
 import itertools
 from collections import defaultdict
-from typing import Union
+from typing import Literal, Union
 
 import numpy as np
 
 from ..reward_classes import BaseReward
 
 
-def get_risk_sensitive(conditions=None, render_backend=None, window_size=None):
+def get_risk_sensitive(
+    conditions: list = None,
+    render_backend: Literal["pygame", "psychopy"] = None,
+    window_size: int = None,
+):
 
     environment_graph = {
         0: [1, 2, 3],  # win - go (action1)
@@ -22,17 +26,19 @@ def get_risk_sensitive(conditions=None, render_backend=None, window_size=None):
         3: BaseReward(reward=[1, 0], p=[0.8, 0.2]),
     }
 
-    if conditions is None:
-        action_space = list(reward_structure.keys())
-        action_map = {}
-        condition_space = action_space + list(itertools.permutations(action_space, 2))
-        for n, ii in enumerate(condition_space):
-            if isinstance(ii, tuple):
-                action_map[n] = {0: ii[0] - 1, 1: ii[1] - 1}
-            else:
-                action_map[n] = {0: ii - 1}
+    action_space = list(reward_structure.keys())
+    action_map = {}
+    condition_space = action_space + list(itertools.permutations(action_space, 2))
+    for n, ii in enumerate(condition_space):
+        if isinstance(ii, tuple):
+            action_map[n] = {0: ii[0] - 1, 1: ii[1] - 1}
+        else:
+            action_map[n] = {0: ii - 1}
 
+    if conditions is None:
         condition_out = ((list(action_map.keys()), ([0])), action_map)
+    else:
+        condition_out = ((conditions, ([0])), action_map)
 
     if render_backend is None:
         info_dict = defaultdict(int)

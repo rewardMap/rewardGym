@@ -1,12 +1,16 @@
 from collections import defaultdict
-from typing import Union
+from typing import Literal, Union
 
 import numpy as np
 
 from ..reward_classes import BaseReward
 
 
-def get_posner(conditions=None, render_backend=None, window_size=None):
+def get_posner(
+    starting_position: list = None,
+    render_backend: Literal["pygame", "psychopy"] = None,
+    window_size: int = None,
+):
 
     environment_graph = {
         0: [4, 5],  # left left
@@ -22,8 +26,10 @@ def get_posner(conditions=None, render_backend=None, window_size=None):
         5: BaseReward([0]),
     }
 
-    if conditions is None:
-        condition_out = (None, ([0, 1, 2, 3]))
+    if starting_position is None:
+        condition_out = (None, ([0, 1, 2, 3], [0.4, 0.1, 0.1, 0.4]))
+    else:
+        condition_out = (None, starting_position)
 
     if render_backend is None:
         info_dict = defaultdict(int)

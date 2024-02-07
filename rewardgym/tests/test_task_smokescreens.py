@@ -21,7 +21,12 @@ def run_task_base(task, n_episodes=10):
             condition = None
 
         if conditions[1] is not None:
-            starting_position = np.random.choice(conditions[1])
+            if len(conditions[1]) == 2:
+                starting_position = np.random.choice(
+                    conditions[1][0], p=conditions[1][1]
+                )
+            else:
+                starting_position = np.random.choice(conditions[1])
         else:
             starting_position = None
 
@@ -37,23 +42,109 @@ def run_task_base(task, n_episodes=10):
             obs = next_obs
 
 
-def test_smoke_screen_task_base_init():
-    for task in ["hcp", "mid", "two-step", "gonogo", "posner", "risk-sensitive"]:
-        get_env(task, conditions=None, render_mode=None, render_backend=None)
+def test_smoke_screen_hcp_base_init():
+    get_env("hcp", conditions=None, render_mode=None, render_backend=None)
 
 
-def test_smoke_screen_task_render_init():
-    for task in ["hcp", "mid", "gonogo", "posner", "two-step", "risk-sensitive"]:
-        get_env(
-            task,
-            conditions=None,
-            render_mode="human",
-            render_backend="pygame",
-            window_size=10,
-        )
+def test_smoke_screen_mid_base_init():
+    get_env("mid", conditions=None, render_mode=None, render_backend=None)
 
 
-def test_smoke_screen_run_base():
-    for task in ["hcp", "mid", "two-step", "gonogo", "posner", "risk-sensitive"]:
-        print(task)
-        run_task_base(task, n_episodes=10)
+def test_smoke_screen_gonogo_base_init():
+    get_env("gonogo", conditions=None, render_mode=None, render_backend=None)
+
+
+def test_smoke_screen_posner_base_init():
+    get_env("posner", conditions=None, render_mode=None, render_backend=None)
+
+
+def test_smoke_screen_two_step_base_init():
+    get_env("two-step", conditions=None, render_mode=None, render_backend=None)
+
+
+def test_smoke_screen_risk_sensitive_base_init():
+    get_env("risk-sensitive", conditions=None, render_mode=None, render_backend=None)
+
+
+def test_smoke_screen_hcp_render_init():
+    get_env(
+        "hcp",
+        conditions=None,
+        render_mode="human",
+        render_backend="pygame",
+        window_size=10,
+    )
+
+
+def test_smoke_screen_mid_render_init():
+    get_env(
+        "mid",
+        conditions=None,
+        render_mode="human",
+        render_backend="pygame",
+        window_size=10,
+    )
+
+
+def test_smoke_screen_gonogo_render_init():
+    get_env(
+        "gonogo",
+        conditions=None,
+        render_mode="human",
+        render_backend="pygame",
+        window_size=10,
+    )
+
+
+def test_smoke_screen_posner_render_init():
+    get_env(
+        "posner",
+        conditions=None,
+        render_mode="human",
+        render_backend="pygame",
+        window_size=10,
+    )
+
+
+def test_smoke_screen_two_step_render_init():
+    get_env(
+        "two-step",
+        conditions=None,
+        render_mode="human",
+        render_backend="pygame",
+        window_size=10,
+    )
+
+
+def test_smoke_screen_risk_sensitive_render_init():
+    get_env(
+        "risk-sensitive",
+        conditions=None,
+        render_mode="human",
+        render_backend="pygame",
+        window_size=10,
+    )
+
+
+def test_smoke_screen_run_hcp_base():
+    run_task_base("hcp", n_episodes=10)
+
+
+def test_smoke_screen_run_mid_base():
+    run_task_base("mid", n_episodes=10)
+
+
+def test_smoke_screen_run_gonogo_base():
+    run_task_base("gonogo", n_episodes=10)
+
+
+def test_smoke_screen_run_posner_base():
+    run_task_base("posner", n_episodes=10)
+
+
+def test_smoke_screen_run_two_step_base():
+    run_task_base("two-step", n_episodes=10)
+
+
+def test_smoke_screen_run_risk_sensitive_base():
+    run_task_base("risk-sensitive", n_episodes=10)

@@ -1,9 +1,14 @@
 from collections import defaultdict
+from typing import Literal
 
 from ..reward_classes import BaseReward
 
 
-def get_mid(conditions=None, render_backend=None, window_size=None):
+def get_mid(
+    starting_positions: list = None,
+    render_backend: Literal["pygame", "psychopy"] = None,
+    window_size: int = None,
+):
 
     environment_graph = {
         0: [7, 5],  # big lose
@@ -26,8 +31,10 @@ def get_mid(conditions=None, render_backend=None, window_size=None):
         9: BaseReward(5),
     }
 
-    if conditions is None:
-        condition_out = (None, ([0, 1, 2, 3, 4]))
+    if starting_positions is None:
+        condition_out = (None, ([0, 1, 2, 3, 4], [0.225, 0.225, 0.1, 0.225, 0.225]))
+    else:
+        condition_out = (None, starting_positions)
 
     if render_backend is None:
         info_dict = defaultdict(int)

@@ -1,12 +1,16 @@
 from collections import defaultdict
-from typing import Union
+from typing import Literal, Union
 
 import numpy as np
 
 from ..reward_classes import BaseReward
 
 
-def get_gonogo(conditions=None, render_backend=None, window_size=None):
+def get_gonogo(
+    starting_positions: list = None,
+    render_backend: Literal["pygame", "psychopy"] = None,
+    window_size: int = None,
+):
 
     environment_graph = {
         0: [6, 7],  # win - go (action1)
@@ -26,8 +30,10 @@ def get_gonogo(conditions=None, render_backend=None, window_size=None):
         7: BaseReward(reward=[1, 0], p=[0.2, 0.8]),
     }
 
-    if conditions is None:
+    if starting_positions is None:
         condition_out = (None, ([0, 1, 2, 3]))
+    else:
+        condition_out = (None, (starting_positions))
 
     if render_backend is None:
         info_dict = defaultdict(int)
