@@ -15,7 +15,7 @@ def run_task_base(task, n_episodes=10):
 
         condition, starting_position = unpack_conditions(conditions, None)
 
-        obs, info = env.reset(starting_position, condition=condition)
+        obs, info = env.reset(agent_location=starting_position, condition=condition)
         done = False
 
         # play one episode
