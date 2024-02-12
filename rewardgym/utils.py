@@ -1,3 +1,4 @@
+import itertools
 from typing import Union
 
 import numpy as np
@@ -39,3 +40,22 @@ def check_seed(seed: Union[np.random.Generator, int] = 1234):
         return seed
     else:
         return np.random.default_rng(seed)
+
+
+def get_starting_nodes(graph: dict):
+    """
+    Finds the starting position of a graph dictionary. I.e. positions which cannot
+    be accessed from any other position in the directed graph.
+
+    :param graph: _description_
+    :type graph: dict
+    :return: _description_
+    :rtype: _type_
+    """
+
+    terminals = [ii[0] if isinstance(ii, tuple) else ii[:] for ii in graph.values()]
+    terminals = list(itertools.chain.from_iterable(terminals))
+    nodes = list(graph.keys())
+    starting_node = list(set(nodes) - set(terminals))
+
+    return starting_node

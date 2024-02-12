@@ -3,10 +3,12 @@ import types
 import numpy as np
 import pytest
 
+from .. import ENVIRONMENTS, get_env
 from ..utils import (
     check_elements_in_list,
     check_seed,
     get_condition_state,
+    get_starting_nodes,
     unpack_conditions,
 )
 
@@ -118,3 +120,21 @@ def test_check_seed_with_default():
 def test_check_seed_with_invalid_input():
     with pytest.raises(TypeError):
         check_seed("invalid_seed")
+
+
+def test_get_starting_nodes():
+    # Test case 1: Basic example
+    graph1 = {"A": ["B"], "B": ["C"], "C": ["D"], "D": []}
+    assert get_starting_nodes(graph1) == ["A"]
+
+    # Test case 2: Graph with multiple starting nodes
+    graph2 = {"A": ["B"], "B": ["C"], "C": ["D"], "E": ["F"]}
+    assert sorted(get_starting_nodes(graph2)) == sorted(["A", "E"])
+
+    # Test case 3: Graph with one node and no connections
+    graph3 = {"A": []}
+    assert get_starting_nodes(graph3) == ["A"]
+
+    # Test case 4: Graph with no nodes
+    graph4 = {}
+    assert get_starting_nodes(graph4) == []
