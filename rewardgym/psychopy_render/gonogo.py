@@ -2,12 +2,8 @@ import os
 
 from psychopy.visual.rect import Rect
 
+from . import STIMPATH
 from .stimuli import ActionStim, BaseStimuli, FeedBackText, ImageStimulus, TextStimulus
-
-STIMPATH = os.path.abspath(
-    os.path.join(os.path.dirname(__file__), "../../template_stimuli/")
-)
-
 
 reward_feedback = FeedBackText(1.0, text="You gain: {0}", target="reward")
 total_reward_feedback = FeedBackText(

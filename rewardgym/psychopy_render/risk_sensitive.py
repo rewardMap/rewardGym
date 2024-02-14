@@ -4,11 +4,8 @@ import numpy as np
 from psychopy.visual import ImageStim
 from psychopy.visual.rect import Rect
 
+from . import STIMPATH
 from .stimuli import ActionStim, BaseStimuli, FeedBackText
-
-STIMPATH = os.path.abspath(
-    os.path.join(os.path.dirname(__file__), "../../template_stimuli/")
-)
 
 
 class RiskSensitiveDisplay(BaseStimuli):
