@@ -1,4 +1,5 @@
 import sys
+from typing import Tuple, Type
 
 import pygame
 
@@ -9,7 +10,7 @@ class BaseDisplay:
         image: str,
         time: int,
         name: str = None,
-        background: tuple[int] = (127, 127, 127),
+        background: Tuple[int] = (127, 127, 127),
     ) -> None:
         self.image_path = image
         self.time = time
@@ -20,8 +21,8 @@ class BaseDisplay:
 
     def __call__(
         self,
-        window: type[pygame.surface.Surface],
-        clock: type[pygame.time.Clock] = None,
+        window: Type[pygame.surface.Surface],
+        clock: Type[pygame.time.Clock] = None,
         condition: int = None,
         **kwargs
     ) -> None:
@@ -54,8 +55,8 @@ class BaseAction:
 
     def __call__(
         self,
-        window: type[pygame.surface.Surface],
-        clock: type[pygame.time.Clock] = None,
+        window: Type[pygame.surface.Surface],
+        clock: Type[pygame.time.Clock] = None,
         condition: int = None,
         **kwargs
     ) -> int:
@@ -85,10 +86,10 @@ class BaseText:
         text: str,
         time: int,
         name: str = None,
-        background: tuple[int, int, int] = (127, 127, 127),
-        fontcolor: tuple[int, int, int] = (0, 0, 0),
+        background: Tuple[int, int, int] = (127, 127, 127),
+        fontcolor: Tuple[int, int, int] = (0, 0, 0),
         fontsize: int = 36,
-        textposition: tuple[int, int] = (0, 0),
+        textposition: Tuple[int, int] = (0, 0),
     ):
         self.font = None
         self.text = text
@@ -103,8 +104,8 @@ class BaseText:
 
     def __call__(
         self,
-        window: type[pygame.surface.Surface],
-        clock: type[pygame.time.Clock] = None,
+        window: Type[pygame.surface.Surface],
+        clock: Type[pygame.time.Clock] = None,
         condition: int = None,
         **kwargs
     ) -> None:
@@ -142,8 +143,8 @@ class TimedAction:
 
     def __call__(
         self,
-        window: type[pygame.surface.Surface],
-        clock: type[pygame.time.Clock] = None,
+        window: Type[pygame.surface.Surface],
+        clock: Type[pygame.time.Clock] = None,
         **kwargs
     ) -> int:
 

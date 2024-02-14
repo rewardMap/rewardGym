@@ -1,7 +1,14 @@
 from collections import defaultdict
+from typing import Union
 
 import numpy as np
-import pygame
+
+try:
+    import pygame
+    from pygame import Surface
+    from pygame.time import Clock
+except ModuleNotFoundError:
+    from .gymnasium_stubs import Surface, Clock
 
 from .base_env import BaseEnv, MultiChoiceEnv
 
@@ -14,9 +21,9 @@ class RenderEnv(BaseEnv):
         render_mode: str = None,
         info_dict: dict = defaultdict(int),
         window_size: int = 255,
-        seed: int | np.random.Generator = 1000,
-        window: pygame.Surface = None,
-        clock: pygame.time.Clock = None,
+        seed: Union[int, np.random.Generator] = 1000,
+        window: Surface = None,
+        clock: Clock = None,
     ):
 
         super().__init__(
@@ -73,10 +80,10 @@ class RenderEnvMultiChoice(MultiChoiceEnv):
         condition_dict: dict,
         render_mode: str = None,
         info_dict: dict = defaultdict(int),
-        seed: int | np.random.Generator = 1000,
+        seed: Union[int, np.random.Generator] = 1000,
         window_size: int = 255,
-        window: pygame.Surface = None,
-        clock: pygame.time.Clock = None,
+        window: Surface = None,
+        clock: Clock = None,
     ):
 
         super().__init__(

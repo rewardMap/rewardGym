@@ -10,7 +10,7 @@ from ..environments import BaseEnv, MultiChoiceEnv, RenderEnv, RenderEnvMultiCho
 def get_task(
     task_name: Literal["hcp", "mid", "two-step", "risk-sensitive", "posner", "gonogo"],
     conditions: Union[list, np.ndarray] = None,
-    render_backend: Literal["pygame", "psychopy"] = None,
+    render_backend: Literal["pygame"] = None,
     window_size: int = None,
 ):
 

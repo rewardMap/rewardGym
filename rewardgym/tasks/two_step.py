@@ -91,62 +91,29 @@ def get_two_step(conditions=None, render_backend=None, window_size=None):
             "You have gained: {0}", 500, condition_text=None, textposition=base_position
         )
 
+        final_display = [
+            BaseDisplay(None, 1),
+            reward_disp,
+            earnings_text,
+        ]
+
+        def first_step(text):
+            return [
+                BaseDisplay(None, 1),
+                BaseText("+", 500, textposition=base_position),
+                BaseDisplay(None, 1),
+                BaseText(text, 50, textposition=base_position),
+                BaseAction(),
+            ]
+
         info_dict = {
-            0: {
-                "human": [
-                    BaseDisplay(None, 1),
-                    BaseText("+", 500, textposition=base_position),
-                    BaseDisplay(None, 1),
-                    BaseText("A ===== or ==== B", 50, textposition=base_position),
-                    BaseAction(),
-                ]
-            },
-            1: {
-                "human": [
-                    BaseDisplay(None, 1),
-                    BaseText("+", 500, textposition=base_position),
-                    BaseDisplay(None, 1),
-                    BaseText("C ===== or ==== D", 50, textposition=base_position),
-                    BaseAction(),
-                ]
-            },
-            2: {
-                "human": [
-                    BaseDisplay(None, 1),
-                    BaseText("+", 500, textposition=base_position),
-                    BaseDisplay(None, 1),
-                    BaseText("E ===== or ==== F", 50, textposition=base_position),
-                    BaseAction(),
-                ]
-            },
-            3: {
-                "human": [
-                    BaseDisplay(None, 1),
-                    reward_disp,
-                    earnings_text,
-                ]
-            },
-            4: {
-                "human": [
-                    BaseDisplay(None, 1),
-                    reward_disp,
-                    earnings_text,
-                ]
-            },
-            5: {
-                "human": [
-                    BaseDisplay(None, 1),
-                    reward_disp,
-                    earnings_text,
-                ]
-            },
-            6: {
-                "human": [
-                    BaseDisplay(None, 1),
-                    reward_disp,
-                    earnings_text,
-                ]
-            },
+            0: {"human": first_step("A       or       B")},
+            1: {"human": first_step("C       or       D")},
+            2: {"human": first_step("E       or       F")},
+            3: {"human": final_display},
+            4: {"human": final_display},
+            5: {"human": final_display},
+            6: {"human": final_display},
         }
 
     elif render_backend == "psychopy":

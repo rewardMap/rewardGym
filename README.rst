@@ -23,7 +23,7 @@ Then install the package and all necessary dependencies using::
     pip install git+https://github.com/rewardMap/rewardGym
 
 
-Alternatively the repository and install from there::
+Alternatively, download / clone the repository and install from there::
 
     git clone https://github.com/rewardMap/rewardGym
     cd rewardGym
@@ -59,6 +59,39 @@ posner
     Posner task. Response buttons are left + right.
 gonogo
     Go / No-Go task, different stimuli indicate go to win, go to punish etc. Response button is: space.
+
+
+Use PsychoPy for data collection
+********************************************************************************
+
+There might be cases, where you want to use this package purely for data collection.
+
+In the current release, basic logging is supported.
+
+This is also possible using `PsychoPy <https://psychopy.org/>`_ Standalone [cit3]_ (only tested version v2023.2.3).
+
+For this clone or download the repository.
+
+E.g.::
+
+    git clone https://github.com/rewardMap/rewardGym
+
+**IMPORTANT:**
+
+In it's current form, the stimuli files are not shipped with the package, please ask SRSteinkamp to get the files.
+
+
+Afterwards, you can use the PsychoPy coder to run ``rewardGym.py``, which is located in the root directory.
+
+Outputs of this program will be saved by default in the ``data`` directory.
+
+**TODOS:**
+
+* bundle stimuli with the package
+* MR logging
+* Clearer meaning of conditions
+* configurations
+* No logging option
 
 
 Run the environment and train an agent
@@ -99,3 +132,4 @@ References
 --------------------------------------------------------------------------------
 .. [cit1] Towers, M., Terry, J. K., Kwiatkowski, A., Balis, J. U., Cola, G. de, Deleu, T., Goulão, M., Kallinteris, A., KG, A., Krimmel, M., Perez-Vicente, R., Pierré, A., Schulhoff, S., Tai, J. J., Shen, A. T. J., & Younis, O. G. (2023). Gymnasium. Zenodo. https://doi.org/10.5281/zenodo.8127026
 .. [cit2] Juliani, A., Barnett, S., Davis, B., Sereno, M., & Momennejad, I. (2022). Neuro-Nav: A Library for Neurally-Plausible Reinforcement Learning (arXiv:2206.03312). arXiv. https://doi.org/10.48550/arXiv.2206.03312
+.. [cit3] Peirce, J., Gray, J. R., Simpson, S., MacAskill, M., Höchenberger, R., Sogo, H., Kastman, E., & Lindeløv, J. K. (2019). PsychoPy2: Experiments in behavior made easy. Behavior Research Methods, 51(1), 195–203. https://doi.org/10.3758/s13428-018-01193-y

@@ -54,65 +54,30 @@ def get_posner(
             "You have gained: {0}", 500, condition_text=None, textposition=base_position
         )
 
+        def first_step(img1, pos):
+            return [
+                BaseDisplay(None, 1),
+                BaseText("+", 1000, textposition=base_position),
+                BaseDisplay(None, 1),
+                BaseText(img1, 500, textposition=base_position),
+                BaseDisplay(None, 1),
+                BaseText("x", 500, textposition=pos),
+                BaseAction(),
+            ]
+
+        final_display = [
+            BaseDisplay(None, 1),
+            reward_disp,
+            earnings_text,
+        ]
+
         info_dict = {
-            0: {
-                "human": [
-                    BaseDisplay(None, 1),
-                    BaseText("+", 1000, textposition=base_position),
-                    BaseDisplay(None, 1),
-                    BaseText("<", 500, textposition=base_position),
-                    BaseDisplay(None, 1),
-                    BaseText("x", 500, textposition=left_position),
-                    BaseAction(),
-                ]
-            },
-            1: {
-                "human": [
-                    BaseDisplay(None, 1),
-                    BaseText("+", 1000, textposition=base_position),
-                    BaseDisplay(None, 1),
-                    BaseText("<", 500, textposition=base_position),
-                    BaseDisplay(None, 1),
-                    BaseText("x", 500, textposition=right_position),
-                    BaseAction(),
-                ]
-            },
-            2: {
-                "human": [
-                    BaseDisplay(None, 1),
-                    BaseText("+", 1000, textposition=base_position),
-                    BaseDisplay(None, 1),
-                    BaseText(">", 500, textposition=base_position),
-                    BaseDisplay(None, 1),
-                    BaseText("x", 500, textposition=left_position),
-                    BaseAction(),
-                ]
-            },
-            3: {
-                "human": [
-                    BaseDisplay(None, 1),
-                    BaseText("+", 1000, textposition=base_position),
-                    BaseDisplay(None, 1),
-                    BaseText(">", 500, textposition=base_position),
-                    BaseDisplay(None, 1),
-                    BaseText("x", 500, textposition=right_position),
-                    BaseAction(),
-                ]
-            },
-            4: {
-                "human": [
-                    BaseDisplay(None, 1),
-                    reward_disp,
-                    earnings_text,
-                ]
-            },
-            5: {
-                "human": [
-                    BaseDisplay(None, 1),
-                    reward_disp,
-                    earnings_text,
-                ]
-            },
+            0: {"human": first_step("<", left_position)},
+            1: {"human": first_step("<", right_position)},
+            2: {"human": first_step(">", left_position)},
+            3: {"human": first_step(">", right_position)},
+            4: {"human": final_display},
+            5: {"human": final_display},
         }
 
     elif render_backend == "psychopy":

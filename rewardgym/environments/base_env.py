@@ -1,14 +1,21 @@
 from collections import defaultdict
 from typing import Union
 
-import gymnasium as gym
+try:
+    from gymnasium import Env
+    from gymnasium.spaces import Discrete
+except ModuleNotFoundError:
+    from .gymnasium_stubs import Env
+    from .gymnasium_stubs import Discrete
+
+from typing import Tuple, Union
+
 import numpy as np
-from gymnasium import spaces
 
 from ..utils import check_seed
 
 
-class BaseEnv(gym.Env):
+class BaseEnv(Env):
 
     metadata = {"render_modes": ["human"]}
 
@@ -18,7 +25,7 @@ class BaseEnv(gym.Env):
         reward_locations: dict,
         render_mode: str = None,
         info_dict: dict = defaultdict(int),
-        seed: int | np.random.Generator = 1000,
+        seed: Union[int, np.random.Generator] = 1000,
     ):
 
         # It should be posssible to use wrapper for one-hot, so no box and other handling necessary.
@@ -28,8 +35,8 @@ class BaseEnv(gym.Env):
         self.n_states = len(
             environment_graph
         )  # Assuming nodes are states (different from neuro-nav)
-        self.action_space = spaces.Discrete(self.n_actions)
-        self.observation_space = spaces.Discrete(self.n_states)
+        self.action_space = Discrete(self.n_actions)
+        self.observation_space = Discrete(self.n_states)
 
         self.rng = check_seed(seed)
 
@@ -59,7 +66,7 @@ class BaseEnv(gym.Env):
 
     def reset(
         self, agent_location: int = None, condition: int = None
-    ) -> tuple[Union[int, np.array], dict]:
+    ) -> Tuple[Union[int, np.array], dict]:
         # We need the following line to seed self.np_random
         self.agent_location = agent_location
         self.condition = condition  # Needs some condition logic
@@ -74,7 +81,7 @@ class BaseEnv(gym.Env):
 
     def step(
         self, action: int = None
-    ) -> tuple[Union[int, np.array], int, bool, bool, dict]:
+    ) -> Tuple[Union[int, np.array], int, bool, bool, dict]:
 
         # Can do jumps now, if probabilistic end positions
         if isinstance(self.graph[self.agent_location], tuple):
@@ -127,7 +134,7 @@ class MultiChoiceEnv(BaseEnv):
         condition_dict: dict,
         render_mode: str = None,
         info_dict: dict = defaultdict(int),
-        seed: int | np.random.Generator = 1000,
+        seed: Union[int, np.random.Generator] = 1000,
     ):
 
         super().__init__(
@@ -142,7 +149,7 @@ class MultiChoiceEnv(BaseEnv):
 
     def step(
         self, action: int = None
-    ) -> tuple[Union[int, np.array], int, bool, bool, dict]:
+    ) -> Tuple[Union[int, np.array], int, bool, bool, dict]:
 
         if action not in self.condition_dict[self.condition].keys():
             observation = self._get_obs()
