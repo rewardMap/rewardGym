@@ -51,7 +51,7 @@ class BaseStimuli:
 
         self.duration = duration
 
-    def setup(self, win):
+    def setup(self, win, **kwargs):
         self.win = win
 
     def __call__(self, **kwargs):
@@ -67,12 +67,11 @@ class TextStimulus(BaseStimuli):
         self.name = name
         self.text_color = text_color
 
-    def setup(self, win):
+    def setup(self, win, **kwargs):
 
         self.textStim = visual.TextStim(
             win=win, name=self.name, text=self.text, color=self.text_color
         )
-        self.textStim.setAutoDraw(False)
 
     def __call__(self, win, logger, wait, **kwargs):
 
@@ -99,12 +98,11 @@ class ImageStimulus(BaseStimuli):
         self.positions = positions
         self.name = name
 
-    def setup(self, win):
+    def setup(self, win, **kwargs):
 
         self.imageStims = []
         for ip, pos in zip(self.image_paths, self.positions):
             self.imageStims.append(visual.ImageStim(win, image=ip, pos=pos))
-            self.imageStims.setAutoDraw(False)
 
     def __call__(self, win, logger, wait, **kwargs):
 
@@ -137,7 +135,7 @@ class ActionStim(BaseStimuli):
         self.key_dict = key_dict
         self.timeout_action = timeout_action
 
-    def setup(self, win):
+    def setup(self, win, **kwargs):
         pass
 
     def __call__(self, win, logger, wait, **kwargs):
@@ -200,7 +198,7 @@ class FeedBackText(BaseStimuli):
         self.text_color = text_color
         self.target = target
 
-    def setup(self, win):
+    def setup(self, win, **kwargs):
 
         self.textStim = visual.TextStim(
             win=win, name=self.name, text=self.text, color=self.text_color
