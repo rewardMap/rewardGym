@@ -102,7 +102,10 @@ def test_check_seed_with_int():
     seed = 5678
     rng = check_seed(seed)
     assert isinstance(rng, np.random.Generator)
-    assert rng.bit_generator.seed_seq.entropy == seed
+    try:
+        assert rng.bit_generator.seed_seq.entropy == seed
+    except AttributeError:  # For compatibility with earlier python versions
+        assert rng.bit_generator._seed_seq.entropy == seed
 
 
 def test_check_seed_with_generator():
@@ -114,7 +117,10 @@ def test_check_seed_with_generator():
 def test_check_seed_with_default():
     rng = check_seed()
     assert isinstance(rng, np.random.Generator)
-    assert rng.bit_generator.seed_seq.entropy == 1234
+    try:
+        assert rng.bit_generator.seed_seq.entropy == 1234
+    except AttributeError:  # For compatibility with earlier python versions
+        assert rng.bit_generator._seed_seq.entropy == 1234
 
 
 def test_check_seed_with_invalid_input():
