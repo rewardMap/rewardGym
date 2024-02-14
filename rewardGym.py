@@ -2,12 +2,13 @@ import os
 
 from psychopy import core, gui, visual
 
-from rewardgym import ENVIRONMENTS, unpack_conditions
-from rewardgym.psychopy_render.helper import get_env
-from rewardgym.psychopy_render.logger import ExperimentLogger
-from rewardgym.psychopy_render.stimuli import WaitTime
+from rewardgym import ENVIRONMENTS, get_env, unpack_conditions
+from rewardgym.psychopy_render import ExperimentLogger, WaitTime, get_psychopy_info
 
 outdir = "data/"
+
+if not os.path.isdir(outdir):
+    os.mkdir(outdir)
 
 exp_dict = {"participant_id": "001", "run": 1, "task": ENVIRONMENTS}
 
@@ -24,7 +25,6 @@ win = visual.Window(
     screen=0,
     winType="pyglet",
     allowGUI=True,
-    monitor=None,
     color=[-1, -1, -1],
     colorSpace="rgb",
     units="pix",
@@ -49,20 +49,7 @@ Wait = WaitTime(win, Logger)
 
 task = exp_dict["task"]
 
-if task == "hcp":
-    from rewardgym.psychopy_render.hcp import info_dict
-elif task == "mid":
-    from rewardgym.psychopy_render.mid import info_dict
-elif task == "risk-sensitive":
-    from rewardgym.psychopy_render.risk_sensitive import info_dict
-elif task == "two-step":
-    from rewardgym.psychopy_render.two_step import info_dict
-elif task == "gonogo":
-    from rewardgym.psychopy_render.gonogo import info_dict
-elif task == "posner":
-    from rewardgym.psychopy_render.posner import info_dict
-
-
+info_dict = get_psychopy_info(task)
 env, conditions = get_env(task)
 
 if task == "risk-sensitive":
