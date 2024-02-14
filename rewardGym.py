@@ -1,9 +1,20 @@
-from psychopy import core, visual
+import os
 
-from rewardgym import unpack_conditions
+from psychopy import core, gui, visual
+
+from rewardgym import ENVIRONMENTS, unpack_conditions
 from rewardgym.psychopy_render.helper import get_env
 from rewardgym.psychopy_render.logger import ExperimentLogger
 from rewardgym.psychopy_render.stimuli import WaitTime
+
+outdir = "data/"
+
+exp_dict = {"participant_id": "001", "run": 1, "task": ENVIRONMENTS}
+
+dlg = gui.DlgFromDict(exp_dict)
+
+if dlg.OK is False:
+    core.quit()  # user pressed cancel
 
 globalClock = core.Clock()
 
@@ -21,11 +32,22 @@ win = visual.Window(
     useFBO=False,
 )
 
-Logger = ExperimentLogger("test.tsv", globalClock, "01")
+
+logger_name = "sub-{0}_task-{1}_run-{2}_beh.tsv".format(
+    exp_dict["participant_id"], exp_dict["task"], exp_dict["run"]
+)
+
+Logger = ExperimentLogger(
+    os.path.join(outdir, logger_name),
+    globalClock,
+    participant_id=exp_dict["participant_id"],
+    run=exp_dict["run"],
+    task=exp_dict["task"],
+)
 Logger.create()
 Wait = WaitTime(win, Logger)
 
-task = "posner"
+task = exp_dict["task"]
 
 if task == "hcp":
     from rewardgym.psychopy_render.hcp import info_dict
@@ -84,10 +106,10 @@ for episode in range(n_episodes):
     if out is not None:
         action = out
         done = False
+        actions.append(action)
+
     else:
         done = True
-
-    actions.append(action)
 
     # play one episode
     while not done:
