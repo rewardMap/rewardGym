@@ -31,7 +31,7 @@ class ShowCard(BaseStimuli):
         self.duration = duration
         self.condition_text = condition_text
 
-    def setup(self, win):
+    def setup(self, win, **kwargs):
 
         self.textStim = TextStim(
             win=win, name=self.name + "_text", text=self.text, color=self.textColor
