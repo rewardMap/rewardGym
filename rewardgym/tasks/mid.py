@@ -61,88 +61,34 @@ def get_mid(
             "You have gained: {0}", 500, condition_text=None, textposition=base_position
         )
 
+        def first_step(stim1, stim2):
+            return [
+                BaseDisplay(None, 500),
+                BaseText(stim1, 1000, textposition=base_position),
+                BaseDisplay(None, 500),
+                BaseText(stim2, 200, textposition=base_position),
+                TimedAction(500),
+            ]
+
+        final_display = [
+            BaseDisplay(None, 500),
+            reward_disp,
+            earnings_text,
+        ]
+
         info_dict = {
-            0: {
-                "human": [
-                    BaseDisplay(None, 500),
-                    BaseText("LL", 1000, textposition=base_position),
-                    BaseDisplay(None, 500),
-                    BaseText("x", 200, textposition=base_position),
-                    TimedAction(500),
-                ]
-            },
-            1: {
-                "human": [
-                    BaseDisplay(None, 500),
-                    BaseText("L", 1000, textposition=base_position),
-                    BaseDisplay(None, 500),
-                    BaseText("x", 200, textposition=base_position),
-                    TimedAction(500),
-                ]
-            },
-            2: {
-                "human": [
-                    BaseDisplay(None, 500),
-                    BaseText("O", 1000, textposition=base_position),
-                    BaseDisplay(None, 500),
-                    BaseText("o", 200, textposition=base_position),
-                    TimedAction(500),
-                ]
-            },
-            3: {
-                "human": [
-                    BaseDisplay(None, 500),
-                    BaseText("W", 1000, textposition=base_position),
-                    BaseDisplay(None, 500),
-                    BaseText("+", 200, textposition=base_position),
-                    TimedAction(500),
-                ]
-            },
-            4: {
-                "human": [
-                    BaseDisplay(None, 500),
-                    BaseText("W", 1000, textposition=base_position),
-                    BaseDisplay(None, 500),
-                    BaseText("+", 200, textposition=base_position),
-                    TimedAction(500),
-                ]
-            },
-            5: {
-                "human": [
-                    BaseDisplay(None, 500),
-                    reward_disp,
-                    earnings_text,
-                ]
-            },
-            6: {
-                "human": [
-                    BaseDisplay(None, 500),
-                    reward_disp,
-                    earnings_text,
-                ]
-            },
-            7: {
-                "human": [
-                    BaseDisplay(None, 500),
-                    reward_disp,
-                    earnings_text,
-                ]
-            },
-            8: {
-                "human": [
-                    BaseDisplay(None, 500),
-                    reward_disp,
-                    earnings_text,
-                ]
-            },
-            9: {
-                "human": [
-                    BaseDisplay(None, 500),
-                    reward_disp,
-                    earnings_text,
-                ]
-            },
+            0: {"human": first_step("LL", "x")},
+            1: {"human": first_step("LL", "x")},
+            2: {"human": first_step("O", "o")},
+            3: {"human": first_step("W", "+")},
+            4: {"human": first_step("WW", "+")},
+            5: {"human": final_display},
+            6: {"human": final_display},
+            7: {"human": final_display},
+            8: {"human": final_display},
+            9: {"human": final_display},
         }
+
     elif render_backend == "psychopy":
         raise NotImplementedError("Psychopy integration still under deliberation.")
 

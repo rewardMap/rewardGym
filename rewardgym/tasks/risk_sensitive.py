@@ -72,6 +72,12 @@ def get_risk_sensitive(
             textposition=base_position,
         )
 
+        final_display = [
+            BaseDisplay(None, 1),
+            reward_disp,
+            earnings_text,
+        ]
+
         info_dict = {
             0: {
                 "human": [
@@ -82,27 +88,9 @@ def get_risk_sensitive(
                     BaseAction(),
                 ]
             },
-            1: {
-                "human": [
-                    BaseDisplay(None, 1),
-                    reward_disp,
-                    earnings_text,
-                ]
-            },
-            2: {
-                "human": [
-                    BaseDisplay(None, 1),
-                    reward_disp,
-                    earnings_text,
-                ]
-            },
-            3: {
-                "human": [
-                    BaseDisplay(None, 1),
-                    reward_disp,
-                    earnings_text,
-                ]
-            },
+            1: {"human": final_display},
+            2: {"human": final_display},
+            3: {"human": final_display},
         }
 
     elif render_backend == "psychopy":
