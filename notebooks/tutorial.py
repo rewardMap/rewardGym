@@ -93,10 +93,10 @@ plot_env_graph(env)
 #
 # The API follows the gym/gymnasium structure. An example loop over the environment
 # might look like this:
-
-import matplotlib.pyplot as plt
-
+#
+#
 # %%
+import matplotlib.pyplot as plt
 import numpy as np
 
 n_episodes = 100
@@ -161,9 +161,9 @@ ax.set(
 # We create each step separately, before merging them into the main display dictionary.
 #
 
+# %%
 import pygame
 
-# %%
 from rewardgym.pygame_render.stimuli import BaseAction, BaseDisplay, BaseText
 
 # State / Step1:
