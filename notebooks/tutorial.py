@@ -171,17 +171,17 @@ from rewardgym.pygame_render.stimuli import BaseAction, BaseDisplay, BaseText
 # The class can also be used to show images, but if it's not defined,
 # it will only flip the screen. The time is in ms.
 
-flip_screen = BaseDisplay(image=None, time=1, name="blank")
+flip_screen = BaseDisplay(image=None, duration=1, name="blank")
 
 # Unfortunately, we need to know the screen size in the beginning, if we want
 # to position text in the center.
 window_size = 500  # Let's use 500 by 500 px.
 center_position = (window_size // 2, window_size // 2)
 # We then define a text, that presents a cross in the center.
-fixation_cross = BaseText("+", time=200, textposition=center_position)
+fixation_cross = BaseText("+", duration=200, textposition=center_position)
 # Next we want to present the selection, we use a very short duration,
 # as we present an action afterwards.
-selection = BaseText("A or B", time=1, textposition=center_position)
+selection = BaseText("A or B", duration=1, textposition=center_position)
 # Base action has an infinite lenght, it waits until an action is ushered.
 action = BaseAction(action_map={pygame.K_LEFT: 0, pygame.K_RIGHT: 1})
 
@@ -200,12 +200,12 @@ from rewardgym.pygame_render.task_stims import FormatTextReward
 # their reward immediately.
 
 reward_disp = FormatTextReward(
-    "You gain: {0}", time=1000, textposition=center_position, target="reward"
+    "You gain: {0}", duration=1000, textposition=center_position, target="reward"
 )
 
 earnings_text = FormatTextReward(
     "You have gained: {0}",
-    time=500,
+    duration=500,
     textposition=center_position,
     target="total_reward",
 )

@@ -10,14 +10,14 @@ class FormatText(BaseText):
     def __init__(
         self,
         text,
-        time,
+        duration,
         name=None,
         fontcolor=(0, 0, 0),
         fontsize=36,
         textposition=(0, 0),
         condition_text={1: 5, 0: [1, 2, 3, 4], 2: [6, 7, 8, 9]},
     ):
-        super().__init__(text, time, name, fontcolor, fontsize, textposition)
+        super().__init__(text, duration, name, fontcolor, fontsize, textposition)
 
         self.condition_text = condition_text
 
@@ -39,7 +39,7 @@ class FormatText(BaseText):
 
         pygame.event.pump()
         pygame.display.update()
-        pygame.time.delay(self.time)
+        pygame.time.delay(self.duration)
 
         return None
 
@@ -48,7 +48,7 @@ class FormatTextReward(FormatText):
     def __init__(
         self,
         text,
-        time,
+        duration,
         name=None,
         fontcolor=(0, 0, 0),
         fontsize=36,
@@ -56,7 +56,7 @@ class FormatTextReward(FormatText):
         target: Literal["reward", "total_reward"] = "total_reward",
     ):
 
-        super().__init__(text, time, name, fontcolor, fontsize, textposition)
+        super().__init__(text, duration, name, fontcolor, fontsize, textposition)
 
         self.target = target
 
@@ -90,7 +90,7 @@ class FormatTextReward(FormatText):
 
         pygame.event.pump()
         pygame.display.update()
-        pygame.time.delay(self.time)
+        pygame.time.delay(self.duration)
 
         return None
 
@@ -99,7 +99,7 @@ class FormatTextRiskSensitive(BaseText):
     def __init__(
         self,
         text,
-        time,
+        duration,
         name=None,
         fontcolor=(0, 0, 0),
         fontsize=36,
@@ -107,7 +107,7 @@ class FormatTextRiskSensitive(BaseText):
         condition_text={1: 5, 0: [1, 2, 3, 4], 2: [6, 7, 8, 9]},
         letter_map={0: "A", 1: "B", 2: "C"},
     ):
-        super().__init__(text, time, name, fontcolor, fontsize, textposition)
+        super().__init__(text, duration, name, fontcolor, fontsize, textposition)
 
         self.condition_text = condition_text
         self.letter_map = letter_map
@@ -134,7 +134,7 @@ class FormatTextRiskSensitive(BaseText):
 
         pygame.event.pump()
         pygame.display.update()
-        pygame.time.delay(self.time)
+        pygame.time.delay(self.duration)
 
         return None
 
