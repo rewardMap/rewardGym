@@ -218,7 +218,7 @@ info_dict[2] = {
 }
 
 # %% [markdown]
-# We can now move this all into a `RenderEnv` which allows rendering of the
+# We can now move this all into a ``RenderEnv`` which allows rendering of the
 # environment.
 
 # %%
