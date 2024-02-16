@@ -1,19 +1,7 @@
 from collections import defaultdict
 from typing import Literal
 
-from ..reward_classes import BaseReward
-
-
-class HCPReward(BaseReward):
-    def __init__(self, reward_range=[-0.5, 0.0, 1.0]):
-        self.reward_range = reward_range
-
-    def _reward_function(self, condition):
-        reward = self.reward_range[condition]
-        return reward
-
-    def __call__(self, condition):
-        return self._reward_function(condition)
+from ..reward_classes import ConditionReward
 
 
 def get_hcp(
@@ -28,7 +16,7 @@ def get_hcp(
         2: [],  # go - no punish
     }
 
-    reward = HCPReward()
+    reward = ConditionReward()
 
     reward_structure = {1: reward, 2: reward}
 

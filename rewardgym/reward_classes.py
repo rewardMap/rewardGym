@@ -64,3 +64,15 @@ class DriftingReward(BaseReward):
 
     def __call__(self, condition=None):
         return self._reward_function(condition)
+
+
+class ConditionReward(BaseReward):
+    def __init__(self, conditione_reward={0: -0.5, 1: 0.0, 2: 1.0}):
+        self.condition_reward = conditione_reward
+
+    def _reward_function(self, condition):
+        reward = self.condition_reward[condition]
+        return reward
+
+    def __call__(self, condition):
+        return self._reward_function(condition)
