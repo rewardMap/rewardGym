@@ -45,21 +45,11 @@ def get_mid(
             return ValueError("window_size needs to be defined!")
 
         from ..pygame_render.stimuli import BaseDisplay, BaseText, TimedAction
-        from ..pygame_render.task_stims import FormatText, FormatTextMid
+        from ..pygame_render.task_stims import feedback_block
 
         base_position = (window_size // 2, window_size // 2)
 
-        reward_text = {5: [-5], 6: [-1], 7: [0], 8: [1], 9: [5]}
-        reward_disp = FormatTextMid(
-            "You gain: {0}",
-            1000,
-            condition_text=reward_text,
-            textposition=base_position,
-        )
-
-        earnings_text = FormatText(
-            "You have gained: {0}", 500, condition_text=None, textposition=base_position
-        )
+        reward_disp, earnings_text = feedback_block(base_position)
 
         def first_step(stim1, stim2):
             return [

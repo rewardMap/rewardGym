@@ -46,24 +46,14 @@ def get_hcp(
             return ValueError("window_size needs to be defined!")
 
         from ..pygame_render.stimuli import BaseAction, BaseDisplay, BaseText
-        from ..pygame_render.task_stims import FormatText
+        from ..pygame_render.task_stims import FormatText, feedback_block
 
         base_position = (window_size // 2, window_size // 2)
 
         left_text = {1: [5], 2: [1, 2, 3, 4], 0: [6, 7, 8, 9]}
         right_text = {1: [5], 0: [1, 2, 3, 4], 2: [6, 7, 8, 9]}
 
-        reward_text = {0: [-0.5], 1: [0], 2: [1]}
-        reward_disp = FormatText(
-            "You gain: {0}",
-            1000,
-            condition_text=reward_text,
-            textposition=base_position,
-        )
-
-        earnings_text = FormatText(
-            "You have gained: {0}", 500, condition_text=None, textposition=base_position
-        )
+        reward_disp, earnings_text = feedback_block(base_position)
 
         info_dict = {
             0: {

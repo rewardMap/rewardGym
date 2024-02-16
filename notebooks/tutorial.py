@@ -192,22 +192,30 @@ action = BaseAction(action_map={pygame.K_LEFT: 0, pygame.K_RIGHT: 1})
 info_dict = {0: {"human": [flip_screen, fixation_cross, selection, action]}}
 
 # %%
-from rewardgym.pygame_render.task_stims import FormatText, FormatTextReward
+from rewardgym.pygame_render.task_stims import FormatTextReward
 
 # Step 2 and step three are basically the same, so we can define them once
 # and reuse the code.
 # In this simple implementation, after a selection, the participant will see
 # their reward immediately.
 
-reward_disp = FormatTextReward("You gain: {0}", time=1000, textposition=center_position)
+reward_disp = FormatTextReward(
+    "You gain: {0}", time=1000, textposition=center_position, target="reward"
+)
 
-earnings_text = FormatText(
-    "You have gained: {0}", time=500, condition_text=None, textposition=center_position
+earnings_text = FormatTextReward(
+    "You have gained: {0}",
+    time=500,
+    textposition=center_position,
+    target="total_reward",
 )
 # The format texts, use inputs during the loop to update the value according
 # to some input.
 # NOTE: These functions are currently a bit messy and will be cleaned up
 # in future versions of the package.
+# NOTE: Because the pygame implementation, uses similar displays through out,
+# there is a helper function ``rewardgym.pygame_render.task_stims.feedback_block``,
+# that creates the two feedbacks using some default values.
 
 info_dict[1] = {
     "human": [flip_screen, reward_disp, earnings_text]  # Just for good measure

@@ -86,7 +86,6 @@ class BaseText:
         text: str,
         time: int,
         name: str = None,
-        background: Tuple[int, int, int] = (127, 127, 127),
         fontcolor: Tuple[int, int, int] = (0, 0, 0),
         fontsize: int = 36,
         textposition: Tuple[int, int] = (0, 0),
@@ -97,7 +96,6 @@ class BaseText:
         self.name = name
         self.display_type = "text"
         self.textposition = textposition
-        self.background = background
         self.fontsize = fontsize
         self.text_surface = None
         self.fontcolor = fontcolor
@@ -109,8 +107,6 @@ class BaseText:
         condition: int = None,
         **kwargs
     ) -> None:
-
-        window.fill(self.background)
 
         if self.font is None:
             self.font = pygame.font.Font(pygame.font.get_default_font(), self.fontsize)

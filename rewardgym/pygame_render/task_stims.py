@@ -1,3 +1,5 @@
+from typing import Literal
+
 import numpy as np
 import pygame
 
@@ -10,15 +12,12 @@ class FormatText(BaseText):
         text,
         time,
         name=None,
-        background=(127, 127, 127),
         fontcolor=(0, 0, 0),
         fontsize=36,
         textposition=(0, 0),
         condition_text={1: 5, 0: [1, 2, 3, 4], 2: [6, 7, 8, 9]},
     ):
-        super().__init__(
-            text, time, name, background, fontcolor, fontsize, textposition
-        )
+        super().__init__(text, time, name, fontcolor, fontsize, textposition)
 
         self.condition_text = condition_text
 
@@ -33,38 +32,6 @@ class FormatText(BaseText):
             card = np.random.choice(self.condition_text[condition])
             display_text = self.text.format(card)
 
-        elif total_reward is not None:
-            display_text = self.text.format(total_reward)
-
-        self.text_surface = self.font.render(display_text, True, self.fontcolor)
-        self.text_rect = self.text_surface.get_rect(center=self.textposition)
-
-        window.blit(self.text_surface, self.text_rect)
-
-        pygame.event.pump()
-        pygame.display.update()
-        pygame.time.delay(self.time)
-
-        return None
-
-
-class FormatTextMid(FormatText):
-    def __call__(
-        self, window, clock=None, condition=None, reward=None, location=None, **kwargs
-    ):
-
-        window.fill(self.background)
-
-        if self.font is None:
-            self.font = pygame.font.Font(pygame.font.get_default_font(), self.fontsize)
-
-        if self.condition_text is not None:
-            card = np.random.choice(self.condition_text[location])
-            display_text = self.text.format(card)
-
-        elif reward is not None:
-            display_text = self.text.format(reward)
-
         self.text_surface = self.font.render(display_text, True, self.fontcolor)
         self.text_rect = self.text_surface.get_rect(center=self.textposition)
 
@@ -78,17 +45,41 @@ class FormatTextMid(FormatText):
 
 
 class FormatTextReward(FormatText):
-    def __call__(
-        self, window, clock=None, condition=None, reward=None, location=None, **kwargs
+    def __init__(
+        self,
+        text,
+        time,
+        name=None,
+        fontcolor=(0, 0, 0),
+        fontsize=36,
+        textposition=(0, 0),
+        target: Literal["reward", "total_reward"] = "total_reward",
     ):
 
-        window.fill(self.background)
+        super().__init__(text, time, name, fontcolor, fontsize, textposition)
+
+        self.target = target
+
+    def __call__(
+        self,
+        window,
+        clock=None,
+        condition=None,
+        reward=None,
+        total_reward=None,
+        **kwargs
+    ):
 
         if self.font is None:
             self.font = pygame.font.Font(pygame.font.get_default_font(), self.fontsize)
 
-        if reward is not None:
+        if reward is not None and self.target == "reward":
             display_text = self.text.format(reward)
+        else:
+            display_text = ""
+
+        if total_reward is not None and self.target == "total_reward":
+            display_text = self.text.format(total_reward)
         else:
             display_text = ""
 
@@ -110,23 +101,18 @@ class FormatTextRiskSensitive(BaseText):
         text,
         time,
         name=None,
-        background=(127, 127, 127),
         fontcolor=(0, 0, 0),
         fontsize=36,
         textposition=(0, 0),
         condition_text={1: 5, 0: [1, 2, 3, 4], 2: [6, 7, 8, 9]},
         letter_map={0: "A", 1: "B", 2: "C"},
     ):
-        super().__init__(
-            text, time, name, background, fontcolor, fontsize, textposition
-        )
+        super().__init__(text, time, name, fontcolor, fontsize, textposition)
 
         self.condition_text = condition_text
         self.letter_map = letter_map
 
-    def __call__(self, window, clock=None, condition=None, total_reward=None, **kwargs):
-
-        window.fill(self.background)
+    def __call__(self, window, clock=None, condition=None, **kwargs):
 
         if self.font is None:
             self.font = pygame.font.Font(pygame.font.get_default_font(), self.fontsize)
@@ -141,9 +127,6 @@ class FormatTextRiskSensitive(BaseText):
 
             display_text = self.text.format(letA, letB)
 
-        elif total_reward is not None:
-            display_text = self.text.format(total_reward)
-
         self.text_surface = self.font.render(display_text, True, self.fontcolor)
         self.text_rect = self.text_surface.get_rect(center=self.textposition)
 
@@ -154,3 +137,22 @@ class FormatTextRiskSensitive(BaseText):
         pygame.time.delay(self.time)
 
         return None
+
+
+def feedback_block(center, duration_reward=1000, duration_total=500):
+
+    cur_reward = FormatTextReward(
+        "You gain: {0}",
+        duration_reward,
+        target="reward",
+        textposition=center,
+    )
+
+    total_reward = FormatTextReward(
+        "You have gained: {0}",
+        duration_total,
+        textposition=center,
+        target="total_reward",
+    )
+
+    return cur_reward, total_reward

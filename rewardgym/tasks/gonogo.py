@@ -49,11 +49,14 @@ def get_gonogo(
         base_position = (window_size // 2, window_size // 2)
 
         reward_disp = FormatTextReward(
-            "You gain: {0}", 1000, condition_text=None, textposition=base_position
+            "You gain: {0}", 1000, textposition=base_position, target="reward"
         )
 
-        earnings_text = FormatText(
-            "You have gained: {0}", 500, condition_text=None, textposition=base_position
+        earnings_text = FormatTextReward(
+            "You have gained: {0}",
+            500,
+            textposition=base_position,
+            target="total_reward",
         )
 
         def first_step(stim):

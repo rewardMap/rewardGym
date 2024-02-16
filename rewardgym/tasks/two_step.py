@@ -79,17 +79,11 @@ def get_two_step(conditions=None, render_backend=None, window_size=None):
         if window_size is None:
             return ValueError("window_size needs to be defined!")
         from ..pygame_render.stimuli import BaseAction, BaseDisplay, BaseText
-        from ..pygame_render.task_stims import FormatText, FormatTextReward
+        from ..pygame_render.task_stims import feedback_block
 
         base_position = (window_size // 2, window_size // 2)
 
-        reward_disp = FormatTextReward(
-            "You gain: {0}", 1000, textposition=base_position
-        )
-
-        earnings_text = FormatText(
-            "You have gained: {0}", 500, condition_text=None, textposition=base_position
-        )
+        reward_disp, earnings_text = feedback_block(base_position)
 
         final_display = [
             BaseDisplay(None, 1),

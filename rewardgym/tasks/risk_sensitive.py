@@ -49,21 +49,11 @@ def get_risk_sensitive(
             return ValueError("window_size needs to be defined!")
 
         from ..pygame_render.stimuli import BaseAction, BaseDisplay, BaseText
-        from ..pygame_render.task_stims import (
-            FormatText,
-            FormatTextReward,
-            FormatTextRiskSensitive,
-        )
+        from ..pygame_render.task_stims import FormatTextRiskSensitive, feedback_block
 
         base_position = (window_size // 2, window_size // 2)
 
-        reward_disp = FormatTextReward(
-            "You gain: {0}", 1000, textposition=base_position
-        )
-
-        earnings_text = FormatText(
-            "You have gained: {0}", 500, condition_text=None, textposition=base_position
-        )
+        reward_disp, earnings_text = feedback_block(base_position)
 
         stim = FormatTextRiskSensitive(
             "{0} --------- {1}",
