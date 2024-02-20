@@ -8,15 +8,19 @@ on:
 permissions:
   contents: write
 
+# https://github.com/r-lib/actions/tree/v2-branch/setup-pandoc pandoc setup found here
+# https://coderefinery.github.io/documentation/gh_workflow/ documentation of doc setup here
+
 jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+      - uses: r-lib/actions/setup-pandoc@v2
       - name: Install dependencies
         run: |
-          pip install -e '.[dev]'
+          pip install -e '.[doc,devtools]'
       - name: Sphinx build
         run: |
           sphinx-build docs _build
