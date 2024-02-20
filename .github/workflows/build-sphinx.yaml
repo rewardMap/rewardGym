@@ -9,6 +9,9 @@ on:
 permissions:
   contents: write
 
+# https://github.com/r-lib/actions/tree/v2-branch/setup-pandoc pandoc setup found here
+# https://coderefinery.github.io/documentation/gh_workflow/ documentation of doc setup here
+
 jobs:
   docs:
     runs-on: ubuntu-latest
