@@ -9,13 +9,13 @@ processes in humans.
 
 In the experiment, we use the starting points of probabilities described in :cite:p:`nussenbaumMovingDevelopmentalResearch2020`,
 but with a separate drift. Furthermore, the drift in this implementation is only applied when the choice is selected.
-
+For their implementation of the task, see their GitHub `repo <https://github.com/hartleylabnyu/online_two_step_replication>`_
 
 For this project the graph structure is the following:
 
-.. literalinclude:: ../rewardgym/tasks/hcp.py
+.. literalinclude:: ../rewardgym/tasks/two_step.py
     :language: python
-    :lines: 14-122
+    :lines: 14-22
 
 Or in graph form:
 
@@ -23,7 +23,7 @@ Or in graph form:
 
     from rewardgym import get_env
     from rewardgym.environments.visualizations import plot_env_graph
-    env, conditions = get_env(two-steps")
+    env, conditions = get_env("two-step")
     plot_env_graph(env)
 
 Task description

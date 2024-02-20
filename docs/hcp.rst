@@ -8,7 +8,7 @@ For this project the graph structure is the following:
 
 .. literalinclude:: ../rewardgym/tasks/hcp.py
     :language: python
-    :lines: 13-17
+    :lines: 14-18
 
 Or in graph form:
 

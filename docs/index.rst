@@ -17,8 +17,8 @@ Welcome to rewardGym's documentation!
    :maxdepth: 1
    :caption: Tasks
 
-   hcp.rst
-   two-step.rst
+   hcp
+   two_step
 
 
 .. include:: ../README.rst
