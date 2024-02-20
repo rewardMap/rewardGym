@@ -17,9 +17,12 @@ Welcome to rewardGym's documentation!
    :maxdepth: 1
    :caption: Tasks
 
-   hcp
-   two_step
-
+   tasks/hcp.rst
+   tasks/mid.rst
+   tasks/gonogo.rst
+   tasks/two_step.rst
+   tasks/risk_sensitive.rst
+   tasks/posner.rst
 
 .. include:: ../README.rst
 

@@ -13,7 +13,7 @@ For their implementation of the task, see their GitHub `repo <https://github.com
 
 For this project the graph structure is the following:
 
-.. literalinclude:: ../rewardgym/tasks/two_step.py
+.. literalinclude:: ../../rewardgym/tasks/two_step.py
     :language: python
     :lines: 14-22
 

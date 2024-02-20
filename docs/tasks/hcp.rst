@@ -6,7 +6,7 @@ This is a reimplementation of the HCP's gambling task :cite:p:`delgadoTrackingHe
 
 For this project the graph structure is the following:
 
-.. literalinclude:: ../rewardgym/tasks/hcp.py
+.. literalinclude:: ../../rewardgym/tasks/hcp.py
     :language: python
     :lines: 14-18
 
