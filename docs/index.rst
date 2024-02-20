@@ -18,14 +18,17 @@ Welcome to rewardGym's documentation!
    :caption: Tasks
 
    hcp.rst
+   two-step.rst
+
+
+.. include:: ../README.rst
+
 
 .. toctree::
    :maxdepth: 1
    :caption: Functionality
 
    api.rst
-
-.. include:: ../README.rst
 
 
 Indices and tables
