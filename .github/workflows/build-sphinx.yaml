@@ -19,7 +19,7 @@ jobs:
           pip install -e '.[dev]'
       - name: Install pandoc
         run: |
-          conda install pandoc
+          pip install pypandoc_binary
       - name: Sphinx build
         run: |
           sphinx-build docs _build
