@@ -10,6 +10,7 @@ def get_posner(
     starting_position: list = None,
     render_backend: Literal["pygame", "psychopy"] = None,
     window_size: int = None,
+    **kwargs
 ):
 
     environment_graph = {

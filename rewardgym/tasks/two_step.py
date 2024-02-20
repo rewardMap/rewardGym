@@ -7,10 +7,12 @@ import numpy as np
 from ..reward_classes import DriftingReward
 
 
-def get_two_step(conditions=None, render_backend=None, window_size=None):
+def get_two_step(
+    conditions=None, render_backend=None, window_size=None, seed=111, **kwargs
+):
 
     environment_graph = {
-        0: ([1, 2], 0.8),
+        0: ([1, 2], 0.7),
         1: [3, 4],  # env two
         2: [5, 6],  # control
         3: [],  # small win
@@ -20,10 +22,10 @@ def get_two_step(conditions=None, render_backend=None, window_size=None):
     }
 
     reward_structure = {
-        3: DriftingReward(seed=123),
-        4: DriftingReward(seed=154),
-        5: DriftingReward(seed=895),
-        6: DriftingReward(seed=698),
+        3: DriftingReward(seed=seed, p=0.74262),
+        4: DriftingReward(seed=seed, p=0.27253),
+        5: DriftingReward(seed=seed, p=0.71669),
+        6: DriftingReward(seed=seed, p=0.47906),
     }
 
     if conditions is None:

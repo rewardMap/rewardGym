@@ -12,6 +12,7 @@ def get_task(
     conditions: Union[list, np.ndarray] = None,
     render_backend: Literal["pygame"] = None,
     window_size: int = None,
+    seed: Union[np.random.Generator, int] = 1000,
 ):
 
     if task_name == "hcp":
@@ -36,9 +37,7 @@ def get_task(
         raise NotImplementedError(f"Task {task_name} is not implemented.")
 
     environment_graph, reward_structure, condition_out, info_dict = get_task_func(
-        conditions,
-        render_backend=render_backend,
-        window_size=window_size,
+        conditions, render_backend=render_backend, window_size=window_size, seed=seed
     )
 
     return environment_graph, reward_structure, condition_out, info_dict
@@ -50,10 +49,15 @@ def get_env(
     render_mode: Literal["human"] = None,
     render_backend: Literal["pygame", "psychopy"] = None,
     window_size: int = None,
+    seed: Union[int, np.random.Generator] = 1000,
 ):
 
     environment_graph, reward_structure, condition_out, info_dict = get_task(
-        task_name, conditions, render_backend=render_backend, window_size=window_size
+        task_name,
+        conditions,
+        render_backend=render_backend,
+        window_size=window_size,
+        seed=seed,
     )
 
     if (render_mode is None) and (render_backend is None):
@@ -65,6 +69,7 @@ def get_env(
                 reward_locations=reward_structure,
                 render_mode=render_mode,
                 info_dict=info_dict,
+                seed=seed,
             )
             condition_out = condition_out[0]
         else:
@@ -73,6 +78,7 @@ def get_env(
                 reward_locations=reward_structure,
                 render_mode=render_mode,
                 info_dict=info_dict,
+                seed=seed,
             )
     else:
         if task_name == "risk-sensitive":
@@ -83,6 +89,7 @@ def get_env(
                 render_mode=render_mode,
                 info_dict=info_dict,
                 window_size=window_size,
+                seed=seed,
             )
             condition_out = condition_out[0]
         else:
@@ -92,6 +99,7 @@ def get_env(
                 render_mode=render_mode,
                 info_dict=info_dict,
                 window_size=window_size,
+                seed=seed,
             )
 
     return env, condition_out

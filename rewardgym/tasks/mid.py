@@ -8,6 +8,7 @@ def get_mid(
     starting_positions: list = None,
     render_backend: Literal["pygame", "psychopy"] = None,
     window_size: int = None,
+    **kwargs
 ):
 
     environment_graph = {
