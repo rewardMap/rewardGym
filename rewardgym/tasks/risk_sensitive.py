@@ -11,6 +11,8 @@ def get_risk_sensitive(
     conditions: list = None,
     render_backend: Literal["pygame", "psychopy"] = None,
     window_size: int = None,
+    seed: Union[int, np.random.Generator] = 1000,
+    **kwargs
 ):
 
     environment_graph = {
@@ -21,9 +23,9 @@ def get_risk_sensitive(
     }
 
     reward_structure = {
-        1: BaseReward(reward=[1, 0], p=[0.2, 0.8]),
-        2: BaseReward(reward=[1, 0], p=[0.5, 0.5]),
-        3: BaseReward(reward=[1, 0], p=[0.8, 0.2]),
+        1: BaseReward(reward=[1, 0], p=[0.2, 0.8], seed=seed),
+        2: BaseReward(reward=[1, 0], p=[0.5, 0.5], seed=seed),
+        3: BaseReward(reward=[1, 0], p=[0.8, 0.2], seed=seed),
     }
 
     action_space = list(reward_structure.keys())
@@ -49,21 +51,11 @@ def get_risk_sensitive(
             return ValueError("window_size needs to be defined!")
 
         from ..pygame_render.stimuli import BaseAction, BaseDisplay, BaseText
-        from ..pygame_render.task_stims import (
-            FormatText,
-            FormatTextReward,
-            FormatTextRiskSensitive,
-        )
+        from ..pygame_render.task_stims import FormatTextRiskSensitive, feedback_block
 
         base_position = (window_size // 2, window_size // 2)
 
-        reward_disp = FormatTextReward(
-            "You gain: {0}", 1000, textposition=base_position
-        )
-
-        earnings_text = FormatText(
-            "You have gained: {0}", 500, condition_text=None, textposition=base_position
-        )
+        reward_disp, earnings_text = feedback_block(base_position)
 
         stim = FormatTextRiskSensitive(
             "{0} --------- {1}",

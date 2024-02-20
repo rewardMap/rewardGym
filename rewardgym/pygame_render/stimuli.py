@@ -8,12 +8,12 @@ class BaseDisplay:
     def __init__(
         self,
         image: str,
-        time: int,
+        duration: int,
         name: str = None,
         background: Tuple[int] = (127, 127, 127),
     ) -> None:
         self.image_path = image
-        self.time = time
+        self.duration = duration
         self.image = None
         self.name = name
         self.display_type = "image"
@@ -39,7 +39,7 @@ class BaseDisplay:
 
         pygame.event.pump()
         pygame.display.update()
-        pygame.time.delay(self.time)
+        pygame.time.delay(self.duration)
 
         return None
 
@@ -84,20 +84,18 @@ class BaseText:
     def __init__(
         self,
         text: str,
-        time: int,
+        duration: int,
         name: str = None,
-        background: Tuple[int, int, int] = (127, 127, 127),
         fontcolor: Tuple[int, int, int] = (0, 0, 0),
         fontsize: int = 36,
         textposition: Tuple[int, int] = (0, 0),
     ):
         self.font = None
         self.text = text
-        self.time = time
+        self.duration = duration
         self.name = name
         self.display_type = "text"
         self.textposition = textposition
-        self.background = background
         self.fontsize = fontsize
         self.text_surface = None
         self.fontcolor = fontcolor
@@ -110,8 +108,6 @@ class BaseText:
         **kwargs
     ) -> None:
 
-        window.fill(self.background)
-
         if self.font is None:
             self.font = pygame.font.Font(pygame.font.get_default_font(), self.fontsize)
             self.text_surface = self.font.render(self.text, True, self.fontcolor)
@@ -121,7 +117,7 @@ class BaseText:
 
         pygame.event.pump()
         pygame.display.update()
-        pygame.time.delay(self.time)
+        pygame.time.delay(self.duration)
 
         return None
 
@@ -129,7 +125,7 @@ class BaseText:
 class TimedAction:
     def __init__(
         self,
-        time: int,
+        duration: int,
         action_map: dict = {pygame.K_SPACE: 0},
         timeout_action: int = 1,
         name: str = None,
@@ -137,7 +133,7 @@ class TimedAction:
         self.action_map = action_map
         self.allowed_keys = action_map.keys()
         self.display_type = "action"
-        self.time = time
+        self.duration = duration
         self.name = name
         self.timeout_action = timeout_action
 
@@ -152,7 +148,7 @@ class TimedAction:
         current_time = pygame.time.get_ticks()
         response = None
 
-        while current_time + self.time >= pygame.time.get_ticks():
+        while current_time + self.duration >= pygame.time.get_ticks():
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.display.quit()

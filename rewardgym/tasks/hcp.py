@@ -1,25 +1,14 @@
 from collections import defaultdict
 from typing import Literal
 
-from ..reward_classes import BaseReward
-
-
-class HCPReward(BaseReward):
-    def __init__(self, reward_range=[-0.5, 0.0, 1.0]):
-        self.reward_range = reward_range
-
-    def _reward_function(self, condition):
-        reward = self.reward_range[condition]
-        return reward
-
-    def __call__(self, condition):
-        return self._reward_function(condition)
+from ..reward_classes import ConditionReward
 
 
 def get_hcp(
     conditions: list = None,
     render_backend: Literal["pygame", "psychopy"] = None,
     window_size: int = None,
+    **kwargs
 ):
 
     environment_graph = {
@@ -28,7 +17,7 @@ def get_hcp(
         2: [],  # go - no punish
     }
 
-    reward = HCPReward()
+    reward = ConditionReward()
 
     reward_structure = {1: reward, 2: reward}
 
@@ -46,24 +35,14 @@ def get_hcp(
             return ValueError("window_size needs to be defined!")
 
         from ..pygame_render.stimuli import BaseAction, BaseDisplay, BaseText
-        from ..pygame_render.task_stims import FormatText
+        from ..pygame_render.task_stims import FormatText, feedback_block
 
         base_position = (window_size // 2, window_size // 2)
 
         left_text = {1: [5], 2: [1, 2, 3, 4], 0: [6, 7, 8, 9]}
         right_text = {1: [5], 0: [1, 2, 3, 4], 2: [6, 7, 8, 9]}
 
-        reward_text = {0: [-0.5], 1: [0], 2: [1]}
-        reward_disp = FormatText(
-            "You gain: {0}",
-            1000,
-            condition_text=reward_text,
-            textposition=base_position,
-        )
-
-        earnings_text = FormatText(
-            "You have gained: {0}", 500, condition_text=None, textposition=base_position
-        )
+        reward_disp, earnings_text = feedback_block(base_position)
 
         info_dict = {
             0: {

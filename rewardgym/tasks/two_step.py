@@ -4,53 +4,15 @@ from typing import Union
 
 import numpy as np
 
-from ..reward_classes import BaseReward
-from ..utils import check_seed
+from ..reward_classes import DriftingReward
 
 
-class DriftingReward(BaseReward):
-    def __init__(
-        self,
-        reward: Union[list, int] = [1, 0],
-        p: float = None,
-        borders: list = [0.25, 0.75],
-        gauss_sd: float = 0.025,
-        seed: int = 1234,
-    ):
-
-        if not isinstance(reward, (list, tuple, np.ndarray)):
-            reward = [reward]
-
-        self.rng = check_seed(seed)
-
-        if p is None:
-            p = self.rng.uniform(*borders)
-
-        self.p = p
-        self.reward = reward
-        self.gauss_sd = gauss_sd
-        self.borders = borders
-
-    def _reward_function(self, condition=None):
-        reward = self.rng.choice(self.reward, p=[self.p, 1 - self.p])
-
-        step = self.rng.normal(0, self.gauss_sd)
-
-        if (self.p + step >= self.borders[1]) or (self.p + step <= self.borders[0]):
-            self.p -= step
-        else:
-            self.p += step
-
-        return reward
-
-    def __call__(self, condition=None):
-        return self._reward_function(condition)
-
-
-def get_two_step(conditions=None, render_backend=None, window_size=None):
+def get_two_step(
+    conditions=None, render_backend=None, window_size=None, seed=111, **kwargs
+):
 
     environment_graph = {
-        0: ([1, 2], 0.8),
+        0: ([1, 2], 0.7),
         1: [3, 4],  # env two
         2: [5, 6],  # control
         3: [],  # small win
@@ -60,10 +22,10 @@ def get_two_step(conditions=None, render_backend=None, window_size=None):
     }
 
     reward_structure = {
-        3: DriftingReward(seed=123),
-        4: DriftingReward(seed=154),
-        5: DriftingReward(seed=895),
-        6: DriftingReward(seed=698),
+        3: DriftingReward(seed=seed, p=0.74262),
+        4: DriftingReward(seed=seed, p=0.27253),
+        5: DriftingReward(seed=seed, p=0.71669),
+        6: DriftingReward(seed=seed, p=0.47906),
     }
 
     if conditions is None:
@@ -78,18 +40,13 @@ def get_two_step(conditions=None, render_backend=None, window_size=None):
 
         if window_size is None:
             return ValueError("window_size needs to be defined!")
+
         from ..pygame_render.stimuli import BaseAction, BaseDisplay, BaseText
-        from ..pygame_render.task_stims import FormatText, FormatTextReward
+        from ..pygame_render.task_stims import feedback_block
 
         base_position = (window_size // 2, window_size // 2)
 
-        reward_disp = FormatTextReward(
-            "You gain: {0}", 1000, textposition=base_position
-        )
-
-        earnings_text = FormatText(
-            "You have gained: {0}", 500, condition_text=None, textposition=base_position
-        )
+        reward_disp, earnings_text = feedback_block(base_position)
 
         final_display = [
             BaseDisplay(None, 1),

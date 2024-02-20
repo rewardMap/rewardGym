@@ -10,6 +10,7 @@ def get_posner(
     starting_position: list = None,
     render_backend: Literal["pygame", "psychopy"] = None,
     window_size: int = None,
+    **kwargs
 ):
 
     environment_graph = {
@@ -40,19 +41,13 @@ def get_posner(
             return ValueError("window_size needs to be defined!")
 
         from ..pygame_render.stimuli import BaseAction, BaseDisplay, BaseText
-        from ..pygame_render.task_stims import FormatText, FormatTextReward
+        from ..pygame_render.task_stims import feedback_block
 
         base_position = (window_size // 2, window_size // 2)
         left_position = (window_size // 2 - window_size // 4, window_size // 2)
         right_position = (window_size // 2 + window_size // 4, window_size // 2)
 
-        reward_disp = FormatTextReward(
-            "You gain: {0}", 1000, textposition=base_position
-        )
-
-        earnings_text = FormatText(
-            "You have gained: {0}", 500, condition_text=None, textposition=base_position
-        )
+        reward_disp, earnings_text = feedback_block(base_position)
 
         def first_step(img1, pos):
             return [

@@ -10,6 +10,7 @@ def get_gonogo(
     starting_positions: list = None,
     render_backend: Literal["pygame", "psychopy"] = None,
     window_size: int = None,
+    seed: Union[int, np.random.Generator] = 1000,
 ):
 
     environment_graph = {
@@ -24,10 +25,10 @@ def get_gonogo(
     }
 
     reward_structure = {
-        4: BaseReward(reward=[-1, 0], p=[0.2, 0.8]),
-        5: BaseReward(reward=[-1, 0], p=[0.8, 0.2]),
-        6: BaseReward(reward=[1, 0], p=[0.8, 0.2]),
-        7: BaseReward(reward=[1, 0], p=[0.2, 0.8]),
+        4: BaseReward(reward=[-1, 0], p=[0.2, 0.8], seed=seed),
+        5: BaseReward(reward=[-1, 0], p=[0.8, 0.2], seed=seed),
+        6: BaseReward(reward=[1, 0], p=[0.8, 0.2], seed=seed),
+        7: BaseReward(reward=[1, 0], p=[0.2, 0.8], seed=seed),
     }
 
     if starting_positions is None:
@@ -49,11 +50,14 @@ def get_gonogo(
         base_position = (window_size // 2, window_size // 2)
 
         reward_disp = FormatTextReward(
-            "You gain: {0}", 1000, condition_text=None, textposition=base_position
+            "You gain: {0}", 1000, textposition=base_position, target="reward"
         )
 
-        earnings_text = FormatText(
-            "You have gained: {0}", 500, condition_text=None, textposition=base_position
+        earnings_text = FormatTextReward(
+            "You have gained: {0}",
+            500,
+            textposition=base_position,
+            target="total_reward",
         )
 
         def first_step(stim):

@@ -1,3 +1,5 @@
+from typing import List, Tuple
+
 from psychopy import visual
 
 from .logger import ExperimentLogger
@@ -47,7 +49,7 @@ class WaitTime:
 
 
 class BaseStimuli:
-    def __init__(self, duration):
+    def __init__(self, duration: float = None):
 
         self.duration = duration
 
@@ -60,14 +62,21 @@ class BaseStimuli:
 
 
 class TextStimulus(BaseStimuli):
-    def __init__(self, duration, text, position=None, name=None, text_color="white"):
+    def __init__(
+        self,
+        duration: float,
+        text: str,
+        position: Tuple[int, int] = None,
+        name: str = None,
+        text_color: str = "white",
+    ):
         self.duration = duration
         self.text = text
         self.position = position
         self.name = name
         self.text_color = text_color
 
-    def setup(self, win, **kwargs):
+    def setup(self, win: visual.Window, **kwargs):
 
         self.textStim = visual.TextStim(
             win=win, name=self.name, text=self.text, color=self.text_color
@@ -92,19 +101,27 @@ class TextStimulus(BaseStimuli):
 
 
 class ImageStimulus(BaseStimuli):
-    def __init__(self, duration, image_paths, positions=None, name=None):
+    def __init__(
+        self,
+        duration: float,
+        image_paths: List,
+        positions: List = None,
+        name: str = None,
+    ):
         self.duration = duration
         self.image_paths = image_paths
         self.positions = positions
         self.name = name
 
-    def setup(self, win, **kwargs):
+    def setup(self, win: visual.Window, **kwargs):
 
         self.imageStims = []
         for ip, pos in zip(self.image_paths, self.positions):
             self.imageStims.append(visual.ImageStim(win, image=ip, pos=pos))
 
-    def __call__(self, win, logger, wait, **kwargs):
+    def __call__(
+        self, win: visual.Window, logger: ExperimentLogger, wait: float, **kwargs
+    ):
 
         logger.keyStrokes(win)
 
@@ -127,7 +144,11 @@ class ImageStimulus(BaseStimuli):
 
 class ActionStim(BaseStimuli):
     def __init__(
-        self, duration, key_dict={"left": 0, "right": 1}, name=None, timeout_action=None
+        self,
+        duration: float,
+        key_dict: dict = {"left": 0, "right": 1},
+        name: str = None,
+        timeout_action: int = None,
     ):
         self.duration = duration
         self.name = name
@@ -135,10 +156,12 @@ class ActionStim(BaseStimuli):
         self.key_dict = key_dict
         self.timeout_action = timeout_action
 
-    def setup(self, win, **kwargs):
+    def setup(self, win: visual.Window, **kwargs):
         pass
 
-    def __call__(self, win, logger, wait, **kwargs):
+    def __call__(
+        self, win: visual.Window, logger: ExperimentLogger, wait: float, **kwargs
+    ):
 
         logger.keyStrokes(win)
 
@@ -184,12 +207,12 @@ class ActionStim(BaseStimuli):
 class FeedBackText(BaseStimuli):
     def __init__(
         self,
-        duration,
-        text,
-        position=None,
-        name=None,
-        target="reward",
-        text_color="white",
+        duration: float,
+        text: str,
+        position: Tuple[int, int] = None,
+        name: str = None,
+        target: str = "reward",
+        text_color: str = "white",
     ):
         self.duration = duration
         self.text = text
@@ -198,14 +221,22 @@ class FeedBackText(BaseStimuli):
         self.text_color = text_color
         self.target = target
 
-    def setup(self, win, **kwargs):
+    def setup(self, win: visual.Window, **kwargs):
 
         self.textStim = visual.TextStim(
             win=win, name=self.name, text=self.text, color=self.text_color
         )
         self.textStim.setAutoDraw(False)
 
-    def __call__(self, win, logger, wait, reward, total_reward, **kwargs):
+    def __call__(
+        self,
+        win: visual.Window,
+        logger: ExperimentLogger,
+        wait: float,
+        reward: float,
+        total_reward: float,
+        **kwargs
+    ):
 
         if self.target == "reward":
             self.textStim.setText(self.text.format(reward))
