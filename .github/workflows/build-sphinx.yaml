@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - pandoc_fixes
 
 permissions:
   contents: write
