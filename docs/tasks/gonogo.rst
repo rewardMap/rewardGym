@@ -1,5 +1,5 @@
 ================================================================================
-Monetary Incentive Delay Task
+Go / No-Go
 ================================================================================
 
 This is a reimplementation of the Go / No-Go task described in :cite:p:`guitart-masipGoNogoLearning2012`.
@@ -40,7 +40,6 @@ As can be seen in the graph, the task is controlled by the ``agent_location``
 or ``starting_position`` in that each cueing condition, has a separate graph
 structure.
 
-References
-********************************************************************************
 
 .. bibliography::
+   :filter: docname in docnames

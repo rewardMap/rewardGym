@@ -44,9 +44,5 @@ of the experiment, where participant either win more or lose more. By contrastin
 the neural activity in the blocks, one can localize brain regions related to punishment
 or reward.
 
-
-
-References
-********************************************************************************
-
 .. bibliography::
+   :filter: docname in docnames

@@ -41,9 +41,5 @@ set reward probability at the beginning, but drifts slowly over time.
 Because the task has no set conditions, there is only a single starting position
 and no further conditions that can be controlled from the outside.
 
-
-
-References
-********************************************************************************
-
 .. bibliography::
+   :filter: docname in docnames

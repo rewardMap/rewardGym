@@ -42,6 +42,7 @@ source_suffix = ".rst"
 templates_path = ["_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 bibtex_bibfiles = ["references.bib"]
+bibtex_reference_style = "author_year"
 
 import glob
 import jupytext
