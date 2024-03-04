@@ -23,8 +23,6 @@ class FormatText(BaseText):
 
     def __call__(self, window, clock=None, condition=None, total_reward=None, **kwargs):
 
-        window.fill(self.background)
-
         if self.font is None:
             self.font = pygame.font.Font(pygame.font.get_default_font(), self.fontsize)
 
