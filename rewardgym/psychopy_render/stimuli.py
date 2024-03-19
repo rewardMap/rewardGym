@@ -49,9 +49,10 @@ class WaitTime:
 
 
 class BaseStimuli:
-    def __init__(self, duration: float = None):
+    def __init__(self, duration: float = None, name: str = None):
 
         self.duration = duration
+        self.name = name
 
     def setup(self, win, **kwargs):
         self.win = win
@@ -70,10 +71,11 @@ class TextStimulus(BaseStimuli):
         name: str = None,
         text_color: str = "white",
     ):
-        self.duration = duration
+
+        super().__init__(name=name, duration=duration)
+
         self.text = text
         self.position = position
-        self.name = name
         self.text_color = text_color
 
     def setup(self, win: visual.Window, **kwargs):
@@ -108,10 +110,11 @@ class ImageStimulus(BaseStimuli):
         positions: List = None,
         name: str = None,
     ):
-        self.duration = duration
+
+        super().__init__(name=name, duration=duration)
+
         self.image_paths = image_paths
         self.positions = positions
-        self.name = name
 
     def setup(self, win: visual.Window, **kwargs):
 
@@ -150,8 +153,9 @@ class ActionStim(BaseStimuli):
         name: str = None,
         timeout_action: int = None,
     ):
-        self.duration = duration
-        self.name = name
+
+        super().__init__(name=name, duration=duration)
+
         self.key_list = list(key_dict.keys())
         self.key_dict = key_dict
         self.timeout_action = timeout_action
@@ -214,10 +218,11 @@ class FeedBackText(BaseStimuli):
         target: str = "reward",
         text_color: str = "white",
     ):
-        self.duration = duration
+
+        super().__init__(name=name, duration=duration)
+
         self.text = text
         self.position = position
-        self.name = name
         self.text_color = text_color
         self.target = target
 
