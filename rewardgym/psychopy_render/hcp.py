@@ -20,6 +20,8 @@ class ShowCard(BaseStimuli):
         name=None,
     ):
 
+        super().__init__(name=name, duration=duration)
+
         self.height = height
         self.width = width
         self.lineWidth = lineWidth
@@ -27,8 +29,6 @@ class ShowCard(BaseStimuli):
         self.fillColor = fillColor
         self.textColor = textColor
         self.text = text
-        self.name = name
-        self.duration = duration
         self.condition_text = condition_text
 
     def setup(self, win, **kwargs):
@@ -72,7 +72,7 @@ reward_feedback = FeedBackText(1.0, text="You gain: {0}", target="reward")
 total_reward_feedback = FeedBackText(
     1.0, text="You have gained: {0}", target="total_reward"
 )
-base_stim = BaseStimuli(1)
+base_stim = BaseStimuli(1000, name="iti")
 
 info_dict = {
     0: {

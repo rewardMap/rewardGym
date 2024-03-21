@@ -12,7 +12,7 @@ total_reward_feedback = FeedBackText(
     1.0, text="You have gained: {0}", target="total_reward"
 )
 base_stim = BaseStimuli(1)
-fix = TextStimulus(text="+", duration=0.2)
+fix = TextStimulus(text="+", duration=0.4, name="isi")
 
 image_shift = 0
 
@@ -38,7 +38,11 @@ def first_step(img, img2, image_shift2, to=1):
     ]
 
 
-final_step = [reward_feedback, total_reward_feedback, base_stim]
+final_step = [
+    reward_feedback,
+    total_reward_feedback,
+    BaseStimuli(name="iti", duration=2.0),
+]
 
 info_dict = {
     0: {"psychopy": first_step("<", "F000.png", image_shift2=-500, to=1)},

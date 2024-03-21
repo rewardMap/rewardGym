@@ -16,16 +16,20 @@ def get_risk_sensitive(
 ):
 
     environment_graph = {
-        0: [1, 2, 3],  # win - go (action1)
-        1: [],  # punish - go (action1)
-        2: [],  # win - nogo (action2)
-        3: [],  # punish - nogo (action2)
+        0: [1, 2, 3, 4, 5],  # win - go (action1)
+        1: [],  # Deterministic 0
+        2: [],  # Deterministic 20
+        3: [],  # Deterministic 40
+        4: [],  # Probabilistic 0 / 40
+        5: [],  # Probabilistic 0 / 80
     }
 
     reward_structure = {
-        1: BaseReward(reward=[1, 0], p=[0.2, 0.8], seed=seed),
-        2: BaseReward(reward=[1, 0], p=[0.5, 0.5], seed=seed),
-        3: BaseReward(reward=[1, 0], p=[0.8, 0.2], seed=seed),
+        1: BaseReward(reward=[0], seed=seed),
+        2: BaseReward(reward=[20], seed=seed),
+        3: BaseReward(reward=[40], seed=seed),
+        4: BaseReward(reward=[40, 0], p=[0.5, 0.5], seed=seed),
+        5: BaseReward(reward=[80, 0], p=[0.5, 0.5], seed=seed),
     }
 
     action_space = list(reward_structure.keys())
@@ -42,6 +46,7 @@ def get_risk_sensitive(
     else:
         condition_out = ((conditions, ([0],)), action_map)
 
+    print(condition_out, action_map)
     if render_backend is None:
         info_dict = defaultdict(int)
 
@@ -83,6 +88,8 @@ def get_risk_sensitive(
             1: {"human": final_display},
             2: {"human": final_display},
             3: {"human": final_display},
+            4: {"human": final_display},
+            5: {"human": final_display},
         }
 
     elif render_backend == "psychopy":

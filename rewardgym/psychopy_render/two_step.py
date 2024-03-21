@@ -16,7 +16,12 @@ fix = TextStimulus(text="+", duration=0.2)
 
 image_shift = 400
 
-final_step = [base_stim, reward_feedback, total_reward_feedback]
+final_step = [
+    base_stim,
+    reward_feedback,
+    total_reward_feedback,
+    BaseStimuli(duration=1.5, name="iti"),
+]
 
 
 info_dict = {
@@ -38,18 +43,13 @@ info_dict = {
     1: {
         "psychopy": [
             ImageStimulus(
-                duration=0.25,
-                image_paths=[os.path.join(STIMPATH, "F000.png")],
-                positions=[(-image_shift, 0)],
-            ),
-            fix,
-            ImageStimulus(
                 duration=0.1,
                 image_paths=[
+                    os.path.join(STIMPATH, "F000.png"),
                     os.path.join(STIMPATH, "F002.png"),
                     os.path.join(STIMPATH, "F003.png"),
                 ],
-                positions=[(-image_shift, 0), (image_shift, 0)],
+                positions=[(0, image_shift), (-image_shift, 0), (image_shift, 0)],
             ),
             ActionStim(duration=2.0),
         ]
@@ -57,18 +57,13 @@ info_dict = {
     2: {
         "psychopy": [
             ImageStimulus(
-                duration=0.25,
-                image_paths=[os.path.join(STIMPATH, "F001.png")],
-                positions=[(image_shift, 0)],
-            ),
-            fix,
-            ImageStimulus(
                 duration=0.1,
                 image_paths=[
+                    os.path.join(STIMPATH, "F001.png"),
                     os.path.join(STIMPATH, "F004.png"),
                     os.path.join(STIMPATH, "F000.png"),
                 ],
-                positions=[(-image_shift, 0), (image_shift, 0)],
+                positions=[(0, image_shift), (-image_shift, 0), (image_shift, 0)],
             ),
             ActionStim(duration=2.0),
         ]

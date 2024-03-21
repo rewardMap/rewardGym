@@ -20,13 +20,15 @@ class RiskSensitiveDisplay(BaseStimuli):
             0: os.path.join(STIMPATH, "F000.png"),
             1: os.path.join(STIMPATH, "F001.png"),
             2: os.path.join(STIMPATH, "F002.png"),
+            3: os.path.join(STIMPATH, "F000.png"),
+            4: os.path.join(STIMPATH, "F002.png"),
         },
     ):
 
-        self.duration = duration
+        super().__init__(name=name, duration=duration)
+
         self.image_position = image_position
         self.image_map = image_map
-        self.name = name
         self.image_shift = image_shift
         self.condition_dict = None
         self.with_action = with_action
@@ -119,4 +121,6 @@ info_dict = {
     1: {"psychopy": final_step},
     2: {"psychopy": final_step},
     3: {"psychopy": final_step},
+    4: {"psychopy": final_step},
+    5: {"psychopy": final_step},
 }

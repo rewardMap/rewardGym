@@ -55,7 +55,7 @@ def get_mid(
         def first_step(stim1, stim2):
             return [
                 BaseDisplay(None, 500),
-                BaseText(stim1, 1000, textposition=base_position),
+                BaseText(stim1, 2000, textposition=base_position),
                 BaseDisplay(None, 500),
                 BaseText(stim2, 200, textposition=base_position),
                 TimedAction(500),

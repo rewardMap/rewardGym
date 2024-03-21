@@ -103,7 +103,7 @@ class FormatTextRiskSensitive(BaseText):
         fontsize=36,
         textposition=(0, 0),
         condition_text={1: 5, 0: [1, 2, 3, 4], 2: [6, 7, 8, 9]},
-        letter_map={0: "A", 1: "B", 2: "C"},
+        letter_map={0: "A", 1: "B", 2: "C", 3: "D", 4: "E"},
     ):
         super().__init__(text, duration, name, fontcolor, fontsize, textposition)
 
