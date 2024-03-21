@@ -46,7 +46,18 @@ def get_risk_sensitive(
     else:
         condition_out = ((conditions, ([0],)), action_map)
 
-    print(condition_out, action_map)
+    # Conditions of importance: 0, 1, 2, 3, 4 = single display
+    # Risky trials, with same EV:
+    # 20 vs 0 / 40 = 11 and 18
+    # 40 vs 0 / 80 = 16 and 23
+    # 20 vs 0 / 80 = 12 and 22
+    # Dominated
+    # 40 vs 0 / 40 = 15 and 9
+    # 20 vs 0 = 5 and 9
+    # 40 vs 0 = 6 and 13
+    # 0 vs 0 / 20 = 7 and 17
+    # 0 vs 0 / 40 = 12 and 21
+
     if render_backend is None:
         info_dict = defaultdict(int)
 
