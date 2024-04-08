@@ -1,6 +1,5 @@
 import os
 
-import numpy as np
 from psychopy.visual import ImageStim
 from psychopy.visual.rect import Rect
 
@@ -17,11 +16,11 @@ class RiskSensitiveDisplay(BaseStimuli):
         image_shift=250,
         with_action=False,
         image_map={
-            0: os.path.join(STIMPATH, "F000.png"),
-            1: os.path.join(STIMPATH, "F001.png"),
-            2: os.path.join(STIMPATH, "F002.png"),
-            3: os.path.join(STIMPATH, "F000.png"),
-            4: os.path.join(STIMPATH, "F002.png"),
+            0: os.path.join(STIMPATH, "two_step", "stim11.png"),
+            1: os.path.join(STIMPATH, "two_step", "stim12.png"),
+            2: os.path.join(STIMPATH, "two_step", "stim21.png"),
+            3: os.path.join(STIMPATH, "two_step", "stim22.png"),
+            4: os.path.join(STIMPATH, "two_step", "stim31.png"),
         },
     ):
 

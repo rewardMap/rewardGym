@@ -107,3 +107,7 @@ def get_risk_sensitive(
         raise NotImplementedError("Psychopy integration still under deliberation.")
 
     return environment_graph, reward_structure, condition_out, info_dict
+
+
+def generate_risk_senistive_configs(stimulus_set: str = "1"):
+    raise NotImplementedError
