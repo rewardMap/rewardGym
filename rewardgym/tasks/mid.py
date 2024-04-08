@@ -2,6 +2,7 @@ from collections import defaultdict
 from typing import Literal
 
 from ..reward_classes import BaseReward
+from ..utils import check_seed
 
 
 def get_mid(
@@ -84,3 +85,40 @@ def get_mid(
         raise NotImplementedError("Psychopy integration still under deliberation.")
 
     return environment_graph, reward_structure, condition_out, info_dict
+
+
+def generate_mid_configs(stimulus_set: str = "1"):
+
+    seed = check_seed(353)
+    # 0 & 1 = win, 2  = neutral, 3 & 4 = lose
+    condition_template = [0, 1, 2, 3, 4]
+    isi_template = [1.5, 2.125, 2.75, 3.375, 4.0]
+
+    n_trials_per_condition = 20
+
+    conditions = seed.choice(a=condition_template, size=5, replace=False).tolist()
+    isi = seed.choice(isi_template, size=5, replace=False).tolist()
+
+    for _ in range(n_trials_per_condition - 1):
+        reject = True
+        while reject:
+            condition_template = seed.choice(
+                a=condition_template, size=5, replace=False
+            ).tolist()
+
+            if conditions[-1] != condition_template[0]:
+                reject = False
+                conditions.extend(condition_template)
+                isi.extend(seed.choice(isi_template, size=5, replace=False).tolist())
+
+    config = {
+        "name": "mid",
+        "stimulus_set": stimulus_set,
+        "isi": isi,
+        "condition": conditions,
+        "condition_target": "condition",
+        "ntrials": len(conditions),
+        "update": ["isi"],
+    }
+
+    return config
