@@ -1,9 +1,5 @@
 import os
 
-import numpy as np
-from psychopy.visual import ImageStim
-from psychopy.visual.rect import Rect
-
 from . import STIMPATH
 from .stimuli import ActionStim, BaseStimuli, FeedBackText, ImageStimulus, TextStimulus
 
@@ -31,9 +27,10 @@ info_dict = {
             fix,
             ImageStimulus(
                 duration=0.1,
+                name="step1",
                 image_paths=[
-                    os.path.join(STIMPATH, "F000.png"),
-                    os.path.join(STIMPATH, "F001.png"),
+                    os.path.join(STIMPATH, "two_step", "stim11.png"),
+                    os.path.join(STIMPATH, "two_step", "stim12.png"),
                 ],
                 positions=[(-image_shift, 0), (image_shift, 0)],
             ),
@@ -44,10 +41,11 @@ info_dict = {
         "psychopy": [
             ImageStimulus(
                 duration=0.1,
+                name="step21",
                 image_paths=[
-                    os.path.join(STIMPATH, "F000.png"),
-                    os.path.join(STIMPATH, "F002.png"),
-                    os.path.join(STIMPATH, "F003.png"),
+                    os.path.join(STIMPATH, "two_step", "stim11.png"),
+                    os.path.join(STIMPATH, "two_step", "stim21.png"),
+                    os.path.join(STIMPATH, "two_step", "stim22.png"),
                 ],
                 positions=[(0, image_shift), (-image_shift, 0), (image_shift, 0)],
             ),
@@ -58,10 +56,11 @@ info_dict = {
         "psychopy": [
             ImageStimulus(
                 duration=0.1,
+                name="step22",
                 image_paths=[
-                    os.path.join(STIMPATH, "F001.png"),
-                    os.path.join(STIMPATH, "F004.png"),
-                    os.path.join(STIMPATH, "F000.png"),
+                    os.path.join(STIMPATH, "two_step", "stim12.png"),
+                    os.path.join(STIMPATH, "two_step", "stim31.png"),
+                    os.path.join(STIMPATH, "two_step", "stim32.png"),
                 ],
                 positions=[(0, image_shift), (-image_shift, 0), (image_shift, 0)],
             ),

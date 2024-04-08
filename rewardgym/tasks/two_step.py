@@ -77,3 +77,19 @@ def get_two_step(
         raise NotImplementedError("Psychopy integration still under deliberation.")
 
     return environment_graph, reward_structure, condition_out, info_dict
+
+
+def generate_two_step_configs(set: str = "1"):
+
+    configs = {
+        "name": "two-step",
+        "set": set,
+        "iti": None,
+        "isi": None,
+        "condition": None,
+        "condition_target": "condition",
+        "ntrials": 160,
+        "update": None,
+    }
+
+    return configs
