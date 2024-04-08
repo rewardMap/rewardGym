@@ -2,7 +2,7 @@ import os
 
 from psychopy import core, gui, visual
 
-from rewardgym import ENVIRONMENTS, get_env, unpack_conditions
+from rewardgym import ENVIRONMENTS, get_configs, get_env, unpack_conditions
 from rewardgym.psychopy_render import ExperimentLogger, WaitTime, get_psychopy_info
 
 outdir = "data/"
@@ -20,12 +20,12 @@ if dlg.OK is False:
 globalClock = core.Clock()
 
 win = visual.Window(
-    size=[700, 500],
+    size=[1200, 1000],
     fullscr=False,
     screen=0,
     winType="pyglet",
     allowGUI=True,
-    color=[-1, -1, -1],
+    color=[-0.7, -0.7, -0.7],
     colorSpace="rgb",
     units="pix",
     waitBlanking=False,
@@ -52,6 +52,19 @@ task = exp_dict["task"]
 info_dict = get_psychopy_info(task)
 env, conditions = get_env(task)
 
+try:
+    settings = get_configs(task)
+    if settings["condition_target"] == "location":
+        conditions = (conditions[0], settings["condition"])
+    elif settings["condition_target"] == "condition":
+        conditions = (settings["condition"], conditions[1])
+
+    n_episodes = settings["ntrials"]
+
+except NotImplementedError:
+    settings = None
+    n_episodes = 5
+
 if task == "risk-sensitive":
     action_map = env.condition_dict
 else:
@@ -60,16 +73,21 @@ else:
 for k in info_dict.keys():
     [i.setup(win, action_map=action_map) for i in info_dict[k]["psychopy"]]
 
-
 env.info_dict = info_dict
-
-n_episodes = 5
 
 actions = []
 
 for episode in range(n_episodes):
 
     condition, starting_position = unpack_conditions(conditions, episode)
+
+    # Update timings
+    if len(settings["update"]) > 0 and settings is not None:
+        for k in settings["update"]:
+            for jj in info_dict.keys():
+                for ii in info_dict[jj]["psychopy"]:
+                    if ii.name == k:
+                        ii.duration = settings[k][episode]
 
     obs, info = env.reset(starting_position, condition=condition)
     Logger.trial = episode
