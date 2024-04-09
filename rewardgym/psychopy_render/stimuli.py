@@ -240,12 +240,14 @@ class FeedBackText(BaseStimuli):
         wait: float,
         reward: float,
         total_reward: float,
-        **kwargs
+        **kwargs,
     ):
 
         if self.target == "reward":
+            reward = f"+{reward}" if reward > 0 else f"{reward}"
             self.textStim.setText(self.text.format(reward))
         elif self.target == "total_reward":
+            total_reward = f"+{total_reward}" if total_reward > 0 else f"{total_reward}"
             self.textStim.setText(self.text.format(total_reward))
 
         logger.keyStrokes(win)
