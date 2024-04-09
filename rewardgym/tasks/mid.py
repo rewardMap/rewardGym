@@ -116,7 +116,7 @@ def generate_mid_configs(stimulus_set: str = "1"):
         "stimulus_set": stimulus_set,
         "isi": isi,
         "condition": conditions,
-        "condition_target": "condition",
+        "condition_target": "location",
         "ntrials": len(conditions),
         "update": ["isi"],
     }

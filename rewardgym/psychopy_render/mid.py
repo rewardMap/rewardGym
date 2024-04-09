@@ -14,10 +14,7 @@ total_reward_feedback = FeedBackText(
 base_stim = BaseStimuli(1)
 fix = TextStimulus(text="+", duration=1.5, name="isi")
 
-image_shift = 0
-
-
-action_stim = ActionStim(duration=0.5, timeout_action=1)
+action_stim = ActionStim(duration=0.25, key_dict={"space": 0}, timeout_action=1)
 
 
 def first_step(img, img2):
@@ -27,10 +24,14 @@ def first_step(img, img2):
         ImageStimulus(
             duration=0.5,
             image_paths=[os.path.join(STIMPATH, img)],
-            positions=[(image_shift, 0)],
+            positions=[(0, 0)],
         ),
         fix,
-        TextStimulus(text=img2, duration=0.01),
+        ImageStimulus(
+            duration=0.01,
+            image_paths=[os.path.join(STIMPATH, img2)],
+            positions=[(0, 0)],
+        ),
         action_stim,
     ]
 
@@ -42,11 +43,11 @@ final_step = [
 ]
 
 info_dict = {
-    0: {"psychopy": first_step("mid/stim1_high.png", "*")},  # big lose
-    1: {"psychopy": first_step("mid/stim1_low.png", "*")},  # small lose
-    2: {"psychopy": first_step("mid/stim3_neut.png", "*")},  # control
-    3: {"psychopy": first_step("mid/stim2_low.png", "*")},  # small win
-    4: {"psychopy": first_step("mid/stim2_high.png", "*")},  # big win
+    0: {"psychopy": first_step("mid/stim1_high.png", "mid/probe1.png")},  # big lose
+    1: {"psychopy": first_step("mid/stim1_low.png", "mid/probe1.png")},  # small lose
+    2: {"psychopy": first_step("mid/stim3_neut.png", "mid/probe3.png")},  # control
+    3: {"psychopy": first_step("mid/stim2_low.png", "mid/probe2.png")},  # small win
+    4: {"psychopy": first_step("mid/stim2_high.png", "mid/probe2.png")},  # big win
     5: {"psychopy": final_step},
     6: {"psychopy": final_step},
     7: {"psychopy": final_step},
