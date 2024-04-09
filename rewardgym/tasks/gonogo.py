@@ -4,6 +4,7 @@ from typing import Literal, Union
 import numpy as np
 
 from ..reward_classes import BaseReward
+from ..utils import check_seed
 
 
 def get_gonogo(
@@ -90,3 +91,38 @@ def get_gonogo(
         raise NotImplementedError("Psychopy integration still under deliberation.")
 
     return environment_graph, reward_structure, condition_out, info_dict
+
+
+def generate_gonogo_configs(stimulus_set: str = "1"):
+
+    seed = check_seed(98)
+
+    condition_template = [0, 0, 1, 1, 2, 2, 3, 3]  # 80 %
+    iti_template = [0.75, 1.0, 1.25, 1.5] * 2
+    isi_template = [0.25, 0.5, 0.75, 1.0] * 2
+
+    n_trials_per_condition = 5
+
+    conditions = seed.choice(a=condition_template, size=8, replace=False).tolist()
+    isi = seed.choice(isi_template, size=8, replace=False).tolist()
+    iti = seed.choice(iti_template, size=8, replace=False).tolist()
+
+    for _ in range(n_trials_per_condition - 1):
+        conditions.extend(
+            seed.choice(a=condition_template, size=8, replace=False).tolist()
+        )
+        isi.extend(seed.choice(isi_template, size=8, replace=False).tolist())
+        iti.extend(seed.choice(iti_template, size=8, replace=False).tolist())
+
+    config = {
+        "name": "gonogo",
+        "stimulus_set": stimulus_set,
+        "isi": isi,
+        "iti": iti,
+        "condition": conditions,
+        "condition_target": "location",
+        "ntrials": len(conditions),
+        "update": ["isi", "iti"],
+    }
+
+    return config
