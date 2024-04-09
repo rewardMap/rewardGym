@@ -5,6 +5,7 @@ from typing import Literal, Union
 import numpy as np
 
 from ..reward_classes import BaseReward
+from ..utils import check_seed
 
 
 def get_risk_sensitive(
@@ -45,18 +46,6 @@ def get_risk_sensitive(
         condition_out = (((list(action_map.keys()),), ([0],)), action_map)
     else:
         condition_out = ((conditions, ([0],)), action_map)
-
-    # Conditions of importance: 0, 1, 2, 3, 4 = single display
-    # Risky trials, with same EV:
-    # 20 vs 0 / 40 = 11 and 18
-    # 40 vs 0 / 80 = 16 and 23
-    # 20 vs 0 / 80 = 12 and 22
-    # Dominated
-    # 40 vs 0 / 40 = 15 and 9
-    # 20 vs 0 = 5 and 9
-    # 40 vs 0 = 6 and 13
-    # 0 vs 0 / 20 = 7 and 17
-    # 0 vs 0 / 40 = 12 and 21
 
     if render_backend is None:
         info_dict = defaultdict(int)
@@ -110,4 +99,51 @@ def get_risk_sensitive(
 
 
 def generate_risk_senistive_configs(stimulus_set: str = "1"):
-    raise NotImplementedError
+
+    # Conditions of importance: 0, 1, 2, 3, 4 = single display
+    # Risky trials, with same EV:
+    # 20 vs 0 / 40 = 11 and 18
+    # 40 vs 0 / 80 = 16 and 23
+    # 20 vs 0 / 80 = 12 and 22
+    # Dominated
+    # 40 vs 0 / 40 = 15 and 9
+    # 20 vs 0 = 5 and 9 #TODO Check this
+    # 40 vs 0 = 6 and 13
+    # 0 vs 0 / 20 = 7 and 17
+    # 0 vs 0 / 40 = 12 and 21
+
+    seed = check_seed(222)
+
+    risky_choices = [11, 18] * 11 + [16, 23] * 10 + [12, 22] * 12
+    risky_choices = seed.choice(
+        risky_choices, size=len(risky_choices), replace=False
+    ).tolist()
+    forced_choices = [0, 1, 2, 3, 4] * 15
+    forced_choices = seed.choice(
+        forced_choices, size=len(forced_choices), replace=False
+    ).tolist()
+    test_trials = [15, 9, 5, 9, 6, 23, 7, 17, 12, 21] * 4 + [7, 6]
+    test_trials = seed.choice(
+        test_trials, size=len(test_trials), replace=False
+    ).tolist()
+
+    iti_template = [1.5, 2.125, 2.75, 3.375, 4.0] * 36 + [1.5, 2.75, 4.0]
+
+    condition_template = risky_choices + forced_choices + test_trials
+    conditions = seed.choice(
+        a=condition_template, size=len(condition_template), replace=False
+    ).tolist()
+    iti = seed.choice(iti_template, size=len(conditions), replace=False).tolist()
+
+    config = {
+        "name": "risk-sensitive",
+        "stimulus_set": stimulus_set,
+        "isi": [],
+        "iti": iti,
+        "condition": conditions,
+        "condition_target": "condition",
+        "ntrials": len(conditions),  # 183
+        "update": ["iti"],
+    }
+
+    return config

@@ -16,11 +16,11 @@ class RiskSensitiveDisplay(BaseStimuli):
         image_shift=250,
         with_action=False,
         image_map={
-            0: os.path.join(STIMPATH, "two_step", "stim11.png"),
-            1: os.path.join(STIMPATH, "two_step", "stim12.png"),
-            2: os.path.join(STIMPATH, "two_step", "stim21.png"),
-            3: os.path.join(STIMPATH, "two_step", "stim22.png"),
-            4: os.path.join(STIMPATH, "two_step", "stim31.png"),
+            0: os.path.join(STIMPATH, "risk_sensitive", "stim1.png"),
+            1: os.path.join(STIMPATH, "risk_sensitive", "stim2.png"),
+            2: os.path.join(STIMPATH, "risk_sensitive", "stim3.png"),
+            3: os.path.join(STIMPATH, "risk_sensitive", "stim4.png"),
+            4: os.path.join(STIMPATH, "risk_sensitive", "stim5.png"),
         },
     ):
 
