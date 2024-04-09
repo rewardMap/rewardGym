@@ -2,6 +2,7 @@ from collections import defaultdict
 from typing import Literal
 
 from ..reward_classes import ConditionReward
+from ..utils import check_seed
 
 
 def get_hcp(
@@ -88,3 +89,32 @@ def get_hcp(
         raise NotImplementedError("Psychopy integration still under deliberation.")
 
     return environment_graph, reward_structure, condition_out, info_dict
+
+
+def generate_hcp_configs(stimulus_set: str = "1"):
+
+    seed = check_seed(987)
+    # 0 = loss, 1, = neutral, 2= win 1
+    lose1 = [0, 0, 0, 0, 0, 0, 1, 1]
+    lose2 = [0, 0, 0, 0, 0, 0, 2, 2]
+    lose3 = [0, 0, 0, 0, 0, 0, 1, 2]
+
+    win1 = [2, 2, 2, 2, 2, 2, 1, 1]
+    win2 = [2, 2, 2, 2, 2, 2, 0, 0]
+    win3 = [2, 2, 2, 2, 2, 2, 1, 0]
+
+    conditions = []
+    for block in [lose1, win1, lose2, win2, lose3, win3]:
+        conditions.extend(seed.choice(block, size=8, replace=False).tolist())
+
+    config = {
+        "name": "hcp",
+        "stimulus_set": stimulus_set,
+        "isi": [],
+        "condition": conditions,
+        "condition_target": "condition",
+        "ntrials": len(conditions),
+        "update": None,
+    }
+
+    return config
