@@ -106,11 +106,11 @@ def generate_risk_senistive_configs(stimulus_set: str = "1"):
     # 40 vs 0 / 80 = 16 and 23
     # 20 vs 0 / 80 = 12 and 22
     # Dominated
-    # 40 vs 0 / 40 = 15 and 9
+    # 40 vs 0 / 40 = 15 and 19
     # 20 vs 0 = 5 and 9 #TODO Check this
     # 40 vs 0 = 6 and 13
     # 0 vs 0 / 20 = 7 and 17
-    # 0 vs 0 / 40 = 12 and 21
+    # 0 vs 0 / 40 = 8 and 21
 
     seed = check_seed(222)
 
@@ -122,7 +122,7 @@ def generate_risk_senistive_configs(stimulus_set: str = "1"):
     forced_choices = seed.choice(
         forced_choices, size=len(forced_choices), replace=False
     ).tolist()
-    test_trials = [15, 9, 5, 9, 6, 23, 7, 17, 12, 21] * 4 + [7, 6]
+    test_trials = [15, 19, 5, 9, 6, 13, 7, 17, 8, 21] * 4 + [7, 6]
     test_trials = seed.choice(
         test_trials, size=len(test_trials), replace=False
     ).tolist()
