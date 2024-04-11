@@ -84,6 +84,7 @@ info_dict = {
         "psychopy": [
             ImageStimulus(
                 duration=0.5,
+                name="stim21",
                 image_paths=[os.path.join(STIMPATH, "two_step", "stim21.png")],
                 positions=[(0, image_shift)],
             )
@@ -94,6 +95,7 @@ info_dict = {
         "psychopy": [
             ImageStimulus(
                 duration=0.5,
+                name="stim22",
                 image_paths=[os.path.join(STIMPATH, "two_step", "stim22.png")],
                 positions=[(0, image_shift)],
             )
@@ -104,6 +106,7 @@ info_dict = {
         "psychopy": [
             ImageStimulus(
                 duration=0.5,
+                name="stim31",
                 image_paths=[os.path.join(STIMPATH, "two_step", "stim31.png")],
                 positions=[(0, image_shift)],
             )
@@ -114,6 +117,7 @@ info_dict = {
         "psychopy": [
             ImageStimulus(
                 duration=0.5,
+                name="stim32",
                 image_paths=[os.path.join(STIMPATH, "two_step", "stim32.png")],
                 positions=[(0, image_shift)],
             )
