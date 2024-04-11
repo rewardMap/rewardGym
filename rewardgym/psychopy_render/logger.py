@@ -68,6 +68,7 @@ class ExperimentLogger:
             "participant_id",
             "expexted_duration",
             "trial_time",
+            "total_reward",
         ]
 
         # Create a dictionary of nans to be used later.

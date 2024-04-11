@@ -147,8 +147,6 @@ for episode in range(n_episodes):
         core.wait(1.0)
         win.flip()
 
-    # play one episode
-
     while not done:
         next_obs, reward, terminated, truncated, info = env.step(action)
 
@@ -173,6 +171,9 @@ for episode in range(n_episodes):
             win.flip()
             done = True
 
+        elif out is not None:
+            action = out
+
     if task == "mid":
 
         win_trials += 1 if starting_position in [3, 4] else 0
@@ -182,7 +183,10 @@ for episode in range(n_episodes):
         elif (win_trials % 3) == 0:
             info_dict[0]["psychopy"][-1].duration += 0.25
 
-    Logger.logEvent({"event_type": "TrialEnd"}, reward=reward)
+    Logger.logEvent(
+        {"event_type": "TrialEnd", "total_reward": env.cumulative_reward},
+        reward=env.reward,
+    )
 
 
 Logger.close()
