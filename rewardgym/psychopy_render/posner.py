@@ -39,11 +39,19 @@ def first_step(img, img2, image_shift2, to=1):
         ),
         fix_isi,
         ImageStimulus(
-            duration=0.01,
-            image_paths=[os.path.join(STIMPATH, img2)],
-            positions=[(image_shift2, 0)],
+            duration=0.1,
+            image_paths=[
+                os.path.join(STIMPATH, "posner/fix.png"),
+                os.path.join(STIMPATH, img2),
+            ],
+            positions=[(0, 0), (image_shift2, 0)],
         ),
-        ActionStim(duration=0.3, key_dict={"left": 0, "right": 1}, timeout_action=to),
+        ImageStimulus(
+            image_paths=[os.path.join(STIMPATH, "posner/fix.png")],
+            positions=[(0, 0)],
+            duration=0.001,
+        ),
+        ActionStim(duration=1.0, key_dict={"left": 0, "right": 1}, timeout_action=to),
     ]
 
 
@@ -56,22 +64,22 @@ final_step = [
 info_dict = {
     0: {
         "psychopy": first_step(
-            "posner/fix_left.png", "posner/target.png", image_shift2=-500, to=1
+            "posner/fix_left.png", "posner/target.png", image_shift2=-500, to=None
         )
     },
     1: {
         "psychopy": first_step(
-            "posner/fix_left.png", "posner/target.png", image_shift2=500, to=0
+            "posner/fix_left.png", "posner/target.png", image_shift2=500, to=None
         )
     },
     2: {
         "psychopy": first_step(
-            "posner/fix_right.png", "posner/target.png", image_shift2=-500, to=1
+            "posner/fix_right.png", "posner/target.png", image_shift2=-500, to=None
         )
     },
     3: {
         "psychopy": first_step(
-            "posner/fix_right.png", "posner/target.png", image_shift2=500, to=0
+            "posner/fix_right.png", "posner/target.png", image_shift2=500, to=None
         )
     },
     4: {"psychopy": final_step},
