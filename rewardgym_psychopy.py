@@ -120,6 +120,8 @@ for episode in range(n_episodes):
     Logger.setTrialTime()
     Logger.trial_type = condition
     Logger.start_position = starting_position
+    Logger.current_location = env.agent_location
+
     reward = None
     action = None
 
@@ -149,7 +151,7 @@ for episode in range(n_episodes):
 
     while not done:
         next_obs, reward, terminated, truncated, info = env.step(action)
-
+        Logger.current_location = env.agent_location
         for ii in info["psychopy"]:
             out = ii(
                 win=win,

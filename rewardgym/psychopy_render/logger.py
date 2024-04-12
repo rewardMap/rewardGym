@@ -44,6 +44,7 @@ class ExperimentLogger:
 
         self.trial_type = self.na
         self.start_position = self.na
+        self.current_location = self.na
 
         self.trial = -1
         self.tr = 0
@@ -69,6 +70,7 @@ class ExperimentLogger:
             "expexted_duration",
             "trial_time",
             "total_reward",
+            "current_location",
         ]
 
         # Create a dictionary of nans to be used later.
@@ -91,6 +93,7 @@ class ExperimentLogger:
         tmp_dict["participant_id"] = self.participant_id
         tmp_dict["trial_type"] = self.trial_type
         tmp_dict["start_position"] = self.start_position
+        tmp_dict["current_location"] = self.current_location
         tmp_dict["TR"] = self.tr
         tmp_dict["run"] = self.run
 
