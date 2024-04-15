@@ -116,7 +116,10 @@ class ImageStimulus(BaseStimulus):
         self.image_paths = image_paths
         self.positions = positions
 
-    def setup(self, win: visual.Window, **kwargs):
+    def setup(self, win: visual.Window, image_paths=None, **kwargs):
+
+        if image_paths is not None:
+            self.image_paths = image_paths
 
         self.imageStims = []
         for ip, pos in zip(self.image_paths, self.positions):
