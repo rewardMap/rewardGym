@@ -3,13 +3,13 @@ import os
 from psychopy.visual.rect import Rect
 
 from . import STIMPATH
-from .stimuli import ActionStim, BaseStimuli, FeedBackText, ImageStimulus, TextStimulus
+from .stimuli import ActionStim, BaseStimulus, FeedBackText, ImageStimulus, TextStimulus
 
 reward_feedback = FeedBackText(1.0, text="You gain: {0}", target="reward")
 total_reward_feedback = FeedBackText(
     0.75, text="You have gained: {0}", target="total_reward"
 )
-base_stim = BaseStimuli(0)
+base_stim = BaseStimulus(0)
 fix = TextStimulus(text="+", duration=0.2)
 fix_isi = TextStimulus(text="+", duration=0.2, name="isi")
 
@@ -36,7 +36,7 @@ def first_step(img):
 final_step = [
     reward_feedback,
     total_reward_feedback,
-    BaseStimuli(name="iti", duration=1.0),
+    BaseStimulus(name="iti", duration=1.0),
 ]
 
 info_dict = {

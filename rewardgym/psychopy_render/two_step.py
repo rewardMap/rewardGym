@@ -1,13 +1,13 @@
 import os
 
 from . import STIMPATH
-from .stimuli import ActionStim, BaseStimuli, FeedBackText, ImageStimulus, TextStimulus
+from .stimuli import ActionStim, BaseStimulus, FeedBackText, ImageStimulus, TextStimulus
 
 reward_feedback = FeedBackText(1.0, text="You gain: {0}", target="reward")
 total_reward_feedback = FeedBackText(
     1.0, text="You have gained: {0}", target="total_reward"
 )
-base_stim = BaseStimuli(1)
+base_stim = BaseStimulus(1)
 fix = TextStimulus(text="+", duration=0.2)
 fix_iti = TextStimulus(text="+", duration=1.5, name="iti")
 

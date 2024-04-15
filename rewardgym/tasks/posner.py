@@ -90,7 +90,7 @@ def generate_posner_configs(stimulus_set: str = "1"):
     iti_template = [1.5, 2.125, 2.75, 3.375, 4.0] * 2
     isi_template = [0.4, 0.6] * 5
 
-    n_trials_per_condition = 16
+    n_trials_per_condition = 10
 
     conditions = seed.choice(a=condition_template, size=10, replace=False).tolist()
     isi = seed.choice(isi_template, size=10, replace=False).tolist()

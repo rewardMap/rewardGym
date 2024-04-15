@@ -5,13 +5,13 @@ from psychopy.visual import ImageStim
 from psychopy.visual.rect import Rect
 
 from . import STIMPATH
-from .stimuli import ActionStim, BaseStimuli, FeedBackText, ImageStimulus, TextStimulus
+from .stimuli import ActionStim, BaseStimulus, FeedBackText, ImageStimulus, TextStimulus
 
 reward_feedback = FeedBackText(1.0, text="You gain: {0}", target="reward")
 total_reward_feedback = FeedBackText(
     1.0, text="You have gained: {0}", target="total_reward"
 )
-base_stim = BaseStimuli(1)
+base_stim = BaseStimulus(1)
 fix = ImageStimulus(
     image_paths=[os.path.join(STIMPATH, "posner/fix.png")],
     positions=[(0, 0)],
@@ -58,7 +58,7 @@ def first_step(img, img2, image_shift2, to=1):
 final_step = [
     reward_feedback,
     total_reward_feedback,
-    BaseStimuli(name="iti", duration=2.0),
+    BaseStimulus(name="iti", duration=2.0),
 ]
 
 info_dict = {

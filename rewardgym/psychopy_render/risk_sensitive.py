@@ -4,10 +4,10 @@ from psychopy.visual import ImageStim
 from psychopy.visual.rect import Rect
 
 from . import STIMPATH
-from .stimuli import ActionStim, BaseStimuli, FeedBackText
+from .stimuli import ActionStim, BaseStimulus, FeedBackText
 
 
-class RiskSensitiveDisplay(BaseStimuli):
+class RiskSensitiveDisplay(BaseStimulus):
     def __init__(
         self,
         duration,
@@ -97,7 +97,7 @@ reward_feedback = FeedBackText(1.0, text="You gain: {0}", target="reward")
 total_reward_feedback = FeedBackText(
     1.0, text="You have gained: {0}", target="total_reward"
 )
-base_stim = BaseStimuli(1)
+base_stim = BaseStimulus(1)
 
 cue_disp = RiskSensitiveDisplay(0.05, name="Stimulus")
 sel_disp = RiskSensitiveDisplay(0.5, with_action=True, name="StimulusSelection")

@@ -48,7 +48,7 @@ class WaitTime:
                 pass
 
 
-class BaseStimuli:
+class BaseStimulus:
     def __init__(self, duration: float = None, name: str = None):
 
         self.duration = duration
@@ -62,7 +62,7 @@ class BaseStimuli:
         self.win.flip()
 
 
-class TextStimulus(BaseStimuli):
+class TextStimulus(BaseStimulus):
     def __init__(
         self,
         duration: float,
@@ -102,7 +102,7 @@ class TextStimulus(BaseStimuli):
         return None
 
 
-class ImageStimulus(BaseStimuli):
+class ImageStimulus(BaseStimulus):
     def __init__(
         self,
         duration: float,
@@ -145,7 +145,7 @@ class ImageStimulus(BaseStimuli):
         return None
 
 
-class ActionStim(BaseStimuli):
+class ActionStim(BaseStimulus):
     def __init__(
         self,
         duration: float,
@@ -208,7 +208,7 @@ class ActionStim(BaseStimuli):
         return response_key
 
 
-class FeedBackText(BaseStimuli):
+class FeedBackText(BaseStimulus):
     def __init__(
         self,
         duration: float,
