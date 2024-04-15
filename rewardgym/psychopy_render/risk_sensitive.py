@@ -4,7 +4,7 @@ from psychopy.visual import ImageStim
 from psychopy.visual.rect import Rect
 
 from . import STIMPATH
-from .stimuli import ActionStim, BaseStimulus, FeedBackText
+from .stimuli import ActionStimulus, BaseStimulus, FeedBackStimulus
 
 
 class RiskSensitiveDisplay(BaseStimulus):
@@ -93,8 +93,8 @@ class RiskSensitiveDisplay(BaseStimulus):
         return None
 
 
-reward_feedback = FeedBackText(1.0, text="You gain: {0}", target="reward")
-total_reward_feedback = FeedBackText(
+reward_feedback = FeedBackStimulus(1.0, text="You gain: {0}", target="reward")
+total_reward_feedback = FeedBackStimulus(
     1.0, text="You have gained: {0}", target="total_reward"
 )
 base_stim = BaseStimulus(1)
@@ -114,7 +114,7 @@ info_dict = {
         "psychopy": [
             base_stim,
             cue_disp,
-            ActionStim(duration=1.0),
+            ActionStimulus(duration=1.0),
         ]
     },
     1: {"psychopy": final_step},

@@ -5,10 +5,16 @@ from psychopy.visual import ImageStim
 from psychopy.visual.rect import Rect
 
 from . import STIMPATH
-from .stimuli import ActionStim, BaseStimulus, FeedBackText, ImageStimulus, TextStimulus
+from .stimuli import (
+    ActionStimulus,
+    BaseStimulus,
+    FeedBackStimulus,
+    ImageStimulus,
+    TextStimulus,
+)
 
-reward_feedback = FeedBackText(1.0, text="You gain: {0}", target="reward")
-total_reward_feedback = FeedBackText(
+reward_feedback = FeedBackStimulus(1.0, text="You gain: {0}", target="reward")
+total_reward_feedback = FeedBackStimulus(
     1.0, text="You have gained: {0}", target="total_reward"
 )
 base_stim = BaseStimulus(1)
@@ -27,7 +33,7 @@ fix_isi = ImageStimulus(
 image_shift = 0
 
 
-action_stim = ActionStim(duration=0.5, key_dict={"left": 0, "right": 1})
+action_stim = ActionStimulus(duration=0.5, key_dict={"left": 0, "right": 1})
 
 
 def first_step(img, img2, image_shift2, to=1):
@@ -51,7 +57,9 @@ def first_step(img, img2, image_shift2, to=1):
             positions=[(0, 0)],
             duration=0.001,
         ),
-        ActionStim(duration=1.0, key_dict={"left": 0, "right": 1}, timeout_action=to),
+        ActionStimulus(
+            duration=1.0, key_dict={"left": 0, "right": 1}, timeout_action=to
+        ),
     ]
 
 

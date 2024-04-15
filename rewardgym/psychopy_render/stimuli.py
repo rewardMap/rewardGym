@@ -294,7 +294,7 @@ class ImageStimulus(BaseStimulus):
         return None
 
 
-class ActionStim(BaseStimulus):
+class ActionStimulus(BaseStimulus):
     """
     Stimulus class, for when actions are required by the participants.
     """
@@ -400,7 +400,7 @@ class ActionStim(BaseStimulus):
         return response_key
 
 
-class FeedBackText(BaseStimulus):
+class FeedBackStimulus(BaseStimulus):
     """
     Class that possibly will be superseded or become obsolete at some point.
 

@@ -3,10 +3,16 @@ import os
 from psychopy.visual.rect import Rect
 
 from . import STIMPATH
-from .stimuli import ActionStim, BaseStimulus, FeedBackText, ImageStimulus, TextStimulus
+from .stimuli import (
+    ActionStimulus,
+    BaseStimulus,
+    FeedBackStimulus,
+    ImageStimulus,
+    TextStimulus,
+)
 
-reward_feedback = FeedBackText(1.0, text="You gain: {0}", target="reward")
-total_reward_feedback = FeedBackText(
+reward_feedback = FeedBackStimulus(1.0, text="You gain: {0}", target="reward")
+total_reward_feedback = FeedBackStimulus(
     0.75, text="You have gained: {0}", target="total_reward"
 )
 base_stim = BaseStimulus(0)
@@ -29,7 +35,7 @@ def first_step(img):
             image_paths=[os.path.join(STIMPATH, "gonogo/probe.png")],
             positions=[(0, 0)],
         ),
-        ActionStim(duration=1.0, key_dict={"space": 0}, timeout_action=1),
+        ActionStimulus(duration=1.0, key_dict={"space": 0}, timeout_action=1),
     ]
 
 

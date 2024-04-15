@@ -1,10 +1,16 @@
 import os
 
 from . import STIMPATH
-from .stimuli import ActionStim, BaseStimulus, FeedBackText, ImageStimulus, TextStimulus
+from .stimuli import (
+    ActionStimulus,
+    BaseStimulus,
+    FeedBackStimulus,
+    ImageStimulus,
+    TextStimulus,
+)
 
-reward_feedback = FeedBackText(1.0, text="You gain: {0}", target="reward")
-total_reward_feedback = FeedBackText(
+reward_feedback = FeedBackStimulus(1.0, text="You gain: {0}", target="reward")
+total_reward_feedback = FeedBackStimulus(
     1.0, text="You have gained: {0}", target="total_reward"
 )
 base_stim = BaseStimulus(1)
@@ -29,7 +35,7 @@ info_dict = {
                 ],
                 positions=[(-image_shift, 0), (image_shift, 0)],
             ),
-            ActionStim(duration=2.0),
+            ActionStimulus(duration=2.0),
         ]
     },
     1: {
@@ -53,7 +59,7 @@ info_dict = {
                 ],
                 positions=[(0, image_shift), (-image_shift, 0), (image_shift, 0)],
             ),
-            ActionStim(duration=2.0),
+            ActionStimulus(duration=2.0),
         ]
     },
     2: {
@@ -77,7 +83,7 @@ info_dict = {
                 ],
                 positions=[(0, image_shift), (-image_shift, 0), (image_shift, 0)],
             ),
-            ActionStim(duration=2.0),
+            ActionStimulus(duration=2.0),
         ]
     },
     3: {

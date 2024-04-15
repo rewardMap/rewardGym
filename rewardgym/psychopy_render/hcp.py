@@ -2,7 +2,7 @@ import numpy as np
 from psychopy.visual import TextStim
 from psychopy.visual.rect import Rect
 
-from .stimuli import ActionStim, BaseStimulus, FeedBackText, TextStimulus
+from .stimuli import ActionStimulus, BaseStimulus, FeedBackStimulus, TextStimulus
 
 
 class ShowCard(BaseStimulus):
@@ -68,8 +68,8 @@ class ShowCard(BaseStimulus):
         )
 
 
-reward_feedback = FeedBackText(1.0, text="You gain: {0}", target="reward")
-total_reward_feedback = FeedBackText(
+reward_feedback = FeedBackStimulus(1.0, text="You gain: {0}", target="reward")
+total_reward_feedback = FeedBackStimulus(
     1.0, text="You have gained: {0}", target="total_reward"
 )
 base_stim_iti = BaseStimulus(1.0, name="iti")
@@ -85,7 +85,7 @@ info_dict = {
                 name="Cue",
                 duration=0.01,
             ),
-            ActionStim(duration=1.0),
+            ActionStimulus(duration=1.0),
         ]
     },
     1: {
