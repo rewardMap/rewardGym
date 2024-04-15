@@ -6,19 +6,30 @@ from .logger import ExperimentLogger
 
 
 class WaitTime:
+    """
+    WaitTime class. This a class used to put the PsychoPy experiment on hold
+    for a given duration. While waiting, this class also checks if any buttons
+    have been pressed, so that the experiment can be terminated or MRI triggers
+    can be collected.
+    """
+
     def __init__(
         self,
         win: visual.Window,
         logger: ExperimentLogger = None,
         frameDuration: float = 1 / 60,
     ):
-        """Class to wait for a given time. Logs keypresses in between.
+        """
+        Class to wait for a given time. Logs keypresses in between.
 
-        Args:
-            win (visual.Window): Psychopy window.
-            logger (ExperimentLogger, optional): Logging class, to get MR pulses.
-                Defaults to None.
-            frameDuration (float, optional): Duration in 1/HZ. Defaults to 1/60.
+        Parameters
+        ----------
+        win : visual.Window
+            The psychopy window object that is used for displaying stimuli.
+        logger : ExperimentLogger, optional
+            The logger associated with the experiment, by default None
+        frameDuration : float, optional
+             frame refresh of the screen, duration in 1/HZ. Defaults to 1/60, by default 1/60
         """
 
         self.logger = logger
@@ -26,13 +37,17 @@ class WaitTime:
         self.win = win
 
     def wait(self, time: float, start: float = None):
-        """Wait for a given time.
-
-        Args:
-            time (float): Time to wait.
-            start (float, optional): Specify time or use logging clock. Defaults to None.
         """
+        Wait for a given time.
 
+
+        Parameters
+        ----------
+        time : float
+            Time to wait, in seconds.
+        start : float, optional
+            Specify a different time, than the current one of the Logger, by default None
+        """
         if start is None:
             start = self.logger.getTime()
 
@@ -49,20 +64,58 @@ class WaitTime:
 
 
 class BaseStimulus:
-    def __init__(self, duration: float = None, name: str = None):
+    """
+    Base class for stimulus presentation. If called on its own it will flip the
+    window.
+    """
 
+    def __init__(self, duration: float = None, name: str = None):
+        """
+        Stimulus presentation base class. The parameters do not really do anything.
+
+        Parameters
+        ----------
+        duration : float, optional
+            duration of the stimulus presentation, by default None
+        name : str, optional
+            name of the object, will be used for logging, by default None
+        """
         self.duration = duration
         self.name = name
 
-    def setup(self, win, **kwargs):
+    def setup(self, win: visual.Window, **kwargs):
+        """
+        Call this to setup the stimulus. This means associating the stimulus
+        with a window (so there is something to flip).
+
+        Parameters
+        ----------
+        win : visual.Window
+            The psychopy window object that is used for displaying stimuli.
+        """
+
         self.win = win
 
-    def __call__(self, **kwargs):
+    def __call__(self, **kwargs) -> None:
+        """
+        Calls the stimulus object. In this case initiate a window flip.
+        Should only return something, if there has been an action required.
 
+        Returns
+        -------
+        None
+            None
+        """
         self.win.flip()
+
+        return None
 
 
 class TextStimulus(BaseStimulus):
+    """
+    A stimulus class for text display in psychopy.
+    """
+
     def __init__(
         self,
         duration: float,
@@ -71,6 +124,22 @@ class TextStimulus(BaseStimulus):
         name: str = None,
         text_color: str = "white",
     ):
+        """
+        Stimulus class for text displays.
+
+        Parameters
+        ----------
+        duration : float
+            Duration of the stimulus presentation.
+        text : str
+            The text that should be displayed on the screen.
+        position : Tuple[int, int], optional
+            Where to display the text (by default in px), by default None
+        name : str, optional
+            name of the object, will be used for logging, by default None
+        text_color : str, optional
+            Color of the text string, by default "white"
+        """
 
         super().__init__(name=name, duration=duration)
 
@@ -79,13 +148,41 @@ class TextStimulus(BaseStimulus):
         self.text_color = text_color
 
     def setup(self, win: visual.Window, **kwargs):
+        """
+        Performs the setup for the stimulus object. Initiating a PsychoPy.TextStim,
+        object, using the parameters given parameters.
+
+        Parameters
+        ----------
+        win : visual.Window
+            The psychopy window object that is used for displaying stimuli.
+        """
 
         self.textStim = visual.TextStim(
             win=win, name=self.name, text=self.text, color=self.text_color
         )
 
-    def __call__(self, win, logger, wait, **kwargs):
+    def __call__(
+        self, win: visual.Window, logger: ExperimentLogger, wait: WaitTime, **kwargs
+    ) -> None:
+        """
+        Calls the stimulus object. In this case drawing the text stim, flipping the window,
+        waiting and logging.
 
+         Parameters
+         ----------
+         win : visual.Window
+             The psychopy window object that is used for displaying stimuli.
+         logger : ExperimentLogger
+             The logger associated with the experiment.
+         wait : WaitTime
+             The WaitTime object associated with the experiment.
+
+         Returns
+         -------
+         None
+             None
+        """
         logger.keyStrokes(win)
 
         stim_onset = logger.getTime()
