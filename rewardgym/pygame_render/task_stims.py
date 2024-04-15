@@ -21,7 +21,7 @@ class FormatText(BaseText):
 
         self.condition_text = condition_text
 
-    def __call__(self, window, clock=None, condition=None, total_reward=None, **kwargs):
+    def display(self, window, clock=None, condition=None, total_reward=None, **kwargs):
 
         if self.font is None:
             self.font = pygame.font.Font(pygame.font.get_default_font(), self.fontsize)
@@ -58,7 +58,7 @@ class FormatTextReward(FormatText):
 
         self.target = target
 
-    def __call__(
+    def display(
         self,
         window,
         clock=None,
@@ -110,7 +110,7 @@ class FormatTextRiskSensitive(BaseText):
         self.condition_text = condition_text
         self.letter_map = letter_map
 
-    def __call__(self, window, clock=None, condition=None, **kwargs):
+    def display(self, window, clock=None, condition=None, **kwargs):
 
         if self.font is None:
             self.font = pygame.font.Font(pygame.font.get_default_font(), self.fontsize)

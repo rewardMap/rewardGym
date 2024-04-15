@@ -19,7 +19,7 @@ class BaseDisplay:
         self.display_type = "image"
         self.background = background
 
-    def __call__(
+    def display(
         self,
         window: Type[pygame.surface.Surface],
         clock: Type[pygame.time.Clock] = None,
@@ -53,7 +53,7 @@ class BaseAction:
         self.display_type = "action"
         self.name = name
 
-    def __call__(
+    def display(
         self,
         window: Type[pygame.surface.Surface],
         clock: Type[pygame.time.Clock] = None,
@@ -100,7 +100,7 @@ class BaseText:
         self.text_surface = None
         self.fontcolor = fontcolor
 
-    def __call__(
+    def display(
         self,
         window: Type[pygame.surface.Surface],
         clock: Type[pygame.time.Clock] = None,
@@ -137,7 +137,7 @@ class TimedAction:
         self.name = name
         self.timeout_action = timeout_action
 
-    def __call__(
+    def display(
         self,
         window: Type[pygame.surface.Surface],
         clock: Type[pygame.time.Clock] = None,

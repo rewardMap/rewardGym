@@ -51,7 +51,7 @@ class RenderEnv(BaseEnv):
         if self.render_mode == "human":
 
             for disp in info["human"]:
-                out = disp(
+                out = disp.display(
                     window=self.window,
                     clock=self.clock,
                     condition=self.condition,
