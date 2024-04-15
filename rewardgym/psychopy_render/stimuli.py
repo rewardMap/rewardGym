@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import Dict, List, Literal, Tuple, Union
 
 from psychopy import visual
 
@@ -200,6 +200,10 @@ class TextStimulus(BaseStimulus):
 
 
 class ImageStimulus(BaseStimulus):
+    """
+    A stimulus class to display (multiple) images in psychopy.
+    """
+
     def __init__(
         self,
         duration: float,
@@ -207,6 +211,20 @@ class ImageStimulus(BaseStimulus):
         positions: List = None,
         name: str = None,
     ):
+        """
+        Stimulus class for image displays.
+
+        Parameters
+        ----------
+        duration : float
+            Duration of the stimulus presentation.
+        image_paths : List
+            A list of paths to images that should be displayed on screen.
+        positions : List, optional
+            A list of positions (where the images should be displayed), by default None
+        name : str, optional
+            name of the object, will be used for logging, by default None
+        """
 
         super().__init__(name=name, duration=duration)
 
@@ -214,6 +232,18 @@ class ImageStimulus(BaseStimulus):
         self.positions = positions
 
     def setup(self, win: visual.Window, image_paths=None, **kwargs):
+        """
+        Performs the setup for the stimulus object. Initiating PsychoPy.ImageStim objects,
+        given the provides paths and positions.
+
+        Parameters
+        ----------
+        win : visual.Window
+            The psychopy window object that is used for displaying stimuli.
+
+        image_paths : _type_, optional
+            Image paths can be overwritten during setup, for example to allow for randomization, by default None
+        """
 
         if image_paths is not None:
             self.image_paths = image_paths
@@ -225,7 +255,24 @@ class ImageStimulus(BaseStimulus):
     def __call__(
         self, win: visual.Window, logger: ExperimentLogger, wait: float, **kwargs
     ):
+        """
+        Calls the stimulus object. In this case drawing the images stims, flipping the window,
+        waiting and logging.
 
+         Parameters
+         ----------
+         win : visual.Window
+             The psychopy window object that is used for displaying stimuli.
+         logger : ExperimentLogger
+             The logger associated with the experiment.
+         wait : WaitTime
+             The WaitTime object associated with the experiment.
+
+         Returns
+         -------
+         None
+             None
+        """
         logger.keyStrokes(win)
 
         stim_onset = logger.getTime()
@@ -246,13 +293,31 @@ class ImageStimulus(BaseStimulus):
 
 
 class ActionStim(BaseStimulus):
+    """
+    Stimulus class, for when actions are required by the participants.
+    """
+
     def __init__(
         self,
         duration: float,
-        key_dict: dict = {"left": 0, "right": 1},
+        key_dict: Dict = {"left": 0, "right": 1},
         name: str = None,
         timeout_action: int = None,
     ):
+        """
+        Setting up the action object.
+
+        Parameters
+        ----------
+        duration : float
+            Duration of the response window.
+        key_dict : dict, optional
+            Dictionary to map keyboard responses to actions recognized by the environment, by default {"left": 0, "right": 1}
+        name : str, optional
+            name of the object, will be used for logging, by default None
+        timeout_action : int, optional
+            Behavior of the object if the response window times out, making it possible that no response is also a distinc action, by default None
+        """
 
         super().__init__(name=name, duration=duration)
 
@@ -260,19 +325,44 @@ class ActionStim(BaseStimulus):
         self.key_dict = key_dict
         self.timeout_action = timeout_action
 
-    def setup(self, win: visual.Window, **kwargs):
+    def setup(self, win: visual.Window = None, **kwargs):
+        """
+        Does not need a special setup, including the function, to make easy looping possible.
+
+        Parameters
+        ----------
+        win : visual.Window, optional
+            The psychopy window object that is used for displaying stimuli, by default None
+        """
         pass
 
     def __call__(
-        self, win: visual.Window, logger: ExperimentLogger, wait: float, **kwargs
-    ):
+        self, win: visual.Window, logger: ExperimentLogger, **kwargs
+    ) -> Union[int, str]:
+        """
+        Calls the stimulus object. In this case waiting for a specific response,
+        returning it and logging the process. Flipping the window in the end.
 
+
+        Parameters
+        ----------
+        win : visual.Window
+            The psychopy window object that is used for displaying stimuli.
+        logger : ExperimentLogger
+            The logger associated with the experiment.
+
+        Returns
+        -------
+        Union[int, str]
+            The response issued by the participant, interpretable by the environment.
+        """
         logger.keyStrokes(win)
 
         response_window_onset = logger.getTime()
         response_window = response_window_onset + self.duration
         response_present = False
 
+        # Main loop, keeping time and waiting for response.
         while response_window > logger.getTime() and response_present is False:
 
             response = logger.keyStrokes(win, keyList=self.key_list)
@@ -290,6 +380,7 @@ class ActionStim(BaseStimulus):
                 response_present = True
                 response_key = self.key_dict[response[0]]
 
+        # What todo if response window timed out and now response has been given.
         if response_present is False:
             RT = None
             logger.logEvent(
@@ -302,22 +393,47 @@ class ActionStim(BaseStimulus):
             )
             response_key = self.timeout_action
 
-        # To undraw response windows
         win.flip()
 
         return response_key
 
 
 class FeedBackText(BaseStimulus):
+    """
+    Class that possibly will be superseded or become obsolete at some point.
+
+    Purpose of the class is to provide feedback to the participant, about the
+    number of points they have received in a given trial or across the experiment.
+    """
+
     def __init__(
         self,
         duration: float,
         text: str,
         position: Tuple[int, int] = None,
         name: str = None,
-        target: str = "reward",
+        target: Literal["reward", "total_reward"] = "reward",
         text_color: str = "white",
     ):
+        """
+        FeedBack class, provides feedback to the participant, by creating
+        updatable TextStims.
+
+        Parameters
+        ----------
+        duration : float
+            Duration of the feedback.
+        text : str
+            The text that should be displayed on the screen. Should be a format string!
+        position : Tuple[int, int], optional
+            Where to display the text (by default in px), by default None
+        name : str, optional
+            name of the object, will be used for logging, by default None
+        target : Literal[&quot;reward&quot;, &quot;total_reward&quot;], optional
+            If the trial's reward or the total reward should be shown, by default "reward"
+        text_color : str, optional
+            Color of the text, by default "white"
+        """
 
         super().__init__(name=name, duration=duration)
 
@@ -327,6 +443,15 @@ class FeedBackText(BaseStimulus):
         self.target = target
 
     def setup(self, win: visual.Window, **kwargs):
+        """
+        Performs the setup for the stimulus object. Initiating a PsychoPy.TextStim,
+        object, using the parameters given parameters.
+
+        Parameters
+        ----------
+        win : visual.Window
+            The psychopy window object that is used for displaying stimuli.
+        """
 
         self.textStim = visual.TextStim(
             win=win, name=self.name, text=self.text, color=self.text_color
@@ -341,8 +466,31 @@ class FeedBackText(BaseStimulus):
         reward: float,
         total_reward: float,
         **kwargs,
-    ):
+    ) -> None:
+        """
+        Calls the stimulus object, to display the reward. Uses reward or total_reward
+        depending on the target that has been defined.
 
+        Parameters
+        ----------
+         win : visual.Window
+             The psychopy window object that is used for displaying stimuli.
+         logger : ExperimentLogger
+             The logger associated with the experiment.
+         wait : WaitTime
+             The WaitTime object associated with the experiment.
+        reward : float
+            Reward of the given trial, provided by the environment.
+        total_reward : float
+            Total reward, provided by the environment.
+
+        Returns
+        -------
+        None
+            None
+        """
+
+        # Fills in the format string. Adds the + sign for positive rewards.
         if self.target == "reward":
             reward = f"+{reward}" if reward > 0 else f"{reward}"
             self.textStim.setText(self.text.format(reward))
