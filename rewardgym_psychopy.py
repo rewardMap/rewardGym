@@ -126,7 +126,7 @@ for episode in range(n_episodes):
     action = None
 
     for ii in info["psychopy"]:
-        out = ii(
+        out = ii.display(
             win=win,
             logger=Logger,
             wait=Wait,
@@ -153,7 +153,7 @@ for episode in range(n_episodes):
         next_obs, reward, terminated, truncated, info = env.step(action)
         Logger.current_location = env.agent_location
         for ii in info["psychopy"]:
-            out = ii(
+            out = ii.display(
                 win=win,
                 logger=Logger,
                 wait=Wait,

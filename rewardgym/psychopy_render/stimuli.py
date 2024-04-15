@@ -96,7 +96,7 @@ class BaseStimulus:
 
         self.win = win
 
-    def __call__(self, **kwargs) -> None:
+    def display(self, **kwargs) -> None:
         """
         Calls the stimulus object. In this case initiate a window flip.
         Should only return something, if there has been an action required.
@@ -163,7 +163,7 @@ class TextStimulus(BaseStimulus):
             win=win, name=self.name, text=self.text, color=self.text_color
         )
 
-    def __call__(
+    def display(
         self, win: visual.Window, logger: ExperimentLogger, wait: WaitTime, **kwargs
     ) -> None:
         """
@@ -254,7 +254,7 @@ class ImageStimulus(BaseStimulus):
         for ip, pos in zip(self.image_paths, self.positions):
             self.imageStims.append(visual.ImageStim(win, image=ip, pos=pos))
 
-    def __call__(
+    def display(
         self, win: visual.Window, logger: ExperimentLogger, wait: float, **kwargs
     ):
         """
@@ -338,7 +338,7 @@ class ActionStim(BaseStimulus):
         """
         pass
 
-    def __call__(
+    def display(
         self, win: visual.Window, logger: ExperimentLogger, **kwargs
     ) -> Union[int, str]:
         """
@@ -460,7 +460,7 @@ class FeedBackText(BaseStimulus):
         )
         self.textStim.setAutoDraw(False)
 
-    def __call__(
+    def display(
         self,
         win: visual.Window,
         logger: ExperimentLogger,

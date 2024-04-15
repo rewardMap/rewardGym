@@ -46,7 +46,7 @@ class ShowCard(BaseStimulus):
             name=self.name + "_rect",
         )
 
-    def __call__(self, win, logger, wait, condition, **kwargs):
+    def display(self, win, logger, wait, condition, **kwargs):
 
         logger.keyStrokes(win)
 

@@ -39,7 +39,7 @@ class RiskSensitiveDisplay(BaseStimulus):
         for kk in self.image_map.keys():
             self.image_dict[kk] = ImageStim(win=win, image=self.image_map[kk])
 
-    def __call__(self, win, logger, wait, condition=None, action=None, **kwargs):
+    def display(self, win, logger, wait, condition=None, action=None, **kwargs):
 
         logger.keyStrokes(win)
         stim_onset = logger.getTime()
