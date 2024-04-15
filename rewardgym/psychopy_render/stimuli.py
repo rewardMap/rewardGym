@@ -29,7 +29,7 @@ class WaitTime:
         logger : ExperimentLogger, optional
             The logger associated with the experiment, by default None
         frameDuration : float, optional
-             frame refresh of the screen, duration in 1/HZ. Defaults to 1/60, by default 1/60
+            frame refresh of the screen, duration in 1/HZ. Defaults to 1/60, by default 1/60
         """
 
         self.logger = logger
@@ -104,7 +104,8 @@ class BaseStimulus:
         Returns
         -------
         None
-            None
+            Should return None
+
         """
         self.win.flip()
 
@@ -169,19 +170,20 @@ class TextStimulus(BaseStimulus):
         Calls the stimulus object. In this case drawing the text stim, flipping the window,
         waiting and logging.
 
-         Parameters
-         ----------
-         win : visual.Window
-             The psychopy window object that is used for displaying stimuli.
-         logger : ExperimentLogger
-             The logger associated with the experiment.
-         wait : WaitTime
-             The WaitTime object associated with the experiment.
+        Parameters
+        ----------
+        win : visual.Window
+            The psychopy window object that is used for displaying stimuli.
+        logger : ExperimentLogger
+            The logger associated with the experiment.
+        wait : WaitTime
+            The WaitTime object associated with the experiment.
 
-         Returns
-         -------
-         None
-             None
+        Returns
+        -------
+        None
+        Should return None
+
         """
         logger.keyStrokes(win)
 
@@ -259,19 +261,19 @@ class ImageStimulus(BaseStimulus):
         Calls the stimulus object. In this case drawing the images stims, flipping the window,
         waiting and logging.
 
-         Parameters
-         ----------
-         win : visual.Window
-             The psychopy window object that is used for displaying stimuli.
-         logger : ExperimentLogger
-             The logger associated with the experiment.
-         wait : WaitTime
-             The WaitTime object associated with the experiment.
+        Parameters
+        ----------
+        win : visual.Window
+            The psychopy window object that is used for displaying stimuli.
+        logger : ExperimentLogger
+            The logger associated with the experiment.
+        wait : WaitTime
+            The WaitTime object associated with the experiment.
 
-         Returns
-         -------
-         None
-             None
+        Returns
+        -------
+        None
+        Should return None
         """
         logger.keyStrokes(win)
 
@@ -473,12 +475,12 @@ class FeedBackText(BaseStimulus):
 
         Parameters
         ----------
-         win : visual.Window
-             The psychopy window object that is used for displaying stimuli.
-         logger : ExperimentLogger
-             The logger associated with the experiment.
-         wait : WaitTime
-             The WaitTime object associated with the experiment.
+        win : visual.Window
+            The psychopy window object that is used for displaying stimuli.
+        logger : ExperimentLogger
+            The logger associated with the experiment.
+        wait : WaitTime
+            The WaitTime object associated with the experiment.
         reward : float
             Reward of the given trial, provided by the environment.
         total_reward : float
@@ -487,7 +489,8 @@ class FeedBackText(BaseStimulus):
         Returns
         -------
         None
-            None
+            Should return None
+
         """
 
         # Fills in the format string. Adds the + sign for positive rewards.
