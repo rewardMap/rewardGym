@@ -6,12 +6,14 @@
 Welcome to rewardGym's documentation!
 =====================================
 
+.. include:: ../README.rst
 
 .. toctree::
    :maxdepth: 2
    :caption: Walkthrough
 
-   tutorial
+   tutorials/tutorial
+   tutorials/psychopy.rst
 
 .. toctree::
    :maxdepth: 1
@@ -24,14 +26,13 @@ Welcome to rewardGym's documentation!
    tasks/risk_sensitive.rst
    tasks/posner.rst
 
-.. include:: ../README.rst
-
 
 .. toctree::
-   :maxdepth: 1
-   :caption: Functionality
+   :maxdepth: 3
+   :caption: (limited) API reference
 
-   api.rst
+   api/environments.rst
+   api/psychopy_stimuli.rst
 
 
 Indices and tables
