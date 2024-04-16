@@ -33,8 +33,10 @@ extensions = [
 ]
 
 autosummary_generate = True
-numpydoc_show_class_members = False
+numpydoc_show_class_members = True
 autoclass_content = "class"
+
+autodoc_mock_imports = ["psychopy"]
 
 # The suffix(es) of source filenames.
 source_suffix = ".rst"
@@ -42,12 +44,15 @@ source_suffix = ".rst"
 templates_path = ["_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 bibtex_bibfiles = ["references.bib"]
+bibtex_reference_style = "author_year"
 
 import glob
 import jupytext
 
-for ii in glob.glob("../notebooks/*.py"):
-    os.popen(f"jupytext {ii} --to ipynb")
+code_to_convert = ["tutorial.py"]
+for ii in code_to_convert:
+    file = os.path.join("../notebooks", ii)
+    os.popen(f"jupytext {file} --to ipynb")
 # Make nbsphinx detect jupytext files
 
 # -- Options for HTML output -------------------------------------------------

@@ -2,10 +2,10 @@ import numpy as np
 from psychopy.visual import TextStim
 from psychopy.visual.rect import Rect
 
-from .stimuli import ActionStim, BaseStimuli, FeedBackText, TextStimulus
+from .stimuli import ActionStimulus, BaseStimulus, FeedBackStimulus, TextStimulus
 
 
-class ShowCard(BaseStimuli):
+class ShowCard(BaseStimulus):
     def __init__(
         self,
         text,
@@ -20,6 +20,8 @@ class ShowCard(BaseStimuli):
         name=None,
     ):
 
+        super().__init__(name=name, duration=duration)
+
         self.height = height
         self.width = width
         self.lineWidth = lineWidth
@@ -27,8 +29,6 @@ class ShowCard(BaseStimuli):
         self.fillColor = fillColor
         self.textColor = textColor
         self.text = text
-        self.name = name
-        self.duration = duration
         self.condition_text = condition_text
 
     def setup(self, win, **kwargs):
@@ -46,7 +46,7 @@ class ShowCard(BaseStimuli):
             name=self.name + "_rect",
         )
 
-    def __call__(self, win, logger, wait, condition, **kwargs):
+    def display(self, win, logger, wait, condition, **kwargs):
 
         logger.keyStrokes(win)
 
@@ -68,40 +68,54 @@ class ShowCard(BaseStimuli):
         )
 
 
-reward_feedback = FeedBackText(1.0, text="You gain: {0}", target="reward")
-total_reward_feedback = FeedBackText(
+reward_feedback = FeedBackStimulus(1.0, text="You gain: {0}", target="reward")
+total_reward_feedback = FeedBackStimulus(
     1.0, text="You have gained: {0}", target="total_reward"
 )
-base_stim = BaseStimuli(1)
+base_stim_iti = BaseStimulus(1.0, name="iti")
+
 
 info_dict = {
     0: {
         "psychopy": [
-            base_stim,
-            ShowCard("{0}", {0: ["?"], 1: ["?"], 2: ["?"]}, name="Cue"),
-            ActionStim(duration=1.0),
+            ShowCard("{0}", {0: [""], 1: [""], 2: [""]}, name="Fix", duration=1.0),
+            ShowCard(
+                "{0}",
+                {0: ["?\n< or >"], 1: ["?\n< or >"], 2: ["?\n< or >"]},
+                name="Cue",
+                duration=0.01,
+            ),
+            ActionStimulus(duration=1.0),
         ]
     },
     1: {
         "psychopy": [
-            ShowCard("{0}", {0: ["<"], 1: ["<"], 2: ["<"]}, name="select"),
             ShowCard(
-                "{0}", {1: 5, 0: [1, 2, 3, 4], 2: [6, 7, 8, 9]}, name="Outcome_l5"
+                "{0}", condition_text={0: ["<"], 1: ["<"], 2: ["<"]}, name="select"
+            ),
+            ShowCard(
+                "{0}",
+                condition_text={1: 5, 2: [1, 2, 3, 4], 0: [6, 7, 8, 9]},
+                name="Outcome_l5",
             ),
             reward_feedback,
             total_reward_feedback,
-            base_stim,
+            base_stim_iti,
         ]
     },
     2: {
         "psychopy": [
-            ShowCard("{0}", {0: [">"], 1: [">"], 2: [">"]}, name="select"),
             ShowCard(
-                "{0}", {1: 5, 2: [1, 2, 3, 4], 0: [6, 7, 8, 9]}, name="Outcome_g5"
+                "{0}", condition_text={0: [">"], 1: [">"], 2: [">"]}, name="select"
+            ),
+            ShowCard(
+                "{0}",
+                condition_text={1: 5, 0: [1, 2, 3, 4], 2: [6, 7, 8, 9]},
+                name="Outcome_g5",
             ),
             reward_feedback,
             total_reward_feedback,
-            base_stim,
+            base_stim_iti,
         ]
     },
 }

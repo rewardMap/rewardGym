@@ -1,14 +1,13 @@
 import os
 
-import numpy as np
 from psychopy.visual import ImageStim
 from psychopy.visual.rect import Rect
 
 from . import STIMPATH
-from .stimuli import ActionStim, BaseStimuli, FeedBackText
+from .stimuli import ActionStimulus, BaseStimulus, FeedBackStimulus
 
 
-class RiskSensitiveDisplay(BaseStimuli):
+class RiskSensitiveDisplay(BaseStimulus):
     def __init__(
         self,
         duration,
@@ -17,16 +16,18 @@ class RiskSensitiveDisplay(BaseStimuli):
         image_shift=250,
         with_action=False,
         image_map={
-            0: os.path.join(STIMPATH, "F000.png"),
-            1: os.path.join(STIMPATH, "F001.png"),
-            2: os.path.join(STIMPATH, "F002.png"),
+            0: os.path.join(STIMPATH, "risk_sensitive", "stim1.png"),
+            1: os.path.join(STIMPATH, "risk_sensitive", "stim2.png"),
+            2: os.path.join(STIMPATH, "risk_sensitive", "stim3.png"),
+            3: os.path.join(STIMPATH, "risk_sensitive", "stim4.png"),
+            4: os.path.join(STIMPATH, "risk_sensitive", "stim5.png"),
         },
     ):
 
-        self.duration = duration
+        super().__init__(name=name, duration=duration)
+
         self.image_position = image_position
         self.image_map = image_map
-        self.name = name
         self.image_shift = image_shift
         self.condition_dict = None
         self.with_action = with_action
@@ -38,7 +39,7 @@ class RiskSensitiveDisplay(BaseStimuli):
         for kk in self.image_map.keys():
             self.image_dict[kk] = ImageStim(win=win, image=self.image_map[kk])
 
-    def __call__(self, win, logger, wait, condition=None, action=None, **kwargs):
+    def display(self, win, logger, wait, condition=None, action=None, **kwargs):
 
         logger.keyStrokes(win)
         stim_onset = logger.getTime()
@@ -92,11 +93,11 @@ class RiskSensitiveDisplay(BaseStimuli):
         return None
 
 
-reward_feedback = FeedBackText(1.0, text="You gain: {0}", target="reward")
-total_reward_feedback = FeedBackText(
+reward_feedback = FeedBackStimulus(1.0, text="You gain: {0}", target="reward")
+total_reward_feedback = FeedBackStimulus(
     1.0, text="You have gained: {0}", target="total_reward"
 )
-base_stim = BaseStimuli(1)
+base_stim = BaseStimulus(1)
 
 cue_disp = RiskSensitiveDisplay(0.05, name="Stimulus")
 sel_disp = RiskSensitiveDisplay(0.5, with_action=True, name="StimulusSelection")
@@ -113,10 +114,12 @@ info_dict = {
         "psychopy": [
             base_stim,
             cue_disp,
-            ActionStim(duration=1.0),
+            ActionStimulus(duration=1.0),
         ]
     },
     1: {"psychopy": final_step},
     2: {"psychopy": final_step},
     3: {"psychopy": final_step},
+    4: {"psychopy": final_step},
+    5: {"psychopy": final_step},
 }

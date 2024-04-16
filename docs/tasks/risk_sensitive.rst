@@ -40,8 +40,5 @@ As can be seen by the graph, the setting here is slightly different than in the
 other tasks, in that separate actions are associated with each individual gamble.
 In practice the actions (*left* or *right*) are remapped to indicate the selection.
 
-
-References
-********************************************************************************
-
 .. bibliography::
+   :filter: docname in docnames

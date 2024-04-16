@@ -1,10 +1,10 @@
 import itertools
-from typing import Union
+from typing import List, Union
 
 import numpy as np
 
 
-def check_elements_in_list(check_list: list, check_set: list):
+def check_elements_in_list(check_list: list, check_set: List):
 
     return all([ii in check_set for ii in check_list])
 
@@ -18,12 +18,12 @@ def unpack_conditions(conditions: tuple = None, episode: int = None):
 
 
 def get_condition_state(
-    conditions: Union[None, list, tuple] = None, episode: int = None
+    conditions: Union[None, List, tuple] = None, episode: int = None
 ):
 
     if conditions is None:
         current_condition = conditions
-    elif isinstance(conditions, list):
+    elif isinstance(conditions, List):
         current_condition = conditions[episode]
     elif isinstance(conditions, tuple):
         if len(conditions) == 2:
@@ -42,20 +42,24 @@ def check_seed(seed: Union[np.random.Generator, int] = 1234):
         return np.random.default_rng(seed)
 
 
-def get_starting_nodes(graph: dict):
+def get_starting_nodes(graph: dict) -> List:
     """
-    Finds the starting position of a graph dictionary. I.e. positions which cannot
-    be accessed from any other position in the directed graph.
+    Returns the starting nodes of a graph.
 
-    :param graph: _description_
-    :type graph: dict
-    :return: _description_
-    :rtype: _type_
+    Parameters
+    ----------
+    graph : dict
+        A dictionary of acyclic directed graph(s).
+
+    Returns
+    -------
+    List
+        the starting position of each graph.
     """
 
     terminals = [ii[0] if isinstance(ii, tuple) else ii[:] for ii in graph.values()]
     terminals = list(itertools.chain.from_iterable(terminals))
     nodes = list(graph.keys())
-    starting_node = list(set(nodes) - set(terminals))
+    starting_nodes = list(set(nodes) - set(terminals))
 
-    return starting_node
+    return starting_nodes

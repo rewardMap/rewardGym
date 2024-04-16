@@ -53,8 +53,8 @@ def play_task(
     text = BaseText("Instruction", 1, textposition=base_position)
     click = BaseAction()
 
-    text(window=window, clock=clock)
-    click(window=window, clock=clock)
+    text.display(window=window, clock=clock)
+    click.display(window=window, clock=clock)
 
     actions = []
     observations = []

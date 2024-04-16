@@ -4,6 +4,7 @@ from typing import Literal, Union
 import numpy as np
 
 from ..reward_classes import BaseReward
+from ..utils import check_seed
 
 
 def get_posner(
@@ -79,3 +80,44 @@ def get_posner(
         raise NotImplementedError("Psychopy integration still under deliberation.")
 
     return environment_graph, reward_structure, condition_out, info_dict
+
+
+def generate_posner_configs(stimulus_set: str = "1"):
+
+    seed = check_seed(222)
+
+    condition_template = [0, 0, 0, 0, 1, 2, 2, 2, 2, 3]  # 80 %
+    iti_template = [1.5, 2.125, 2.75, 3.375, 4.0] * 2
+    isi_template = [0.4, 0.6] * 5
+
+    n_trials_per_condition = 10
+
+    conditions = seed.choice(a=condition_template, size=10, replace=False).tolist()
+    isi = seed.choice(isi_template, size=10, replace=False).tolist()
+    iti = seed.choice(iti_template, size=10, replace=False).tolist()
+
+    for _ in range(n_trials_per_condition - 1):
+        reject = True
+        while reject:
+            condition_template = seed.choice(
+                a=condition_template, size=10, replace=False
+            ).tolist()
+
+            if conditions[-1] != condition_template[0]:
+                reject = False
+                conditions.extend(condition_template)
+                isi.extend(seed.choice(isi_template, size=10, replace=False).tolist())
+                iti.extend(seed.choice(iti_template, size=10, replace=False).tolist())
+
+    config = {
+        "name": "posner",
+        "stimulus_set": stimulus_set,
+        "isi": isi,
+        "iti": iti,
+        "condition": conditions,
+        "condition_target": "location",
+        "ntrials": len(conditions),
+        "update": ["isi", "iti"],
+    }
+
+    return config

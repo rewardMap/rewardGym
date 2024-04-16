@@ -103,3 +103,31 @@ def get_env(
             )
 
     return env, condition_out
+
+
+def get_configs(
+    task_name: Literal["hcp", "mid", "two-step", "risk-sensitive", "posner", "gonogo"]
+):
+
+    if task_name == "hcp":
+        from .hcp import generate_hcp_configs as generate_configs
+
+    elif task_name == "mid":
+        from .mid import generate_mid_configs as generate_configs
+
+    elif task_name == "two-step":
+        from .two_step import generate_two_step_configs as generate_configs
+
+    elif task_name == "risk-sensitive":
+        from .risk_sensitive import generate_risk_senistive_configs as generate_configs
+
+    elif task_name == "posner":
+        from .posner import generate_posner_configs as generate_configs
+
+    elif task_name == "gonogo":
+        from .gonogo import generate_gonogo_configs as generate_configs
+
+    else:
+        raise NotImplementedError(f"Task {task_name} is not implemented.")
+
+    return generate_configs()
