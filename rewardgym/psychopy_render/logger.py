@@ -174,7 +174,7 @@ class ExperimentLogger:
 
         tmp_values = self._create_log_list(tmp_dict)
 
-        self.write_to_file(tmp_values)
+        self._write_to_file(tmp_values)
 
     def _create_log_list(self, tmp_dict: Dict) -> List[str]:
         """
@@ -195,7 +195,7 @@ class ExperimentLogger:
         logList = [str(tmp_dict[kk]) for kk in self.categories]
         return logList
 
-    def write_to_file(self, tmp_values: List[float]):
+    def _write_to_file(self, tmp_values: List[float]):
         """
         Converts all values in value_list to string and writes them
         to the log file.
@@ -224,7 +224,7 @@ class ExperimentLogger:
         self.set_trial_time()
 
         if mode == "w":
-            self.write_to_file(self.categories)
+            self._write_to_file(self.categories)
 
     def close(self):
         """
@@ -314,3 +314,78 @@ class ExperimentLogger:
 
         else:
             return response
+
+
+class MinimalLogger(ExperimentLogger):
+    """
+    Emulates the experiment logger, to keep stimuli classes working, does not write to file (uses stubs)
+    """
+
+    def __init__(
+        self,
+        global_clock: core.Clock,
+        seq_tr: float = 0.752,
+        na: str = "n/a",
+        kill_switch: str = "q",
+        mr_trigger: str = "5",
+    ):
+        """
+        Logger class to help with logging during a potential fMRI experiment,
+        which is implemented in PsychoPy.
+
+        Parameters
+        ----------
+        global_clock : core.Clock
+            Clock that is used by the experiment.
+        seq_tr : float, optional
+            If it is an fMRI experiment, this is echo time. Used to calculate the expected collection between acqusitions, by default 0.752
+        na : str, optional
+            How NaN values are written to file, by default "n/a"
+        kill_switch : str, optional
+            Button to press to exit the experiment, by default "q"
+        mr_trigger : str, optional
+            Trigger of the MRI (assuming that it is transformed to a key press), by default "5"
+        """
+
+        self.global_clock = global_clock
+        self.mr_clock = core.Clock()
+
+        self.na = na
+
+        self.seq_tr = seq_tr
+        self.reward = 0
+        self.kill_switch = kill_switch
+        self.mr_trigger = mr_trigger
+
+        self.trial_type = self.na
+        self.start_position = self.na
+        self.current_location = self.na
+
+        self.trial = -1
+        self.tr = 0
+
+    def log_event(self, **kwargs):
+        """
+        Log event stub.
+        """
+
+        pass
+
+    def _write_to_file(self, tmp_values: List[float]):
+        """
+        Write stub
+        """
+        pass
+
+    def create(self, **kwargs):
+        """
+        Create stub.
+        """
+
+        self.set_trial_time()
+
+    def close(self):
+        """
+        Close stub.
+        """
+        pass
