@@ -364,7 +364,7 @@ class MinimalLogger(ExperimentLogger):
         self.trial = -1
         self.tr = 0
 
-    def log_event(self, **kwargs):
+    def log_event(self, *args, **kwargs):
         """
         Log event stub.
         """
@@ -377,7 +377,7 @@ class MinimalLogger(ExperimentLogger):
         """
         pass
 
-    def create(self, **kwargs):
+    def create(self, *args, **kwargs):
         """
         Create stub.
         """
