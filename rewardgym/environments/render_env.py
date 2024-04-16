@@ -98,6 +98,9 @@ class RenderEnv(BaseEnv):
             raise NotImplementedError("Render should only be called in human mode")
 
     def close(self) -> None:
+        """
+        Closes the pygame display and quits pygame.
+        """
         if self.window is not None:
             pygame.display.quit()
             pygame.quit()
