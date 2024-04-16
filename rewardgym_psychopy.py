@@ -117,7 +117,7 @@ for episode in range(n_episodes):
 
     obs, info = env.reset(starting_position, condition=condition)
     Logger.trial = episode
-    Logger.setTrialTime()
+    Logger.set_trial_time()
     Logger.trial_type = condition
     Logger.start_position = starting_position
     Logger.current_location = env.agent_location
@@ -185,7 +185,7 @@ for episode in range(n_episodes):
         elif (win_trials % 3) == 0:
             info_dict[0]["psychopy"][-1].duration += 0.25
 
-    Logger.logEvent(
+    Logger.log_event(
         {"event_type": "TrialEnd", "total_reward": env.cumulative_reward},
         reward=env.reward,
     )

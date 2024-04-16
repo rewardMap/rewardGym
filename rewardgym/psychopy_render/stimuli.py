@@ -49,14 +49,14 @@ class WaitTime:
             Specify a different time, than the current one of the Logger, by default None
         """
         if start is None:
-            start = self.logger.getTime()
+            start = self.logger.get_time()
 
         t_wait = start + time  # - self.frameDuration
 
         # Trying to avoid unecessary checks
         if self.logger is not None:
-            while t_wait > self.logger.getTime():
-                self.logger.keyStrokes(self.win)
+            while t_wait > self.logger.get_time():
+                self.logger.key_strokes(self.win)
 
         else:
             while t_wait > self.logger.getTime():
@@ -185,15 +185,15 @@ class TextStimulus(BaseStimulus):
         Should return None
 
         """
-        logger.keyStrokes(win)
+        logger.key_strokes(win)
 
-        stim_onset = logger.getTime()
+        stim_onset = logger.get_time()
         self.textStim.draw()
         win.flip()
 
         wait.wait(self.duration, stim_onset)
 
-        logger.logEvent(
+        logger.log_event(
             {"event_type": self.name, "expected_duration": self.duration},
             onset=stim_onset,
         )
@@ -275,9 +275,9 @@ class ImageStimulus(BaseStimulus):
         None
         Should return None
         """
-        logger.keyStrokes(win)
+        logger.key_strokes(win)
 
-        stim_onset = logger.getTime()
+        stim_onset = logger.get_time()
 
         for ii in self.imageStims:
             ii.draw()
@@ -286,7 +286,7 @@ class ImageStimulus(BaseStimulus):
 
         wait.wait(self.duration, stim_onset)
 
-        logger.logEvent(
+        logger.log_event(
             {"event_type": self.name, "expected_duration": self.duration},
             onset=stim_onset,
         )
@@ -358,20 +358,20 @@ class ActionStimulus(BaseStimulus):
         Union[int, str]
             The response issued by the participant, interpretable by the environment.
         """
-        logger.keyStrokes(win)
+        logger.key_strokes(win)
 
-        response_window_onset = logger.getTime()
+        response_window_onset = logger.get_time()
         response_window = response_window_onset + self.duration
         response_present = False
 
         # Main loop, keeping time and waiting for response.
-        while response_window > logger.getTime() and response_present is False:
+        while response_window > logger.get_time() and response_present is False:
 
-            response = logger.keyStrokes(win, keyList=self.key_list)
+            response = logger.key_strokes(win, keyList=self.key_list)
 
             if response:
                 RT = response[1] - response_window_onset
-                logger.logEvent(
+                logger.log_event(
                     {
                         "event_type": "Response",
                         "response_button": response[0],
@@ -385,7 +385,7 @@ class ActionStimulus(BaseStimulus):
         # What todo if response window timed out and now response has been given.
         if response_present is False:
             RT = None
-            logger.logEvent(
+            logger.log_event(
                 {
                     "event_type": "ResponseTimeOut",
                     "response_late": True,
@@ -501,15 +501,15 @@ class FeedBackStimulus(BaseStimulus):
             total_reward = f"+{total_reward}" if total_reward > 0 else f"{total_reward}"
             self.textStim.setText(self.text.format(total_reward))
 
-        logger.keyStrokes(win)
+        logger.key_strokes(win)
 
-        stim_onset = logger.getTime()
+        stim_onset = logger.get_time()
         self.textStim.draw()
         win.flip()
 
         wait.wait(self.duration, stim_onset)
 
-        logger.logEvent(
+        logger.log_event(
             {"event_type": self.name, "expected_duration": self.duration},
             onset=stim_onset,
         )
