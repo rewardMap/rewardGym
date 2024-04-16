@@ -25,6 +25,28 @@ class RenderEnv(BaseEnv):
         window: Surface = None,
         clock: Clock = None,
     ):
+        """
+        Environment to render tasks to the screen using pygame.
+
+        Parameters
+        ----------
+        environment_graph : dict
+            The main graph showing the asssociation between states and actions.
+        reward_locations : dict
+            Which location in the graph are associated with a reward.
+        render_mode : str, optional
+            If using rendering or not, by default None
+        info_dict : dict, optional
+            Additional information, that should be associated with a node, by default defaultdict(int)
+        window_size : int, optional
+            Size of the window in pixel, by default 255
+        seed : Union[int, np.random.Generator], optional
+            The random seed associated with the environment, creates a generator, by default 1000
+        window : Surface, optional
+            The window / pygame surface class on which stimuli are drawn, by default None
+        clock : Clock, optional
+            The pygame clock for time kepping, by default None
+        """
 
         super().__init__(
             environment_graph,
@@ -38,6 +60,15 @@ class RenderEnv(BaseEnv):
         self.clock = clock
 
     def _render_frame(self, info: dict) -> None:
+        """
+        Renders a "frame", which here means, all the stimuli that are included
+        in the info_dict list associated with a given node.
+
+        Parameters
+        ----------
+        info : dict
+            Additional information, that should be associated with a node, by default defaultdict(int)
+        """
         if self.window is None and self.render_mode == "human":
             pygame.init()
             pygame.display.init()
@@ -80,12 +111,37 @@ class RenderEnvMultiChoice(MultiChoiceEnv):
         condition_dict: dict,
         render_mode: str = None,
         info_dict: dict = defaultdict(int),
-        seed: Union[int, np.random.Generator] = 1000,
         window_size: int = 255,
+        seed: Union[int, np.random.Generator] = 1000,
         window: Surface = None,
         clock: Clock = None,
     ):
+        """
+        MultiChoice Environment to render tasks to the screen using pygame.
 
+        Parameters
+        ----------
+        environment_graph : dict
+            The main graph showing the asssociation between states and actions.
+        reward_locations : dict
+            Which location in the graph are associated with a reward.
+        condition_dict : dict
+            A mapping between the condition and the possible outcomes of a response. E.g. in the risk-sensitive task,
+            condition_dict[1] = {0 : 4, 1: 2} would say that in condition 1, a "left" response would lead to outcome 4,
+            a "right" response to outcome 2.
+        render_mode : str, optional
+            If using rendering or not, by default None
+        info_dict : dict, optional
+            Additional information, that should be associated with a node, by default defaultdict(int)
+        window_size : int, optional
+            Size of the window in pixel, by default 255
+        seed : Union[int, np.random.Generator], optional
+            The random seed associated with the environment, creates a generator, by default 1000
+        window : Surface, optional
+            The window / pygame surface class on which stimuli are drawn, by default None
+        clock : Clock, optional
+            The pygame clock for time kepping, by default None
+        """
         super().__init__(
             environment_graph=environment_graph,
             reward_locations=reward_locations,
