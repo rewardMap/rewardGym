@@ -1,5 +1,5 @@
 import itertools
-from typing import List, Union
+from typing import Dict, List, Union
 
 import numpy as np
 
@@ -41,7 +41,7 @@ def run_single_episode(
     """
     obs, _ = env.reset(agent_location=starting_position, condition=condition)
 
-    states, actions = [], []
+    states, actions, rewards = [], [], []
 
     done = False
 
@@ -66,8 +66,68 @@ def run_single_episode(
 
         actions.append(action)
         states.append(obs)
+        rewards.append(reward)
 
-    return states, actions, reward
+    return states, actions, rewards
+
+
+def add_to_df(
+    episode_step: List,
+    episode: int = None,
+    condition: int = None,
+    starting_position: int = None,
+    df: Dict = None,
+) -> Dict:
+    """
+    Helper function to collect outcomes of run_single_episode in a dictionary,
+    which could subsequently be transformed to a pandas DataFrame.
+    The columns are:
+    ['index', 'episode', 'state', 'action', 'reward', 'condition', 'starting_position']
+
+    Parameters
+    ----------
+    episode_step : List
+        Outcomes of run_single_episode, alternatively a list of lists, that
+        contains, state, action, and reward.
+    episode : int, optional
+        Episode counter variable, by default None
+    condition : int, optional
+        Condition of the episode, by default None
+    starting_position : int, optional
+        Where the agent started, by default None
+    df : Dict, optional
+        Dict to append to, if None, creates a new dict, by default None
+
+    Returns
+    -------
+    Dict
+        Returns a dictionary logging the current episode.
+    """
+
+    df_cols = [
+        "index",
+        "episode",
+        "state",
+        "action",
+        "reward",
+        "condition",
+        "starting_position",
+    ]
+    if df is None:
+        df = {ii: [] for ii in df_cols}
+        index = 0
+    else:
+        index = df["index"][-1] + 1
+
+    for st, ac, rew in zip(*episode_step):
+        for ii, jj in zip(
+            df_cols, [index, episode, st, ac, rew, condition, starting_position]
+        ):
+            df[ii].append(jj)
+
+        index += 1
+
+    return df
 
 
 def check_elements_in_list(check_list: List, check_set: List) -> bool:

@@ -5,6 +5,7 @@ import pytest
 
 from .. import ENVIRONMENTS, get_env
 from ..utils import (
+    add_to_df,
     check_elements_in_list,
     check_seed,
     get_condition_state,
@@ -179,3 +180,42 @@ def test_run_episode_smokescreen():
                 step_reward=envname == "two-step",
                 avail_actions=avail_actions,
             )
+
+
+def test_add_to_df_new_df():
+    episode_step = [[0, 3, 6], [1, 4, 7], [2, 5, 8]]
+    expected_df = {
+        "index": [0, 1, 2],
+        "episode": [None, None, None],
+        "state": [0, 3, 6],
+        "action": [1, 4, 7],
+        "reward": [2, 5, 8],
+        "condition": [None, None, None],
+        "starting_position": [None, None, None],
+    }
+    result_df = add_to_df(episode_step)
+    assert result_df == expected_df
+
+
+def test_add_to_df_existing_df():
+    episode_step = [[0, 1, 2], [3, 4, 5], [6, 7, 8]]
+    existing_df = {
+        "index": [0, 1],
+        "episode": [None, None],
+        "state": [0, 3],
+        "action": [1, 4],
+        "reward": [2, 5],
+        "condition": [None, None],
+        "starting_position": [None, None],
+    }
+    expected_df = {
+        "index": [0, 1, 2, 3, 4],
+        "episode": [None, None, None, None, None],
+        "state": [0, 3, 0, 1, 2],
+        "action": [1, 4, 3, 4, 5],
+        "reward": [2, 5, 6, 7, 8],
+        "condition": [None, None, None, None, None],
+        "starting_position": [None, None, None, None, None],
+    }
+    result_df = add_to_df(episode_step, df=existing_df)
+    assert result_df == expected_df
