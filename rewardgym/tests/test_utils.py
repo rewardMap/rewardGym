@@ -155,7 +155,7 @@ def test_run_episode_smokescreen():
     for envname in ENVIRONMENTS:
         n_episodes = 20
         env, conditions = get_env(envname)
-        agent = base_agent.Agent(
+        agent = base_agent.QAgent(
             learning_rate=0.25,
             temperature=1.0,
             discount_factor=0.99,
@@ -176,6 +176,6 @@ def test_run_episode_smokescreen():
                 agent,
                 starting_position,
                 condition,
-                True,
+                step_reward=envname == "two-step",
                 avail_actions=avail_actions,
             )

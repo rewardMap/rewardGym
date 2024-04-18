@@ -3,29 +3,50 @@ from collections import defaultdict
 import numpy as np
 
 
-class SimpleQAgent:
+class QAgent:
     def __init__(
         self,
-        env,
         learning_rate: float,
-        epsilon: float,
-        discount_factor: float = 0.95,
+        temperature: float,
+        discount_factor: float,
+        action_space: int = 2,
     ):
+        """Initialize a Reinforcement Learning agent with an empty dictionary
+        of state-action values (q_values), a learning rate and an epsilon.
 
-        self.env = env
-        self.q_values = defaultdict(lambda: np.zeros(self.env.action_space.n))
+        Args:
+            learning_rate: The learning rate
+            initial_epsilon: The initial epsilon value
+            epsilon_decay: The decay for epsilon
+            final_epsilon: The final epsilon value
+            discount_factor: The discount factor for computing the Q-value
+        """
+        self.q_values = defaultdict(lambda: np.zeros(action_space))
 
         self.lr = learning_rate
+        self.temperature = temperature
         self.discount_factor = discount_factor
 
-        self.epsilon = epsilon
+        self.training_error = []
 
-    def get_action(self, obs: tuple[int, int, bool]) -> int:
+    def get_action(self, obs: tuple[int, int, bool], avail_actions: list = None) -> int:
+        """
+        Returns the best action with probability (1 - epsilon)
+        otherwise a random action with probability epsilon to ensure exploration.
+        """
+        # with probability epsilon return a random action to explore the environment
 
-        if np.random.random() < self.epsilon:
-            return self.env.action_space.sample()
-        else:
-            return int(np.argmax(self.q_values[obs]))
+        if avail_actions is None:
+            avail_actions = np.arange(len(self.q_values[obs]))
+
+        qval = self.q_values[obs][avail_actions]
+
+        qs = np.exp(qval * self.temperature)
+        prob = qs / np.sum(qs)
+
+        a = np.random.choice(np.arange(len(qval)), p=prob)
+
+        return a
 
     def update(
         self,
@@ -44,3 +65,4 @@ class SimpleQAgent:
         self.q_values[obs][action] = (
             self.q_values[obs][action] + self.lr * temporal_difference
         )
+        self.training_error.append(temporal_difference)
