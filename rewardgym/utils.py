@@ -4,13 +4,107 @@ from typing import List, Union
 import numpy as np
 
 
-def check_elements_in_list(check_list: list, check_set: List):
+def run_single_episode(
+    env,
+    agent,
+    starting_position: int,
+    condition: int,
+    update_agent: bool = True,
+    step_reward: bool = False,
+    avail_actions: List = None,
+) -> Union[List, List, float]:
+    """
+    Runs a single episode of a task.
 
+    Parameters
+    ----------
+    env : env.BaseEnv
+        A task-environemnt.
+    agent : _type_
+        The agent playing the game
+    starting_position : int
+        Where in the graph the agent starts the task.
+    condition : int
+        Which condition the agent is in.
+    update_agent : bool, optional
+        If the agent should update internal states, by default True
+    step_reward : bool, optional
+        If all rewards should be triggered e.g. in two-step task, by default False
+    avail_actions : List, optional
+        What actions are available for the agent to take (indices in q-values), by default None
+
+    Returns
+    -------
+    Union[List, List, float]
+        returns the agent's observations (excluding starting point), agent's actions,
+        and optained reward.
+    """
+    obs, _ = env.reset(agent_location=starting_position, condition=condition)
+
+    states, actions = [], []
+
+    done = False
+
+    while not done:
+
+        action = agent.get_action(obs, avail_actions)
+
+        next_obs, reward, terminated, truncated, _ = env.step(
+            action, step_reward=step_reward
+        )
+
+        if update_agent:
+            # MultiChoiceEnvs (and the risk-sensitive task) need some back and forth mapping between
+            # actions.
+            if avail_actions is not None:
+                action = avail_actions[action]
+
+            agent.update(obs, action, reward, terminated, next_obs)
+
+        done = terminated or truncated
+        obs = next_obs
+
+        actions.append(action)
+        states.append(obs)
+
+    return states, actions, reward
+
+
+def check_elements_in_list(check_list: List, check_set: List) -> bool:
+    """
+    Checks if all elements in the check_list are included in the check
+
+    Parameters
+    ----------
+    check_list : list
+        List of items that should be included in check_set.
+    check_set : List
+        Set of items to check agains.
+
+    Returns
+    -------
+    bool
+        True if all elements in the check_list are included in the check_set
+    """
     return all([ii in check_set for ii in check_list])
 
 
-def unpack_conditions(conditions: tuple = None, episode: int = None):
+def unpack_conditions(conditions: tuple = None, episode: int = None) -> Union[int, int]:
+    """
+    Unpacks a condition / starting position set.
 
+    Parameters
+    ----------
+    conditions : tuple, optional
+        _description_, by default None
+    episode : int, optional
+        _description_, by default None
+
+    Returns
+    -------
+    Union[int, int]
+        _description_
+    """
     condition = get_condition_state(conditions=conditions[0], episode=episode)
     starting_position = get_condition_state(conditions=conditions[1], episode=episode)
 
@@ -34,8 +128,23 @@ def get_condition_state(
     return current_condition
 
 
-def check_seed(seed: Union[np.random.Generator, int] = 1234):
+def check_seed(seed: Union[np.random.Generator, int] = 1234) -> np.random.Generator:
+    """
+    Checks if a provided seed is a np.random.Generator object or an integer.
+    If it is an integer, creates a Generator object using the integer as a seed
+    , else returns the provided
+    Generator.
 
+    Parameters
+    ----------
+    seed : Union[np.random.Generator, int], optional
+        A np.random.Generator or an integer, used to seed the Generator, by default 1234
+
+    Returns
+    -------
+    np.random.Generator
+        A np.random.Generator object.
+    """
     if isinstance(seed, np.random.Generator):
         return seed
     else:
