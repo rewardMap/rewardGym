@@ -161,6 +161,7 @@ def test_run_episode_smokescreen():
             temperature=1.0,
             discount_factor=0.99,
             action_space=env.action_space.n,
+            state_space=env.n_states,
         )
 
         for ne in range(n_episodes):

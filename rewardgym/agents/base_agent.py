@@ -10,6 +10,7 @@ class QAgent:
         temperature: float,
         discount_factor: float,
         action_space: int = 2,
+        state_space: int = 2,
     ):
         """Initialize a Reinforcement Learning agent with an empty dictionary
         of state-action values (q_values), a learning rate and an epsilon.
@@ -21,7 +22,7 @@ class QAgent:
             final_epsilon: The final epsilon value
             discount_factor: The discount factor for computing the Q-value
         """
-        self.q_values = defaultdict(lambda: np.zeros(action_space))
+        self.q_values = np.zeros((state_space, action_space))
 
         self.lr = learning_rate
         self.temperature = temperature
@@ -36,17 +37,23 @@ class QAgent:
         """
         # with probability epsilon return a random action to explore the environment
 
+        prob = self.get_probs(obs, avail_actions)
+
+        a = np.random.choice(np.arange(len(prob)), p=prob)
+
+        return a
+
+    def get_probs(self, obs, avail_actions=None):
         if avail_actions is None:
             avail_actions = np.arange(len(self.q_values[obs]))
 
         qval = self.q_values[obs][avail_actions]
 
         qs = np.exp(qval * self.temperature)
+
         prob = qs / np.sum(qs)
 
-        a = np.random.choice(np.arange(len(qval)), p=prob)
-
-        return a
+        return prob
 
     def update(
         self,
@@ -66,3 +73,5 @@ class QAgent:
             self.q_values[obs][action] + self.lr * temporal_difference
         )
         self.training_error.append(temporal_difference)
+
+        return self.q_values
