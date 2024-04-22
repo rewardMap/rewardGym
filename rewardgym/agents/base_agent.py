@@ -1,4 +1,5 @@
 from collections import defaultdict
+from typing import Tuple
 
 import numpy as np
 
@@ -30,7 +31,7 @@ class QAgent:
 
         self.training_error = []
 
-    def get_action(self, obs: tuple[int, int, bool], avail_actions: list = None) -> int:
+    def get_action(self, obs: Tuple[int, int, bool], avail_actions: list = None) -> int:
         """
         Returns the best action with probability (1 - epsilon)
         otherwise a random action with probability epsilon to ensure exploration.
@@ -57,11 +58,11 @@ class QAgent:
 
     def update(
         self,
-        obs: tuple[int, int, bool],
+        obs: Tuple[int, int, bool],
         action: int,
         reward: float,
         terminated: bool,
-        next_obs: tuple[int, int, bool],
+        next_obs: Tuple[int, int, bool],
     ):
         """Updates the Q-value of an action."""
         future_q_value = (not terminated) * np.max(self.q_values[next_obs])
