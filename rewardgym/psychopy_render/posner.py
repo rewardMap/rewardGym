@@ -1,17 +1,7 @@
 import os
 
-import numpy as np
-from psychopy.visual import ImageStim
-from psychopy.visual.rect import Rect
-
 from . import STIMPATH
-from .stimuli import (
-    ActionStimulus,
-    BaseStimulus,
-    FeedBackStimulus,
-    ImageStimulus,
-    TextStimulus,
-)
+from .stimuli import ActionStimulus, BaseStimulus, FeedBackStimulus, ImageStimulus
 
 reward_feedback = FeedBackStimulus(1.0, text="You gain: {0}", target="reward")
 total_reward_feedback = FeedBackStimulus(

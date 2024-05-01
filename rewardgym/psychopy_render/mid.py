@@ -1,8 +1,6 @@
 import os
 
 import numpy as np
-from psychopy.visual import ImageStim
-from psychopy.visual.rect import Rect
 
 from . import STIMPATH
 from .stimuli import (

@@ -1,7 +1,5 @@
 import os
 
-from psychopy.visual.rect import Rect
-
 from . import STIMPATH
 from .stimuli import (
     ActionStimulus,
