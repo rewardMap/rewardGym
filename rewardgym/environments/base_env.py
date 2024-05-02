@@ -1,5 +1,5 @@
 from collections import defaultdict
-from typing import Union
+from typing import Dict, Union
 
 try:
     from gymnasium import Env
@@ -24,10 +24,10 @@ class BaseEnv(Env):
 
     def __init__(
         self,
-        environment_graph: dict,
-        reward_locations: dict,
+        environment_graph: Dict,
+        reward_locations: Dict,
         render_mode: str = None,
-        info_dict: dict = defaultdict(int),
+        info_dict: Dict = defaultdict(int),
         seed: Union[int, np.random.Generator] = 1000,
     ):
         """
@@ -102,7 +102,7 @@ class BaseEnv(Env):
 
     def reset(
         self, agent_location: int = None, condition: int = None
-    ) -> Tuple[Union[int, np.array], dict]:
+    ) -> Tuple[Union[int, np.array], Dict]:
         """
         Resetting the environment, moving everything to start.
         Using conditions and agent_locations to specify task features.
@@ -197,7 +197,7 @@ class BaseEnv(Env):
 
         return observation, self.reward, terminated, False, info
 
-    def _render_frame(self, info: dict):
+    def _render_frame(self, info: Dict):
         """
         Rendering method, not implemented for BaseEnvironment.
 
@@ -213,6 +213,9 @@ class BaseEnv(Env):
         """
         raise NotImplementedError("Not implemented in basic environments")
 
+    def add_info(self, new_info: Dict) -> None:
+        self.info_dict.update(new_info)
+
 
 class MultiChoiceEnv(BaseEnv):
     """
@@ -225,11 +228,11 @@ class MultiChoiceEnv(BaseEnv):
 
     def __init__(
         self,
-        environment_graph: dict,
-        reward_locations: dict,
-        condition_dict: dict,
+        environment_graph: Dict,
+        reward_locations: Dict,
+        condition_dict: Dict,
         render_mode: str = None,
-        info_dict: dict = defaultdict(int),
+        info_dict: Dict = defaultdict(int),
         seed: Union[int, np.random.Generator] = 1000,
     ):
         """
@@ -265,7 +268,7 @@ class MultiChoiceEnv(BaseEnv):
 
     def step(
         self, action: int = None, step_reward: bool = False
-    ) -> Tuple[Union[int, np.array], int, bool, bool, dict]:
+    ) -> Tuple[Union[int, np.array], int, bool, bool, Dict]:
         """
         Stepping through the graph - acquire a new observation in the graph. In
         this case also maps condition specific actions to outcomes.
