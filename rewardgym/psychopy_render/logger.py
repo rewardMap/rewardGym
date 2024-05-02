@@ -406,7 +406,7 @@ class SimulationLogger(ExperimentLogger):
         for n, ii in enumerate(self.categories):
             self.df[ii].append(tmp_values[n])
 
-    def create(self, mode: str = "w"):
+    def create(self):
         self.df = {ii: [] for ii in self.categories}
 
     def key_strokes(

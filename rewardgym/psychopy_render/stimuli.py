@@ -432,18 +432,31 @@ class ActionStimulus(BaseStimulus):
         **kwargs,
     ):
 
-        response_key, remaining = logger.key_strokes(key, rt)
+        response_key, rt = logger.key_strokes(key, rt)
         response_window_onset = logger.get_time()
         logger.global_clock.time += rt
 
-        logger.log_event(
-            {
-                "event_type": "Response",
-                "response_button": response_key,
-                "response_time": rt,
-            },
-            onset=response_window_onset,
-        )
+        if rt > self.duration:
+            logger.log_event(
+                {
+                    "event_type": "ResponseTimeOut",
+                    "response_late": True,
+                    "response_time": rt,
+                },
+                onset=response_window_onset,
+            )
+            response_key = self.timeout_action
+            remaining = None
+        else:
+            logger.log_event(
+                {
+                    "event_type": "Response",
+                    "response_button": response_key,
+                    "response_time": rt,
+                },
+                onset=response_window_onset,
+            )
+            remaining = self.duration - rt
 
         return response_key, remaining
 
