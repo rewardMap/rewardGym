@@ -33,10 +33,9 @@ def get_two_step(
     else:
         warnings.warn("Two-step does not use conditions.")
 
-    if render_backend is None:
-        info_dict = defaultdict(int)
+    info_dict = defaultdict(int)
 
-    elif render_backend == "pygame":
+    if render_backend == "pygame":
 
         if window_size is None:
             return ValueError("window_size needs to be defined!")
@@ -63,7 +62,7 @@ def get_two_step(
                 BaseAction(),
             ]
 
-        info_dict = {
+        pygame_dict = {
             0: {"human": first_step("A       or       B")},
             1: {"human": first_step("C       or       D")},
             2: {"human": first_step("E       or       F")},
@@ -72,6 +71,8 @@ def get_two_step(
             5: {"human": final_display},
             6: {"human": final_display},
         }
+
+        info_dict.update(pygame_dict)
 
     elif render_backend == "psychopy":
         raise NotImplementedError("Psychopy integration still under deliberation.")

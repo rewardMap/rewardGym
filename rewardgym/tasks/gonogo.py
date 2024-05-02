@@ -37,10 +37,12 @@ def get_gonogo(
     else:
         condition_out = (None, (starting_positions))
 
-    if render_backend is None:
-        info_dict = defaultdict(int)
+    info_dict = defaultdict(int)
+    info_dict.update(
+        {"position": {0: "go-win", 1: "go-punish", 2: "nogo-win", 3: "nogo-punish"}}
+    )
 
-    elif render_backend == "pygame":
+    if render_backend == "pygame":
 
         from ..pygame_render.stimuli import BaseDisplay, BaseText, TimedAction
         from ..pygame_render.task_stims import FormatText, FormatTextReward
@@ -76,7 +78,7 @@ def get_gonogo(
             earnings_text,
         ]
 
-        info_dict = {
+        pygame_dict = {
             0: {"human": first_step("A")},
             1: {"human": first_step("B")},
             2: {"human": first_step("C")},
@@ -86,6 +88,8 @@ def get_gonogo(
             6: {"human": final_disp},
             7: {"human": final_disp},
         }
+
+        info_dict.update(pygame_dict)
 
     elif render_backend == "psychopy":
         raise NotImplementedError("Psychopy integration still under deliberation.")
