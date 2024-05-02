@@ -188,6 +188,44 @@ def get_condition_state(
     return current_condition
 
 
+def get_condition_meaning(
+    info_dict: Dict, starting_position: int, condition: int
+) -> str:
+    """
+    Construct the meaning of a trial based on condition and starting position.
+
+    Parameters
+    ----------
+    info_dict : Dict
+        A dictionary containing information about conditions and positions. It should have the keys:
+        - 'condition': A dictionary mapping condition IDs to their meanings.
+        - 'position': A dictionary mapping starting positions to their meanings.
+    starting_position : int
+        The ID of the starting position.
+    condition : int
+        The ID of the condition.
+
+    Returns
+    -------
+    str
+        The concatenated meaning of the condition and starting position.
+
+    Notes
+    -----
+    If either 'condition' or 'position' is missing from `info_dict`, the corresponding part of
+    the meaning will not be included in the result.
+    """
+
+    trial_type = ""
+    if "condition" in info_dict.keys():
+        trial_type += info_dict["condition"][condition]
+
+    if "position" in info_dict.keys():
+        trial_type += info_dict["position"][starting_position]
+
+    return trial_type
+
+
 def check_seed(seed: Union[np.random.Generator, int] = 1234) -> np.random.Generator:
     """
     Checks if a provided seed is a np.random.Generator object or an integer.

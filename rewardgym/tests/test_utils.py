@@ -8,6 +8,7 @@ from ..utils import (
     add_to_df,
     check_elements_in_list,
     check_seed,
+    get_condition_meaning,
     get_condition_state,
     get_starting_nodes,
     run_single_episode,
@@ -220,3 +221,54 @@ def test_add_to_df_existing_df():
     }
     result_df = add_to_df(episode_step, df=existing_df)
     assert result_df == expected_df
+
+
+@pytest.fixture
+def info_dict():
+    return {
+        "condition": {1: "Condition A", 2: "Condition B"},
+        "position": {1: "Position X", 2: "Position Y"},
+    }
+
+
+def test_condition_and_position_present(info_dict):
+    starting_position = 1
+    condition = 2
+    expected_result = "Condition BPosition X"
+    assert (
+        get_condition_meaning(info_dict, starting_position, condition)
+        == expected_result
+    )
+
+
+def test_condition_only_present():
+    info_dict = {"condition": {1: "Condition A", 2: "Condition B"}}
+    starting_position = 1
+    condition = 2
+    expected_result = "Condition B"
+    assert (
+        get_condition_meaning(info_dict, starting_position, condition)
+        == expected_result
+    )
+
+
+def test_position_only_present():
+    info_dict = {"position": {1: "Position X", 2: "Position Y"}}
+    starting_position = 1
+    condition = 2
+    expected_result = "Position X"
+    assert (
+        get_condition_meaning(info_dict, starting_position, condition)
+        == expected_result
+    )
+
+
+def test_neither_condition_nor_position_present():
+    info_dict = {}
+    starting_position = 1
+    condition = 2
+    expected_result = ""
+    assert (
+        get_condition_meaning(info_dict, starting_position, condition)
+        == expected_result
+    )
