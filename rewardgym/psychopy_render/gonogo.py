@@ -14,7 +14,7 @@ total_reward_feedback = FeedBackStimulus(
     0.75, text="You have gained: {0}", target="total_reward"
 )
 base_stim = BaseStimulus(0)
-fix = TextStimulus(text="+", duration=0.2)
+fix = TextStimulus(text="+", duration=0.2, name="fixation")
 fix_isi = TextStimulus(text="+", duration=0.2, name="isi")
 
 
@@ -26,12 +26,14 @@ def first_step(img):
             duration=1.0,
             image_paths=[os.path.join(STIMPATH, img)],
             positions=[(0, 0)],
+            name="cue",
         ),
         fix_isi,
         ImageStimulus(
             duration=0.001,
             image_paths=[os.path.join(STIMPATH, "gonogo/probe.png")],
             positions=[(0, 0)],
+            name="target",
         ),
         ActionStimulus(duration=1.0, key_dict={"space": 0}, timeout_action=1),
     ]

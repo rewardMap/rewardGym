@@ -1,8 +1,12 @@
 import numpy as np
-from psychopy.visual import TextStim
-from psychopy.visual.rect import Rect
 
-from .stimuli import ActionStimulus, BaseStimulus, FeedBackStimulus, TextStimulus
+try:
+    from psychopy.visual import TextStim, Window
+    from psychopy.visual.rect import Rect
+except ModuleNotFoundError:
+    from .psychopy_stubs import TextStim, Rect
+
+from .stimuli import ActionStimulus, BaseStimulus, FeedBackStimulus
 
 
 class ShowCard(BaseStimulus):
