@@ -28,6 +28,10 @@ class TextStim(ImageStim):
     pass
 
 
+class Rect(ImageStim):
+    pass
+
+
 def getKeys(**kwargs):
     pass
 
