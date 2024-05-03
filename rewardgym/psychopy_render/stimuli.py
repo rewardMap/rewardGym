@@ -578,8 +578,44 @@ class FeedBackStimulus(BaseStimulus):
         wait.wait(self.duration, stim_onset)
 
         logger.log_event(
-            {"event_type": self.name, "expected_duration": self.duration},
+            {
+                "event_type": self.name,
+                "expected_duration": self.duration,
+                "total_reward": total_reward,
+            },
             onset=stim_onset,
+            reward=reward,
         )
 
         return None
+
+    def simulate(
+        self,
+        logger=ExperimentLogger,
+        reward: float = None,
+        total_reward: float = None,
+        **kwargs,
+    ) -> None:
+        """
+        Function to pretend that a stimulus has been shown. Logging and creating
+        timing.
+
+        Returns
+        -------
+        None
+            Does not return anything, but logs the stimulus.
+        """
+
+        stim_onset = logger.get_time()
+
+        logger.global_clock.time += self.duration
+
+        logger.log_event(
+            {
+                "event_type": self.name,
+                "expected_duration": self.duration,
+                "total_reward": total_reward,
+            },
+            onset=stim_onset,
+            reward=reward,
+        )

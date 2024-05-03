@@ -94,7 +94,6 @@ class ExperimentLogger:
             "response_button",
             "response_late",
             "reward",
-            "delta_reward",
             "trial",
             "TR",
             "task",
@@ -123,6 +122,8 @@ class ExperimentLogger:
         Dict
             dictionary populated with default values.
         """
+
+        self.reward = reward
         tmp_dict = self.nan_dict.copy()
         tmp_dict["onset"] = self.global_clock.getTime()
         tmp_dict["reward"] = self.reward
@@ -134,13 +135,6 @@ class ExperimentLogger:
         tmp_dict["current_location"] = self.current_location
         tmp_dict["TR"] = self.tr
         tmp_dict["run"] = self.run
-
-        # Update reward
-        if reward is not None:
-            tmp_dict["delta_reward"] = reward - self.reward
-            self.reward = reward
-        else:
-            tmp_dict["delta_reward"] = 0
 
         return tmp_dict
 

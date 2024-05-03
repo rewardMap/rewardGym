@@ -9,9 +9,11 @@ from .stimuli import (
     TextStimulus,
 )
 
-reward_feedback = FeedBackStimulus(1.0, text="You gain: {0}", target="reward")
+reward_feedback = FeedBackStimulus(
+    1.0, text="You gain: {0}", target="reward", name="reward"
+)
 total_reward_feedback = FeedBackStimulus(
-    1.0, text="You have gained: {0}", target="total_reward"
+    1.0, text="You have gained: {0}", target="total_reward", name="reward-total"
 )
 
 base_stim = BaseStimulus(0)

@@ -10,10 +10,10 @@ from .stimuli import (
 )
 
 reward_feedback = FeedBackStimulus(
-    1.0, text="You gain: {0}", target="reward", name="rewardFeedback"
+    1.0, text="You gain: {0}", target="reward", name="reward"
 )
 total_reward_feedback = FeedBackStimulus(
-    1.0, text="You have gained: {0}", target="total_reward", name="totalReward"
+    1.0, text="You have gained: {0}", target="total_reward", name="reward-total"
 )
 base_stim = BaseStimulus(0)
 fix_isi = TextStimulus(text="+", duration=1.5, name="isi")
