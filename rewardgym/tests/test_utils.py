@@ -5,10 +5,13 @@ import pytest
 
 from .. import ENVIRONMENTS, get_env
 from ..utils import (
+    add_to_df,
     check_elements_in_list,
     check_seed,
+    get_condition_meaning,
     get_condition_state,
     get_starting_nodes,
+    run_single_episode,
     unpack_conditions,
 )
 
@@ -144,3 +147,128 @@ def test_get_starting_nodes():
     # Test case 4: Graph with no nodes
     graph4 = {}
     assert get_starting_nodes(graph4) == []
+
+
+def test_run_episode_smokescreen():
+    from .. import ENVIRONMENTS, get_env
+    from ..agents import base_agent
+    from ..utils import unpack_conditions
+
+    for envname in ENVIRONMENTS:
+        n_episodes = 20
+        env, conditions = get_env(envname)
+        agent = base_agent.QAgent(
+            learning_rate=0.25,
+            temperature=1.0,
+            discount_factor=0.99,
+            action_space=env.action_space.n,
+            state_space=env.n_states,
+        )
+
+        for ne in range(n_episodes):
+
+            condition, starting_position = unpack_conditions(conditions, ne)
+
+            if envname == "risk-sensitive":
+                avail_actions = list(env.condition_dict[condition].values())
+            else:
+                avail_actions = None
+
+            a = run_single_episode(
+                env,
+                agent,
+                starting_position,
+                condition,
+                step_reward=envname == "two-step",
+                avail_actions=avail_actions,
+            )
+
+
+def test_add_to_df_new_df():
+    episode_step = [[0, 3, 6], [1, 4, 7], [2, 5, 8]]
+    expected_df = {
+        "index": [0, 1, 2],
+        "episode": [None, None, None],
+        "state": [0, 3, 6],
+        "action": [1, 4, 7],
+        "reward": [2, 5, 8],
+        "condition": [None, None, None],
+        "starting_position": [None, None, None],
+    }
+    result_df = add_to_df(episode_step)
+    assert result_df == expected_df
+
+
+def test_add_to_df_existing_df():
+    episode_step = [[0, 1, 2], [3, 4, 5], [6, 7, 8]]
+    existing_df = {
+        "index": [0, 1],
+        "episode": [None, None],
+        "state": [0, 3],
+        "action": [1, 4],
+        "reward": [2, 5],
+        "condition": [None, None],
+        "starting_position": [None, None],
+    }
+    expected_df = {
+        "index": [0, 1, 2, 3, 4],
+        "episode": [None, None, None, None, None],
+        "state": [0, 3, 0, 1, 2],
+        "action": [1, 4, 3, 4, 5],
+        "reward": [2, 5, 6, 7, 8],
+        "condition": [None, None, None, None, None],
+        "starting_position": [None, None, None, None, None],
+    }
+    result_df = add_to_df(episode_step, df=existing_df)
+    assert result_df == expected_df
+
+
+@pytest.fixture
+def info_dict():
+    return {
+        "condition": {1: "Condition A", 2: "Condition B"},
+        "position": {1: "Position X", 2: "Position Y"},
+    }
+
+
+def test_condition_and_position_present(info_dict):
+    starting_position = 1
+    condition = 2
+    expected_result = "Condition BPosition X"
+    assert (
+        get_condition_meaning(info_dict, starting_position, condition)
+        == expected_result
+    )
+
+
+def test_condition_only_present():
+    info_dict = {"condition": {1: "Condition A", 2: "Condition B"}}
+    starting_position = 1
+    condition = 2
+    expected_result = "Condition B"
+    assert (
+        get_condition_meaning(info_dict, starting_position, condition)
+        == expected_result
+    )
+
+
+def test_position_only_present():
+    info_dict = {"position": {1: "Position X", 2: "Position Y"}}
+    starting_position = 1
+    condition = 2
+    expected_result = "Position X"
+    assert (
+        get_condition_meaning(info_dict, starting_position, condition)
+        == expected_result
+    )
+
+
+def test_neither_condition_nor_position_present():
+    info_dict = {}
+    starting_position = 1
+    condition = 2
+    expected_result = ""
+    assert (
+        get_condition_meaning(info_dict, starting_position, condition)
+        == expected_result
+    )

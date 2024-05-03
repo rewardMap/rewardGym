@@ -1,9 +1,5 @@
 import os
 
-import numpy as np
-from psychopy.visual import ImageStim
-from psychopy.visual.rect import Rect
-
 from . import STIMPATH
 from .stimuli import (
     ActionStimulus,
@@ -13,12 +9,15 @@ from .stimuli import (
     TextStimulus,
 )
 
-reward_feedback = FeedBackStimulus(1.0, text="You gain: {0}", target="reward")
-total_reward_feedback = FeedBackStimulus(
-    1.0, text="You have gained: {0}", target="total_reward"
+reward_feedback = FeedBackStimulus(
+    1.0, text="You gain: {0}", target="reward", name="reward"
 )
-base_stim = BaseStimulus(1)
-fix = TextStimulus(text="+", duration=1.5, name="isi")
+total_reward_feedback = FeedBackStimulus(
+    1.0, text="You have gained: {0}", target="total_reward", name="reward-total"
+)
+base_stim = BaseStimulus(0)
+fix_isi = TextStimulus(text="+", duration=1.5, name="isi")
+fix = TextStimulus(text="+", duration=1.5, name="fixation")
 
 action_stim = ActionStimulus(duration=0.25, key_dict={"space": 0}, timeout_action=1)
 
@@ -31,12 +30,14 @@ def first_step(img, img2):
             duration=0.5,
             image_paths=[os.path.join(STIMPATH, img)],
             positions=[(0, 0)],
+            name="cue",
         ),
-        fix,
+        fix_isi,
         ImageStimulus(
             duration=0.01,
             image_paths=[os.path.join(STIMPATH, img2)],
             positions=[(0, 0)],
+            name="target",
         ),
         action_stim,
     ]

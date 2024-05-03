@@ -1,7 +1,10 @@
 import os
 
-from psychopy.visual import ImageStim
-from psychopy.visual.rect import Rect
+try:
+    from psychopy.visual import ImageStim
+    from psychopy.visual.rect import Rect
+except ModuleNotFoundError:
+    from .psychopy_stubs import Rect, ImageStim
 
 from . import STIMPATH
 from .stimuli import ActionStimulus, BaseStimulus, FeedBackStimulus
@@ -41,8 +44,8 @@ class RiskSensitiveDisplay(BaseStimulus):
 
     def display(self, win, logger, wait, condition=None, action=None, **kwargs):
 
-        logger.keyStrokes(win)
-        stim_onset = logger.getTime()
+        logger.key_strokes(win)
+        stim_onset = logger.get_time()
 
         if len(self.condition_dict[condition].keys()) == 1:
             imgA = self.image_dict[self.condition_dict[condition][0]]
@@ -85,7 +88,7 @@ class RiskSensitiveDisplay(BaseStimulus):
 
         wait.wait(self.duration, stim_onset)
 
-        logger.logEvent(
+        logger.log_event(
             {"event_type": self.name, "expected_duration": self.duration},
             onset=stim_onset,
         )
@@ -93,20 +96,21 @@ class RiskSensitiveDisplay(BaseStimulus):
         return None
 
 
-reward_feedback = FeedBackStimulus(1.0, text="You gain: {0}", target="reward")
-total_reward_feedback = FeedBackStimulus(
-    1.0, text="You have gained: {0}", target="total_reward"
+reward_feedback = FeedBackStimulus(
+    1.0, text="You gain: {0}", target="reward", name="reward"
 )
-base_stim = BaseStimulus(1)
+total_reward_feedback = FeedBackStimulus(
+    1.0, text="You have gained: {0}", target="total_reward", name="reward-total"
+)
+base_stim = BaseStimulus(0)
 
-cue_disp = RiskSensitiveDisplay(0.05, name="Stimulus")
-sel_disp = RiskSensitiveDisplay(0.5, with_action=True, name="StimulusSelection")
+cue_disp = RiskSensitiveDisplay(0.05, name="cue")
+sel_disp = RiskSensitiveDisplay(0.5, with_action=True, name="selected")
 
 final_step = [
     sel_disp,
     reward_feedback,
     total_reward_feedback,
-    base_stim,
 ]
 
 info_dict = {

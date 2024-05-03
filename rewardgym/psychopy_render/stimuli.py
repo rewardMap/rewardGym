@@ -1,8 +1,11 @@
 from typing import Dict, List, Literal, Tuple, Union
 
-from psychopy import visual
+try:
+    from psychopy.visual import ImageStim, TextStim, Window
+except ModuleNotFoundError:
+    from .psychopy_stubs import Window, TextStim, ImageStim
 
-from .logger import ExperimentLogger
+from .logger import ExperimentLogger, SimulationLogger
 
 
 class WaitTime:
@@ -15,7 +18,7 @@ class WaitTime:
 
     def __init__(
         self,
-        win: visual.Window,
+        win: Window,
         logger: ExperimentLogger = None,
         frameDuration: float = 1 / 60,
     ):
@@ -24,7 +27,7 @@ class WaitTime:
 
         Parameters
         ----------
-        win : visual.Window
+        win : Window
             The psychopy window object that is used for displaying stimuli.
         logger : ExperimentLogger, optional
             The logger associated with the experiment, by default None
@@ -83,14 +86,14 @@ class BaseStimulus:
         self.duration = duration
         self.name = name
 
-    def setup(self, win: visual.Window, **kwargs):
+    def setup(self, win: Window, **kwargs):
         """
         Call this to setup the stimulus. This means associating the stimulus
         with a window (so there is something to flip).
 
         Parameters
         ----------
-        win : visual.Window
+        win : Window
             The psychopy window object that is used for displaying stimuli.
         """
 
@@ -110,6 +113,26 @@ class BaseStimulus:
         self.win.flip()
 
         return None
+
+    def simulate(self, logger=ExperimentLogger, **kwargs) -> None:
+        """
+        Function to pretend that a stimulus has been shown. Logging and creating
+        timing.
+
+        Returns
+        -------
+        None
+            Does not return anything, but logs the stimulus.
+        """
+
+        stim_onset = logger.get_time()
+
+        logger.global_clock.time += self.duration
+
+        logger.log_event(
+            {"event_type": self.name, "expected_duration": self.duration},
+            onset=stim_onset,
+        )
 
 
 class TextStimulus(BaseStimulus):
@@ -148,23 +171,23 @@ class TextStimulus(BaseStimulus):
         self.position = position
         self.text_color = text_color
 
-    def setup(self, win: visual.Window, **kwargs):
+    def setup(self, win: Window, **kwargs):
         """
         Performs the setup for the stimulus object. Initiating a PsychoPy.TextStim,
         object, using the parameters given parameters.
 
         Parameters
         ----------
-        win : visual.Window
+        win : Window
             The psychopy window object that is used for displaying stimuli.
         """
 
-        self.textStim = visual.TextStim(
+        self.textStim = TextStim(
             win=win, name=self.name, text=self.text, color=self.text_color
         )
 
     def display(
-        self, win: visual.Window, logger: ExperimentLogger, wait: WaitTime, **kwargs
+        self, win: Window, logger: ExperimentLogger, wait: WaitTime, **kwargs
     ) -> None:
         """
         Calls the stimulus object. In this case drawing the text stim, flipping the window,
@@ -172,7 +195,7 @@ class TextStimulus(BaseStimulus):
 
         Parameters
         ----------
-        win : visual.Window
+        win : Window
             The psychopy window object that is used for displaying stimuli.
         logger : ExperimentLogger
             The logger associated with the experiment.
@@ -233,14 +256,14 @@ class ImageStimulus(BaseStimulus):
         self.image_paths = image_paths
         self.positions = positions
 
-    def setup(self, win: visual.Window, image_paths=None, **kwargs):
+    def setup(self, win: Window, image_paths=None, **kwargs):
         """
         Performs the setup for the stimulus object. Initiating PsychoPy.ImageStim objects,
         given the provides paths and positions.
 
         Parameters
         ----------
-        win : visual.Window
+        win : Window
             The psychopy window object that is used for displaying stimuli.
 
         image_paths : _type_, optional
@@ -252,18 +275,16 @@ class ImageStimulus(BaseStimulus):
 
         self.imageStims = []
         for ip, pos in zip(self.image_paths, self.positions):
-            self.imageStims.append(visual.ImageStim(win, image=ip, pos=pos))
+            self.imageStims.append(ImageStim(win, image=ip, pos=pos))
 
-    def display(
-        self, win: visual.Window, logger: ExperimentLogger, wait: float, **kwargs
-    ):
+    def display(self, win: Window, logger: ExperimentLogger, wait: float, **kwargs):
         """
         Calls the stimulus object. In this case drawing the images stims, flipping the window,
         waiting and logging.
 
         Parameters
         ----------
-        win : visual.Window
+        win : Window
             The psychopy window object that is used for displaying stimuli.
         logger : ExperimentLogger
             The logger associated with the experiment.
@@ -327,19 +348,19 @@ class ActionStimulus(BaseStimulus):
         self.key_dict = key_dict
         self.timeout_action = timeout_action
 
-    def setup(self, win: visual.Window = None, **kwargs):
+    def setup(self, win: Window = None, **kwargs):
         """
         Does not need a special setup, including the function, to make easy looping possible.
 
         Parameters
         ----------
-        win : visual.Window, optional
+        win : Window, optional
             The psychopy window object that is used for displaying stimuli, by default None
         """
         pass
 
     def display(
-        self, win: visual.Window, logger: ExperimentLogger, **kwargs
+        self, win: Window, logger: ExperimentLogger, **kwargs
     ) -> Union[int, str]:
         """
         Calls the stimulus object. In this case waiting for a specific response,
@@ -348,7 +369,7 @@ class ActionStimulus(BaseStimulus):
 
         Parameters
         ----------
-        win : visual.Window
+        win : Window
             The psychopy window object that is used for displaying stimuli.
         logger : ExperimentLogger
             The logger associated with the experiment.
@@ -363,6 +384,7 @@ class ActionStimulus(BaseStimulus):
         response_window_onset = logger.get_time()
         response_window = response_window_onset + self.duration
         response_present = False
+        remaining = None
 
         # Main loop, keeping time and waiting for response.
         while response_window > logger.get_time() and response_present is False:
@@ -373,7 +395,7 @@ class ActionStimulus(BaseStimulus):
                 RT = response[1] - response_window_onset
                 logger.log_event(
                     {
-                        "event_type": "Response",
+                        "event_type": "response",
                         "response_button": response[0],
                         "response_time": RT,
                     },
@@ -382,12 +404,14 @@ class ActionStimulus(BaseStimulus):
                 response_present = True
                 response_key = self.key_dict[response[0]]
 
+                remaining = self.duration - RT
+
         # What todo if response window timed out and now response has been given.
         if response_present is False:
             RT = None
             logger.log_event(
                 {
-                    "event_type": "ResponseTimeOut",
+                    "event_type": "response-time-out",
                     "response_late": True,
                     "response_time": RT,
                 },
@@ -395,9 +419,53 @@ class ActionStimulus(BaseStimulus):
             )
             response_key = self.timeout_action
 
+            if response_key is None:
+                return None
+
         win.flip()
 
-        return response_key
+        return response_key, remaining
+
+    def simulate(
+        self,
+        win: Window,
+        logger=SimulationLogger,
+        key: str = None,
+        rt: float = None,
+        **kwargs,
+    ):
+
+        response_key, rt = logger.key_strokes(key, rt)
+        response_window_onset = logger.get_time()
+        logger.global_clock.time += rt
+
+        if rt > self.duration:
+            logger.log_event(
+                {
+                    "event_type": "response-time-out",
+                    "response_late": True,
+                    "response_time": rt,
+                },
+                onset=response_window_onset,
+            )
+            response_key = self.timeout_action
+            remaining = None
+
+            if response_key is None:
+                return None
+
+        else:
+            logger.log_event(
+                {
+                    "event_type": "response",
+                    "response_button": response_key,
+                    "response_time": rt,
+                },
+                onset=response_window_onset,
+            )
+            remaining = self.duration - rt
+
+        return response_key, remaining
 
 
 class FeedBackStimulus(BaseStimulus):
@@ -444,25 +512,25 @@ class FeedBackStimulus(BaseStimulus):
         self.text_color = text_color
         self.target = target
 
-    def setup(self, win: visual.Window, **kwargs):
+    def setup(self, win: Window, **kwargs):
         """
         Performs the setup for the stimulus object. Initiating a PsychoPy.TextStim,
         object, using the parameters given parameters.
 
         Parameters
         ----------
-        win : visual.Window
+        win : Window
             The psychopy window object that is used for displaying stimuli.
         """
 
-        self.textStim = visual.TextStim(
+        self.textStim = TextStim(
             win=win, name=self.name, text=self.text, color=self.text_color
         )
         self.textStim.setAutoDraw(False)
 
     def display(
         self,
-        win: visual.Window,
+        win: Window,
         logger: ExperimentLogger,
         wait: float,
         reward: float,
@@ -475,7 +543,7 @@ class FeedBackStimulus(BaseStimulus):
 
         Parameters
         ----------
-        win : visual.Window
+        win : Window
             The psychopy window object that is used for displaying stimuli.
         logger : ExperimentLogger
             The logger associated with the experiment.
@@ -510,8 +578,44 @@ class FeedBackStimulus(BaseStimulus):
         wait.wait(self.duration, stim_onset)
 
         logger.log_event(
-            {"event_type": self.name, "expected_duration": self.duration},
+            {
+                "event_type": self.name,
+                "expected_duration": self.duration,
+                "total_reward": total_reward,
+            },
             onset=stim_onset,
+            reward=reward,
         )
 
         return None
+
+    def simulate(
+        self,
+        logger=ExperimentLogger,
+        reward: float = None,
+        total_reward: float = None,
+        **kwargs,
+    ) -> None:
+        """
+        Function to pretend that a stimulus has been shown. Logging and creating
+        timing.
+
+        Returns
+        -------
+        None
+            Does not return anything, but logs the stimulus.
+        """
+
+        stim_onset = logger.get_time()
+
+        logger.global_clock.time += self.duration
+
+        logger.log_event(
+            {
+                "event_type": self.name,
+                "expected_duration": self.duration,
+                "total_reward": total_reward,
+            },
+            onset=stim_onset,
+            reward=reward,
+        )

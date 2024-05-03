@@ -27,10 +27,10 @@ def get_hcp(
     else:
         condition_out = (conditions, ([0],))
 
-    if render_backend is None:
-        info_dict = defaultdict(int)
+    info_dict = defaultdict(int)
+    info_dict.update({"condition": {0: "lose", 1: "neutral", 2: "win"}})
 
-    elif render_backend == "pygame":
+    if render_backend == "pygame":
 
         if window_size is None:
             return ValueError("window_size needs to be defined!")
@@ -45,7 +45,7 @@ def get_hcp(
 
         reward_disp, earnings_text = feedback_block(base_position)
 
-        info_dict = {
+        pygame_dict = {
             0: {
                 "human": [
                     BaseDisplay(None, 1),
@@ -84,6 +84,8 @@ def get_hcp(
                 ]
             },
         }
+
+        info_dict.update(pygame_dict)
 
     elif render_backend == "psychopy":
         raise NotImplementedError("Psychopy integration still under deliberation.")

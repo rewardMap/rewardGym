@@ -33,10 +33,19 @@ def get_posner(
     else:
         condition_out = (None, starting_position)
 
-    if render_backend is None:
-        info_dict = defaultdict(int)
+    info_dict = defaultdict(int)
+    info_dict.update(
+        {
+            "position": {
+                0: "valid-cue-left",
+                1: "invalid-cue-left",
+                2: "valid-cue-right",
+                3: "invalid-cue-right",
+            }
+        }
+    )
 
-    elif render_backend == "pygame":
+    if render_backend == "pygame":
 
         if window_size is None:
             return ValueError("window_size needs to be defined!")
@@ -67,7 +76,7 @@ def get_posner(
             earnings_text,
         ]
 
-        info_dict = {
+        pygame_dict = {
             0: {"human": first_step("<", left_position)},
             1: {"human": first_step("<", right_position)},
             2: {"human": first_step(">", left_position)},
@@ -75,6 +84,8 @@ def get_posner(
             4: {"human": final_display},
             5: {"human": final_display},
         }
+
+        info_dict.update(pygame_dict)
 
     elif render_backend == "psychopy":
         raise NotImplementedError("Psychopy integration still under deliberation.")

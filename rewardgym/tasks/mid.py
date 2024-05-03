@@ -38,10 +38,20 @@ def get_mid(
     else:
         condition_out = (None, starting_positions)
 
-    if render_backend is None:
-        info_dict = defaultdict(int)
+    info_dict = defaultdict(int)
+    info_dict.update(
+        {
+            "position": {
+                0: "large-loss",
+                1: "small-loss",
+                2: "neutral",
+                3: "small-win",
+                4: "large-win",
+            }
+        }
+    )
 
-    elif render_backend == "pygame":
+    if render_backend == "pygame":
 
         if window_size is None:
             return ValueError("window_size needs to be defined!")
@@ -68,7 +78,7 @@ def get_mid(
             earnings_text,
         ]
 
-        info_dict = {
+        pygame_dict = {
             0: {"human": first_step("LL", "x")},
             1: {"human": first_step("LL", "x")},
             2: {"human": first_step("O", "o")},
@@ -80,6 +90,8 @@ def get_mid(
             8: {"human": final_display},
             9: {"human": final_display},
         }
+
+        info_dict.update(pygame_dict)
 
     elif render_backend == "psychopy":
         raise NotImplementedError("Psychopy integration still under deliberation.")

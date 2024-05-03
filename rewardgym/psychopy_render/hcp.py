@@ -1,8 +1,12 @@
 import numpy as np
-from psychopy.visual import TextStim
-from psychopy.visual.rect import Rect
 
-from .stimuli import ActionStimulus, BaseStimulus, FeedBackStimulus, TextStimulus
+try:
+    from psychopy.visual import TextStim, Window
+    from psychopy.visual.rect import Rect
+except ModuleNotFoundError:
+    from .psychopy_stubs import TextStim, Rect
+
+from .stimuli import ActionStimulus, BaseStimulus, FeedBackStimulus
 
 
 class ShowCard(BaseStimulus):
@@ -48,9 +52,9 @@ class ShowCard(BaseStimulus):
 
     def display(self, win, logger, wait, condition, **kwargs):
 
-        logger.keyStrokes(win)
+        logger.key_strokes(win)
 
-        stim_onset = logger.getTime()
+        stim_onset = logger.get_time()
 
         card = np.random.choice(self.condition_text[condition])
         display_text = self.text.format(card)
@@ -62,15 +66,17 @@ class ShowCard(BaseStimulus):
 
         wait.wait(self.duration, stim_onset)
 
-        logger.logEvent(
+        logger.log_event(
             {"event_type": self.name, "expected_duration": self.duration},
             onset=stim_onset,
         )
 
 
-reward_feedback = FeedBackStimulus(1.0, text="You gain: {0}", target="reward")
+reward_feedback = FeedBackStimulus(
+    1.0, text="You gain: {0}", target="reward", name="reward"
+)
 total_reward_feedback = FeedBackStimulus(
-    1.0, text="You have gained: {0}", target="total_reward"
+    1.0, text="You have gained: {0}", target="total_reward", name="reward-total"
 )
 base_stim_iti = BaseStimulus(1.0, name="iti")
 

@@ -88,14 +88,6 @@ Afterwards, you can use the PsychoPy coder to run ``rewardGym.py``, which is loc
 
 Outputs of this program will be saved by default in the ``data`` directory.
 
-**TODOS:**
-
-* bundle stimuli with the package
-* MR logging
-* Clearer meaning of conditions
-* configurations
-* No logging option
-
 
 Run the environment and train an agent
 ********************************************************************************
@@ -105,16 +97,16 @@ Running a task could look like the following
 .. code-block:: python
 
     from rewardgym import get_env, unpack_conditions
-    from rewardgym.agents.base_agent import SimpleQAgent
+    from rewardgym.agents.base_agent import QAgent
 
     env, conditions = get_env('hcp')
-    agent = SimpleQAgent(env, 0.1, 0.2)
+    agent = QAgent(env, 0.1, 0.2)
 
     n_episodes = 1000
 
-    for _ in range(n_episodes):
+    for t in range(n_episodes):
 
-        condition, starting_position = unpack_conditions(conditions)
+        condition, starting_position = unpack_conditions(conditions, t)
 
         obs, info = env.reset(agent_location=starting_position, condition=condition)
 

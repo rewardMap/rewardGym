@@ -5,6 +5,7 @@ from psychopy import core, event, gui, visual
 
 from rewardgym import ENVIRONMENTS, get_configs, get_env, unpack_conditions
 from rewardgym.psychopy_render import ExperimentLogger, WaitTime, get_psychopy_info
+from rewardgym.utils import get_condition_meaning
 
 outdir = "data/"
 
@@ -84,7 +85,7 @@ if task == "mid":
 for k in info_dict.keys():
     [i.setup(win, action_map=action_map) for i in info_dict[k]["psychopy"]]
 
-env.info_dict = info_dict
+env.add_info(info_dict)
 
 actions = []
 
@@ -118,7 +119,9 @@ for episode in range(n_episodes):
     obs, info = env.reset(starting_position, condition=condition)
     Logger.trial = episode
     Logger.set_trial_time()
-    Logger.trial_type = condition
+    Logger.trial_type = get_condition_meaning(
+        env.info_dict, starting_position=starting_position, condition=condition
+    )
     Logger.start_position = starting_position
     Logger.current_location = env.agent_location
 
@@ -138,7 +141,7 @@ for episode in range(n_episodes):
         )
 
     if out is not None:
-        action = out
+        action = out[0]
         done = False
         actions.append(action)
 
@@ -174,7 +177,7 @@ for episode in range(n_episodes):
             done = True
 
         elif out is not None:
-            action = out
+            action = out[0]
 
     if task == "mid":
 
@@ -186,7 +189,7 @@ for episode in range(n_episodes):
             info_dict[0]["psychopy"][-1].duration += 0.25
 
     Logger.log_event(
-        {"event_type": "TrialEnd", "total_reward": env.cumulative_reward},
+        {"event_type": "trial-end", "total_reward": env.cumulative_reward},
         reward=env.reward,
     )
 

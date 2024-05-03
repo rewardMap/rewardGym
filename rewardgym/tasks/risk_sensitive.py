@@ -47,10 +47,29 @@ def get_risk_sensitive(
     else:
         condition_out = ((conditions, ([0],)), action_map)
 
-    if render_backend is None:
-        info_dict = defaultdict(int)
+    reward_meaning = {
+        1: "null",
+        2: "save-20",
+        3: "save-40",
+        4: "risky-20",
+        5: "risky-80",
+    }
 
-    elif render_backend == "pygame":
+    condition_meaning = {}
+    for kk in action_map.keys():
+        if len(action_map[kk]) == 2:
+            condition_meaning[kk] = (
+                reward_meaning[action_map[kk][0] + 1]
+                + "_"
+                + reward_meaning[action_map[kk][1] + 1]
+            )
+        elif len(action_map[kk]) == 1:
+            condition_meaning[kk] = reward_meaning[action_map[kk][0] + 1]
+
+    info_dict = defaultdict(int)
+    info_dict.update({"condition": condition_meaning})
+
+    if render_backend == "pygame":
 
         if window_size is None:
             return ValueError("window_size needs to be defined!")
@@ -75,7 +94,7 @@ def get_risk_sensitive(
             earnings_text,
         ]
 
-        info_dict = {
+        pygame_dict = {
             0: {
                 "human": [
                     BaseDisplay(None, 1),
@@ -91,6 +110,8 @@ def get_risk_sensitive(
             4: {"human": final_display},
             5: {"human": final_display},
         }
+
+        info_dict.update(pygame_dict)
 
     elif render_backend == "psychopy":
         raise NotImplementedError("Psychopy integration still under deliberation.")

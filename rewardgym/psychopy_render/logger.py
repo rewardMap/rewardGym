@@ -2,7 +2,14 @@
 
 from typing import Dict, List, Tuple, Union
 
-from psychopy import core, event, visual
+try:
+    from psychopy import core
+    from psychopy.core import Clock
+    from psychopy.event import getKeys
+    from psychopy.visual import Window
+except ModuleNotFoundError:
+    from . import psychopy_stubs as core
+    from .psychopy_stubs import Clock, Window, getKeys
 
 
 class ExperimentLogger:
@@ -13,7 +20,7 @@ class ExperimentLogger:
     def __init__(
         self,
         file_name: str,
-        global_clock: core.Clock,
+        global_clock: Clock,
         participant_id: str,
         task: str = "hcp",
         run: int = 1,
@@ -22,6 +29,7 @@ class ExperimentLogger:
         na: str = "n/a",
         kill_switch: str = "q",
         mr_trigger: str = "5",
+        mr_clock: Clock = Clock,
     ):
         """
         Logger class to help with logging during a potential fMRI experiment,
@@ -53,7 +61,7 @@ class ExperimentLogger:
 
         self.file_name = file_name
         self.global_clock = global_clock
-        self.mr_clock = core.Clock()
+        self.mr_clock = mr_clock
 
         self.sep = sep
         self.na = na
@@ -86,7 +94,6 @@ class ExperimentLogger:
             "response_button",
             "response_late",
             "reward",
-            "delta_reward",
             "trial",
             "TR",
             "task",
@@ -115,6 +122,8 @@ class ExperimentLogger:
         Dict
             dictionary populated with default values.
         """
+
+        self.reward = reward
         tmp_dict = self.nan_dict.copy()
         tmp_dict["onset"] = self.global_clock.getTime()
         tmp_dict["reward"] = self.reward
@@ -126,13 +135,6 @@ class ExperimentLogger:
         tmp_dict["current_location"] = self.current_location
         tmp_dict["TR"] = self.tr
         tmp_dict["run"] = self.run
-
-        # Update reward
-        if reward is not None:
-            tmp_dict["delta_reward"] = reward - self.reward
-            self.reward = reward
-        else:
-            tmp_dict["delta_reward"] = 0
 
         return tmp_dict
 
@@ -159,7 +161,7 @@ class ExperimentLogger:
         tmp_dict = self._default_logging(reward)
 
         if onset:
-            if onset < tmp_dict["onset"]:
+            if onset <= tmp_dict["onset"]:
                 tmp_dict["duration"] = tmp_dict["onset"] - onset
                 tmp_dict["onset"] = onset
             else:
@@ -250,7 +252,7 @@ class ExperimentLogger:
         return self.global_clock.getTime()
 
     def key_strokes(
-        self, win: visual.Window, keyList: List[str] = []
+        self, win: Window, keyList: List[str] = []
     ) -> Union[Tuple[str, float], None]:
         """
         Check for key strokes in the keyboard buffer. Checking for MR-triggers,
@@ -258,7 +260,7 @@ class ExperimentLogger:
 
         Parameters
         ----------
-        win : visual.Window
+        win : Window
             Psychopy window object, used to display the task.
         keyList : List[str], optional
             List of allowed keys., by default []
@@ -269,7 +271,7 @@ class ExperimentLogger:
             _description_
         """
 
-        presses = event.getKeys(timeStamped=self.global_clock)
+        presses = getKeys(timeStamped=self.global_clock)
         response = None
 
         if presses:
@@ -303,7 +305,7 @@ class ExperimentLogger:
                 else:
                     self.log_event(
                         {
-                            "event_type": "ButtonPress",
+                            "event_type": "button-press",
                             "response_button": resp[0],
                             "response_time": resp[1] - self.trial_start,
                         },
@@ -323,11 +325,12 @@ class MinimalLogger(ExperimentLogger):
 
     def __init__(
         self,
-        global_clock: core.Clock,
+        global_clock: Clock,
         seq_tr: float = 0.752,
         na: str = "n/a",
         kill_switch: str = "q",
         mr_trigger: str = "5",
+        mr_clock: Clock = Clock,
     ):
         """
         Logger class to help with logging during a potential fMRI experiment,
@@ -335,7 +338,7 @@ class MinimalLogger(ExperimentLogger):
 
         Parameters
         ----------
-        global_clock : core.Clock
+        global_clock : Clock
             Clock that is used by the experiment.
         seq_tr : float, optional
             If it is an fMRI experiment, this is echo time. Used to calculate the expected collection between acqusitions, by default 0.752
@@ -348,7 +351,7 @@ class MinimalLogger(ExperimentLogger):
         """
 
         self.global_clock = global_clock
-        self.mr_clock = core.Clock()
+        self.mr_clock = mr_clock
 
         self.na = na
 
@@ -389,3 +392,24 @@ class MinimalLogger(ExperimentLogger):
         Close stub.
         """
         pass
+
+
+class SimulationLogger(ExperimentLogger):
+    def _write_to_file(self, tmp_values: List[float]):
+
+        for n, ii in enumerate(self.categories):
+            self.df[ii].append(tmp_values[n])
+
+    def create(self):
+        self.df = {ii: [] for ii in self.categories}
+
+    def key_strokes(
+        self,
+        key,
+        rt,
+    ) -> Union[Tuple[str, float], None]:
+
+        return (key, rt)
+
+    def close(self):
+        return self.df

@@ -9,12 +9,15 @@ from .stimuli import (
     TextStimulus,
 )
 
-reward_feedback = FeedBackStimulus(1.0, text="You gain: {0}", target="reward")
-total_reward_feedback = FeedBackStimulus(
-    1.0, text="You have gained: {0}", target="total_reward"
+reward_feedback = FeedBackStimulus(
+    1.0, text="You gain: {0}", target="reward", name="reward"
 )
-base_stim = BaseStimulus(1)
-fix = TextStimulus(text="+", duration=0.2)
+total_reward_feedback = FeedBackStimulus(
+    1.0, text="You have gained: {0}", target="total_reward", name="reward-total"
+)
+
+base_stim = BaseStimulus(0)
+fix = TextStimulus(text="+", duration=0.2, name="fixation")
 fix_iti = TextStimulus(text="+", duration=1.5, name="iti")
 
 image_shift = 250

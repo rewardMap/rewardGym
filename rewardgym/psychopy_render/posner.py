@@ -1,28 +1,23 @@
 import os
 
-import numpy as np
-from psychopy.visual import ImageStim
-from psychopy.visual.rect import Rect
-
 from . import STIMPATH
-from .stimuli import (
-    ActionStimulus,
-    BaseStimulus,
-    FeedBackStimulus,
-    ImageStimulus,
-    TextStimulus,
-)
+from .stimuli import ActionStimulus, BaseStimulus, FeedBackStimulus, ImageStimulus
 
-reward_feedback = FeedBackStimulus(1.0, text="You gain: {0}", target="reward")
-total_reward_feedback = FeedBackStimulus(
-    1.0, text="You have gained: {0}", target="total_reward"
+reward_feedback = FeedBackStimulus(
+    1.0, text="You gain: {0}", target="reward", name="reward"
 )
-base_stim = BaseStimulus(1)
+total_reward_feedback = FeedBackStimulus(
+    1.0, text="You have gained: {0}", target="total_reward", name="reward-total"
+)
+base_stim = BaseStimulus(0)
+
 fix = ImageStimulus(
     image_paths=[os.path.join(STIMPATH, "posner/fix.png")],
     positions=[(0, 0)],
     duration=0.4,
+    name="fixation",
 )
+
 fix_isi = ImageStimulus(
     image_paths=[os.path.join(STIMPATH, "posner/fix.png")],
     positions=[(0, 0)],
@@ -32,7 +27,6 @@ fix_isi = ImageStimulus(
 
 image_shift = 0
 
-
 action_stim = ActionStimulus(duration=0.5, key_dict={"left": 0, "right": 1})
 
 
@@ -41,7 +35,10 @@ def first_step(img, img2, image_shift2, to=1):
         base_stim,
         fix,
         ImageStimulus(
-            image_paths=[os.path.join(STIMPATH, img)], duration=0.5, positions=[(0, 0)]
+            image_paths=[os.path.join(STIMPATH, img)],
+            duration=0.5,
+            positions=[(0, 0)],
+            name="cue",
         ),
         fix_isi,
         ImageStimulus(
@@ -51,11 +48,13 @@ def first_step(img, img2, image_shift2, to=1):
                 os.path.join(STIMPATH, img2),
             ],
             positions=[(0, 0), (image_shift2, 0)],
+            name="target",
         ),
         ImageStimulus(
             image_paths=[os.path.join(STIMPATH, "posner/fix.png")],
             positions=[(0, 0)],
             duration=0.001,
+            name="fixation",
         ),
         ActionStimulus(
             duration=1.0, key_dict={"left": 0, "right": 1}, timeout_action=to
