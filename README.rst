@@ -5,7 +5,7 @@
  :target: https://codecov.io/gh/rewardMap/rewardGym
 
 .. image:: https://github.com/rewardMap/rewardGym/actions/workflows/build-sphinx.yaml/badge.svg
-.. image:: https://github.com/rewardMap/rewardGym/actions/workflows/pip-tests.yaml/badge.svg
+.. image:: https://github.com/rewardMap/rewardGym/actions/workflows/pip-push.yaml/badge.svg
 
 ==================================
 rewardGym
