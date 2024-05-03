@@ -311,7 +311,7 @@ class ExperimentLogger:
                 else:
                     self.log_event(
                         {
-                            "event_type": "ButtonPress",
+                            "event_type": "button-press",
                             "response_button": resp[0],
                             "response_time": resp[1] - self.trial_start,
                         },

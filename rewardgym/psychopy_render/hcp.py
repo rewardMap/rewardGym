@@ -52,9 +52,9 @@ class ShowCard(BaseStimulus):
 
     def display(self, win, logger, wait, condition, **kwargs):
 
-        logger.keyStrokes(win)
+        logger.key_strokes(win)
 
-        stim_onset = logger.getTime()
+        stim_onset = logger.get_time()
 
         card = np.random.choice(self.condition_text[condition])
         display_text = self.text.format(card)
@@ -66,7 +66,7 @@ class ShowCard(BaseStimulus):
 
         wait.wait(self.duration, stim_onset)
 
-        logger.logEvent(
+        logger.log_event(
             {"event_type": self.name, "expected_duration": self.duration},
             onset=stim_onset,
         )

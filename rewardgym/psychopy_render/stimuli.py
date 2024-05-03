@@ -395,7 +395,7 @@ class ActionStimulus(BaseStimulus):
                 RT = response[1] - response_window_onset
                 logger.log_event(
                     {
-                        "event_type": "Response",
+                        "event_type": "response",
                         "response_button": response[0],
                         "response_time": RT,
                     },
@@ -411,13 +411,16 @@ class ActionStimulus(BaseStimulus):
             RT = None
             logger.log_event(
                 {
-                    "event_type": "ResponseTimeOut",
+                    "event_type": "response-time-out",
                     "response_late": True,
                     "response_time": RT,
                 },
                 onset=response_window_onset,
             )
             response_key = self.timeout_action
+
+            if response_key is None:
+                return None
 
         win.flip()
 
@@ -439,7 +442,7 @@ class ActionStimulus(BaseStimulus):
         if rt > self.duration:
             logger.log_event(
                 {
-                    "event_type": "ResponseTimeOut",
+                    "event_type": "response-time-out",
                     "response_late": True,
                     "response_time": rt,
                 },
@@ -447,10 +450,14 @@ class ActionStimulus(BaseStimulus):
             )
             response_key = self.timeout_action
             remaining = None
+
+            if response_key is None:
+                return None
+
         else:
             logger.log_event(
                 {
-                    "event_type": "Response",
+                    "event_type": "response",
                     "response_button": response_key,
                     "response_time": rt,
                 },

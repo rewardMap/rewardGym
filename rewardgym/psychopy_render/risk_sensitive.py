@@ -44,8 +44,8 @@ class RiskSensitiveDisplay(BaseStimulus):
 
     def display(self, win, logger, wait, condition=None, action=None, **kwargs):
 
-        logger.keyStrokes(win)
-        stim_onset = logger.getTime()
+        logger.key_strokes(win)
+        stim_onset = logger.get_time()
 
         if len(self.condition_dict[condition].keys()) == 1:
             imgA = self.image_dict[self.condition_dict[condition][0]]
@@ -88,7 +88,7 @@ class RiskSensitiveDisplay(BaseStimulus):
 
         wait.wait(self.duration, stim_onset)
 
-        logger.logEvent(
+        logger.log_event(
             {"event_type": self.name, "expected_duration": self.duration},
             onset=stim_onset,
         )
