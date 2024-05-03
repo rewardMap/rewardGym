@@ -1,6 +1,12 @@
 .. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.10942784.svg
   :target: https://doi.org/10.5281/zenodo.10942784
 
+.. image:: https://codecov.io/gh/rewardMap/rewardGym/graph/badge.svg?token=NVVNHNP38M
+ :target: https://codecov.io/gh/rewardMap/rewardGym
+
+.. image:: https://github.com/rewardMap/rewardGym/actions/workflows/build-sphinx.yaml/badge.svg
+.. image:: https://github.com/rewardMap/rewardGym/actions/workflows/pip-tests.yaml/badge.svg
+
 ==================================
 rewardGym
 ==================================
