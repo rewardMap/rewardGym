@@ -1,6 +1,9 @@
-name: Python test
+name: Tests
 
-on: [pull_request]
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   build:
@@ -29,3 +32,7 @@ jobs:
           flake8 . --count --exit-zero --max-complexity=10 --statistics
       - name: Run tests and collect coverage
         run: pytest --cov --cov-report=xml
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4.0.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
