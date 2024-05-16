@@ -1,5 +1,5 @@
 from collections import defaultdict
-from typing import Tuple
+from typing import List, Tuple, Union
 
 import numpy as np
 
@@ -73,6 +73,67 @@ class QAgent:
         self.q_values[obs][action] = (
             self.q_values[obs][action] + self.lr * temporal_difference
         )
+        self.training_error.append(temporal_difference)
+
+        return self.q_values
+
+
+from collections import defaultdict
+from typing import Tuple
+
+import numpy as np
+
+
+class ValenceQAgent(QAgent):
+    def __init__(
+        self,
+        learning_rate_pos: float,
+        learning_rate_neg: float,
+        temperature: float,
+        discount_factor: float,
+        action_space: int = 2,
+        state_space: int = 2,
+    ):
+        """Initialize a Reinforcement Learning agent with an empty dictionary
+        of state-action values (q_values), a learning rate and an epsilon.
+
+        Args:
+            learning_rate: The learning rate
+            initial_epsilon: The initial epsilon value
+            epsilon_decay: The decay for epsilon
+            final_epsilon: The final epsilon value
+            discount_factor: The discount factor for computing the Q-value
+        """
+        self.q_values = np.zeros((state_space, action_space))
+
+        self.lr_neg = learning_rate_neg
+        self.lr_pos = learning_rate_pos
+
+        self.temperature = temperature
+        self.discount_factor = discount_factor
+
+        self.training_error = []
+
+    def update(
+        self,
+        obs: Tuple[int, int, bool],
+        action: int,
+        reward: float,
+        terminated: bool,
+        next_obs: Tuple[int, int, bool],
+    ):
+        """Updates the Q-value of an action."""
+        future_q_value = (not terminated) * np.max(self.q_values[next_obs])
+        temporal_difference = (
+            reward + self.discount_factor * future_q_value - self.q_values[obs][action]
+        )
+
+        if temporal_difference > 0:
+            q_update = self.lr_pos * temporal_difference
+        elif temporal_difference <= 0:
+            q_update = self.lr_neg * temporal_difference
+
+        self.q_values[obs][action] = self.q_values[obs][action] + q_update
         self.training_error.append(temporal_difference)
 
         return self.q_values
