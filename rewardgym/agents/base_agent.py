@@ -49,6 +49,7 @@ class QAgent:
             avail_actions = np.arange(len(self.q_values[obs]))
 
         qval = self.q_values[obs][avail_actions]
+        qval = qval - np.max(qval)
 
         qs = np.exp(qval * self.temperature)
 

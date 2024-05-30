@@ -1,9 +1,8 @@
 .vscode
 *.ipynb
 .DS_Store
-
-stimuli
 template_stimuli
+screenshots
 docs/build_
 data
 # Byte-compiled / optimized / DLL files
