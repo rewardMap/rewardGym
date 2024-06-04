@@ -409,15 +409,21 @@ class ActionStimulus(BaseStimulus):
         # What todo if response window timed out and now response has been given.
         if response_present is False:
             RT = None
+
+            response_key = self.timeout_action
+
+            if response_key is None:
+                response_key = logger.na
+
             logger.log_event(
                 {
                     "event_type": "response-time-out",
                     "response_late": True,
                     "response_time": RT,
+                    "response_button": response_key,
                 },
                 onset=response_window_onset,
             )
-            response_key = self.timeout_action
 
             if response_key is None:
                 return None
@@ -440,11 +446,16 @@ class ActionStimulus(BaseStimulus):
         logger.global_clock.time += rt
 
         if rt > self.duration:
+
+            if response_key is None:
+                response_key = logger.na
+
             logger.log_event(
                 {
                     "event_type": "response-time-out",
                     "response_late": True,
                     "response_time": rt,
+                    "response_button": response_key,
                 },
                 onset=response_window_onset,
             )
