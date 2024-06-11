@@ -78,6 +78,7 @@ class ExperimentLogger:
         self.trial_type = self.na
         self.start_position = self.na
         self.current_location = self.na
+        self.condition = self.na
 
         self.trial = -1
         self.tr = 0
@@ -103,6 +104,7 @@ class ExperimentLogger:
             "trial_time",
             "total_reward",
             "current_location",
+            "condition",
         ]
 
         # Create a dictionary of nans to be used later.
@@ -133,6 +135,7 @@ class ExperimentLogger:
         tmp_dict["trial_type"] = self.trial_type
         tmp_dict["start_position"] = self.start_position
         tmp_dict["current_location"] = self.current_location
+        tmp_dict["condition"] = self.condition
         tmp_dict["TR"] = self.tr
         tmp_dict["run"] = self.run
 
@@ -316,6 +319,20 @@ class ExperimentLogger:
 
         else:
             return response
+
+    def update_trial_info(self, **kwargs):
+
+        for k, v in kwargs.items():
+            if k in [
+                "condition",
+                "trial",
+                "start_position",
+                "trial_type",
+                "current_location",
+            ]:
+                setattr(self, k, v)
+            else:
+                raise AttributeError(f"Cannot / doest not have attribute: {k}")
 
 
 class MinimalLogger(ExperimentLogger):

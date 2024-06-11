@@ -133,7 +133,7 @@ def generate_risk_senistive_configs(stimulus_set: str = "1"):
     # 0 vs 0 / 20 = 7 and 17
     # 0 vs 0 / 40 = 8 and 21
 
-    seed = check_seed(222)
+    seed = check_seed(int(stimulus_set))
 
     risky_choices = [11, 18] * 11 + [16, 23] * 10 + [12, 22] * 12
     risky_choices = seed.choice(

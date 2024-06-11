@@ -1,5 +1,4 @@
-import json
-import os
+import pytest
 
 from rewardgym import ENVIRONMENTS, get_configs, get_env, unpack_conditions
 from rewardgym.psychopy_render import SimulationLogger, get_psychopy_info
@@ -71,6 +70,13 @@ def simulate_task(envname):
         )
         Logger.start_position = starting_position
         Logger.current_location = env.agent_location
+
+        Logger.update_trial_info(
+            start_position=starting_position,
+            current_location=env.agent_location,
+            trial=episode,
+            condition=condition,
+        )
 
         reward = None
         action = None
@@ -160,3 +166,18 @@ def test_smoke_screen_simulate_posner():
 
 def test_smoke_screen_simulate_mid():
     simulate_task("mid")
+
+
+def test_logger_error():
+
+    Logger = SimulationLogger(
+        "",
+        None,
+        participant_id="1",
+        run=1,
+        task="test",
+    )
+    Logger.create()
+
+    with pytest.raises(AttributeError):
+        Logger.update_trial_info(bla="bla")
