@@ -105,7 +105,7 @@ def generate_gonogo_configs(stimulus_set: str = "1"):
     iti_template = [0.75, 1.0, 1.25, 1.5] * 2
     isi_template = [0.25, 0.5, 0.75, 1.0] * 2
 
-    n_trials_per_condition = 5
+    n_trials_per_condition = 20
 
     conditions = seed.choice(a=condition_template, size=8, replace=False).tolist()
     isi = seed.choice(isi_template, size=8, replace=False).tolist()
