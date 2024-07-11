@@ -26,7 +26,7 @@ def simulate_task(envname):
     env, conditions = get_env(task)
 
     try:
-        settings = get_configs(task)
+        settings = get_configs(task)()
         if settings["condition_target"] == "location":
             conditions = (conditions[0], settings["condition"])
         elif settings["condition_target"] == "condition":
