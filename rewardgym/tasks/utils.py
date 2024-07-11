@@ -130,7 +130,7 @@ def get_configs(
     else:
         raise NotImplementedError(f"Task {task_name} is not implemented.")
 
-    return generate_configs()
+    return generate_configs
 
 
 def check_conditions_not_following(
