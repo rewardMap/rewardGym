@@ -1,4 +1,4 @@
-from typing import Literal, Union
+from typing import Any, List, Literal, Union
 
 import numpy as np
 
@@ -119,7 +119,7 @@ def get_configs(
         from .two_step import generate_two_step_configs as generate_configs
 
     elif task_name == "risk-sensitive":
-        from .risk_sensitive import generate_risk_senistive_configs as generate_configs
+        from .risk_sensitive import generate_risk_sensitive_configs as generate_configs
 
     elif task_name == "posner":
         from .posner import generate_posner_configs as generate_configs
@@ -131,3 +131,59 @@ def get_configs(
         raise NotImplementedError(f"Task {task_name} is not implemented.")
 
     return generate_configs()
+
+
+def check_conditions_not_following(
+    condition_list: List[Any], not_following: List[Any], window_length: int = 1
+) -> bool:
+    """
+    Checks if any elements in the condition_list are followed by elements from the not_following list within a specified window length.
+
+    Parameters
+    ----------
+    condition_list : List[Any]
+        The list of conditions to check.
+    not_following : List[Any]
+        The list of elements that should not follow the elements in condition_list.
+    window_length : int, optional
+        The length of the window to check after each element in condition_list, by default 1.
+
+    Returns
+    -------
+    bool
+        Returns True if no elements from not_following appear within the window length after any element in condition_list, False otherwise.
+    """
+    for n, _ in enumerate(condition_list):
+        if condition_list[n] in not_following:
+            # Loop over conditions following the window. N + 1 as to make the window_lengths more intuitive.
+            if any(
+                k in not_following
+                for k in condition_list[n + 1 : n + 1 + window_length]
+            ):
+                return False
+
+    return True
+
+
+def check_conditions_present(
+    condition_list: List[Any], conditions_required: List[Any]
+) -> bool:
+    """
+    Checks if all elements in the conditions_required list are present in the condition_list.
+
+    Parameters
+    ----------
+    condition_list : List[Any]
+        The list of conditions to check.
+    conditions_required : List[Any]
+        The list of elements that must be present in the condition_list.
+
+    Returns
+    -------
+    bool
+        Returns True if all elements from conditions_required are present in the condition_list, False otherwise.
+    """
+    test_set = set(condition_list)
+    required_set = set(conditions_required)
+
+    return required_set.issubset(test_set)
