@@ -1,7 +1,10 @@
+import warnings
 from collections import defaultdict
 from typing import List, Tuple, Union
 
 import numpy as np
+
+from ..utils import check_seed
 
 
 class QAgent:
@@ -12,6 +15,7 @@ class QAgent:
         discount_factor: float,
         action_space: int = 2,
         state_space: int = 2,
+        seed: Union[int, np.random.Generator] = 1000,
     ):
         """Initialize a Reinforcement Learning agent with an empty dictionary
         of state-action values (q_values), a learning rate and an epsilon.
@@ -28,6 +32,7 @@ class QAgent:
         self.lr = learning_rate
         self.temperature = temperature
         self.discount_factor = discount_factor
+        self.rng = check_seed(seed)
 
         self.training_error = []
 
@@ -40,7 +45,7 @@ class QAgent:
 
         prob = self.get_probs(obs, avail_actions)
 
-        a = np.random.choice(np.arange(len(prob)), p=prob)
+        a = self.rng.choice(np.arange(len(prob)), p=prob)
 
         return a
 
@@ -79,12 +84,6 @@ class QAgent:
         return self.q_values
 
 
-from collections import defaultdict
-from typing import Tuple
-
-import numpy as np
-
-
 class ValenceQAgent(QAgent):
     def __init__(
         self,
@@ -94,6 +93,7 @@ class ValenceQAgent(QAgent):
         discount_factor: float,
         action_space: int = 2,
         state_space: int = 2,
+        seed: Union[int, np.random.Generator] = 1000,
     ):
         """Initialize a Reinforcement Learning agent with an empty dictionary
         of state-action values (q_values), a learning rate and an epsilon.
@@ -112,6 +112,8 @@ class ValenceQAgent(QAgent):
 
         self.temperature = temperature
         self.discount_factor = discount_factor
+
+        self.rng = check_seed(seed)
 
         self.training_error = []
 
@@ -138,3 +140,39 @@ class ValenceQAgent(QAgent):
         self.training_error.append(temporal_difference)
 
         return self.q_values
+
+
+class RandomAgent(QAgent):
+    def __init__(
+        self,
+        bias: float = None,
+        action_space: int = 2,
+        state_space: int = 2,
+        seed: Union[int, np.random.Generator] = 1000,
+    ) -> None:
+
+        self.bias = bias
+
+        self.action_space = action_space
+        self.state_space = state_space
+        self.rng = check_seed(seed)
+
+    def update(self, *args, **kwargs):
+
+        return None
+
+    def get_probs(self, obs, avail_actions=None):
+
+        if avail_actions is None:
+            avail_actions = np.arange(self.action_space)
+
+        action_probs = np.zeros(len(avail_actions))
+        if len(action_probs) > 1:
+            action_probs[0] = self.bias
+            action_probs[1:] = (1 - self.bias) / (len(avail_actions) - 1)
+        else:
+            action_probs[0] = 1
+
+        prob = action_probs
+
+        return prob
