@@ -12,7 +12,7 @@ class QAgent:
         self,
         learning_rate: float,
         temperature: float,
-        discount_factor: float,
+        discount_factor: float = 0.99,
         action_space: int = 2,
         state_space: int = 2,
         seed: Union[int, np.random.Generator] = 1000,
@@ -54,7 +54,7 @@ class QAgent:
             avail_actions = np.arange(len(self.q_values[obs]))
 
         qval = self.q_values[obs][avail_actions]
-        qval = qval - np.max(qval)
+        qval = qval - np.mean(qval)
 
         qs = np.exp(qval * self.temperature)
 
@@ -90,7 +90,7 @@ class ValenceQAgent(QAgent):
         learning_rate_pos: float,
         learning_rate_neg: float,
         temperature: float,
-        discount_factor: float,
+        discount_factor: float = 0.99,
         action_space: int = 2,
         state_space: int = 2,
         seed: Union[int, np.random.Generator] = 1000,
@@ -130,7 +130,6 @@ class ValenceQAgent(QAgent):
         temporal_difference = (
             reward + self.discount_factor * future_q_value - self.q_values[obs][action]
         )
-
         if temporal_difference > 0:
             q_update = self.lr_pos * temporal_difference
         elif temporal_difference <= 0:
