@@ -6,6 +6,7 @@ import numpy as np
 
 from ..reward_classes import BaseReward
 from ..utils import check_seed
+from .utils import check_conditions_not_following, check_conditions_present
 
 
 def get_risk_sensitive(
@@ -119,48 +120,126 @@ def get_risk_sensitive(
     return environment_graph, reward_structure, condition_out, info_dict
 
 
-def generate_risk_senistive_configs(stimulus_set: str = "1"):
+def generate_risk_sensitive_configs(stimulus_set: str = "1"):
+    """
+    Generating randomized stimulus sequences following Rosenbaum et al. 2022.
+    Stimulus generation pseudo random for each block and another check is implemented, to not have two forced choices
+    following each other and making sure, that one of each forced choices appears in the first 15 trials.
 
-    # Conditions of importance: 0, 1, 2, 3, 4 = single display
-    # Risky trials, with same EV:
-    # 20 vs 0 / 40 = 11 and 18
-    # 40 vs 0 / 80 = 16 and 23
-    # 20 vs 0 / 80 = 12 and 22
-    # Dominated
-    # 40 vs 0 / 40 = 15 and 19
-    # 20 vs 0 = 5 and 9 #TODO Check this
-    # 40 vs 0 = 6 and 13
-    # 0 vs 0 / 20 = 7 and 17
-    # 0 vs 0 / 40 = 8 and 21
+
+    Three blocks of 61 stimuli each:
+    * 66 risky choices
+        * 42 with equal EV
+        * 24 with sure 20 vs risky 80
+    * 75 forced choices (15 each)
+    * 42 test trials (i.e. dominated choices, where one option has clearly higher outcome).
+
+    ITIs are drawn from the fixed set [1.5, 2.125, 2.75, 3.375, 4.0].
+
+    Conditions of importance:
+    * 0, 1, 2, 3, 4 = forced choice
+    Risky trials, with same EV:
+     * 20 vs 0 / 40 = 11 and 18
+     * 40 vs 0 / 80 = 16 and 23
+    Risky trials, not same EV:
+     * 20 vs 0 / 80 = 12 and 22
+    Dominated
+     * 40 vs 0 / 40 = 15 and 19
+     * 20 vs 0 = 5 and 9
+     * 40 vs 0 = 6 and 13
+     * 0 vs 0 / 20 = 7 and 17
+     * 0 vs 0 / 40 = 8 and 21
+
+    All other possible conditions:
+    {0: 'null',
+     1: 'save-20',
+     2: 'save-40',
+     3: 'risky-20',
+     4: 'risky-80',
+     5: 'null_save-20',
+     6: 'null_save-40',
+     7: 'null_risky-20',
+     8: 'null_risky-80',
+     9: 'save-20_null',
+     10: 'save-20_save-40',
+     11: 'save-20_risky-20',
+     12: 'save-20_risky-80',
+     13: 'save-40_null',
+     14: 'save-40_save-20',
+     15: 'save-40_risky-20',
+     16: 'save-40_risky-80',
+     17: 'risky-20_null',
+     18: 'risky-20_save-20',
+     19: 'risky-20_save-40',
+     20: 'risky-20_risky-80',
+     21: 'risky-80_null',
+     22: 'risky-80_save-20',
+     23: 'risky-80_save-40',
+     24: 'risky-80_risky-20'}
+
+    """
 
     seed = check_seed(int(stimulus_set))
 
-    risky_choices = [11, 18] * 11 + [16, 23] * 10 + [12, 22] * 12
-    risky_choices = seed.choice(
-        risky_choices, size=len(risky_choices), replace=False
-    ).tolist()
-    forced_choices = [0, 1, 2, 3, 4] * 15
-    forced_choices = seed.choice(
-        forced_choices, size=len(forced_choices), replace=False
-    ).tolist()
-    test_trials = [15, 19, 5, 9, 6, 13, 7, 17, 8, 21] * 4 + [7, 6]
-    test_trials = seed.choice(
-        test_trials, size=len(test_trials), replace=False
-    ).tolist()
+    blocks = 3
 
-    iti_template = [1.5, 2.125, 2.75, 3.375, 4.0] * 36 + [1.5, 2.75, 4.0]
+    itis = []
+    conditions = []
 
-    condition_template = risky_choices + forced_choices + test_trials
-    conditions = seed.choice(
-        a=condition_template, size=len(condition_template), replace=False
-    ).tolist()
-    iti = seed.choice(iti_template, size=len(conditions), replace=False).tolist()
+    for b in range(blocks):
+        risky_equal_ev = [11, 18, 16, 23] * 3 + [
+            seed.choice([11, 18]),
+            seed.choice([16, 23]),
+        ]
+        risky_non_equal_ev = [12, 22] * 4
+        forced_choices = [0, 1, 2, 3, 4] * 5
+
+        test_trials = [15, 19, 5, 9, 6, 13, 7, 17, 8, 21] + [
+            seed.choice([15, 10]),
+            seed.choice([5, 9]),
+            seed.choice([6, 13]),
+            seed.choice([8, 21]),
+        ]
+
+        print(
+            len(risky_equal_ev),
+            len(risky_non_equal_ev),
+            len(test_trials),
+            len(forced_choices),
+        )
+        iti_template = [1.5, 2.125, 2.75, 3.375, 4.0] * 12 + [1.5, 2.75, 4.0]
+
+        condition_template = (
+            forced_choices + risky_equal_ev + risky_non_equal_ev + test_trials
+        )
+
+        approve = False
+
+        while not approve:
+            conditions_proposal = seed.choice(
+                a=condition_template, size=len(condition_template), replace=False
+            ).tolist()
+            approve = (
+                check_conditions_not_following(conditions_proposal, [0])
+                and check_conditions_not_following(conditions_proposal, [1])
+                and check_conditions_not_following(conditions_proposal, [2])
+                and check_conditions_not_following(conditions_proposal, [3])
+                and check_conditions_not_following(conditions_proposal, [4])
+                and check_conditions_present(conditions_proposal[:15], [0, 1, 2, 3, 4])
+            )
+
+        conditions.extend(conditions_proposal)
+
+        iti = seed.choice(
+            iti_template, size=len(condition_template), replace=False
+        ).tolist()
+        itis.extend(iti)
 
     config = {
         "name": "risk-sensitive",
         "stimulus_set": stimulus_set,
         "isi": [],
-        "iti": iti,
+        "iti": itis,
         "condition": conditions,
         "condition_target": "condition",
         "ntrials": len(conditions),  # 183
