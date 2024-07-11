@@ -4,7 +4,7 @@ from typing import Literal, Union
 
 import numpy as np
 
-from ..reward_classes import BaseReward
+from ..reward_classes import BaseReward, PseudoRandomReward
 from ..utils import check_seed
 from .utils import check_conditions_not_following, check_conditions_present
 
@@ -30,8 +30,8 @@ def get_risk_sensitive(
         1: BaseReward(reward=[0], seed=seed),
         2: BaseReward(reward=[20], seed=seed),
         3: BaseReward(reward=[40], seed=seed),
-        4: BaseReward(reward=[40, 0], p=[0.5, 0.5], seed=seed),
-        5: BaseReward(reward=[80, 0], p=[0.5, 0.5], seed=seed),
+        4: PseudoRandomReward(reward_list=[40, 40, 40, 40, 0, 0, 0, 0], seed=seed),
+        5: PseudoRandomReward(reward_list=[80, 80, 80, 80, 0, 0, 0, 0], seed=seed),
     }
 
     action_space = list(reward_structure.keys())
