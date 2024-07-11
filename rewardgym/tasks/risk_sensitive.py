@@ -201,12 +201,6 @@ def generate_risk_sensitive_configs(stimulus_set: str = "1"):
             seed.choice([8, 21]),
         ]
 
-        print(
-            len(risky_equal_ev),
-            len(risky_non_equal_ev),
-            len(test_trials),
-            len(forced_choices),
-        )
         iti_template = [1.5, 2.125, 2.75, 3.375, 4.0] * 12 + [1.5, 2.75, 4.0]
 
         condition_template = (
