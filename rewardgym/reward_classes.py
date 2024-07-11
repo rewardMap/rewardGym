@@ -1,4 +1,4 @@
-from typing import Union
+from typing import List, Union
 
 import numpy as np
 
@@ -19,12 +19,12 @@ class BaseReward:
 
         self.rng = check_seed(seed)
 
-    def _reward_function(self, condition=None):
+    def _reward_function(self, **kwargs):
         reward = self.rng.choice(self.reward, p=self.p)
         return reward
 
-    def __call__(self, condition=None):
-        return self._reward_function(condition)
+    def __call__(self, *args):
+        return self._reward_function(condition=args[0])
 
 
 class DriftingReward(BaseReward):
@@ -50,7 +50,7 @@ class DriftingReward(BaseReward):
         self.gauss_sd = gauss_sd
         self.borders = borders
 
-    def _reward_function(self, condition=None):
+    def _reward_function(self, **kwargs):
         reward = self.rng.choice(self.reward, p=[self.p, 1 - self.p])
 
         step = self.rng.normal(0, self.gauss_sd)
@@ -61,9 +61,6 @@ class DriftingReward(BaseReward):
             self.p += step
 
         return reward
-
-    def __call__(self, condition=None):
-        return self._reward_function(condition)
 
 
 class ConditionReward(BaseReward):
@@ -76,3 +73,24 @@ class ConditionReward(BaseReward):
 
     def __call__(self, condition):
         return self._reward_function(condition)
+
+
+class PseudoRandomReward(BaseReward):
+    def __init__(self, reward_list: Union[List], seed=1234):
+        self.reward_list = reward_list
+        self.rng = check_seed(seed)
+        self._generate_sequence()
+
+    def _reward_function(self, **kwargs):
+
+        reward = self.rewards.pop()
+
+        if len(self.rewards) == 0:
+            self._generate_sequence()
+
+        return reward
+
+    def _generate_sequence(self):
+        self.rewards = self.rng.choice(
+            self.reward_list, size=len(self.reward_list), replace=False
+        ).tolist()
