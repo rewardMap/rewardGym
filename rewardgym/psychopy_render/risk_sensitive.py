@@ -7,7 +7,14 @@ except ModuleNotFoundError:
     from .psychopy_stubs import Rect, ImageStim
 
 from . import STIMPATH
-from .stimuli import ActionStimulus, BaseStimulus, FeedBackStimulus
+from .default_images import fixation_cross
+from .stimuli import (
+    ActionStimulus,
+    BaseStimulus,
+    FeedBackStimulus,
+    ImageStimulus,
+    TextStimulus,
+)
 
 
 class RiskSensitiveDisplay(BaseStimulus):
@@ -16,7 +23,7 @@ class RiskSensitiveDisplay(BaseStimulus):
         duration,
         name=None,
         image_position=(0, 0),
-        image_shift=250,
+        image_shift=350,
         with_action=False,
         image_map={
             0: os.path.join(STIMPATH, "risk_sensitive", "stim1.png"),
@@ -40,7 +47,13 @@ class RiskSensitiveDisplay(BaseStimulus):
         self.condition_dict = action_map
 
         for kk in self.image_map.keys():
-            self.image_dict[kk] = ImageStim(win=win, image=self.image_map[kk])
+
+            if isinstance(self.image_map[kk], str):
+                self.image_dict[kk] = ImageStim(win=win, image=self.image_map[kk])
+            else:
+                self.image_dict[kk] = ImageStim(
+                    win, image=self.image_dict[kk], size=self.image_dict[kk].shape[:2]
+                )
 
     def display(self, win, logger, wait, condition=None, action=None, **kwargs):
 
@@ -50,7 +63,7 @@ class RiskSensitiveDisplay(BaseStimulus):
         if len(self.condition_dict[condition].keys()) == 1:
             imgA = self.image_dict[self.condition_dict[condition][0]]
             imgB = None
-            imgA.pos = self.image_position
+            imgA.pos = (-self.image_shift, self.image_position[1])
         else:
             imgA = self.image_dict[self.condition_dict[condition][0]]
             imgB = self.image_dict[self.condition_dict[condition][1]]
@@ -102,23 +115,22 @@ reward_feedback = FeedBackStimulus(
 total_reward_feedback = FeedBackStimulus(
     1.0, text="You have gained: {0}", target="total_reward", name="reward-total"
 )
-base_stim = BaseStimulus(0)
+base_stim = ImageStimulus(
+    image_paths=[fixation_cross()], duration=0.1, name=None, autodraw=True
+)
+fix_iti = BaseStimulus(duration=1.5, name="iti")
 
 cue_disp = RiskSensitiveDisplay(0.05, name="cue")
-sel_disp = RiskSensitiveDisplay(0.5, with_action=True, name="selected")
+sel_disp = RiskSensitiveDisplay(1.5, with_action=True, name="selected")
 
-final_step = [
-    sel_disp,
-    reward_feedback,
-    total_reward_feedback,
-]
+final_step = [sel_disp, reward_feedback, total_reward_feedback, fix_iti]
 
 info_dict = {
     0: {
         "psychopy": [
             base_stim,
             cue_disp,
-            ActionStimulus(duration=1.0),
+            ActionStimulus(duration=2.0, timeout_action=None),
         ]
     },
     1: {"psychopy": final_step},
