@@ -68,6 +68,7 @@ def draw_shape(
     -------
     None
     """
+
     if padding is None:
         padding = 0
 
@@ -80,30 +81,32 @@ def draw_shape(
 
     if shape.split("-")[0] == "neg":
         color = bg_color
-        shape = shape[1]
+        shape = shape.split("-")[1]
+
+    cx, cy = (bbox[0] + bbox[2]) // 2, (bbox[1] + bbox[3]) // 2
 
     """Draw a specified shape within a bounding box."""
     if shape == "square":
         draw.rectangle(bbox, fill=color)
     elif shape == "triangle_d":
-        cx, cy = (bbox[0] + bbox[2]) // 2, (bbox[1] + bbox[3]) // 2
         draw.polygon(
             [(cx, bbox[3]), (bbox[0], bbox[1]), (bbox[2], bbox[1])], fill=color
         )
     elif shape == "triangle_u":
-        cx, cy = (bbox[0] + bbox[2]) // 2, (bbox[1] + bbox[3]) // 2
         draw.polygon(
             [(cx, bbox[1]), (bbox[0], bbox[3]), (bbox[2], bbox[3])], fill=color
         )
     elif shape == "circle":
         draw.ellipse(bbox, fill=color)
     elif shape == "diamond":
-        cx, cy = (bbox[0] + bbox[2]) // 2, (bbox[1] + bbox[3]) // 2
         draw.polygon(
             [(cx, bbox[1]), (bbox[2], cy), (cx, bbox[3]), (bbox[0], cy)], fill=color
         )
+    elif shape == "halfdiamond_u":
+        draw.polygon([(bbox[2], cy), (cx, bbox[3]), (bbox[0], cy)], fill=color)
+    elif shape == "halfdiamond_d":
+        draw.polygon([(cx, bbox[1]), (bbox[2], cy), (bbox[0], cy)], fill=color)
     elif shape == "cross":
-        cx, cy = (bbox[0] + bbox[2]) // 2, (bbox[1] + bbox[3]) // 2
         draw.line(
             [cx, bbox[1], cx, bbox[3]], fill=color, width=(bbox[2] - bbox[0]) // 4
         )
@@ -133,6 +136,9 @@ def draw_shape(
         left = pad_bbox[0] + start_pct * (pad_bbox[2] - pad_bbox[0])
         right = pad_bbox[0] + end_pct * (pad_bbox[2] - pad_bbox[0])
         draw.rectangle([left, pad_bbox[1], right, pad_bbox[3]], fill=color)
+
+    else:
+        raise ValueError(f"{shape} is not in list of valid shapes.")
 
 
 def add_border(image, border_size, border_color):
@@ -238,7 +244,10 @@ def create_pattern(
             center_x = (x + 0.5) * tile_size
             center_y = (y + 0.5) * tile_size
 
-            for sh, sz in zip(shape.split("+"), sizes):
+            if not isinstance(color, list):
+                color = [color] * len(sizes)
+
+            for sh, sz, c in zip(shape.split("+"), sizes, color):
                 shape_size = tile_size * sz
                 bbox = [
                     int(center_x - shape_size // 2),
@@ -247,7 +256,7 @@ def create_pattern(
                     int(center_y + shape_size // 2),
                 ]
 
-                draw_shape(draw, sh.strip(" "), bbox, color, padding, bg_color=bg_color)
+                draw_shape(draw, sh.strip(" "), bbox, c, padding, bg_color=bg_color)
 
     return pattern
 
@@ -268,6 +277,7 @@ def make_stimulus(
     border_color: str = "white",
     bg_color: Tuple[int, int, int, int] = (0, 0, 0, 0),
     return_numpy: bool = False,
+    normalize_color_space: bool = True,
 ) -> Union[Image.Image, np.ndarray]:
     """
     Create a stimulus image with a pattern of shapes and optional border.
@@ -337,6 +347,9 @@ def make_stimulus(
         pattern_image.show()
 
     if return_numpy:
-        return np.array(pattern_image)
+        if normalize_color_space:
+            return np.array(pattern_image) / 255
+        else:
+            return np.array(pattern_image)
     else:
         return pattern_image
