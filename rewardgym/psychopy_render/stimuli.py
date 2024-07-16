@@ -5,6 +5,7 @@ try:
 except ModuleNotFoundError:
     from .psychopy_stubs import Window, TextStim, ImageStim
 
+from .default_images import lose_cross, win_cross, zero_cross
 from .logger import ExperimentLogger, SimulationLogger
 
 
@@ -235,6 +236,9 @@ class ImageStimulus(BaseStimulus):
         image_paths: List,
         positions: List = None,
         name: str = None,
+        width: float = None,
+        height: float = None,
+        autodraw: bool = False,
     ):
         """
         Stimulus class for image displays.
@@ -254,7 +258,14 @@ class ImageStimulus(BaseStimulus):
         super().__init__(name=name, duration=duration)
 
         self.image_paths = image_paths
+
+        if positions is None:
+            positions = [(0, 0)] * len(image_paths)
+
         self.positions = positions
+        self.width = width
+        self.height = height
+        self.autodraw = autodraw
 
     def setup(self, win: Window, image_paths=None, **kwargs):
         """
@@ -275,7 +286,18 @@ class ImageStimulus(BaseStimulus):
 
         self.imageStims = []
         for ip, pos in zip(self.image_paths, self.positions):
-            self.imageStims.append(ImageStim(win, image=ip, pos=pos))
+            if isinstance(ip, str):
+                self.imageStims.append(ImageStim(win, image=ip, pos=pos))
+
+            else:
+                width = ip.shape[1] if self.width is None else self.width
+                height = ip.shape[0] if self.height is None else self.height
+                self.imageStims.append(
+                    ImageStim(win, image=ip, size=(width, height), pos=pos)
+                )
+
+        for ip in self.imageStims:
+            ip.autoDraw = self.autodraw
 
     def display(self, win: Window, logger: ExperimentLogger, wait: float, **kwargs):
         """
@@ -425,7 +447,7 @@ class ActionStimulus(BaseStimulus):
                 onset=response_window_onset,
             )
 
-            if response_key is None:
+            if response_key == logger.na:
                 return None
 
         win.flip()
@@ -491,10 +513,12 @@ class FeedBackStimulus(BaseStimulus):
         self,
         duration: float,
         text: str,
-        position: Tuple[int, int] = None,
+        position: Tuple[int, int] = (0, 350),
         name: str = None,
         target: Literal["reward", "total_reward"] = "reward",
         text_color: str = "white",
+        font_height: float = 75,
+        feedback_stim: Dict = True,
     ):
         """
         FeedBack class, provides feedback to the participant, by creating
@@ -514,6 +538,10 @@ class FeedBackStimulus(BaseStimulus):
             If the trial's reward or the total reward should be shown, by default "reward"
         text_color : str, optional
             Color of the text, by default "white"
+        feedback_stim : Dict, optional
+            If the feedback_stim should be displayed, if True changes fixation cross,
+            if None does not show an image as feedback. For other images populate the
+            keys: win, lose, zero with a string to an image or a numpy array.
         """
 
         super().__init__(name=name, duration=duration)
@@ -522,6 +550,19 @@ class FeedBackStimulus(BaseStimulus):
         self.position = position
         self.text_color = text_color
         self.target = target
+
+        if feedback_stim is True:
+            self.feedback_stim = {
+                "win": win_cross(),
+                "lose": lose_cross(),
+                "zero": zero_cross(),
+            }
+        elif feedback_stim is None or feedback_stim is False:
+            self.feedback_stim = {}
+        else:
+            self.feedback_stim = feedback_stim
+
+        self.font_height = font_height
 
     def setup(self, win: Window, **kwargs):
         """
@@ -535,9 +576,28 @@ class FeedBackStimulus(BaseStimulus):
         """
 
         self.textStim = TextStim(
-            win=win, name=self.name, text=self.text, color=self.text_color
+            win=win,
+            name=self.name,
+            text=self.text,
+            color=self.text_color,
+            height=self.font_height,
+            pos=self.position,
         )
         self.textStim.setAutoDraw(False)
+
+        self.feedback_image = {}
+
+        for kk in self.feedback_stim.keys():
+            if isinstance(self.feedback_stim[kk], str):
+                self.feedback_image[kk] = ImageStim(
+                    win=win, image=self.feedback_stim[kk]
+                )
+            else:
+                self.feedback_image[kk] = ImageStim(
+                    win,
+                    image=self.feedback_stim[kk],
+                    size=self.feedback_stim[kk].shape[:2],
+                )
 
     def display(
         self,
@@ -574,17 +634,33 @@ class FeedBackStimulus(BaseStimulus):
 
         # Fills in the format string. Adds the + sign for positive rewards.
         if self.target == "reward":
+
+            if reward > 0:
+                feedback_img = "win"
+            elif reward < 0:
+                feedback_img = "lose"
+            else:
+                feedback_img = "zero"
+
             reward = f"+{reward}" if reward > 0 else f"{reward}"
             self.textStim.setText(self.text.format(reward))
+
         elif self.target == "total_reward":
             total_reward = f"+{total_reward}" if total_reward > 0 else f"{total_reward}"
             self.textStim.setText(self.text.format(total_reward))
+            feedback_img = "None"
 
         logger.key_strokes(win)
 
         stim_onset = logger.get_time()
+        if feedback_img in self.feedback_image.keys():
+            self.feedback_image[feedback_img].autoDraw = True
+
         self.textStim.draw()
         win.flip()
+
+        if feedback_img in self.feedback_image.keys():
+            self.feedback_image[feedback_img].autoDraw = False
 
         wait.wait(self.duration, stim_onset)
 
