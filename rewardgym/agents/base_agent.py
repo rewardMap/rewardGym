@@ -58,6 +58,11 @@ class QAgent:
 
         qs = np.exp(qval * self.temperature)
 
+        if any(~np.isfinite(qs)):
+            warnings.warn("Overflow in softmax, replacing with max / min value.")
+            qs[np.isposinf(qs)] = np.finfo(float).max
+            qs[np.isneginf(qs)] = np.finfo(float).min
+
         prob = qs / np.sum(qs)
 
         return prob
