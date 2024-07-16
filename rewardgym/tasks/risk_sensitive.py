@@ -52,7 +52,7 @@ def get_risk_sensitive(
         1: "null",
         2: "save-20",
         3: "save-40",
-        4: "risky-20",
+        4: "risky-40",
         5: "risky-80",
     }
 
@@ -154,28 +154,28 @@ def generate_risk_sensitive_configs(stimulus_set: str = "1"):
     {0: 'null',
      1: 'save-20',
      2: 'save-40',
-     3: 'risky-20',
+     3: 'risky-40',
      4: 'risky-80',
      5: 'null_save-20',
      6: 'null_save-40',
-     7: 'null_risky-20',
+     7: 'null_risky-40',
      8: 'null_risky-80',
      9: 'save-20_null',
      10: 'save-20_save-40',
-     11: 'save-20_risky-20',
+     11: 'save-20_risky-40',
      12: 'save-20_risky-80',
      13: 'save-40_null',
      14: 'save-40_save-20',
-     15: 'save-40_risky-20',
+     15: 'save-40_risky-40',
      16: 'save-40_risky-80',
-     17: 'risky-20_null',
-     18: 'risky-20_save-20',
-     19: 'risky-20_save-40',
-     20: 'risky-20_risky-80',
+     17: 'risky-40_null',
+     18: 'risky-40_save-20',
+     19: 'risky-40_save-40',
+     20: 'risky-40_risky-80',
      21: 'risky-80_null',
      22: 'risky-80_save-20',
      23: 'risky-80_save-40',
-     24: 'risky-80_risky-20'}
+     24: 'risky-80_risky-40'}
 
     """
 
