@@ -12,7 +12,13 @@ outdir = "data/"
 if not os.path.isdir(outdir):
     os.mkdir(outdir)
 
-exp_dict = {"participant_id": "001", "run": 1, "task": ENVIRONMENTS}
+exp_dict = {
+    "participant_id": "001",
+    "run": 1,
+    "task": ENVIRONMENTS,
+    "condition_set": 20,
+    "stimulus_set": 22,
+}
 
 dlg = gui.DlgFromDict(exp_dict)
 
@@ -39,6 +45,10 @@ logger_name = "sub-{0}_task-{1}_run-{2}_beh.tsv".format(
     exp_dict["participant_id"], exp_dict["task"], exp_dict["run"]
 )
 
+config_save = "sub-{0}_task-{1}_run-{2}_config.json".format(
+    exp_dict["participant_id"], exp_dict["task"], exp_dict["run"]
+)
+
 Logger = ExperimentLogger(
     os.path.join(outdir, logger_name),
     globalClock,
@@ -51,11 +61,14 @@ Wait = WaitTime(win, Logger)
 
 task = exp_dict["task"]
 
-info_dict = get_psychopy_info(task)
+info_dict, stimulus_info = get_psychopy_info(
+    task, stimulus_set=exp_dict["stimulus_set"]
+)
+exp_dict["stimulus_info"] = stimulus_info
 env, conditions = get_env(task)
 
 try:
-    settings = get_configs(task)()
+    settings = get_configs(task)(exp_dict["stimulus_set"])
     if settings["condition_target"] == "location":
         conditions = (conditions[0], settings["condition"])
     elif settings["condition_target"] == "condition":
@@ -63,12 +76,7 @@ try:
 
     n_episodes = settings["ntrials"]
 
-    config_save = "sub-{0}_task-{1}_run-{2}_config.json".format(
-        exp_dict["participant_id"], exp_dict["task"], exp_dict["run"]
-    )
-
-    with open(os.path.join(outdir, config_save), "w", encoding="utf-8") as f:
-        json.dump(settings, f, ensure_ascii=False, indent=4)
+    exp_dict["setting"] = settings
 
 except NotImplementedError:
     settings = None
@@ -78,6 +86,11 @@ if task == "risk-sensitive":
     action_map = env.condition_dict
 else:
     action_map = None
+
+
+with open(os.path.join(outdir, config_save), "w", encoding="utf-8") as f:
+    json.dump(exp_dict, f, ensure_ascii=False, indent=4)
+
 
 if task == "mid":
     win_trials = 0
