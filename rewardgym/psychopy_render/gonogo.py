@@ -9,52 +9,54 @@ from .stimuli import (
     TextStimulus,
 )
 
-reward_feedback = FeedBackStimulus(
-    1.0, text="You gain: {0}", target="reward", name="reward"
-)
 
-total_reward_feedback = FeedBackStimulus(
-    0.75, text="You have gained: {0}", target="total_reward", name="reward-total"
-)
-base_stim = BaseStimulus(0)
-fix = TextStimulus(text="+", duration=0.2, name="fixation")
-fix_isi = TextStimulus(text="+", duration=0.2, name="isi")
+def get_info_dict(random_state=None):
+    reward_feedback = FeedBackStimulus(
+        1.0, text="You gain: {0}", target="reward", name="reward"
+    )
 
+    total_reward_feedback = FeedBackStimulus(
+        0.75, text="You have gained: {0}", target="total_reward", name="reward-total"
+    )
+    base_stim = BaseStimulus(0)
+    fix = TextStimulus(text="+", duration=0.2, name="fixation")
+    fix_isi = TextStimulus(text="+", duration=0.2, name="isi")
 
-def first_step(img):
-    return [
-        base_stim,
-        fix,
-        ImageStimulus(
-            duration=1.0,
-            image_paths=[os.path.join(STIMPATH, img)],
-            positions=[(0, 0)],
-            name="cue",
-        ),
-        fix_isi,
-        ImageStimulus(
-            duration=0.001,
-            image_paths=[os.path.join(STIMPATH, "gonogo/probe.png")],
-            positions=[(0, 0)],
-            name="target",
-        ),
-        ActionStimulus(duration=1.0, key_dict={"space": 0}, timeout_action=1),
+    def first_step(img):
+        return [
+            base_stim,
+            fix,
+            ImageStimulus(
+                duration=1.0,
+                image_paths=[os.path.join(STIMPATH, img)],
+                positions=[(0, 0)],
+                name="cue",
+            ),
+            fix_isi,
+            ImageStimulus(
+                duration=0.001,
+                image_paths=[os.path.join(STIMPATH, "gonogo/probe.png")],
+                positions=[(0, 0)],
+                name="target",
+            ),
+            ActionStimulus(duration=1.0, key_dict={"space": 0}, timeout_action=1),
+        ]
+
+    final_step = [
+        reward_feedback,
+        total_reward_feedback,
+        BaseStimulus(name="iti", duration=1.0),
     ]
 
+    info_dict = {
+        0: {"psychopy": first_step("gonogo/F000.png")},
+        1: {"psychopy": first_step("gonogo/F001.png")},
+        2: {"psychopy": first_step("gonogo/F002.png")},
+        3: {"psychopy": first_step("gonogo/F003.png")},
+        4: {"psychopy": final_step},
+        5: {"psychopy": final_step},
+        6: {"psychopy": final_step},
+        7: {"psychopy": final_step},
+    }
 
-final_step = [
-    reward_feedback,
-    total_reward_feedback,
-    BaseStimulus(name="iti", duration=1.0),
-]
-
-info_dict = {
-    0: {"psychopy": first_step("gonogo/F000.png")},
-    1: {"psychopy": first_step("gonogo/F001.png")},
-    2: {"psychopy": first_step("gonogo/F002.png")},
-    3: {"psychopy": first_step("gonogo/F003.png")},
-    4: {"psychopy": final_step},
-    5: {"psychopy": final_step},
-    6: {"psychopy": final_step},
-    7: {"psychopy": final_step},
-}
+    return info_dict, None

@@ -22,7 +22,7 @@ def simulate_task(envname):
     Logger.create()
 
     task = exp_dict["task"]
-    info_dict = get_psychopy_info(task)
+    info_dict, _ = get_psychopy_info(task)
     env, conditions = get_env(task)
 
     try:
