@@ -6,15 +6,14 @@ try:
 except ModuleNotFoundError:
     from .psychopy_stubs import Rect, ImageStim
 
+from ..utils import check_seed
 from . import STIMPATH
-from .default_images import fixation_cross
-from .stimuli import (
-    ActionStimulus,
-    BaseStimulus,
-    FeedBackStimulus,
-    ImageStimulus,
-    TextStimulus,
+from .default_images import (
+    fixation_cross,
+    generate_stimulus_properties,
+    make_card_stimulus,
 )
+from .stimuli import ActionStimulus, BaseStimulus, FeedBackStimulus, ImageStimulus
 
 
 class RiskSensitiveDisplay(BaseStimulus):
@@ -52,7 +51,9 @@ class RiskSensitiveDisplay(BaseStimulus):
                 self.image_dict[kk] = ImageStim(win=win, image=self.image_map[kk])
             else:
                 self.image_dict[kk] = ImageStim(
-                    win, image=self.image_dict[kk], size=self.image_dict[kk].shape[:2]
+                    win,
+                    image=self.image_map[kk],
+                    size=(self.image_map[kk].shape[1], self.image_map[kk].shape[0]),
                 )
 
     def display(self, win, logger, wait, condition=None, action=None, **kwargs):
@@ -109,33 +110,49 @@ class RiskSensitiveDisplay(BaseStimulus):
         return None
 
 
-reward_feedback = FeedBackStimulus(
-    1.0, text="You gain: {0}", target="reward", name="reward"
-)
-total_reward_feedback = FeedBackStimulus(
-    1.0, text="You have gained: {0}", target="total_reward", name="reward-total"
-)
-base_stim = ImageStimulus(
-    image_paths=[fixation_cross()], duration=0.1, name=None, autodraw=True
-)
-fix_iti = BaseStimulus(duration=1.5, name="iti")
+def get_info_dict(stimulus_set=111):
 
-cue_disp = RiskSensitiveDisplay(0.05, name="cue")
-sel_disp = RiskSensitiveDisplay(1.5, with_action=True, name="selected")
+    random_state = check_seed(stimulus_set)
 
-final_step = [sel_disp, reward_feedback, total_reward_feedback, fix_iti]
+    stim_properties = [generate_stimulus_properties(random_state) for _ in range(5)]
+    image_map = {}
+    stimuli = {}
 
-info_dict = {
-    0: {
-        "psychopy": [
-            base_stim,
-            cue_disp,
-            ActionStimulus(duration=2.0, timeout_action=None),
-        ]
-    },
-    1: {"psychopy": final_step},
-    2: {"psychopy": final_step},
-    3: {"psychopy": final_step},
-    4: {"psychopy": final_step},
-    5: {"psychopy": final_step},
-}
+    for n in range(5):
+        image_map[n] = make_card_stimulus(stim_properties[n])
+        stimuli[n] = stim_properties[n]
+
+    reward_feedback = FeedBackStimulus(
+        1.0, text="You gain: {0}", target="reward", name="reward"
+    )
+    total_reward_feedback = FeedBackStimulus(
+        1.0, text="You have gained: {0}", target="total_reward", name="reward-total"
+    )
+    base_stim = ImageStimulus(
+        image_paths=[fixation_cross()], duration=0.1, name=None, autodraw=True
+    )
+    fix_iti = BaseStimulus(duration=1.5, name="iti")
+
+    cue_disp = RiskSensitiveDisplay(0.05, name="cue", image_map=image_map)
+    sel_disp = RiskSensitiveDisplay(
+        1.5, with_action=True, name="selected", image_map=image_map
+    )
+
+    final_step = [sel_disp, reward_feedback, total_reward_feedback, fix_iti]
+
+    info_dict = {
+        0: {
+            "psychopy": [
+                base_stim,
+                cue_disp,
+                ActionStimulus(duration=2.0, timeout_action=None),
+            ]
+        },
+        1: {"psychopy": final_step},
+        2: {"psychopy": final_step},
+        3: {"psychopy": final_step},
+        4: {"psychopy": final_step},
+        5: {"psychopy": final_step},
+    }
+
+    return info_dict, stimuli
