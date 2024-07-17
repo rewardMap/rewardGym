@@ -88,6 +88,7 @@ def draw_shape(
     """Draw a specified shape within a bounding box."""
     if shape == "square":
         draw.rectangle(bbox, fill=color)
+
     elif shape == "triangle_d":
         draw.polygon(
             [(cx, bbox[3]), (bbox[0], bbox[1]), (bbox[2], bbox[1])], fill=color
@@ -228,9 +229,16 @@ def create_pattern(
     if shape_pattern not in pos_pattern:
         raise ValueError(f"shape_pattern should be in {pos_pattern}")
 
-    tile_size = min(width, height) // num_tiles
-    num_tiles_x = width // tile_size
-    num_tiles_y = height // tile_size
+    if isinstance(num_tiles, int):
+        num_tiles_x, num_tiles_y = num_tiles, num_tiles
+    else:
+        num_tiles_x, num_tiles_y = num_tiles
+
+    tile_size = min(width // num_tiles_x, height // num_tiles_y)
+
+    # centering:
+    width_offset = (width - (num_tiles_x * tile_size)) / 2
+    height_offset = (height - (num_tiles_y * tile_size)) / 2
 
     pattern = Image.new("RGBA", (width, height), bg_color)
     draw = ImageDraw.Draw(pattern)
@@ -241,8 +249,8 @@ def create_pattern(
             color = return_mod_pattern(color_pattern, x, y, colors)
             shape = return_mod_pattern(shape_pattern, x, y, shapes)
 
-            center_x = (x + 0.5) * tile_size
-            center_y = (y + 0.5) * tile_size
+            center_x = (x + 0.5) * tile_size + width_offset
+            center_y = (y + 0.5) * tile_size + height_offset
 
             if not isinstance(color, list):
                 color = [color] * len(sizes)
