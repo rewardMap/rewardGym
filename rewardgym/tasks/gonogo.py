@@ -3,8 +3,9 @@ from typing import Literal, Union
 
 import numpy as np
 
-from ..reward_classes import BaseReward
+from ..reward_classes import PseudoRandomReward
 from ..utils import check_seed
+from .utils import check_conditions_present
 
 
 def get_gonogo(
@@ -26,10 +27,12 @@ def get_gonogo(
     }
 
     reward_structure = {
-        4: BaseReward(reward=[-1, 0], p=[0.2, 0.8], seed=seed),
-        5: BaseReward(reward=[-1, 0], p=[0.8, 0.2], seed=seed),
-        6: BaseReward(reward=[1, 0], p=[0.8, 0.2], seed=seed),
-        7: BaseReward(reward=[1, 0], p=[0.2, 0.8], seed=seed),
+        4: PseudoRandomReward(reward_list=[-1, -1, 0, 0, 0, 0, 0, 0, 0, 0], seed=seed),
+        5: PseudoRandomReward(
+            reward_list=[-1, -1, -1, -1, -1, -1, -1, -1, 0, 0], seed=seed
+        ),
+        6: PseudoRandomReward(reward_list=[1, 1, 1, 1, 1, 1, 1, 1, 0, 0], seed=seed),
+        7: PseudoRandomReward(reward_list=[1, 1, 0, 0, 0, 0, 0, 0, 0, 0], seed=seed),
     }
 
     if starting_positions is None:
@@ -99,24 +102,28 @@ def get_gonogo(
 
 def generate_gonogo_configs(stimulus_set: str = "1"):
 
-    seed = check_seed(98)
+    seed = check_seed(int(stimulus_set))
 
-    condition_template = [0, 0, 1, 1, 2, 2, 3, 3]  # 80 %
-    iti_template = [0.75, 1.0, 1.25, 1.5] * 2
-    isi_template = [0.25, 0.5, 0.75, 1.0] * 2
+    condition_template = [0, 1, 2, 3] * 15  # 80 %
+    iti_template = [0.75, 1.0, 1.25, 1.5] * 15
+    isi_template = [0.25, 0.75, 1.125, 1.75, 2.0] * 12  # 5 * 12 = 60
 
-    n_trials_per_condition = 20
+    n_blocks = 3
 
-    conditions = seed.choice(a=condition_template, size=8, replace=False).tolist()
-    isi = seed.choice(isi_template, size=8, replace=False).tolist()
-    iti = seed.choice(iti_template, size=8, replace=False).tolist()
+    check = False
+    while not check:
+        conditions = seed.choice(a=condition_template, size=60, replace=False).tolist()
+        check = check_conditions_present(conditions[:10], [0, 1, 2, 3])
 
-    for _ in range(n_trials_per_condition - 1):
+    isi = seed.choice(isi_template, size=60, replace=False).tolist()
+    iti = seed.choice(iti_template, size=60, replace=False).tolist()
+
+    for _ in range(n_blocks - 1):
         conditions.extend(
-            seed.choice(a=condition_template, size=8, replace=False).tolist()
+            seed.choice(a=condition_template, size=60, replace=False).tolist()
         )
-        isi.extend(seed.choice(isi_template, size=8, replace=False).tolist())
-        iti.extend(seed.choice(iti_template, size=8, replace=False).tolist())
+        isi.extend(seed.choice(isi_template, size=60, replace=False).tolist())
+        iti.extend(seed.choice(iti_template, size=60, replace=False).tolist())
 
     config = {
         "name": "gonogo",
