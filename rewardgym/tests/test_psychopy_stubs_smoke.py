@@ -131,9 +131,10 @@ def simulate_task(envname):
             win_trials += 1 if starting_position in [3, 4] else 0
 
             if (sum(actions) / (episode + 1)) < 0.4 and (win_trials % 3) == 0:
-                info_dict[0]["psychopy"][-1].duration -= 0.025
+                if (info_dict[0]["psychopy"][-1].duration - 0.025) > 0.05:
+                    info_dict[0]["psychopy"][-1].duration -= 0.025
             elif (win_trials % 3) == 0:
-                info_dict[0]["psychopy"][-1].duration += 0.25
+                info_dict[0]["psychopy"][-1].duration += 0.025
 
         Logger.log_event(
             {"event_type": "TrialEnd", "total_reward": env.cumulative_reward},
