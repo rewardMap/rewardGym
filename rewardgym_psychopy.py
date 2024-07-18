@@ -20,7 +20,9 @@ exp_dict = {
     "stimulus_set": 22,
 }
 
-dlg = gui.DlgFromDict(exp_dict)
+dlg = gui.DlgFromDict(
+    exp_dict, order=["participant_id", "task", "run", "condition_set", "stimulus_set"]
+)
 
 if dlg.OK is False:
     core.quit()  # user pressed cancel
@@ -140,6 +142,7 @@ for episode in range(n_episodes):
 
     reward = None
     action = None
+    remainder = None
 
     for ii in info["psychopy"]:
         out = ii.display(
@@ -149,7 +152,7 @@ for episode in range(n_episodes):
             reward=env.reward,
             condition=condition,
             starting_position=starting_position,
-            action=None,
+            action=action,
             total_reward=env.cumulative_reward,
         )
 
@@ -157,6 +160,8 @@ for episode in range(n_episodes):
         action = out[0]
         done = False
         actions.append(action)
+        if out[1] is not None:
+            remainder = out[1]
 
     else:
         done = True
@@ -191,6 +196,19 @@ for episode in range(n_episodes):
 
         elif out is not None:
             action = out[0]
+
+            if remainder is not None and out[1] is not None:
+                remainder += out[1]
+
+        if remainder is not None:
+
+            rm_onset = Logger.get_time()
+            Wait.wait(remainder, rm_onset)
+
+            Logger.log_event(
+                {"event_type": "adjusting-time", "expected_duration": remainder},
+                onset=rm_onset,
+            )
 
     if task == "mid":
 
