@@ -79,6 +79,23 @@ def zero_cross(height=100, width=100, color=(150, 150, 150), cross_color=zero_co
     return zero_cross
 
 
+def gonogo_probe(height=200, width=200, color=(150, 150, 150)):
+    probe = make_stimulus(
+        height,
+        width,
+        num_tiles=1,
+        shapes="circle + neg-circle",
+        colors=[color],
+        sizes=[1.0, 0.7],
+        show_image=False,
+        border_color="white",
+        border=None,
+        return_numpy=True,
+    )
+
+    return probe
+
+
 def generate_stimulus_properties(
     random_state,
     colors=colors,
