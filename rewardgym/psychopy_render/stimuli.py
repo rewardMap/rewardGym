@@ -100,7 +100,9 @@ class BaseStimulus:
 
         self.win = win
 
-    def display(self, **kwargs) -> None:
+    def display(
+        self, win: Window, logger: ExperimentLogger, wait: WaitTime, **kwargs
+    ) -> None:
         """
         Calls the stimulus object. In this case initiate a window flip.
         Should only return something, if there has been an action required.
@@ -111,11 +113,22 @@ class BaseStimulus:
             Should return None
 
         """
-        self.win.flip()
+        logger.key_strokes(win)
+
+        stim_onset = logger.get_time()
+
+        win.flip()
+
+        wait.wait(self.duration, stim_onset)
+
+        logger.log_event(
+            {"event_type": self.name, "expected_duration": self.duration},
+            onset=stim_onset,
+        )
 
         return None
 
-    def simulate(self, logger=ExperimentLogger, **kwargs) -> None:
+    def simulate(self, logger: ExperimentLogger, **kwargs) -> None:
         """
         Function to pretend that a stimulus has been shown. Logging and creating
         timing.
@@ -322,10 +335,14 @@ class ImageStimulus(BaseStimulus):
 
         stim_onset = logger.get_time()
 
+        # So that images are drawn on top
         for ii in self.imageStims:
-            ii.draw()
+            ii.autoDraw = True
 
         win.flip()
+
+        for ii in self.imageStims:
+            ii.autoDraw = self.autodraw
 
         wait.wait(self.duration, stim_onset)
 
@@ -465,7 +482,7 @@ class ActionStimulus(BaseStimulus):
 
         response_key, rt = logger.key_strokes(key, rt)
         response_window_onset = logger.get_time()
-        logger.global_clock.time += rt
+        logger.global_clock.time += min([rt, self.duration])
 
         if rt > self.duration:
 
