@@ -5,27 +5,30 @@ from typing import Union
 import numpy as np
 
 from ..reward_classes import DriftingReward
+from ..utils import check_seed
 
 
 def get_two_step(
     conditions=None, render_backend=None, window_size=None, seed=111, **kwargs
 ):
 
+    seed = check_seed(seed)
+
     environment_graph = {
         0: ([1, 2], 0.7),
-        1: [3, 4],  # env two
-        2: [5, 6],  # control
-        3: [],  # small win
-        4: [],  # small lose
-        5: [],  # big lose - lose
-        6: [],  # small lose - lose
+        1: [3, 4],
+        2: [5, 6],
+        3: [],
+        4: [],
+        5: [],
+        6: [],
     }
 
     reward_structure = {
-        3: DriftingReward(seed=seed, p=0.74262),
-        4: DriftingReward(seed=seed, p=0.27253),
-        5: DriftingReward(seed=seed, p=0.71669),
-        6: DriftingReward(seed=seed, p=0.47906),
+        3: DriftingReward(seed=seed, p=None),
+        4: DriftingReward(seed=seed, p=None),
+        5: DriftingReward(seed=seed, p=None),
+        6: DriftingReward(seed=seed, p=None),
     }
 
     if conditions is None:
