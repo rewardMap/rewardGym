@@ -1,6 +1,7 @@
 import os
 
 from . import STIMPATH
+from .default_images import fixation_cross
 from .stimuli import (
     ActionStimulus,
     BaseStimulus,
@@ -10,7 +11,8 @@ from .stimuli import (
 )
 
 
-def get_info_dict(random_state=None):
+def get_info_dict(stimulus_set=None, **kwargs):
+
     reward_feedback = FeedBackStimulus(
         1.0, text="You gain: {0}", target="reward", name="reward"
     )
@@ -18,22 +20,25 @@ def get_info_dict(random_state=None):
         1.0, text="You have gained: {0}", target="total_reward", name="reward-total"
     )
 
-    base_stim = BaseStimulus(0)
-    fix = TextStimulus(text="+", duration=0.2, name="fixation")
-    fix_iti = TextStimulus(text="+", duration=1.5, name="iti")
+    fix = ImageStimulus(
+        image_paths=[fixation_cross()],
+        duration=0.1,
+        autodraw=True,
+        name="initial-fixation",
+    )
+    fix_iti = BaseStimulus(duration=1.5, name="iti")
 
     image_shift = 250
 
-    final_step = [base_stim, reward_feedback, total_reward_feedback, fix_iti]
+    final_step = [reward_feedback, total_reward_feedback, fix_iti]
 
     info_dict = {
         0: {
             "psychopy": [
-                base_stim,
                 fix,
                 ImageStimulus(
                     duration=0.1,
-                    name="step1",
+                    name="decision-0",
                     image_paths=[
                         os.path.join(STIMPATH, "two_step", "stim11.png"),
                         os.path.join(STIMPATH, "two_step", "stim12.png"),
@@ -47,7 +52,7 @@ def get_info_dict(random_state=None):
             "psychopy": [
                 ImageStimulus(
                     duration=0.5,
-                    name="step1-select",
+                    name="environment-select",
                     image_paths=[
                         os.path.join(STIMPATH, "two_step", "stim11.png"),
                         os.path.join(STIMPATH, "two_step", "stim12.png"),
@@ -56,7 +61,7 @@ def get_info_dict(random_state=None):
                 ),
                 ImageStimulus(
                     duration=0.1,
-                    name="step21",
+                    name="environment-decision",
                     image_paths=[
                         os.path.join(STIMPATH, "two_step", "stim11.png"),
                         os.path.join(STIMPATH, "two_step", "stim21.png"),
@@ -71,7 +76,7 @@ def get_info_dict(random_state=None):
             "psychopy": [
                 ImageStimulus(
                     duration=0.5,
-                    name="step2-select",
+                    name="environment-select",
                     image_paths=[
                         os.path.join(STIMPATH, "two_step", "stim11.png"),
                         os.path.join(STIMPATH, "two_step", "stim12.png"),
@@ -80,7 +85,7 @@ def get_info_dict(random_state=None):
                 ),
                 ImageStimulus(
                     duration=0.1,
-                    name="step22",
+                    name="environment-decision",
                     image_paths=[
                         os.path.join(STIMPATH, "two_step", "stim12.png"),
                         os.path.join(STIMPATH, "two_step", "stim31.png"),
@@ -95,7 +100,7 @@ def get_info_dict(random_state=None):
             "psychopy": [
                 ImageStimulus(
                     duration=0.5,
-                    name="stim21",
+                    name="stimulus-select",
                     image_paths=[os.path.join(STIMPATH, "two_step", "stim21.png")],
                     positions=[(0, image_shift)],
                 )
@@ -106,7 +111,7 @@ def get_info_dict(random_state=None):
             "psychopy": [
                 ImageStimulus(
                     duration=0.5,
-                    name="stim22",
+                    name="stimulus-select",
                     image_paths=[os.path.join(STIMPATH, "two_step", "stim22.png")],
                     positions=[(0, image_shift)],
                 )
@@ -117,7 +122,7 @@ def get_info_dict(random_state=None):
             "psychopy": [
                 ImageStimulus(
                     duration=0.5,
-                    name="stim31",
+                    name="stimulus-select",
                     image_paths=[os.path.join(STIMPATH, "two_step", "stim31.png")],
                     positions=[(0, image_shift)],
                 )
@@ -128,7 +133,7 @@ def get_info_dict(random_state=None):
             "psychopy": [
                 ImageStimulus(
                     duration=0.5,
-                    name="stim32",
+                    name="stimulus-select",
                     image_paths=[os.path.join(STIMPATH, "two_step", "stim32.png")],
                     positions=[(0, image_shift)],
                 )
