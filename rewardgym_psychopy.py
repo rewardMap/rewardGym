@@ -162,6 +162,8 @@ for episode in range(n_episodes):
         actions.append(action)
         if out[1] is not None:
             remainder = out[1]
+        else:
+            remainder = 0
 
     else:
         done = True
@@ -200,15 +202,15 @@ for episode in range(n_episodes):
             if remainder is not None and out[1] is not None:
                 remainder += out[1]
 
-        if remainder is not None:
+    if remainder is not None:
 
-            rm_onset = Logger.get_time()
-            Wait.wait(remainder, rm_onset)
+        rm_onset = Logger.get_time()
+        Wait.wait(remainder, rm_onset)
 
-            Logger.log_event(
-                {"event_type": "adjusting-time", "expected_duration": remainder},
-                onset=rm_onset,
-            )
+        Logger.log_event(
+            {"event_type": "adjusting-time", "expected_duration": remainder},
+            onset=rm_onset,
+        )
 
     if task == "mid":
 
