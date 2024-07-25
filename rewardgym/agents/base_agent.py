@@ -7,10 +7,11 @@ import numpy as np
 from ..utils import check_seed
 
 
-class QAgent:
+class ValenceQAgent:
     def __init__(
         self,
-        learning_rate: float,
+        learning_rate_pos: float,
+        learning_rate_neg: float,
         temperature: float,
         discount_factor: float = 0.99,
         action_space: int = 2,
@@ -29,9 +30,12 @@ class QAgent:
         """
         self.q_values = np.zeros((state_space, action_space))
 
-        self.lr = learning_rate
+        self.lr_neg = learning_rate_neg
+        self.lr_pos = learning_rate_pos
+
         self.temperature = temperature
         self.discount_factor = discount_factor
+
         self.rng = check_seed(seed)
 
         self.training_error = []
@@ -80,20 +84,21 @@ class QAgent:
         temporal_difference = (
             reward + self.discount_factor * future_q_value - self.q_values[obs][action]
         )
+        if temporal_difference > 0:
+            q_update = self.lr_pos * temporal_difference
+        elif temporal_difference <= 0:
+            q_update = self.lr_neg * temporal_difference
 
-        self.q_values[obs][action] = (
-            self.q_values[obs][action] + self.lr * temporal_difference
-        )
+        self.q_values[obs][action] = self.q_values[obs][action] + q_update
         self.training_error.append(temporal_difference)
 
         return self.q_values
 
 
-class ValenceQAgent(QAgent):
+class QAgent(ValenceQAgent):
     def __init__(
         self,
-        learning_rate_pos: float,
-        learning_rate_neg: float,
+        learning_rate: float,
         temperature: float,
         discount_factor: float = 0.99,
         action_space: int = 2,
@@ -110,40 +115,16 @@ class ValenceQAgent(QAgent):
             final_epsilon: The final epsilon value
             discount_factor: The discount factor for computing the Q-value
         """
-        self.q_values = np.zeros((state_space, action_space))
 
-        self.lr_neg = learning_rate_neg
-        self.lr_pos = learning_rate_pos
-
-        self.temperature = temperature
-        self.discount_factor = discount_factor
-
-        self.rng = check_seed(seed)
-
-        self.training_error = []
-
-    def update(
-        self,
-        obs: Tuple[int, int, bool],
-        action: int,
-        reward: float,
-        terminated: bool,
-        next_obs: Tuple[int, int, bool],
-    ):
-        """Updates the Q-value of an action."""
-        future_q_value = (not terminated) * np.max(self.q_values[next_obs])
-        temporal_difference = (
-            reward + self.discount_factor * future_q_value - self.q_values[obs][action]
+        super().__init__(
+            learning_rate_pos=learning_rate,
+            learning_rate_neg=learning_rate,
+            temperature=temperature,
+            discount_factor=discount_factor,
+            action_space=action_space,
+            state_space=state_space,
+            seed=seed,
         )
-        if temporal_difference > 0:
-            q_update = self.lr_pos * temporal_difference
-        elif temporal_difference <= 0:
-            q_update = self.lr_neg * temporal_difference
-
-        self.q_values[obs][action] = self.q_values[obs][action] + q_update
-        self.training_error.append(temporal_difference)
-
-        return self.q_values
 
 
 class RandomAgent(QAgent):
@@ -180,3 +161,111 @@ class RandomAgent(QAgent):
         prob = action_probs
 
         return prob
+
+
+class ValenceQAgent_eligibility(ValenceQAgent):
+    def __init__(
+        self,
+        learning_rate_pos: float,
+        learning_rate_neg: float,
+        temperature: float,
+        discount_factor: float = 0.99,
+        eligibility_decay: float = 0.0,
+        reset_traces: bool = True,
+        action_space: int = 2,
+        state_space: int = 2,
+        seed: Union[int, np.random.Generator] = 1000,
+    ):
+        """Initialize a Reinforcement Learning agent with an empty dictionary
+        of state-action values (q_values), a learning rate and an epsilon.
+
+        Args:
+            learning_rate: The learning rate
+            initial_epsilon: The initial epsilon value
+            epsilon_decay: The decay for epsilon
+            final_epsilon: The final epsilon value
+            discount_factor: The discount factor for computing the Q-value
+        """
+
+        super().__init__(
+            learning_rate_pos=learning_rate_pos,
+            learning_rate_neg=learning_rate_neg,
+            temperature=temperature,
+            discount_factor=discount_factor,
+            action_space=action_space,
+            state_space=state_space,
+            seed=seed,
+        )
+
+        self.eligibility_traces = np.zeros((state_space, action_space))
+        self.eligibility_decay = eligibility_decay
+        self.reset_traces = reset_traces
+
+    def update(
+        self,
+        obs: Tuple[int, int, bool],
+        action: int,
+        reward: float,
+        terminated: bool,
+        next_obs: Tuple[int, int, bool],
+    ):
+        """Updates the Q-value of an action."""
+        future_q_value = (not terminated) * np.max(self.q_values[next_obs])
+        temporal_difference = (
+            reward + self.discount_factor * future_q_value - self.q_values[obs][action]
+        )
+        if temporal_difference > 0:
+            q_update = self.lr_pos * temporal_difference
+        elif temporal_difference <= 0:
+            q_update = self.lr_neg * temporal_difference
+
+        self.eligibility_traces[obs][action] += 1
+
+        self.q_values = self.q_values[obs][action] + q_update * self.eligibility_traces
+
+        self.eligibility_traces = (
+            self.eligibility_traces * self.discount_factor * self.eligibility_decay
+        )
+
+        if terminated and self.reset_traces:
+            self.eligibility_traces *= 0
+
+        self.training_error.append(temporal_difference)
+
+        return self.q_values
+
+
+class QAgent_eligibility(ValenceQAgent_eligibility):
+    def __init__(
+        self,
+        learning_rate: float,
+        temperature: float,
+        discount_factor: float = 0.99,
+        eligibility_decay: float = 0.0,
+        reset_traces: bool = True,
+        action_space: int = 2,
+        state_space: int = 2,
+        seed: Union[int, np.random.Generator] = 1000,
+    ):
+        """Initialize a Reinforcement Learning agent with an empty dictionary
+        of state-action values (q_values), a learning rate and an epsilon.
+
+        Args:
+            learning_rate: The learning rate
+            initial_epsilon: The initial epsilon value
+            epsilon_decay: The decay for epsilon
+            final_epsilon: The final epsilon value
+            discount_factor: The discount factor for computing the Q-value
+        """
+
+        super().__init__(
+            learning_rate_pos=learning_rate,
+            learning_rate_neg=learning_rate,
+            temperature=temperature,
+            discount_factor=discount_factor,
+            action_space=action_space,
+            state_space=state_space,
+            seed=seed,
+            eligibility_decay=eligibility_decay,
+            reset_traces=reset_traces,
+        )
