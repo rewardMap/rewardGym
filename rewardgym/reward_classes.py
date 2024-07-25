@@ -53,12 +53,14 @@ class DriftingReward(BaseReward):
     def _reward_function(self, **kwargs):
         reward = self.rng.choice(self.reward, p=[self.p, 1 - self.p])
 
-        step = self.rng.normal(0, self.gauss_sd)
+        next_val = self.p + self.rng.normal(0, self.gauss_sd)
 
-        if (self.p + step >= self.borders[1]) or (self.p + step <= self.borders[0]):
-            self.p -= step
-        else:
-            self.p += step
+        if next_val > self.borders[1]:
+            next_val = 2 * self.borders[1] - next_val
+        if next_val < self.borders[0]:
+            next_val = 2 * self.borders[0] - next_val
+
+        self.p = next_val
 
         return reward
 
