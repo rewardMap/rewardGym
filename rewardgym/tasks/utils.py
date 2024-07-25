@@ -70,6 +70,7 @@ def get_env(
                 render_mode=render_mode,
                 info_dict=info_dict,
                 seed=seed,
+                name=task_name,
             )
             condition_out = condition_out[0]
         else:
@@ -79,6 +80,7 @@ def get_env(
                 render_mode=render_mode,
                 info_dict=info_dict,
                 seed=seed,
+                name=task_name,
             )
     else:
         if task_name == "risk-sensitive":
@@ -90,6 +92,7 @@ def get_env(
                 info_dict=info_dict,
                 window_size=window_size,
                 seed=seed,
+                name=task_name,
             )
             condition_out = condition_out[0]
         else:
@@ -100,6 +103,7 @@ def get_env(
                 info_dict=info_dict,
                 window_size=window_size,
                 seed=seed,
+                name=task_name,
             )
 
     return env, condition_out

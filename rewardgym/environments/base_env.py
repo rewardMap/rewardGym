@@ -29,6 +29,7 @@ class BaseEnv(Env):
         render_mode: str = None,
         info_dict: Dict = defaultdict(int),
         seed: Union[int, np.random.Generator] = 1000,
+        name: str = None,
     ):
         """
         The core environment used for modeling and in part for displays.
@@ -74,6 +75,7 @@ class BaseEnv(Env):
         self.window = None
         self.clock = None
         self.reward = None
+        self.name = name
 
     def _get_obs(self) -> int:
         """
