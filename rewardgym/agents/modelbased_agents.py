@@ -22,6 +22,7 @@ class HybridAgent(ValenceQAgent):
         state_space: int = 2,
         seed: Union[int, np.random.Generator] = 1000,
         graph=None,
+        use_fixed=False,
     ):
         """Initialize a Reinforcement Learning agent with an empty dictionary
         of state-action values (q_values), a learning rate and an epsilon.
@@ -33,27 +34,37 @@ class HybridAgent(ValenceQAgent):
             final_epsilon: The final epsilon value
             discount_factor: The discount factor for computing the Q-value
         """
-        self.t_values = np.zeros((state_space, action_space, state_space)) + (
-            0.5 / state_space
-        )
+        self.t_values = np.zeros((state_space, action_space, state_space))
 
         if graph is not None:
             for k in graph.keys():
                 if isinstance(graph[k], tuple):
-                    locs = [graph[k][0]] * action_space
+                    locations = [graph[k][0]] * action_space
+                    prob = graph[k][1]
                 else:
-                    locs = graph[k]
+                    locations = graph[k]
+                    prob = None
 
-                for n, l in zip(np.arange(action_space), locs):
-                    ln = len(l) if not isinstance(l, int) else 1
-                    self.t_values[k, n, l] = 1 / max([1, ln])
+                for n, loc in zip(np.arange(action_space), locations):
+                    ln = len(loc) if not isinstance(loc, int) else 1
+
+                    if use_fixed and prob is not None:
+                        loc = [loc] if isinstance(loc, int) else loc
+                        for j in loc:
+                            if j == loc[n]:
+                                self.t_values[k, n, j] = prob
+                            else:
+                                self.t_values[k, n, j] = (1 - prob) / max([1, ln - 1])
+                    else:
+                        self.t_values[k, n, loc] = 1 / max([1, ln])
 
         self.discount_factor = discount_factor
 
         if isinstance(learning_rate_mf, float):
             self.q_agent = QAgent_eligibility(
-                learning_rate_mf,
-                self.discount_factor,
+                learning_rate=learning_rate_mf,
+                temperature=temperature,
+                discount_factor=self.discount_factor,
                 action_space=action_space,
                 state_space=state_space,
                 eligibility_decay=eligibility_decay,
@@ -64,6 +75,7 @@ class HybridAgent(ValenceQAgent):
             self.q_agent = ValenceQAgent_eligibility(
                 learning_rate_neg=learning_rate_mf[0],
                 learning_rate_pos=learning_rate_mf[1],
+                temperature=temperature,
                 discount_factor=self.discount_factor,
                 action_space=action_space,
                 state_space=state_space,
@@ -77,7 +89,7 @@ class HybridAgent(ValenceQAgent):
 
         self.q_values = np.zeros((state_space, action_space))
         self.lr = learning_rate_mb
-
+        self.action_space = action_space
         self.temperature = temperature
         self.hybrid = hybrid
         self.rng = check_seed(seed)
@@ -115,14 +127,16 @@ class HybridAgent(ValenceQAgent):
         next_obs: Tuple[int, int, bool],
     ):
 
-        if not terminated:
-            qval_mb = 0
-            for s2 in np.arange(self.t_values.shape[-1]):
-                qval_mb += self.t_values[obs, action, s2] * np.max(
-                    self.q_agent.q_values[s2, :]
-                )
+        self.q_agent.update(obs, action, reward, terminated, next_obs)
 
-            self.q_values[obs][action] = qval_mb
+        if not terminated:
+            for act in range(self.action_space):
+                qval_mb = 0
+                for s2 in range(self.t_values.shape[-1]):
+                    qval_mb += self.t_values[obs, act, s2] * np.max(
+                        self.q_agent.q_values[s2]
+                    )
+                self.q_values[obs][act] = qval_mb
         else:
             self.q_values[obs][action] = self.q_agent.q_values[obs][action]
 
@@ -137,8 +151,6 @@ class HybridAgent(ValenceQAgent):
                 self.t_values[obs][action][n] = self.t_values[obs][action][n] * (
                     1 - self.lr
                 )
-
-        self.q_agent.update(obs, action, reward, terminated, next_obs)
 
         self.training_error.append(state_prediction_error)
 
