@@ -236,6 +236,7 @@ class MultiChoiceEnv(BaseEnv):
         render_mode: str = None,
         info_dict: Dict = defaultdict(int),
         seed: Union[int, np.random.Generator] = 1000,
+        name: str = None,
     ):
         """
         Special class for limited action spaces, but multiple outcomes.
@@ -264,6 +265,7 @@ class MultiChoiceEnv(BaseEnv):
             render_mode=render_mode,
             info_dict=info_dict,
             seed=seed,
+            name=name,
         )
 
         self.condition_dict = condition_dict
