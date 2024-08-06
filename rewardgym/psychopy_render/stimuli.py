@@ -363,8 +363,9 @@ class ActionStimulus(BaseStimulus):
         self,
         duration: float,
         key_dict: Dict = {"left": 0, "right": 1},
-        name: str = None,
+        name: str = "response",
         timeout_action: int = None,
+        name_timeout="response-time-out",
     ):
         """
         Setting up the action object.
@@ -386,6 +387,7 @@ class ActionStimulus(BaseStimulus):
         self.key_list = list(key_dict.keys())
         self.key_dict = key_dict
         self.timeout_action = timeout_action
+        self.name_timeout = name_timeout
 
     def setup(self, win: Window = None, **kwargs):
         """
@@ -434,7 +436,7 @@ class ActionStimulus(BaseStimulus):
                 RT = response[1] - response_window_onset
                 logger.log_event(
                     {
-                        "event_type": "response",
+                        "event_type": self.name,
                         "response_button": response[0],
                         "response_time": RT,
                     },
@@ -456,7 +458,7 @@ class ActionStimulus(BaseStimulus):
 
             logger.log_event(
                 {
-                    "event_type": "response-time-out",
+                    "event_type": self.name_timeout,
                     "response_late": True,
                     "response_time": RT,
                     "response_button": response_key,
@@ -491,7 +493,7 @@ class ActionStimulus(BaseStimulus):
 
             logger.log_event(
                 {
-                    "event_type": "response-time-out",
+                    "event_type": self.name_timeout,
                     "response_late": True,
                     "response_time": rt,
                     "response_button": response_key,
@@ -507,7 +509,7 @@ class ActionStimulus(BaseStimulus):
         else:
             logger.log_event(
                 {
-                    "event_type": "response",
+                    "event_type": self.name,
                     "response_button": response_key,
                     "response_time": rt,
                 },

@@ -13,12 +13,21 @@ def get_posner(
     window_size: int = None,
     **kwargs
 ):
-
+    """
     environment_graph = {
         0: [4, 5],  # left left
         1: [5, 4],  # left right
         2: [4, 5],  # right left
         3: [5, 4],  # right right
+        4: [],  # Win
+        5: [],  # Lose
+    }
+    """
+    environment_graph = {
+        0: ([2, 3], 0.8),  # cue left
+        1: ([3, 2], 0.8),  # cue right
+        2: [4, 5],  # target / reward left
+        3: [5, 4],  # target /reward right
         4: [],  # Win
         5: [],  # Lose
     }
@@ -29,7 +38,7 @@ def get_posner(
     }
 
     if starting_position is None:
-        condition_out = (None, ([0, 1, 2, 3], [0.4, 0.1, 0.1, 0.4]))
+        condition_out = (None, ([0, 1], [0.5, 0.5]))
     else:
         condition_out = (None, starting_position)
 
@@ -37,10 +46,12 @@ def get_posner(
     info_dict.update(
         {
             "position": {
-                0: "valid-cue-left",
-                1: "invalid-cue-left",
-                2: "valid-cue-right",
-                3: "invalid-cue-right",
+                0: "cue-left",
+                1: "cue-right",
+                2: "target-left",
+                3: "target-right",
+                4: "win",
+                5: "lose",
             }
         }
     )
@@ -97,7 +108,7 @@ def generate_posner_configs(stimulus_set: str = "1"):
 
     seed = check_seed(222)
 
-    condition_template = [0, 0, 0, 0, 1, 2, 2, 2, 2, 3]  # 80 %
+    condition_template = [0, 0, 0, 0, 0, 1, 1, 1, 1, 1]  # 80 %
     iti_template = [1.5, 2.125, 2.75, 3.375, 4.0] * 2
     isi_template = [0.4, 0.6] * 5
 

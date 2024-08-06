@@ -4,7 +4,7 @@ from . import STIMPATH
 from .stimuli import ActionStimulus, BaseStimulus, FeedBackStimulus, ImageStimulus
 
 
-def get_info_dict(random_state=None):
+def get_info_dict(stimulus_set=None):
 
     reward_feedback = FeedBackStimulus(
         1.0, text="You gain: {0}", target="reward", name="reward"
@@ -28,7 +28,7 @@ def get_info_dict(random_state=None):
         name="isi",
     )
 
-    def first_step(img, img2, image_shift2, to=1):
+    def first_step(img):
         return [
             base_stim,
             fix,
@@ -39,6 +39,17 @@ def get_info_dict(random_state=None):
                 name="cue",
             ),
             fix_isi,
+            ActionStimulus(
+                duration=0.0,
+                key_dict={"space": 0},
+                timeout_action=0,
+                name="dummy",
+                name_timeout="dummy",
+            ),
+        ]
+
+    def second_step(img2, image_shift2, to=1):
+        return [
             ImageStimulus(
                 duration=0.1,
                 image_paths=[
@@ -68,24 +79,16 @@ def get_info_dict(random_state=None):
     info_dict = {
         0: {
             "psychopy": first_step(
-                "posner/fix_left.png", "posner/target.png", image_shift2=-500, to=None
+                "posner/fix_left.png",
             )
         },
         1: {
             "psychopy": first_step(
-                "posner/fix_left.png", "posner/target.png", image_shift2=500, to=None
+                "posner/fix_right.png",
             )
         },
-        2: {
-            "psychopy": first_step(
-                "posner/fix_right.png", "posner/target.png", image_shift2=-500, to=None
-            )
-        },
-        3: {
-            "psychopy": first_step(
-                "posner/fix_right.png", "posner/target.png", image_shift2=500, to=None
-            )
-        },
+        2: {"psychopy": second_step("posner/target.png", image_shift2=-500, to=None)},
+        3: {"psychopy": second_step("posner/target.png", image_shift2=500, to=None)},
         4: {"psychopy": final_step},
         5: {"psychopy": final_step},
     }
