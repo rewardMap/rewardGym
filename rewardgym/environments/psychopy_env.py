@@ -71,10 +71,11 @@ class PsychopyEnv(BaseEnv):
             self.logger = MinimalLogger()
 
         for node in self.graph.keys():
-            [
-                stim.setup(self.window, action_map=action_map)
-                for stim in self.info_dict[node]["psychopy"]
-            ]
+            if "psychopy" in self.info_dict[node].keys():
+                [
+                    stim.setup(self.window, action_map=action_map)
+                    for stim in self.info_dict[node]["psychopy"]
+                ]
 
         self.setup = True
 
@@ -90,7 +91,8 @@ class PsychopyEnv(BaseEnv):
         """
         self.previous_action = self.action
         self.action = None
-        if self.render_mode == "human":
+
+        if self.render_mode == "human" and "psychopy" in info.keys():
 
             out = None
 
@@ -112,6 +114,8 @@ class PsychopyEnv(BaseEnv):
             else:
                 self.action = None
 
+        elif "psychopy" not in info.keys():
+            pass
         else:
             raise NotImplementedError("Render should only be called in human mode")
 
