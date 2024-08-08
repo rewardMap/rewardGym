@@ -64,14 +64,15 @@ def get_info_dict(stimulus_set=None):
     ]
 
     info_dict = {
-        0: {"psychopy": first_step(image_map[0])},
-        1: {"psychopy": first_step(image_map[1])},
-        2: {"psychopy": first_step(image_map[2])},
-        3: {"psychopy": first_step(image_map[3])},
-        4: {"psychopy": final_step},
+        0: {"psychopy": []},
+        1: {"psychopy": first_step(image_map[0])},
+        2: {"psychopy": first_step(image_map[1])},
+        3: {"psychopy": first_step(image_map[2])},
+        4: {"psychopy": first_step(image_map[3])},
         5: {"psychopy": final_step},
         6: {"psychopy": final_step},
         7: {"psychopy": final_step},
+        8: {"psychopy": final_step},
     }
 
     return info_dict, stimuli
