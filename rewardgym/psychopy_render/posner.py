@@ -77,20 +77,21 @@ def get_info_dict(stimulus_set=None):
     ]
 
     info_dict = {
-        0: {
+        0: {"psychopy": []},
+        1: {
             "psychopy": first_step(
                 "posner/fix_left.png",
             )
         },
-        1: {
+        2: {
             "psychopy": first_step(
                 "posner/fix_right.png",
             )
         },
-        2: {"psychopy": second_step("posner/target.png", image_shift2=-500, to=None)},
-        3: {"psychopy": second_step("posner/target.png", image_shift2=500, to=None)},
-        4: {"psychopy": final_step},
+        3: {"psychopy": second_step("posner/target.png", image_shift2=-500, to=None)},
+        4: {"psychopy": second_step("posner/target.png", image_shift2=500, to=None)},
         5: {"psychopy": final_step},
+        6: {"psychopy": final_step},
     }
 
     return info_dict, None

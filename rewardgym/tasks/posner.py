@@ -8,7 +8,6 @@ from ..utils import check_seed
 
 
 def get_posner(
-    starting_position: list = None,
     render_backend: Literal["pygame", "psychopy"] = None,
     window_size: int = None,
     **kwargs
@@ -24,23 +23,19 @@ def get_posner(
     }
     """
     environment_graph = {
-        0: ([2, 3], 0.8),  # cue left
-        1: ([3, 2], 0.8),  # cue right
-        2: [4, 5],  # target / reward left
-        3: [5, 4],  # target /reward right
-        4: [],  # Win
-        5: [],  # Lose
+        0: ({0: ([1, 2], 0.5), "skip": True}),
+        1: ({0: ([3, 4], 0.8)}),  # cue left
+        2: ({0: ([4, 3], 0.8)}),  # cue right
+        3: [5, 6],  # target / reward left
+        4: [6, 5],  # target /reward right
+        5: [],  # Win
+        6: [],  # Lose
     }
 
     reward_structure = {
-        4: BaseReward([1]),
-        5: BaseReward([0]),
+        5: BaseReward([1]),
+        6: BaseReward([0]),
     }
-
-    if starting_position is None:
-        condition_out = (None, ([0, 1], [0.5, 0.5]))
-    else:
-        condition_out = (None, starting_position)
 
     info_dict = defaultdict(int)
     info_dict.update(
@@ -99,16 +94,28 @@ def get_posner(
         info_dict.update(pygame_dict)
 
     elif render_backend == "psychopy":
-        raise NotImplementedError("Psychopy integration still under deliberation.")
+        pass
 
-    return environment_graph, reward_structure, condition_out, info_dict
+    return environment_graph, reward_structure, info_dict
 
 
 def generate_posner_configs(stimulus_set: str = "1"):
 
     seed = check_seed(222)
+    condition_dict = {
+        "cue-left-valid": {0: {0: 1}, 1: {0: 3}},
+        "cue-left-invalid": {0: {0: 1}, 1: {0: 4}},
+        "cue-right-valid": {0: {0: 2}, 2: {0: 4}},
+        "cue-right-invalid": {0: {0: 2}, 2: {0: 3}},
+    }
 
-    condition_template = [0, 0, 0, 0, 0, 1, 1, 1, 1, 1]  # 80 %
+    condition_template = (
+        ["cue-left-valid"] * 4
+        + ["cue-left-invalid"]
+        + ["cue-right-valid"] * 4
+        + ["cue-right-invalid"]
+    )
+
     iti_template = [1.5, 2.125, 2.75, 3.375, 4.0] * 2
     isi_template = [0.4, 0.6] * 5
 
@@ -137,7 +144,7 @@ def generate_posner_configs(stimulus_set: str = "1"):
         "isi": isi,
         "iti": iti,
         "condition": conditions,
-        "condition_target": "location",
+        "condition_dict": condition_dict,
         "ntrials": len(conditions),
         "update": ["isi", "iti"],
     }
