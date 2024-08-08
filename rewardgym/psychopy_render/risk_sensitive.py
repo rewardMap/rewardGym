@@ -25,11 +25,11 @@ class RiskSensitiveDisplay(BaseStimulus):
         image_shift=350,
         with_action=False,
         image_map={
-            0: os.path.join(STIMPATH, "risk_sensitive", "stim1.png"),
-            1: os.path.join(STIMPATH, "risk_sensitive", "stim2.png"),
-            2: os.path.join(STIMPATH, "risk_sensitive", "stim3.png"),
-            3: os.path.join(STIMPATH, "risk_sensitive", "stim4.png"),
-            4: os.path.join(STIMPATH, "risk_sensitive", "stim5.png"),
+            1: os.path.join(STIMPATH, "risk_sensitive", "stim1.png"),
+            2: os.path.join(STIMPATH, "risk_sensitive", "stim2.png"),
+            3: os.path.join(STIMPATH, "risk_sensitive", "stim3.png"),
+            4: os.path.join(STIMPATH, "risk_sensitive", "stim4.png"),
+            5: os.path.join(STIMPATH, "risk_sensitive", "stim5.png"),
         },
     ):
 
@@ -56,20 +56,25 @@ class RiskSensitiveDisplay(BaseStimulus):
                     size=(self.image_map[kk].shape[1], self.image_map[kk].shape[0]),
                 )
 
-    def display(self, win, logger, condition=None, action=None, **kwargs):
+    def display(self, win, logger, condition, action=None, **kwargs):
+
+        state1 = condition[0][0] if 0 in condition[0].keys() else None
+        state2 = condition[0][1] if 1 in condition[0].keys() else None
 
         logger.key_strokes(win)
         stim_onset = logger.get_time()
 
-        if len(self.condition_dict[condition].keys()) == 1:
-            imgA = self.image_dict[self.condition_dict[condition][0]]
-            imgB = None
+        if state1 is not None:
+            imgA = self.image_dict[state1]
             imgA.pos = (-self.image_shift, self.image_position[1])
         else:
-            imgA = self.image_dict[self.condition_dict[condition][0]]
-            imgB = self.image_dict[self.condition_dict[condition][1]]
-            imgA.pos = (-self.image_shift, self.image_position[1])
+            imgA = None
+
+        if state2 is not None:
+            imgB = self.image_dict[state2]
             imgB.pos = (self.image_shift, self.image_position[1])
+        else:
+            imgB = None
 
         if self.with_action:
             if action == 0:
@@ -93,7 +98,8 @@ class RiskSensitiveDisplay(BaseStimulus):
 
             feedback.draw()
 
-        imgA.draw()
+        if imgA is not None:
+            imgA.draw()
 
         if imgB is not None:
             imgB.draw()
@@ -119,8 +125,8 @@ def get_info_dict(stimulus_set=111):
     stimuli = {}
 
     for n in range(5):
-        image_map[n] = make_card_stimulus(stim_properties[n])
-        stimuli[n] = stim_properties[n]
+        image_map[n + 1] = make_card_stimulus(stim_properties[n])
+        stimuli[n + 1] = stim_properties[n]
 
     reward_feedback = FeedBackStimulus(
         1.0, text="You gain: {0}", target="reward", name="reward"

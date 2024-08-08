@@ -25,6 +25,7 @@ class PsychopyEnv(BaseEnv):
         window: Window = None,
         logger: ExperimentLogger = None,
         name: str = None,
+        n_actions=2,
     ):
         """
         Environment to render tasks to the screen using pygame.
@@ -50,7 +51,13 @@ class PsychopyEnv(BaseEnv):
         """
 
         super().__init__(
-            environment_graph, reward_locations, render_mode, info_dict, seed, name
+            environment_graph,
+            reward_locations,
+            render_mode,
+            info_dict,
+            seed,
+            name,
+            n_actions,
         )
 
         self.window = window
@@ -91,6 +98,7 @@ class PsychopyEnv(BaseEnv):
         """
         self.previous_action = self.action
         self.action = None
+        self.remap_action = None
 
         if self.render_mode == "human" and "psychopy" in info.keys():
 
@@ -108,7 +116,11 @@ class PsychopyEnv(BaseEnv):
                 )
 
             if out is not None:
+
                 self.action = out[0]
+                if "remap-actions" in info.keys():
+                    self.remap_action = info["remap-actions"][self.action]
+
                 if out[1] is not None:
                     self.remainder + out[1]
             else:

@@ -95,8 +95,8 @@ def get_gonogo(
 
         info_dict.update(pygame_dict)
 
-    elif render_backend == "psychopy":
-        raise NotImplementedError("Psychopy integration still under deliberation.")
+    # elif render_backend == "psychopy":
+    #    raise NotImplementedError("Psychopy integration still under deliberation.")
 
     return environment_graph, reward_structure, condition_out, info_dict
 

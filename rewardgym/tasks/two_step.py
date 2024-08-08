@@ -82,7 +82,7 @@ def generate_two_step_configs(set: str = "1"):
 
     condition_dict = {
         "expected-transition": {0: {0: 1, 1: 2}},
-        "unexpected-transition": {1: {0: 2, 1: 1}},
+        "unexpected-transition": {0: {0: 2, 1: 1}},
         None: None,
     }
     configs = {
