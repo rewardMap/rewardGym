@@ -23,25 +23,15 @@ def simulate_task(envname):
 
     task = exp_dict["task"]
     info_dict, _ = get_psychopy_info(task)
-    env, conditions = get_env(task)
+    env = get_env(task)
 
     try:
         settings = get_configs(task)()
-        if settings["condition_target"] == "location":
-            conditions = (conditions[0], settings["condition"])
-        elif settings["condition_target"] == "condition":
-            conditions = (settings["condition"], conditions[1])
-
         n_episodes = settings["ntrials"]
 
     except NotImplementedError:
         settings = None
         n_episodes = 5
-
-    if task == "risk-sensitive":
-        action_map = env.condition_dict
-    else:
-        action_map = None
 
     if task == "mid":
         win_trials = 0
@@ -52,8 +42,6 @@ def simulate_task(envname):
 
     for episode in range(n_episodes):
 
-        condition, starting_position = unpack_conditions(conditions, episode)
-
         # Update timings
         if settings["update"] is not None and len(settings["update"]) > 0:
             for k in settings["update"]:
@@ -62,20 +50,18 @@ def simulate_task(envname):
                         if ii.name == k:
                             ii.duration = settings[k][episode]
 
-        obs, info = env.reset(starting_position, condition=condition)
+        obs, info = env.reset(0, condition=None)
         Logger.trial = episode
         Logger.set_trial_time()
-        Logger.trial_type = get_condition_meaning(
-            env.info_dict, starting_position=starting_position, condition=condition
-        )
-        Logger.start_position = starting_position
+        Logger.trial_type = settings["condition"][episode]
+        Logger.start_position = env.agent_location
         Logger.current_location = env.agent_location
 
         Logger.update_trial_info(
-            start_position=starting_position,
+            start_position=env.agent_location,
             current_location=env.agent_location,
             trial=episode,
-            condition=condition,
+            condition=settings["condition"][episode],
         )
 
         reward = None
@@ -86,8 +72,8 @@ def simulate_task(envname):
                 win=win,
                 logger=Logger,
                 reward=env.reward,
-                condition=condition,
-                starting_position=starting_position,
+                condition=settings["condition"][episode],
+                starting_position=0,
                 action=None,
                 total_reward=env.cumulative_reward,
                 key=0,
@@ -110,8 +96,8 @@ def simulate_task(envname):
                     win=win,
                     logger=Logger,
                     reward=env.reward,
-                    condition=condition,
-                    starting_position=starting_position,
+                    condition=settings["condition"][episode],
+                    starting_position=0,
                     action=action,
                     total_reward=env.cumulative_reward,
                     key=0,
@@ -128,13 +114,15 @@ def simulate_task(envname):
 
         if task == "mid":
 
-            win_trials += 1 if starting_position in [3, 4] else 0
+            win_trials += (
+                1 if settings["condition"][episode] in ["win-small", "win-large"] else 0
+            )
 
             if (sum(actions) / (episode + 1)) < 0.4 and (win_trials % 3) == 0:
-                if (info_dict[0]["psychopy"][-1].duration - 0.025) > 0.05:
-                    info_dict[0]["psychopy"][-1].duration -= 0.025
+                if (info_dict[1]["psychopy"][-1].duration - 0.025) > 0.05:
+                    info_dict[1]["psychopy"][-1].duration -= 0.025
             elif (win_trials % 3) == 0:
-                info_dict[0]["psychopy"][-1].duration += 0.025
+                info_dict[1]["psychopy"][-1].duration += 0.025
 
         Logger.log_event(
             {"event_type": "TrialEnd", "total_reward": env.cumulative_reward},
