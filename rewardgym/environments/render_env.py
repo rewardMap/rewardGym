@@ -10,7 +10,7 @@ try:
 except ModuleNotFoundError:
     from .gymnasium_stubs import Surface, Clock
 
-from .base_env import BaseEnv, MultiChoiceEnv
+from .base_env import BaseEnv
 
 
 class RenderEnv(BaseEnv):
@@ -104,59 +104,3 @@ class RenderEnv(BaseEnv):
         if self.window is not None:
             pygame.display.quit()
             pygame.quit()
-
-
-class RenderEnvMultiChoice(MultiChoiceEnv):
-    def __init__(
-        self,
-        environment_graph: dict,
-        reward_locations: dict,
-        condition_dict: dict,
-        render_mode: str = None,
-        info_dict: dict = defaultdict(int),
-        window_size: int = 255,
-        seed: Union[int, np.random.Generator] = 1000,
-        window: Surface = None,
-        clock: Clock = None,
-    ):
-        """
-        MultiChoice Environment to render tasks to the screen using pygame.
-
-        Parameters
-        ----------
-        environment_graph : dict
-            The main graph showing the asssociation between states and actions.
-        reward_locations : dict
-            Which location in the graph are associated with a reward.
-        condition_dict : dict
-            A mapping between the condition and the possible outcomes of a response. E.g. in the risk-sensitive task,
-            condition_dict[1] = {0 : 4, 1: 2} would say that in condition 1, a "left" response would lead to outcome 4,
-            a "right" response to outcome 2.
-        render_mode : str, optional
-            If using rendering or not, by default None
-        info_dict : dict, optional
-            Additional information, that should be associated with a node, by default defaultdict(int)
-        window_size : int, optional
-            Size of the window in pixel, by default 255
-        seed : Union[int, np.random.Generator], optional
-            The random seed associated with the environment, creates a generator, by default 1000
-        window : Surface, optional
-            The window / pygame surface class on which stimuli are drawn, by default None
-        clock : Clock, optional
-            The pygame clock for time kepping, by default None
-        """
-        super().__init__(
-            environment_graph=environment_graph,
-            reward_locations=reward_locations,
-            condition_dict=condition_dict,
-            render_mode=render_mode,
-            info_dict=info_dict,
-            seed=seed,
-        )
-
-        self.window_size = window_size
-        self.window = window
-        self.clock = clock
-
-    _render_frame = RenderEnv.__dict__["_render_frame"]
-    close = RenderEnv.__dict__["close"]

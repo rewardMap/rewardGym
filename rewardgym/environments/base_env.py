@@ -30,6 +30,7 @@ class BaseEnv(Env):
         info_dict: Dict = None,
         seed: Union[int, np.random.Generator] = 1000,
         name: str = None,
+        n_actions: int = None,
     ):
         """
         The core environment used for modeling and in part for displays.
@@ -51,9 +52,13 @@ class BaseEnv(Env):
         # It should be posssible to use wrapper for one-hot, so no box and other handling necessary (might need an
         # implementation though).
 
-        self.n_actions = max(
-            [len(i) for i in environment_graph.values()]
-        )  # Approach for action spaces, not sure if great
+        if n_actions is None:
+            self.n_actions = max(
+                [len(i) for i in environment_graph.values()]
+            )  # Approach for action spaces, not sure if great
+        else:
+            self.n_actions = n_actions
+
         self.n_states = len(
             environment_graph
         )  # Assuming nodes are states (different from neuro-nav)
@@ -112,9 +117,21 @@ class BaseEnv(Env):
         """
         node_info_dict = self.info_dict[self.agent_location]
         node_info_dict["skip-node"] = self.skip_nodes[self.agent_location]
-        node_info_dict["avail-actions"] = list(
-            self.full_graph[self.agent_location].keys()
-        )
+
+        print("condition:", self.condition)
+
+        if self.condition is None:
+            avail_actions = list(self.full_graph[self.agent_location].keys())
+        elif self.agent_location in self.condition.keys():
+            avail_actions = list(self.condition[self.agent_location].keys())
+            c2s = {v: k for k, v in self.condition[self.agent_location].items()}
+            g2s = {v: k for k, v in self.full_graph[self.agent_location].items()}
+            c2g = {c2s[k]: g2s[k] for k in c2s.keys() if k in g2s.keys()}
+            node_info_dict["remap-actions"] = c2g
+        else:
+            avail_actions = list(self.full_graph[self.agent_location].keys())
+
+        node_info_dict["avail-actions"] = avail_actions
 
         return node_info_dict
 
@@ -138,8 +155,30 @@ class BaseEnv(Env):
             The observation at that node in the graph and the associated info.
         """
 
-        self.agent_location = agent_location
-        self.condition = condition
+        if self.agent_location is None:
+            self.agent_location = 0
+        else:
+            self.agent_location = agent_location
+
+        print(self.n_actions, len(self.full_graph[self.agent_location]))
+        if condition is not None:
+            self.condition = condition
+        elif self.n_actions < len(self.full_graph[self.agent_location]):
+            print("doing something")
+            locs = self.rng.choice(
+                list(self.full_graph[self.agent_location].keys()), size=self.n_actions
+            )
+            self.condition = {
+                self.agent_location: {
+                    n: self.full_graph[self.agent_location][i]
+                    for n, i in enumerate(locs)
+                }
+            }
+            print(self.condition)
+        else:
+            self.condition = None
+
+        print(self.condition)
         self.reward = 0
         observation = self._get_obs()
 
@@ -292,118 +331,3 @@ class BaseEnv(Env):
                     full_graph[node][0] = content
 
         return full_graph, skip_nodes
-
-
-class MultiChoiceEnv(BaseEnv):
-    """
-    Special class of the BaseEnv, which allows and additional mapping of actions.
-    This env is used, when there are many possible outcomes, but only a few
-    actions are available (as in the implementation of the risk-sensitive task).
-    """
-
-    metadata = {"render_modes": ["human"]}
-
-    def __init__(
-        self,
-        environment_graph: Dict,
-        reward_locations: Dict,
-        condition_dict: Dict,
-        render_mode: str = None,
-        info_dict: Dict = defaultdict(int),
-        seed: Union[int, np.random.Generator] = 1000,
-        name: str = None,
-    ):
-        """
-        Special class for limited action spaces, but multiple outcomes.
-
-        Parameters
-        ----------
-        environment_graph : dict
-            The main graph showing the asssociation between states and actions.
-        reward_locations : dict
-            Which location in the graph are associated with a reward.
-        condition_dict : dict
-            A mapping between the condition and the possible outcomes of a response. E.g. in the risk-sensitive task,
-            condition_dict[1] = {0 : 4, 1: 2} would say that in condition 1, a "left" response would lead to outcome 4,
-            a "right" response to outcome 2.
-        render_mode : str, optional
-            If using rendering or not, by default None
-        info_dict : dict, optional
-            Additional information, that should be associated with a node, by default defaultdict(int)
-        seed : Union[int, np.random.Generator], optional
-            The random seed associated with the environment, creates a generator, by default 1000
-        """
-
-        super().__init__(
-            environment_graph=environment_graph,
-            reward_locations=reward_locations,
-            render_mode=render_mode,
-            info_dict=info_dict,
-            seed=seed,
-            name=name,
-        )
-
-        self.condition_dict = condition_dict
-
-    def step(
-        self, action: int = None, step_reward: bool = False
-    ) -> Tuple[Union[int, np.array], int, bool, bool, Dict]:
-        """
-        Stepping through the graph - acquire a new observation in the graph. In
-        this case also maps condition specific actions to outcomes.
-
-        Parameters
-        ----------
-        action : int, optional
-            the action made by an agent, by default None
-        step_reward : bool, optional
-            Only necessary, if rewards are episode sensitive, if True calls
-            all reward objects, not only the selected one (while ignoring their output),
-            by default False
-
-        Returns
-        -------
-        Tuple[Union[int, np.array], int, bool, bool, dict]
-            The new observation, the reward associated with an action, if the
-            episode is terminated, if the episode has been truncated (False),
-            and the new observation's info.
-        """
-
-        if action not in self.condition_dict[self.condition].keys():
-            observation = self._get_obs()
-            reward = 0
-            terminated = False
-            info = self._get_info()
-
-        else:
-            action = self.condition_dict[self.condition][action]
-            next_position = self.graph[self.agent_location][action]
-
-            self.agent_location = next_position
-
-            if len(self.graph[next_position]) == 0:
-                terminated = True
-            else:
-                terminated = False
-
-            if terminated:
-                reward = self.reward_locations[self.agent_location](self.condition)
-                self.reward = reward
-
-                if step_reward:
-                    for rw in self.reward_locations.keys():
-                        if self.agent_location != rw:
-                            self.reward_locations[rw](self.condition)
-
-            else:
-                self.reward = 0
-
-            observation = self._get_obs()
-            info = self._get_info()
-
-            self.cumulative_reward += reward
-
-            if self.render_mode == "human":
-                self._render_frame(info)
-
-        return observation, reward, terminated, False, info
