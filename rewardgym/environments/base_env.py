@@ -118,8 +118,6 @@ class BaseEnv(Env):
         node_info_dict = self.info_dict[self.agent_location]
         node_info_dict["skip-node"] = self.skip_nodes[self.agent_location]
 
-        print("condition:", self.condition)
-
         if self.condition is None:
             avail_actions = list(self.full_graph[self.agent_location].keys())
         elif self.agent_location in self.condition.keys():
@@ -160,11 +158,9 @@ class BaseEnv(Env):
         else:
             self.agent_location = agent_location
 
-        print(self.n_actions, len(self.full_graph[self.agent_location]))
         if condition is not None:
             self.condition = condition
         elif self.n_actions < len(self.full_graph[self.agent_location]):
-            print("doing something")
             locs = self.rng.choice(
                 list(self.full_graph[self.agent_location].keys()), size=self.n_actions
             )
@@ -174,11 +170,9 @@ class BaseEnv(Env):
                     for n, i in enumerate(locs)
                 }
             }
-            print(self.condition)
         else:
             self.condition = None
 
-        print(self.condition)
         self.reward = 0
         observation = self._get_obs()
 
@@ -241,7 +235,7 @@ class BaseEnv(Env):
             terminated = False
 
         if terminated:
-            if "reward" in self.condition.keys():
+            if self.condition is not None and "reward" in self.condition.keys():
                 self.reward = self.condition["reward"]
             else:
                 self.reward = self.reward_locations[self.agent_location](self.condition)
