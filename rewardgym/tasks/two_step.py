@@ -31,11 +31,6 @@ def get_two_step(
         6: DriftingReward(seed=seed, p=None),
     }
 
-    if conditions is None:
-        condition_out = (None, ([0],))
-    else:
-        warnings.warn("Two-step does not use conditions.")
-
     info_dict = defaultdict(int)
 
     if render_backend == "pygame":
@@ -78,20 +73,25 @@ def get_two_step(
         info_dict.update(pygame_dict)
 
     elif render_backend == "psychopy":
-        raise NotImplementedError("Psychopy integration still under deliberation.")
+        pass
 
-    return environment_graph, reward_structure, condition_out, info_dict
+    return environment_graph, reward_structure, info_dict
 
 
 def generate_two_step_configs(set: str = "1"):
 
+    condition_dict = {
+        "expected-transition": {0: {0: 1, 1: 2}},
+        "unexpected-transition": {1: {0: 2, 1: 1}},
+        None: None,
+    }
     configs = {
         "name": "two-step",
         "set": set,
         "iti": None,
         "isi": None,
-        "condition": None,
-        "condition_target": "condition",
+        "condition": [None] * 160,
+        "condition_dict": condition_dict,
         "ntrials": 160,
         "update": None,
     }

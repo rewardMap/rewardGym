@@ -21,6 +21,7 @@ class ShowCard(BaseStimulus):
         lineColor="white",
         fillColor="grey",
         textColor="white",
+        target="reward",
         name=None,
     ):
 
@@ -33,6 +34,7 @@ class ShowCard(BaseStimulus):
         self.fillColor = fillColor
         self.textColor = textColor
         self.text = text
+        self.target = target
         self.condition_text = condition_text
 
     def setup(self, win, **kwargs):
@@ -50,13 +52,17 @@ class ShowCard(BaseStimulus):
             name=self.name + "_rect",
         )
 
-    def display(self, win, logger, condition, **kwargs):
+    def display(self, win, logger, reward, action, **kwargs):
+
+        if self.target == "action":
+            reward = action
 
         logger.key_strokes(win)
 
         stim_onset = logger.get_time()
-
-        card = np.random.choice(self.condition_text[condition])
+        print(reward)
+        print(self.condition_text)
+        card = np.random.choice(self.condition_text[reward])
         display_text = self.text.format(card)
         self.textStim.setText(display_text)
 
@@ -72,7 +78,7 @@ class ShowCard(BaseStimulus):
         )
 
 
-def get_info_dict(random_state=None):
+def get_info_dict(stimulus_set=None):
     reward_feedback = FeedBackStimulus(
         1.0, text="You gain: {0}", target="reward", name="reward"
     )
@@ -84,11 +90,11 @@ def get_info_dict(random_state=None):
     info_dict = {
         0: {
             "psychopy": [
-                ShowCard("{0}", {0: [""], 1: [""], 2: [""]}, name="Fix", duration=1.0),
+                ShowCard("{0}", {0: [""]}, name="fix", duration=1.0),
                 ShowCard(
                     "{0}",
-                    {0: ["?\n< or >"], 1: ["?\n< or >"], 2: ["?\n< or >"]},
-                    name="Cue",
+                    {0: ["?\n< or >"]},
+                    name="cue",
                     duration=0.01,
                 ),
                 ActionStimulus(duration=1.0),
@@ -97,12 +103,15 @@ def get_info_dict(random_state=None):
         1: {
             "psychopy": [
                 ShowCard(
-                    "{0}", condition_text={0: ["<"], 1: ["<"], 2: ["<"]}, name="select"
+                    "{0}",
+                    condition_text={0: ["< 5"], 1: ["> 5"]},
+                    name="select",
+                    target="action",
                 ),
                 ShowCard(
                     "{0}",
-                    condition_text={1: 5, 2: [1, 2, 3, 4], 0: [6, 7, 8, 9]},
-                    name="Outcome_l5",
+                    condition_text={1: [1, 2, 3, 4], -0.5: [6, 7, 8, 9], 0: [5]},
+                    name="lose",
                 ),
                 reward_feedback,
                 total_reward_feedback,
@@ -112,12 +121,15 @@ def get_info_dict(random_state=None):
         2: {
             "psychopy": [
                 ShowCard(
-                    "{0}", condition_text={0: [">"], 1: [">"], 2: [">"]}, name="select"
+                    "{0}",
+                    condition_text={0: ["< 5"], 1: ["> 5"]},
+                    name="select",
+                    target="action",
                 ),
                 ShowCard(
                     "{0}",
-                    condition_text={1: 5, 0: [1, 2, 3, 4], 2: [6, 7, 8, 9]},
-                    name="Outcome_g5",
+                    condition_text={-0.5: [1, 2, 3, 4], 1: [6, 7, 8, 9], 0: [5]},
+                    name="neutral",
                 ),
                 reward_feedback,
                 total_reward_feedback,

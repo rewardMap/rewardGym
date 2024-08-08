@@ -10,7 +10,7 @@ from .stimuli import (
 )
 
 
-def get_info_dict(random_state=None):
+def get_info_dict(stimulus_set=None):
     reward_feedback = FeedBackStimulus(
         1.0, text="You gain: {0}", target="reward", name="reward"
     )
@@ -50,18 +50,18 @@ def get_info_dict(random_state=None):
     ]
 
     info_dict = {
-        0: {"psychopy": first_step("mid/stim1_high.png", "mid/probe1.png")},  # big lose
-        1: {
+        1: {"psychopy": first_step("mid/stim1_high.png", "mid/probe1.png")},  # big lose
+        2: {
             "psychopy": first_step("mid/stim1_low.png", "mid/probe1.png")
         },  # small lose
-        2: {"psychopy": first_step("mid/stim3_neut.png", "mid/probe3.png")},  # control
-        3: {"psychopy": first_step("mid/stim2_low.png", "mid/probe2.png")},  # small win
-        4: {"psychopy": first_step("mid/stim2_high.png", "mid/probe2.png")},  # big win
-        5: {"psychopy": final_step},
+        3: {"psychopy": first_step("mid/stim3_neut.png", "mid/probe3.png")},  # control
+        4: {"psychopy": first_step("mid/stim2_low.png", "mid/probe2.png")},  # small win
+        5: {"psychopy": first_step("mid/stim2_high.png", "mid/probe2.png")},  # big win
         6: {"psychopy": final_step},
         7: {"psychopy": final_step},
         8: {"psychopy": final_step},
         9: {"psychopy": final_step},
+        10: {"psychopy": final_step},
     }
 
     return info_dict, None
