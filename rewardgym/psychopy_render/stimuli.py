@@ -9,64 +9,6 @@ from .default_images import lose_cross, win_cross, zero_cross
 from .logger import ExperimentLogger, SimulationLogger
 
 
-class WaitTime:
-    """
-    WaitTime class. This a class used to put the PsychoPy experiment on hold
-    for a given duration. While waiting, this class also checks if any buttons
-    have been pressed, so that the experiment can be terminated or MRI triggers
-    can be collected.
-    """
-
-    def __init__(
-        self,
-        win: Window,
-        logger: ExperimentLogger = None,
-        frameDuration: float = 1 / 60,
-    ):
-        """
-        Class to wait for a given time. Logs keypresses in between.
-
-        Parameters
-        ----------
-        win : Window
-            The psychopy window object that is used for displaying stimuli.
-        logger : ExperimentLogger, optional
-            The logger associated with the experiment, by default None
-        frameDuration : float, optional
-            frame refresh of the screen, duration in 1/HZ. Defaults to 1/60, by default 1/60
-        """
-
-        self.logger = logger
-        self.frameDuration = frameDuration
-        self.win = win
-
-    def wait(self, time: float, start: float = None):
-        """
-        Wait for a given time.
-
-
-        Parameters
-        ----------
-        time : float
-            Time to wait, in seconds.
-        start : float, optional
-            Specify a different time, than the current one of the Logger, by default None
-        """
-        if start is None:
-            start = self.logger.get_time()
-
-        t_wait = start + time  # - self.frameDuration
-
-        # Trying to avoid unecessary checks
-        if self.logger is not None:
-            while t_wait > self.logger.get_time():
-                self.logger.key_strokes(self.win)
-
-        else:
-            while t_wait > self.logger.getTime():
-                pass
-
-
 class BaseStimulus:
     """
     Base class for stimulus presentation. If called on its own it will flip the
@@ -100,9 +42,7 @@ class BaseStimulus:
 
         self.win = win
 
-    def display(
-        self, win: Window, logger: ExperimentLogger, wait: WaitTime, **kwargs
-    ) -> None:
+    def display(self, win: Window, logger: ExperimentLogger, **kwargs) -> None:
         """
         Calls the stimulus object. In this case initiate a window flip.
         Should only return something, if there has been an action required.
@@ -119,7 +59,7 @@ class BaseStimulus:
 
         win.flip()
 
-        wait.wait(self.duration, stim_onset)
+        logger.wait(self.duration, stim_onset)
 
         logger.log_event(
             {"event_type": self.name, "expected_duration": self.duration},
@@ -200,9 +140,7 @@ class TextStimulus(BaseStimulus):
             win=win, name=self.name, text=self.text, color=self.text_color
         )
 
-    def display(
-        self, win: Window, logger: ExperimentLogger, wait: WaitTime, **kwargs
-    ) -> None:
+    def display(self, win: Window, logger: ExperimentLogger, **kwargs) -> None:
         """
         Calls the stimulus object. In this case drawing the text stim, flipping the window,
         waiting and logging.
@@ -213,8 +151,6 @@ class TextStimulus(BaseStimulus):
             The psychopy window object that is used for displaying stimuli.
         logger : ExperimentLogger
             The logger associated with the experiment.
-        wait : WaitTime
-            The WaitTime object associated with the experiment.
 
         Returns
         -------
@@ -228,7 +164,7 @@ class TextStimulus(BaseStimulus):
         self.textStim.draw()
         win.flip()
 
-        wait.wait(self.duration, stim_onset)
+        logger.wait(self.duration, stim_onset)
 
         logger.log_event(
             {"event_type": self.name, "expected_duration": self.duration},
@@ -312,7 +248,7 @@ class ImageStimulus(BaseStimulus):
         for ip in self.imageStims:
             ip.autoDraw = self.autodraw
 
-    def display(self, win: Window, logger: ExperimentLogger, wait: float, **kwargs):
+    def display(self, win: Window, logger: ExperimentLogger, **kwargs):
         """
         Calls the stimulus object. In this case drawing the images stims, flipping the window,
         waiting and logging.
@@ -323,8 +259,6 @@ class ImageStimulus(BaseStimulus):
             The psychopy window object that is used for displaying stimuli.
         logger : ExperimentLogger
             The logger associated with the experiment.
-        wait : WaitTime
-            The WaitTime object associated with the experiment.
 
         Returns
         -------
@@ -344,7 +278,7 @@ class ImageStimulus(BaseStimulus):
         for ii in self.imageStims:
             ii.autoDraw = self.autodraw
 
-        wait.wait(self.duration, stim_onset)
+        logger.wait(self.duration, stim_onset)
 
         logger.log_event(
             {"event_type": self.name, "expected_duration": self.duration},
@@ -622,7 +556,6 @@ class FeedBackStimulus(BaseStimulus):
         self,
         win: Window,
         logger: ExperimentLogger,
-        wait: float,
         reward: float,
         total_reward: float,
         **kwargs,
@@ -637,8 +570,6 @@ class FeedBackStimulus(BaseStimulus):
             The psychopy window object that is used for displaying stimuli.
         logger : ExperimentLogger
             The logger associated with the experiment.
-        wait : WaitTime
-            The WaitTime object associated with the experiment.
         reward : float
             Reward of the given trial, provided by the environment.
         total_reward : float
@@ -681,7 +612,7 @@ class FeedBackStimulus(BaseStimulus):
         if feedback_img in self.feedback_image.keys():
             self.feedback_image[feedback_img].autoDraw = False
 
-        wait.wait(self.duration, stim_onset)
+        logger.wait(self.duration, stim_onset)
 
         logger.log_event(
             {

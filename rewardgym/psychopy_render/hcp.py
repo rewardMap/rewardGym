@@ -50,7 +50,7 @@ class ShowCard(BaseStimulus):
             name=self.name + "_rect",
         )
 
-    def display(self, win, logger, wait, condition, **kwargs):
+    def display(self, win, logger, condition, **kwargs):
 
         logger.key_strokes(win)
 
@@ -64,7 +64,7 @@ class ShowCard(BaseStimulus):
         self.textStim.draw()
         win.flip()
 
-        wait.wait(self.duration, stim_onset)
+        logger.wait(self.duration, stim_onset)
 
         logger.log_event(
             {"event_type": self.name, "expected_duration": self.duration},

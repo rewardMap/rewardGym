@@ -4,7 +4,7 @@ import os
 from psychopy import core, event, gui, visual
 
 from rewardgym import ENVIRONMENTS, get_configs, get_env, unpack_conditions
-from rewardgym.psychopy_render import ExperimentLogger, WaitTime, get_psychopy_info
+from rewardgym.psychopy_render import ExperimentLogger, get_psychopy_info
 from rewardgym.utils import get_condition_meaning
 
 outdir = "data/"
@@ -59,7 +59,6 @@ Logger = ExperimentLogger(
     task=exp_dict["task"],
 )
 Logger.create()
-Wait = WaitTime(win, Logger)
 
 task = exp_dict["task"]
 
@@ -148,7 +147,6 @@ for episode in range(n_episodes):
         out = ii.display(
             win=win,
             logger=Logger,
-            wait=Wait,
             reward=env.reward,
             condition=condition,
             starting_position=starting_position,
@@ -179,7 +177,6 @@ for episode in range(n_episodes):
             out = ii.display(
                 win=win,
                 logger=Logger,
-                wait=Wait,
                 reward=env.reward,
                 condition=condition,
                 starting_position=starting_position,
@@ -205,7 +202,7 @@ for episode in range(n_episodes):
     if remainder is not None:
 
         rm_onset = Logger.get_time()
-        Wait.wait(remainder, rm_onset)
+        Logger.wait(remainder, rm_onset)
 
         Logger.log_event(
             {"event_type": "adjusting-time", "expected_duration": remainder},

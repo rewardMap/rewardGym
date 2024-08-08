@@ -56,7 +56,7 @@ class RiskSensitiveDisplay(BaseStimulus):
                     size=(self.image_map[kk].shape[1], self.image_map[kk].shape[0]),
                 )
 
-    def display(self, win, logger, wait, condition=None, action=None, **kwargs):
+    def display(self, win, logger, condition=None, action=None, **kwargs):
 
         logger.key_strokes(win)
         stim_onset = logger.get_time()
@@ -100,7 +100,7 @@ class RiskSensitiveDisplay(BaseStimulus):
 
         win.flip()
 
-        wait.wait(self.duration, stim_onset)
+        logger.wait(self.duration, stim_onset)
 
         logger.log_event(
             {"event_type": self.name, "expected_duration": self.duration},
