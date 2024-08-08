@@ -59,7 +59,7 @@ class BaseStimulus:
 
         win.flip()
 
-        logger.wait(self.duration, stim_onset)
+        logger.wait(win, self.duration, stim_onset)
 
         logger.log_event(
             {"event_type": self.name, "expected_duration": self.duration},
@@ -164,7 +164,7 @@ class TextStimulus(BaseStimulus):
         self.textStim.draw()
         win.flip()
 
-        logger.wait(self.duration, stim_onset)
+        logger.wait(win, self.duration, stim_onset)
 
         logger.log_event(
             {"event_type": self.name, "expected_duration": self.duration},
@@ -278,7 +278,7 @@ class ImageStimulus(BaseStimulus):
         for ii in self.imageStims:
             ii.autoDraw = self.autodraw
 
-        logger.wait(self.duration, stim_onset)
+        logger.wait(win, self.duration, stim_onset)
 
         logger.log_event(
             {"event_type": self.name, "expected_duration": self.duration},
@@ -612,7 +612,7 @@ class FeedBackStimulus(BaseStimulus):
         if feedback_img in self.feedback_image.keys():
             self.feedback_image[feedback_img].autoDraw = False
 
-        logger.wait(self.duration, stim_onset)
+        logger.wait(win, self.duration, stim_onset)
 
         logger.log_event(
             {

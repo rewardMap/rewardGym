@@ -100,7 +100,7 @@ class RiskSensitiveDisplay(BaseStimulus):
 
         win.flip()
 
-        logger.wait(self.duration, stim_onset)
+        logger.wait(win, self.duration, stim_onset)
 
         logger.log_event(
             {"event_type": self.name, "expected_duration": self.duration},

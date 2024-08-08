@@ -334,7 +334,7 @@ class ExperimentLogger:
             else:
                 raise AttributeError(f"Cannot / doest not have attribute: {k}")
 
-    def wait(self, time: float, start: float = None):
+    def wait(self, win, time: float, start: float = None):
         """
         Wait for a given time.
 
@@ -353,7 +353,7 @@ class ExperimentLogger:
 
         # Trying to avoid unecessary checks
         while t_wait > self.get_time():
-            self.key_strokes(self.win)
+            self.key_strokes(win)
 
 
 class MinimalLogger(ExperimentLogger):
