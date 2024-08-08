@@ -8,6 +8,7 @@ except ModuleNotFoundError:
     from .gymnasium_stubs import Env
     from .gymnasium_stubs import Discrete
 
+from copy import deepcopy
 from typing import Tuple, Union
 
 import numpy as np
@@ -27,7 +28,7 @@ class BaseEnv(Env):
         environment_graph: Dict,
         reward_locations: Dict,
         render_mode: str = None,
-        info_dict: Dict = defaultdict(int),
+        info_dict: Dict = None,
         seed: Union[int, np.random.Generator] = 1000,
         name: str = None,
     ):
@@ -63,8 +64,18 @@ class BaseEnv(Env):
         self.rng = check_seed(seed)
         self.reward_locations = reward_locations
 
+        if info_dict is None:
+            info_dict = {}
+
         self.info_dict = info_dict
+
         self.graph = environment_graph
+        self.full_graph, self.skip_nodes = self._unpack_graph(self.graph)
+
+        for ke in self.graph.keys():
+            if ke not in self.info_dict.keys():
+                self.info_dict[ke] = {}
+
         self.agent_location = None
 
         self.cumulative_reward = 0
@@ -100,7 +111,13 @@ class BaseEnv(Env):
         dict
             Info dict at current node
         """
-        return self.info_dict[self.agent_location]
+        node_info_dict = deepcopy(self.info_dict[self.agent_location])
+        node_info_dict["skip-node"] = self.skip_nodes[self.agent_location]
+        node_info_dict["avail-actions"] = list(
+            self.full_graph[self.agent_location].keys()
+        )
+
+        return node_info_dict
 
     def reset(
         self, agent_location: int = None, condition: int = None
@@ -127,9 +144,11 @@ class BaseEnv(Env):
         observation = self._get_obs()
 
         info = self._get_info()
-
         if self.render_mode == "human":
             self._render_frame(info)
+
+        if info["skip-node"]:
+            observation, _, _, _, info = self.step(info["avail-actions"][0], False)
 
         return observation, info
 
@@ -156,18 +175,24 @@ class BaseEnv(Env):
             and the new observation's info.
         """
 
-        # Can do jumps now, if probabilistic end positions
-        if isinstance(self.graph[self.agent_location], tuple):
-            stochasticiy = self.graph[self.agent_location][1]
+        if self.condition is not None and self.agent_location in self.condition.keys():
+            current_graph = self.condition[self.agent_location]
+        else:
+            current_graph = self.full_graph[self.agent_location]
+
+        if action not in current_graph.keys():
+            next_position = self.agent_location
+        elif isinstance(current_graph[action], tuple):
+
+            stochasticiy = current_graph[action][1]
 
             if self.rng.random() <= stochasticiy:
-                next_position = self.graph[self.agent_location][0][action]
+                next_position = current_graph[action][0][0]
             else:
-                possible_locs = self.graph[self.agent_location][0][:]
-                possible_locs.pop(action)
+                possible_locs = current_graph[action][0][1:]
                 next_position = self.rng.choice(possible_locs)
         else:
-            next_position = self.graph[self.agent_location][action]
+            next_position = current_graph[action]
 
         self.agent_location = next_position
 
@@ -185,7 +210,6 @@ class BaseEnv(Env):
                 for rw in self.reward_locations.keys():
                     if self.agent_location != rw:
                         self.reward_locations[rw](self.condition)
-
         else:
             self.reward = 0
 
@@ -217,6 +241,55 @@ class BaseEnv(Env):
 
     def add_info(self, new_info: Dict) -> None:
         self.info_dict.update(new_info)
+
+    @staticmethod
+    def _unpack_graph(graph):
+        """
+        Unpacks the environment graph into the full format separating dummy nodes.
+
+        Parameters
+        ----------
+        graph : dict
+            The original environment graph dictionary.
+
+        Returns
+        -------
+        tuple of dict
+            A tuple containing two dictionaries:
+            - full_graph: dict
+                The transformed environment graph.
+            - skip_nodes: dict
+                A dictionary indicating which nodes have the 'skip' attribute.
+        """
+        full_graph = {}
+        skip_nodes = {}
+
+        for node, content in graph.items():
+            full_graph[node] = {}
+            if isinstance(content, dict):
+                for sub_key, sub_value in content.items():
+                    if sub_key == "skip":
+                        skip_nodes[node] = sub_value
+                    else:
+                        full_graph[node][sub_key] = sub_value
+            else:
+                skip_nodes[node] = False
+                if isinstance(content, tuple):
+                    sub_nodes, weight = content
+                    full_graph[node][0] = (sub_nodes, weight)
+                    if len(sub_nodes) > 1:
+                        for idx, sub_node in enumerate(sub_nodes[1:], start=1):
+                            full_graph[node][idx] = (
+                                [sub_node] + sub_nodes[:idx],
+                                weight,
+                            )
+                elif isinstance(content, list):
+                    for idx, sub_node in enumerate(content):
+                        full_graph[node][idx] = sub_node
+                else:
+                    full_graph[node][0] = content
+
+        return full_graph, skip_nodes
 
 
 class MultiChoiceEnv(BaseEnv):
