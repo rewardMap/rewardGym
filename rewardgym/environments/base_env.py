@@ -271,6 +271,7 @@ class BaseEnv(Env):
                         skip_nodes[node] = sub_value
                     else:
                         full_graph[node][sub_key] = sub_value
+                        skip_nodes[node] = False
             else:
                 skip_nodes[node] = False
                 if isinstance(content, tuple):
