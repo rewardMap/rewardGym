@@ -11,7 +11,6 @@ def run_single_episode(
     condition: int,
     update_agent: bool = True,
     step_reward: bool = False,
-    avail_actions: List = None,
 ) -> Union[List, List, float]:
     """
     Runs a single episode of a task.
@@ -39,7 +38,7 @@ def run_single_episode(
         returns the agent's observations (excluding starting point), agent's actions,
         and optained reward.
     """
-    obs, _ = env.reset(agent_location=starting_position, condition=condition)
+    obs, info = env.reset(agent_location=starting_position, condition=condition)
 
     states, actions, rewards = [], [], []
 
@@ -47,17 +46,18 @@ def run_single_episode(
 
     while not done:
 
-        action = agent.get_action(obs, avail_actions)
+        old_info = info
+        action = agent.get_action(obs, info["avail-actions"])
 
-        next_obs, reward, terminated, truncated, _ = env.step(
+        next_obs, reward, terminated, truncated, info = env.step(
             action, step_reward=step_reward
         )
 
         if update_agent:
             # MultiChoiceEnvs (and the risk-sensitive task) need some back and forth mapping between
             # actions.
-            if avail_actions is not None:
-                action = avail_actions[action]
+            if "remap-actions" in old_info.keys():
+                action = old_info["remap-actions"][action]
 
             agent.update(obs, action, reward, terminated, next_obs)
 
