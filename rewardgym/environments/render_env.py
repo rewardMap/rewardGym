@@ -24,6 +24,7 @@ class RenderEnv(BaseEnv):
         seed: Union[int, np.random.Generator] = 1000,
         window: Surface = None,
         clock: Clock = None,
+        name: str = None,
     ):
         """
         Environment to render tasks to the screen using pygame.
@@ -49,11 +50,7 @@ class RenderEnv(BaseEnv):
         """
 
         super().__init__(
-            environment_graph,
-            reward_locations,
-            render_mode,
-            info_dict,
-            seed,
+            environment_graph, reward_locations, render_mode, info_dict, seed, name
         )
         self.window_size = window_size
         self.window = window
