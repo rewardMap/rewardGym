@@ -140,6 +140,7 @@ class BaseEnv(Env):
 
         self.agent_location = agent_location
         self.condition = condition
+        self.reward = 0
         observation = self._get_obs()
 
         info = self._get_info()
@@ -201,9 +202,10 @@ class BaseEnv(Env):
             terminated = False
 
         if terminated:
-            reward = self.reward_locations[self.agent_location](self.condition)
-            self.reward = reward
-
+            if "reward" in self.condition.keys():
+                self.reward = self.condition["reward"]
+            else:
+                self.reward = self.reward_locations[self.agent_location](self.condition)
             # Stepping rewards, e.g. if the whole environment changes (as in two-step task)
             if step_reward:
                 for rw in self.reward_locations.keys():
