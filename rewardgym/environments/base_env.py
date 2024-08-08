@@ -8,7 +8,6 @@ except ModuleNotFoundError:
     from .gymnasium_stubs import Env
     from .gymnasium_stubs import Discrete
 
-from copy import deepcopy
 from typing import Tuple, Union
 
 import numpy as np
@@ -111,7 +110,7 @@ class BaseEnv(Env):
         dict
             Info dict at current node
         """
-        node_info_dict = deepcopy(self.info_dict[self.agent_location])
+        node_info_dict = self.info_dict[self.agent_location]
         node_info_dict["skip-node"] = self.skip_nodes[self.agent_location]
         node_info_dict["avail-actions"] = list(
             self.full_graph[self.agent_location].keys()
@@ -120,7 +119,7 @@ class BaseEnv(Env):
         return node_info_dict
 
     def reset(
-        self, agent_location: int = None, condition: int = None
+        self, agent_location: int = 0, condition: int = None
     ) -> Tuple[Union[int, np.array], Dict]:
         """
         Resetting the environment, moving everything to start.
