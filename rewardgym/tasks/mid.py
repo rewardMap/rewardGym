@@ -99,19 +99,19 @@ def generate_mid_configs(stimulus_set: str = "1"):
     seed = check_seed(353)
     # 0 & 1 = win, 2  = neutral, 3 & 4 = lose
     condition_dict = {
-        "large-loss": {0: {0: 1}},
-        "small-loss": {1: {0: 2}},
+        "loss-large": {0: {0: 1}},
+        "loss-small": {1: {0: 2}},
         "neutral": {2: {0: 3}},
-        "small-win": {3: {0: 4}},
-        "large-win": {4: {0: 5}},
+        "win-small": {3: {0: 4}},
+        "win-large": {4: {0: 5}},
     }
 
     condition_template = [
-        "large-loss",
-        "small-loss",
+        "loss-large",
+        "loss-small",
         "neutral",
-        "small-win",
-        "large-win",
+        "win-small",
+        "win-large",
     ]
     isi_template = [1.5, 2.125, 2.75, 3.375, 4.0]
 

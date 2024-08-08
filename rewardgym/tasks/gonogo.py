@@ -36,11 +36,6 @@ def get_gonogo(
         8: PseudoRandomReward(reward_list=[1, 1, 0, 0, 0, 0, 0, 0, 0, 0], seed=seed),
     }
 
-    if starting_positions is None:
-        condition_out = (None, ([0, 1, 2, 3],))
-    else:
-        condition_out = (None, (starting_positions))
-
     info_dict = defaultdict(int)
     info_dict.update(
         {"position": {0: "go-win", 1: "go-punish", 2: "nogo-win", 3: "nogo-punish"}}
@@ -98,7 +93,7 @@ def get_gonogo(
     # elif render_backend == "psychopy":
     #    raise NotImplementedError("Psychopy integration still under deliberation.")
 
-    return environment_graph, reward_structure, condition_out, info_dict
+    return environment_graph, reward_structure, info_dict
 
 
 def generate_gonogo_configs(stimulus_set: str = "1"):
