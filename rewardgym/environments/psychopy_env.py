@@ -88,7 +88,8 @@ class PsychopyEnv(BaseEnv):
         info : dict
             Additional information, that should be associated with a node, by default defaultdict(int)
         """
-
+        self.previous_action = self.action
+        self.action = None
         if self.render_mode == "human":
 
             out = None
@@ -101,7 +102,7 @@ class PsychopyEnv(BaseEnv):
                     total_reward=self.cumulative_reward,
                     reward=self.reward,
                     location=self.agent_location,
-                    action=self.action,
+                    action=self.previous_action,
                 )
 
             if out is not None:
