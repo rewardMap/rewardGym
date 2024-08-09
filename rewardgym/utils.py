@@ -29,8 +29,6 @@ def run_single_episode(
         If the agent should update internal states, by default True
     step_reward : bool, optional
         If all rewards should be triggered e.g. in two-step task, by default False
-    avail_actions : List, optional
-        What actions are available for the agent to take (indices in q-values), by default None
 
     Returns
     -------
@@ -54,8 +52,6 @@ def run_single_episode(
         )
 
         if update_agent:
-            # MultiChoiceEnvs (and the risk-sensitive task) need some back and forth mapping between
-            # actions.
             if "remap-actions" in old_info.keys():
                 action = old_info["remap-actions"][action]
 
@@ -323,3 +319,14 @@ def get_stripped_graph(graph: Dict):
         stripped_graph[nd] = edges
 
     return stripped_graph
+
+
+def update_psychopy_trials(settings, env, episode):
+    # Update timings
+    if settings["update"] is not None and len(settings["update"]) > 0:
+        for k in settings["update"]:
+            for jj in env.info_dict.keys():
+                if "psychopy" in env.info_dict[jj].keys():
+                    for ii in env.info_dict[jj]["psychopy"]:
+                        if ii.name == k:
+                            ii.duration = settings[k][episode]

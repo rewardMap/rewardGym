@@ -5,7 +5,7 @@ from psychopy import core, event, gui, visual
 
 from rewardgym import ENVIRONMENTS, get_configs, get_env, unpack_conditions
 from rewardgym.psychopy_render import ExperimentLogger, get_psychopy_info
-from rewardgym.utils import get_condition_meaning
+from rewardgym.utils import update_psychopy_trials
 
 outdir = "data/"
 
@@ -62,22 +62,21 @@ Logger.create()
 
 task = exp_dict["task"]
 
-info_dict, stimulus_info = get_psychopy_info(
-    task, stimulus_set=exp_dict["stimulus_set"]
-)
+info_dict, stimulus_info = get_psychopy_info(task, seed=exp_dict["stimulus_set"])
 
 exp_dict["stimulus_info"] = stimulus_info
 
 env = get_env(
-    task, window=win, logger=Logger, render_backend="psychopy", render_mode="human"
+    task,
+    window=win,
+    logger=Logger,
+    render_backend="psychopy",
 )
 
 settings = get_configs(task)(exp_dict["stimulus_set"])
 
 n_episodes = settings["ntrials"]
 exp_dict["setting"] = settings
-
-action_map = None
 
 
 with open(os.path.join(outdir, config_save), "w", encoding="utf-8") as f:
@@ -88,7 +87,7 @@ if task == "mid":
     win_trials = 0
 
 env.add_info(info_dict)
-env.setup_render()
+env.setup_render(window=win, logger=Logger)
 
 actions = []
 
@@ -110,23 +109,18 @@ instruction.setText("Please respond faster!")
 for episode in range(n_episodes):
 
     # Update timings
-    if settings["update"] is not None and len(settings["update"]) > 0:
-        for k in settings["update"]:
-            for jj in info_dict.keys():
-                for ii in info_dict[jj]["psychopy"]:
-                    if ii.name == k:
-                        ii.duration = settings[k][episode]
+    update_psychopy_trials(settings, env, episode)
+
+    Logger.trial = episode
+    Logger.set_trial_time()
+    Logger.trial_type = settings["condition"][episode]
+    Logger.start_position = 0
 
     obs, info = env.reset(
         0, condition=settings["condition_dict"][settings["condition"][episode]]
     )
-    Logger.trial = episode
-    Logger.set_trial_time()
-    Logger.trial_type = settings["condition"][episode]
-    Logger.start_position = env.agent_location
 
     reward = None
-    action = None
     remainder = None
     done = False
 
@@ -166,10 +160,10 @@ for episode in range(n_episodes):
         win_trials += 1 if 0 in [3, 4] else 0
 
         if (sum(actions) / (episode + 1)) < 0.4 and (win_trials % 3) == 0:
-            if (info_dict[0]["psychopy"][-1].duration - 0.025) > 0.05:
-                info_dict[0]["psychopy"][-1].duration -= 0.025
+            if (info_dict[1]["psychopy"][-1].duration - 0.025) > 0.05:
+                info_dict[1]["psychopy"][-1].duration -= 0.025
         elif (win_trials % 3) == 0:
-            info_dict[0]["psychopy"][-1].duration += 0.25
+            info_dict[1]["psychopy"][-1].duration += 0.25
 
     Logger.log_event(
         {"event_type": "trial-end", "total_reward": env.cumulative_reward},
