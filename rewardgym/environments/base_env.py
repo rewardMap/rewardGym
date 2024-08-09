@@ -20,7 +20,7 @@ class BaseEnv(Env):
     The basic environment class for the rewardGym module.
     """
 
-    metadata = {"render_modes": ["human"]}
+    metadata = {"render_modes": ["pygame", "psychopy", "psychopy-simulate"]}
 
     def __init__(
         self,
@@ -123,7 +123,11 @@ class BaseEnv(Env):
         elif self.agent_location in self.condition.keys():
             avail_actions = list(self.condition[self.agent_location].keys())
             c2s = {v: k for k, v in self.condition[self.agent_location].items()}
-            g2s = {v: k for k, v in self.full_graph[self.agent_location].items()}
+            g2s = {
+                v: k
+                for k, v in self.full_graph[self.agent_location].items()
+                for v in (v[0] if isinstance(v, tuple) else [v])
+            }
             c2g = {c2s[k]: g2s[k] for k in c2s.keys() if k in g2s.keys()}
             node_info_dict["remap-actions"] = c2g
         else:
@@ -177,7 +181,7 @@ class BaseEnv(Env):
         observation = self._get_obs()
 
         info = self._get_info()
-        if self.render_mode == "human":
+        if self.render_mode in ["psychopy", "pygame", "psychopy-simulate"]:
             self._render_frame(info)
 
         if info["skip-node"]:
@@ -252,7 +256,7 @@ class BaseEnv(Env):
 
         self.cumulative_reward += self.reward
 
-        if self.render_mode == "human":
+        if self.render_mode in ["psychopy", "pygame", "psychopy-simulate"]:
             self._render_frame(info)
 
         return observation, self.reward, terminated, False, info

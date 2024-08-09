@@ -10,6 +10,7 @@ except ModuleNotFoundError:
 
 from typing import Dict, Tuple, Union
 
+from .. import psychopy_render as psrender
 from ..psychopy_render.logger import ExperimentLogger, MinimalLogger
 from .base_env import BaseEnv
 
@@ -19,11 +20,9 @@ class PsychopyEnv(BaseEnv):
         self,
         environment_graph: dict,
         reward_locations: dict,
-        render_mode: str = "human",
+        render_mode: str = "psychopy",
         info_dict: dict = defaultdict(int),
         seed: Union[int, np.random.Generator] = 1000,
-        window: Window = None,
-        logger: ExperimentLogger = None,
         name: str = None,
         n_actions=2,
     ):
@@ -60,13 +59,12 @@ class PsychopyEnv(BaseEnv):
             n_actions,
         )
 
-        self.window = window
-        self.logger = logger
         self.setup = False
+        self.action = False
 
     def setup_render(self, window=None, logger=None):
 
-        if self.window is None and window is None:
+        if window is None:
             self.window = Window(
                 size=[1680, 1050],
                 fullscr=False,
@@ -74,12 +72,12 @@ class PsychopyEnv(BaseEnv):
                 colorSpace="rgb",
                 units="pix",
             )
-        elif window is not None:
+        else:
             self.window = window
 
-        if self.logger is None and logger is None:
-            self.logger = MinimalLogger()
-        elif logger is not None:
+        if logger is None:
+            self.logger = MinimalLogger(global_clock=psrender.psychopy_stubs.Clock())
+        else:
             self.logger = logger
 
         for node in self.graph.keys():
@@ -87,6 +85,22 @@ class PsychopyEnv(BaseEnv):
                 [stim.setup(self.window) for stim in self.info_dict[node]["psychopy"]]
 
         self.setup = True
+
+    def setup_simulation(self, logger=None, window=None):
+        self.agent_action = None
+        self.reaction_time = None
+
+        if window is None:
+            self.window = psrender.psychopy_stubs.Window()
+        else:
+            self.window = window
+
+        if logger is None:
+            self.logger = MinimalLogger(global_clock=psrender.psychopy_stubs.Clock())
+        else:
+            self.logger = logger
+
+        self.sim_setup = True
 
     def _render_frame(self, info: dict) -> None:
         """
@@ -101,10 +115,14 @@ class PsychopyEnv(BaseEnv):
         self.previous_action = self.action
         self.action = None
         self.remap_action = None
+        out = None
 
-        if self.render_mode == "human" and "psychopy" in info.keys():
+        if self.render_mode == "psychopy" and "psychopy" in info.keys():
 
-            out = None
+            if not self.setup:
+                raise RuntimeError(
+                    "You have to setup the environment first, using env.setup_render()"
+                )
 
             for disp in info["psychopy"]:
                 out = disp.display(
@@ -117,21 +135,43 @@ class PsychopyEnv(BaseEnv):
                     action=self.previous_action,
                 )
 
-            if out is not None:
+        elif self.render_mode == "psychopy-simulate" and "psychopy" in info.keys():
+            if not self.sim_setup:
+                raise RuntimeError(
+                    "You have to setup the environment first, using env.setup_simulation()"
+                )
 
-                self.action = out[0]
-                if "remap-actions" in info.keys():
-                    self.remap_action = info["remap-actions"][self.action]
-
-                if out[1] is not None:
-                    self.remainder + out[1]
-            else:
-                self.action = None
+            for disp in info["psychopy"]:
+                out = disp.simulate(
+                    win=self.window,
+                    logger=self.logger,
+                    condition=self.condition,
+                    total_reward=self.cumulative_reward,
+                    reward=self.reward,
+                    location=self.agent_location,
+                    key=self.previous_action,
+                    rt=self.reaction_time,
+                )
 
         elif "psychopy" not in info.keys():
             pass
         else:
             raise NotImplementedError("Render should only be called in human mode")
+
+        if out is not None:
+            self.action = out[0]
+            if (
+                "remap-actions" in info.keys()
+                and self.action in info["remap-actions"].keys()
+            ):
+                self.remap_action = info["remap-actions"][self.action]
+            else:
+                self.remap_action = None
+
+            if out[1] is not None:
+                self.remainder + out[1]
+        else:
+            self.action = None
 
     def close(self) -> None:
         """
@@ -142,10 +182,20 @@ class PsychopyEnv(BaseEnv):
             self.window.close()
 
     def reset(
-        self, agent_location: int = 0, condition: int = None
+        self,
+        agent_location: int = 0,
+        condition: int = None,
     ) -> Tuple[Union[int, np.array], Dict]:
 
-        self.action = None  # Add your additional reset logic here
+        if self.render_mode == "psychopy-simulate":
+            self.action = self.agent_action
+        else:
+            self.action = None
+
         self.remainder = 0
         observation, info = super().reset(agent_location, condition)
         return observation, info
+
+    def set_agent_action(self, next_action: int = None, reaction_time: float = None):
+        self.agent_action = next_action
+        self.reaction_time = reaction_time

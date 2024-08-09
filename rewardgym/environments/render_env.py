@@ -20,10 +20,7 @@ class RenderEnv(BaseEnv):
         reward_locations: dict,
         render_mode: str = None,
         info_dict: dict = defaultdict(int),
-        window_size: int = 255,
         seed: Union[int, np.random.Generator] = 1000,
-        window: Surface = None,
-        clock: Clock = None,
         name: str = None,
     ):
         """
@@ -39,22 +36,36 @@ class RenderEnv(BaseEnv):
             If using rendering or not, by default None
         info_dict : dict, optional
             Additional information, that should be associated with a node, by default defaultdict(int)
-        window_size : int, optional
-            Size of the window in pixel, by default 255
         seed : Union[int, np.random.Generator], optional
             The random seed associated with the environment, creates a generator, by default 1000
-        window : Surface, optional
-            The window / pygame surface class on which stimuli are drawn, by default None
-        clock : Clock, optional
-            The pygame clock for time kepping, by default None
         """
 
         super().__init__(
             environment_graph, reward_locations, render_mode, info_dict, seed, name
         )
-        self.window_size = window_size
-        self.window = window
-        self.clock = clock
+
+        self.setup = False
+
+    def setup_render(self, window_size, window, clock):
+
+        if window_size is None:
+            self.window_size = 256
+        else:
+            self.window_size = window_size
+
+        if window is None:
+            pygame.init()
+            pygame.display.init()
+            self.window = pygame.display.set_mode((self.window_size, self.window_size))
+        else:
+            self.window = window
+
+        if clock is None:
+            self.clock = pygame.time.Clock()
+        else:
+            self.clock = clock
+
+        self.setup = True
 
     def _render_frame(self, info: dict) -> None:
         """
@@ -66,19 +77,18 @@ class RenderEnv(BaseEnv):
         info : dict
             Additional information, that should be associated with a node, by default defaultdict(int)
         """
-        if self.window is None and self.render_mode == "human":
-            pygame.init()
-            pygame.display.init()
-            self.window = pygame.display.set_mode((self.window_size, self.window_size))
-        if self.clock is None and self.render_mode == "human":
-            self.clock = pygame.time.Clock()
 
         self.human_action = None
         self.human_reward_modifier = 1
 
-        if self.render_mode == "human":
+        if self.render_mode == "pygame" and "pygame" in info.keys():
 
-            for disp in info["human"]:
+            if not self.setup:
+                raise RuntimeError(
+                    "You have to setup the environment first, using env.setup()"
+                )
+
+            for disp in info["pygame"]:
                 out = disp.display(
                     window=self.window,
                     clock=self.clock,
@@ -91,8 +101,10 @@ class RenderEnv(BaseEnv):
                 if disp.display_type == "action":
                     self.human_action = out
 
+        elif "pygame" not in info.keys():
+            pass
         else:
-            raise NotImplementedError("Render should only be called in human mode")
+            raise NotImplementedError("Render should only be called in pygame mode")
 
     def close(self) -> None:
         """
