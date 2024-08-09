@@ -10,7 +10,6 @@ from ..environments import BaseEnv, PsychopyEnv, RenderEnv
 def get_task(
     task_name: Literal["hcp", "mid", "two-step", "risk-sensitive", "posner", "gonogo"],
     render_backend: Literal["pygame"] = None,
-    window_size: int = None,
     seed: Union[np.random.Generator, int] = 1000,
 ):
 
@@ -36,7 +35,7 @@ def get_task(
         raise NotImplementedError(f"Task {task_name} is not implemented.")
 
     environment_graph, reward_structure, info_dict = get_task_func(
-        render_backend=render_backend, window_size=window_size, seed=seed
+        render_backend=render_backend, seed=seed
     )
 
     return environment_graph, reward_structure, info_dict
@@ -44,9 +43,7 @@ def get_task(
 
 def get_env(
     task_name: Literal["hcp", "mid", "two-step", "risk-sensitive", "posner", "gonogo"],
-    render_mode: Literal["human"] = None,
-    render_backend: Literal["pygame", "psychopy"] = None,
-    window_size: int = None,
+    render_backend: Literal["pygame", "psychopy", "psychopy-simulate"] = None,
     seed: Union[int, np.random.Generator] = 1000,
     **kwargs,
 ):
@@ -54,15 +51,14 @@ def get_env(
     environment_graph, reward_structure, info_dict = get_task(
         task_name,
         render_backend=render_backend,
-        window_size=window_size,
         seed=seed,
     )
 
-    if (render_mode is None) and (render_backend is None):
+    if render_backend is None:
         env = BaseEnv(
             environment_graph=environment_graph,
             reward_locations=reward_structure,
-            render_mode=render_mode,
+            render_mode=render_backend,
             info_dict=info_dict,
             seed=seed,
             name=task_name,
@@ -71,23 +67,19 @@ def get_env(
         env = RenderEnv(
             environment_graph=environment_graph,
             reward_locations=reward_structure,
-            render_mode=render_mode,
             info_dict=info_dict,
-            window_size=window_size,
             seed=seed,
             name=task_name,
         )
-    elif render_backend == "psychopy":
+    elif render_backend == "psychopy" or render_backend == "psychopy-simulate":
         env = PsychopyEnv(
             environment_graph=environment_graph,
             reward_locations=reward_structure,
-            render_mode=render_mode,
+            render_mode=render_backend,
             info_dict=info_dict,
             seed=seed,
             name=task_name,
             n_actions=2 if task_name == "risk-sensitive" else None,
-            window=kwargs["window"],
-            logger=kwargs["logger"],
         )
 
     return env
