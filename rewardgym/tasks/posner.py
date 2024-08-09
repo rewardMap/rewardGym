@@ -8,20 +8,9 @@ from ..utils import check_seed
 
 
 def get_posner(
-    render_backend: Literal["pygame", "psychopy"] = None,
-    window_size: int = None,
-    **kwargs
+    render_backend: Literal["pygame", "psychopy"] = None, seed=112, **kwargs
 ):
-    """
-    environment_graph = {
-        0: [4, 5],  # left left
-        1: [5, 4],  # left right
-        2: [4, 5],  # right left
-        3: [5, 4],  # right right
-        4: [],  # Win
-        5: [],  # Lose
-    }
-    """
+
     environment_graph = {
         0: ({0: ([1, 2], 0.5), "skip": True}),
         1: ({0: ([3, 4], 0.8)}),  # cue left
@@ -53,8 +42,7 @@ def get_posner(
 
     if render_backend == "pygame":
 
-        if window_size is None:
-            return ValueError("window_size needs to be defined!")
+        window_size = 256
 
         from ..pygame_render.stimuli import BaseAction, BaseDisplay, BaseText
         from ..pygame_render.task_stims import feedback_block
@@ -83,18 +71,21 @@ def get_posner(
         ]
 
         pygame_dict = {
-            0: {"human": first_step("<", left_position)},
-            1: {"human": first_step("<", right_position)},
-            2: {"human": first_step(">", left_position)},
-            3: {"human": first_step(">", right_position)},
-            4: {"human": final_display},
-            5: {"human": final_display},
+            0: {"pygame": first_step("<", left_position)},
+            1: {"pygame": first_step("<", right_position)},
+            2: {"pygame": first_step(">", left_position)},
+            3: {"pygame": first_step(">", right_position)},
+            4: {"pygame": final_display},
+            5: {"pygame": final_display},
         }
 
         info_dict.update(pygame_dict)
 
-    elif render_backend == "psychopy":
-        pass
+    elif render_backend == "psychopy" or render_backend == "psychopy-simulate":
+        from ..psychopy_render import get_psychopy_info
+
+        psychopy_dict, _ = get_psychopy_info("risk-sensitive", seed=seed)
+        info_dict.update(psychopy_dict)
 
     return environment_graph, reward_structure, info_dict
 

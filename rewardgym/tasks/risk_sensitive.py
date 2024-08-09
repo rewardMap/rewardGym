@@ -10,13 +10,11 @@ from .utils import check_conditions_not_following, check_conditions_present
 
 
 def get_risk_sensitive(
-    conditions: list = None,
     render_backend: Literal["pygame", "psychopy"] = None,
-    window_size: int = None,
     seed: Union[int, np.random.Generator] = 1000,
     **kwargs
 ):
-
+    seed = check_seed(seed)
     environment_graph = {
         0: [1, 2, 3, 4, 5],  # win - go (action1)
         1: [],  # Deterministic 0
@@ -67,8 +65,7 @@ def get_risk_sensitive(
 
     if render_backend == "pygame":
 
-        if window_size is None:
-            return ValueError("window_size needs to be defined!")
+        window_size = 256
 
         from ..pygame_render.stimuli import BaseAction, BaseDisplay, BaseText
         from ..pygame_render.task_stims import FormatTextRiskSensitive, feedback_block
@@ -92,7 +89,7 @@ def get_risk_sensitive(
 
         pygame_dict = {
             0: {
-                "human": [
+                "pygame": [
                     BaseDisplay(None, 1),
                     BaseText("+", 500, textposition=base_position),
                     BaseDisplay(None, 1),
@@ -100,17 +97,20 @@ def get_risk_sensitive(
                     BaseAction(),
                 ]
             },
-            1: {"human": final_display},
-            2: {"human": final_display},
-            3: {"human": final_display},
-            4: {"human": final_display},
-            5: {"human": final_display},
+            1: {"pygame": final_display},
+            2: {"pygame": final_display},
+            3: {"pygame": final_display},
+            4: {"pygame": final_display},
+            5: {"pygame": final_display},
         }
 
         info_dict.update(pygame_dict)
 
-    elif render_backend == "psychopy":
-        pass
+    elif render_backend == "psychopy" or render_backend == "psychopy-simulate":
+        from ..psychopy_render import get_psychopy_info
+
+        psychopy_dict, _ = get_psychopy_info("risk-sensitive", seed=seed)
+        info_dict.update(psychopy_dict)
 
     return environment_graph, reward_structure, info_dict
 

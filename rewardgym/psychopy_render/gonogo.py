@@ -11,9 +11,9 @@ from .default_images import (
 from .stimuli import ActionStimulus, BaseStimulus, FeedBackStimulus, ImageStimulus
 
 
-def get_info_dict(stimulus_set=None):
+def get_info_dict(seed=None):
 
-    random_state = check_seed(stimulus_set)
+    random_state = check_seed(seed)
     stim_properties = [generate_stimulus_properties(random_state) for _ in range(4)]
     image_map = {}
     stimuli = {}

@@ -60,8 +60,7 @@ class ShowCard(BaseStimulus):
         logger.key_strokes(win)
 
         stim_onset = logger.get_time()
-        print(reward)
-        print(self.condition_text)
+
         card = np.random.choice(self.condition_text[reward])
         display_text = self.text.format(card)
         self.textStim.setText(display_text)
@@ -78,7 +77,7 @@ class ShowCard(BaseStimulus):
         )
 
 
-def get_info_dict(stimulus_set=None):
+def get_info_dict(seed=None):
     reward_feedback = FeedBackStimulus(
         1.0, text="You gain: {0}", target="reward", name="reward"
     )

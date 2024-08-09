@@ -8,9 +8,7 @@ from ..reward_classes import DriftingReward
 from ..utils import check_seed
 
 
-def get_two_step(
-    conditions=None, render_backend=None, window_size=None, seed=111, **kwargs
-):
+def get_two_step(render_backend=None, seed=111, **kwargs):
 
     seed = check_seed(seed)
 
@@ -35,8 +33,7 @@ def get_two_step(
 
     if render_backend == "pygame":
 
-        if window_size is None:
-            return ValueError("window_size needs to be defined!")
+        window_size = 256
 
         from ..pygame_render.stimuli import BaseAction, BaseDisplay, BaseText
         from ..pygame_render.task_stims import feedback_block
@@ -61,24 +58,27 @@ def get_two_step(
             ]
 
         pygame_dict = {
-            0: {"human": first_step("A       or       B")},
-            1: {"human": first_step("C       or       D")},
-            2: {"human": first_step("E       or       F")},
-            3: {"human": final_display},
-            4: {"human": final_display},
-            5: {"human": final_display},
-            6: {"human": final_display},
+            0: {"pygame": first_step("A       or       B")},
+            1: {"pygame": first_step("C       or       D")},
+            2: {"pygame": first_step("E       or       F")},
+            3: {"pygame": final_display},
+            4: {"pygame": final_display},
+            5: {"pygame": final_display},
+            6: {"pygame": final_display},
         }
 
         info_dict.update(pygame_dict)
 
-    elif render_backend == "psychopy":
-        pass
+    elif render_backend == "psychopy" or render_backend == "psychopy-simulate":
+        from ..psychopy_render import get_psychopy_info
+
+        psychopy_dict, _ = get_psychopy_info("two-step", seed=seed)
+        info_dict.update(psychopy_dict)
 
     return environment_graph, reward_structure, info_dict
 
 
-def generate_two_step_configs(set: str = "1"):
+def generate_two_step_configs(stimulus_set: str = "1"):
 
     condition_dict = {
         "expected-transition": {0: {0: 1, 1: 2}},
@@ -87,7 +87,7 @@ def generate_two_step_configs(set: str = "1"):
     }
     configs = {
         "name": "two-step",
-        "set": set,
+        "set": stimulus_set,
         "iti": None,
         "isi": None,
         "condition": [None] * 160,

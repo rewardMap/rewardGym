@@ -11,7 +11,7 @@ from .stimuli import (
 )
 
 
-def get_info_dict(stimulus_set=None, **kwargs):
+def get_info_dict(seed=None, **kwargs):
 
     reward_feedback = FeedBackStimulus(
         1.0, text="You gain: {0}", target="reward", name="reward"

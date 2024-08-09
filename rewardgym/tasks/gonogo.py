@@ -9,9 +9,7 @@ from .utils import check_conditions_present
 
 
 def get_gonogo(
-    starting_positions: list = None,
     render_backend: Literal["pygame", "psychopy"] = None,
-    window_size: int = None,
     seed: Union[int, np.random.Generator] = 1000,
 ):
 
@@ -46,8 +44,7 @@ def get_gonogo(
         from ..pygame_render.stimuli import BaseDisplay, BaseText, TimedAction
         from ..pygame_render.task_stims import FormatText, FormatTextReward
 
-        if window_size is None:
-            return ValueError("window_size needs to be defined!")
+        window_size = 256
 
         base_position = (window_size // 2, window_size // 2)
 
@@ -78,20 +75,23 @@ def get_gonogo(
         ]
 
         pygame_dict = {
-            0: {"human": first_step("A")},
-            1: {"human": first_step("B")},
-            2: {"human": first_step("C")},
-            3: {"human": first_step("D")},
-            4: {"human": final_disp},
-            5: {"human": final_disp},
-            6: {"human": final_disp},
-            7: {"human": final_disp},
+            0: {"pygame": first_step("A")},
+            1: {"pygame": first_step("B")},
+            2: {"pygame": first_step("C")},
+            3: {"pygame": first_step("D")},
+            4: {"pygame": final_disp},
+            5: {"pygame": final_disp},
+            6: {"pygame": final_disp},
+            7: {"pygame": final_disp},
         }
 
         info_dict.update(pygame_dict)
 
-    # elif render_backend == "psychopy":
-    #    raise NotImplementedError("Psychopy integration still under deliberation.")
+    elif render_backend == "psychopy" or render_backend == "psychopy-simulate":
+        from ..psychopy_render import get_psychopy_info
+
+        psychopy_dict, _ = get_psychopy_info("gonogo", seed=seed)
+        info_dict.update(psychopy_dict)
 
     return environment_graph, reward_structure, info_dict
 

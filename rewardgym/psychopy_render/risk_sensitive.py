@@ -38,12 +38,10 @@ class RiskSensitiveDisplay(BaseStimulus):
         self.image_position = image_position
         self.image_map = image_map
         self.image_shift = image_shift
-        self.condition_dict = None
         self.with_action = with_action
 
-    def setup(self, win, action_map, **kwargs):
+    def setup(self, win, **kwargs):
         self.image_dict = {}
-        self.condition_dict = action_map
 
         for kk in self.image_map.keys():
 
@@ -116,9 +114,9 @@ class RiskSensitiveDisplay(BaseStimulus):
         return None
 
 
-def get_info_dict(stimulus_set=111):
+def get_info_dict(seed=111):
 
-    random_state = check_seed(stimulus_set)
+    random_state = check_seed(seed)
 
     stim_properties = [generate_stimulus_properties(random_state) for _ in range(5)]
     image_map = {}
