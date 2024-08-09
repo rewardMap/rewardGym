@@ -263,10 +263,63 @@ def get_starting_nodes(graph: dict) -> List:
     List
         the starting position of each graph.
     """
+    terminals = get_stripped_graph(graph)
+    terminals = terminals.values()
 
-    terminals = [ii[0] if isinstance(ii, tuple) else ii[:] for ii in graph.values()]
     terminals = list(itertools.chain.from_iterable(terminals))
     nodes = list(graph.keys())
     starting_nodes = list(set(nodes) - set(terminals))
 
     return starting_nodes
+
+
+def get_stripped_graph(graph: Dict):
+    """
+    Processes a graph by stripping and flattening its edges.
+
+    The function takes a graph (a dictionary where keys are nodes and values are edges)
+    and processes the edges. If the edge is a tuple, it extracts the first element.
+    If the edge is a dictionary, it extracts and flattens the first elements of the
+    tuples that are non-string keys. The function returns a new graph with the
+    processed edges.
+
+    Parameters
+    ----------
+    graph : dict
+        A dictionary representing the graph. Keys are nodes and values are edges, which
+        can be tuples, dictionaries, or other types.
+
+    Returns
+    -------
+    stripped_graph : dict
+        A dictionary representing the processed graph, where the edges have been stripped
+        and flattened as described.
+
+    Examples
+    --------
+    >>> graph = {
+    ...     'A': (['B', 'C'],),
+    ...     'B': {'1': (['D'],), 2: (['E'],), 3: ['F', 'G']},
+    ...     'C': ['H', 'I']
+    ... }
+    >>> get_stripped_graph(graph)
+    {'A': ['B', 'C'], 'B': ['D', 'E', 'F', 'G'], 'C': ['H', 'I']}
+    """
+
+    stripped_graph = {}
+    for nd, edg in graph.items():
+        if isinstance(edg, tuple):
+            edges = edg[0]
+        elif isinstance(edg, dict):
+            edges = [
+                edg[k][0] if isinstance(edg[k], tuple) else edg[k]
+                for k in edg.keys()
+                if not isinstance(k, str)
+            ]
+            edges = list(itertools.chain.from_iterable(edges))  # flatten list
+        else:
+            edges = edg
+
+        stripped_graph[nd] = edges
+
+    return stripped_graph

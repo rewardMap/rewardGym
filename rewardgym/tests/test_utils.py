@@ -11,6 +11,7 @@ from ..utils import (
     get_condition_meaning,
     get_condition_state,
     get_starting_nodes,
+    get_stripped_graph,
     run_single_episode,
     unpack_conditions,
 )
@@ -264,3 +265,19 @@ def test_neither_condition_nor_position_present():
         get_condition_meaning(info_dict, starting_position, condition)
         == expected_result
     )
+
+
+def test_get_stripped_graph_basic():
+    graph = {
+        "A": (["B", "C"],),
+        "B": {"1": (["D"],), 2: (["E"],), 3: ["F", "G"]},
+        "C": ["H", "I"],
+    }
+    expected = {"A": ["B", "C"], "B": ["E", "F", "G"], "C": ["H", "I"]}
+    assert get_stripped_graph(graph) == expected
+
+
+def test_get_stripped_graph_with_empty_dict():
+    graph = {}
+    expected = {}
+    assert get_stripped_graph(graph) == expected
