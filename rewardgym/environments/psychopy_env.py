@@ -64,9 +64,9 @@ class PsychopyEnv(BaseEnv):
         self.logger = logger
         self.setup = False
 
-    def setup_render(self, action_map=None):
+    def setup_render(self, window=None, logger=None):
 
-        if self.window is None:
+        if self.window is None and window is None:
             self.window = Window(
                 size=[1680, 1050],
                 fullscr=False,
@@ -74,15 +74,17 @@ class PsychopyEnv(BaseEnv):
                 colorSpace="rgb",
                 units="pix",
             )
-        if self.logger is None:
+        elif window is not None:
+            self.window = window
+
+        if self.logger is None and logger is None:
             self.logger = MinimalLogger()
+        elif logger is not None:
+            self.logger = logger
 
         for node in self.graph.keys():
             if "psychopy" in self.info_dict[node].keys():
-                [
-                    stim.setup(self.window, action_map=action_map)
-                    for stim in self.info_dict[node]["psychopy"]
-                ]
+                [stim.setup(self.window) for stim in self.info_dict[node]["psychopy"]]
 
         self.setup = True
 
