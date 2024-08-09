@@ -238,12 +238,12 @@ class BaseEnv(Env):
             if self.condition is not None and "reward" in self.condition.keys():
                 self.reward = self.condition["reward"]
             else:
-                self.reward = self.reward_locations[self.agent_location](self.condition)
+                self.reward = self.reward_locations[self.agent_location]()
             # Stepping rewards, e.g. if the whole environment changes (as in two-step task)
             if step_reward:
                 for rw in self.reward_locations.keys():
                     if self.agent_location != rw:
-                        self.reward_locations[rw](self.condition)
+                        self.reward_locations[rw]()
         else:
             self.reward = 0
 

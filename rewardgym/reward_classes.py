@@ -23,8 +23,8 @@ class BaseReward:
         reward = self.rng.choice(self.reward, p=self.p)
         return reward
 
-    def __call__(self, *args):
-        return self._reward_function(condition=args[0])
+    def __call__(self, **kwargs):
+        return self._reward_function(**kwargs)
 
 
 class DriftingReward(BaseReward):
@@ -63,18 +63,6 @@ class DriftingReward(BaseReward):
         self.p = next_val
 
         return reward
-
-
-class ConditionReward(BaseReward):
-    def __init__(self, condition_reward={0: -0.5, 1: 0.0, 2: 1.0}):
-        self.condition_reward = condition_reward
-
-    def _reward_function(self, condition):
-        reward = self.condition_reward[condition]
-        return reward
-
-    def __call__(self, condition):
-        return self._reward_function(condition)
 
 
 class PseudoRandomReward(BaseReward):
