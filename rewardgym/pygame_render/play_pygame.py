@@ -21,18 +21,18 @@ def play_task(
     window = pygame.display.set_mode((window_size, window_size))
     clock = pygame.time.Clock()
 
-    environment_graph, reward_structure, condition_out, info_dict = get_task(
-        task_name, None, render_backend="pygame", window_size=window_size
+    environment_graph, reward_structure, info_dict = get_task(
+        task_name, render_backend="pygame"
     )
+
     env = RenderEnv(
         environment_graph=environment_graph,
         reward_locations=reward_structure,
-        render_mode="human",
+        render_mode="pygame",
         info_dict=info_dict,
-        window_size=window_size,
-        window=window,
-        clock=clock,
     )
+
+    env.setup_render(window_size=window_size, window=window, clock=clock)
 
     base_position = (window_size // 2, window_size // 2)
 
