@@ -3,10 +3,12 @@ import pytest
 from rewardgym import ENVIRONMENTS, get_configs, get_env, unpack_conditions
 from rewardgym.psychopy_render import SimulationLogger, get_psychopy_info
 from rewardgym.psychopy_render.psychopy_stubs import Clock, Window
-from rewardgym.utils import get_condition_meaning
+from rewardgym.utils import get_condition_meaning, update_psychopy_trials
 
 
 def simulate_task(envname):
+    from scipy.stats import uniform
+
     exp_dict = {"participant_id": "001", "run": 1, "task": envname}
 
     win = Window()
@@ -22,40 +24,30 @@ def simulate_task(envname):
     Logger.create()
 
     task = exp_dict["task"]
-    info_dict, _ = get_psychopy_info(task)
-    env = get_env(task)
 
-    try:
-        settings = get_configs(task)()
-        n_episodes = settings["ntrials"]
+    env = get_env(task, render_backend="psychopy-simulate")
+    env.setup_simulation(logger=Logger, window=win)
 
-    except NotImplementedError:
-        settings = None
-        n_episodes = 5
+    settings = get_configs(task)(stimulus_set=55)
+    n_episodes = settings["ntrials"]
 
     if task == "mid":
         win_trials = 0
-
-    env.info_dict.update(info_dict)
 
     actions = []
 
     for episode in range(n_episodes):
 
-        # Update timings
-        if settings["update"] is not None and len(settings["update"]) > 0:
-            for k in settings["update"]:
-                for jj in info_dict.keys():
-                    for ii in info_dict[jj]["psychopy"]:
-                        if ii.name == k:
-                            ii.duration = settings[k][episode]
+        update_psychopy_trials(settings, env, episode)
 
-        obs, info = env.reset(0, condition=None)
         Logger.trial = episode
         Logger.set_trial_time()
         Logger.trial_type = settings["condition"][episode]
         Logger.start_position = env.agent_location
         Logger.current_location = env.agent_location
+
+        env.set_agent_action(0, 0.1)
+        obs, info = env.reset()
 
         Logger.update_trial_info(
             start_position=env.agent_location,
@@ -64,73 +56,43 @@ def simulate_task(envname):
             condition=settings["condition"][episode],
         )
 
-        reward = None
-        action = None
-
-        for ii in info["psychopy"]:
-            out = ii.simulate(
-                win=win,
-                logger=Logger,
-                reward=env.reward,
-                condition=settings["condition"][episode],
-                starting_position=0,
-                action=None,
-                total_reward=env.cumulative_reward,
-                key=0,
-                rt=0.100,
-            )
-
-        if out is not None:
-            action = out[0]
+        if env.action is not None:
+            action = env.action
             done = False
             actions.append(action)
-
         else:
             done = True
 
         while not done:
+            env.set_agent_action(0, 0.1)
             next_obs, reward, terminated, truncated, info = env.step(action)
             Logger.current_location = env.agent_location
-            for ii in info["psychopy"]:
-                out = ii.simulate(
-                    win=win,
-                    logger=Logger,
-                    reward=env.reward,
-                    condition=settings["condition"][episode],
-                    starting_position=0,
-                    action=action,
-                    total_reward=env.cumulative_reward,
-                    key=0,
-                    rt=0.1,
-                )
 
             done = terminated or truncated
 
-            if out is None and not done and task == "two-step":
+            if env.action is None:
                 done = True
-
-            elif out is not None:
-                action = out[0]
+            else:
+                actions.append(env.action)
 
         if task == "mid":
 
-            win_trials += (
-                1 if settings["condition"][episode] in ["win-small", "win-large"] else 0
-            )
+            win_trials += 1 if "win" in settings["condition"] else 0
 
             if (sum(actions) / (episode + 1)) < 0.4 and (win_trials % 3) == 0:
-                if (info_dict[1]["psychopy"][-1].duration - 0.025) > 0.05:
-                    info_dict[1]["psychopy"][-1].duration -= 0.025
+                if (env.info_dict[1]["psychopy"][-1].duration - 0.025) > 0.05:
+                    env.info_dict[1]["psychopy"][-1].duration -= 0.025
             elif (win_trials % 3) == 0:
-                info_dict[1]["psychopy"][-1].duration += 0.025
+                env.info_dict[1]["psychopy"][-1].duration += 0.025
 
         Logger.log_event(
             {"event_type": "TrialEnd", "total_reward": env.cumulative_reward},
             reward=env.reward,
         )
 
-    Logger.close()
     win.close()
+
+    return Logger.close()
 
 
 def test_smoke_screen_simulate_hcp():
