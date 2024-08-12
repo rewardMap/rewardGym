@@ -134,6 +134,7 @@ class BaseEnv(Env):
             avail_actions = list(self.full_graph[self.agent_location].keys())
 
         node_info_dict["avail-actions"] = avail_actions
+        node_info_dict["obs"] = self.agent_location
 
         return node_info_dict
 
@@ -184,7 +185,7 @@ class BaseEnv(Env):
         if self.render_mode in ["psychopy", "pygame", "psychopy-simulate"]:
             self._render_frame(info)
 
-        if info["skip-node"]:
+        if info["skip-node"] and self.render_mode != "psychopy-simulate":
             observation, _, _, _, info = self.step(info["avail-actions"][0], False)
 
         return observation, info
