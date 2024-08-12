@@ -26,7 +26,7 @@ def simulate_task(envname):
     task = exp_dict["task"]
 
     env = get_env(task, render_backend="psychopy-simulate")
-    env.setup_simulation(logger=Logger, window=win)
+    env.setup_simulation(logger=Logger, window=win, expose_last_stim=True)
 
     settings = get_configs(task)(stimulus_set=55)
     n_episodes = settings["ntrials"]
@@ -46,8 +46,8 @@ def simulate_task(envname):
         Logger.start_position = env.agent_location
         Logger.current_location = env.agent_location
 
-        env.set_agent_action(0, 0.1)
         obs, info = env.reset()
+        env.simulate_action(info, 0, 0.1)
 
         Logger.update_trial_info(
             start_position=env.agent_location,
@@ -64,11 +64,13 @@ def simulate_task(envname):
             done = True
 
         while not done:
-            env.set_agent_action(0, 0.1)
             next_obs, reward, terminated, truncated, info = env.step(action)
             Logger.current_location = env.agent_location
 
             done = terminated or truncated
+
+            if not done:
+                env.simulate_action(info, 0, 0.1)
 
             if env.action is None:
                 done = True

@@ -185,7 +185,7 @@ class BaseEnv(Env):
         if self.render_mode in ["psychopy", "pygame", "psychopy-simulate"]:
             self._render_frame(info)
 
-        if info["skip-node"] and self.render_mode != "psychopy-simulate":
+        if info["skip-node"]:
             observation, _, _, _, info = self.step(info["avail-actions"][0], False)
 
         return observation, info

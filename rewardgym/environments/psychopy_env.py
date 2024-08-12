@@ -86,8 +86,9 @@ class PsychopyEnv(BaseEnv):
 
         self.setup = True
 
-    def setup_simulation(self, logger=None, window=None):
-        self.agent_action = None
+    def setup_simulation(self, logger=None, window=None, expose_last_stim=False):
+
+        self.expose_last_stim = expose_last_stim
         self.reaction_time = None
 
         if window is None:
@@ -135,14 +136,16 @@ class PsychopyEnv(BaseEnv):
                     action=self.previous_action,
                 )
 
+                self._check_output(out, info)
+
         elif self.render_mode == "psychopy-simulate" and "psychopy" in info.keys():
             if not self.sim_setup:
                 raise RuntimeError(
                     "You have to setup the environment first, using env.setup_simulation()"
                 )
 
-            for disp in info["psychopy"]:
-                out = disp.simulate(
+            for disp in info["psychopy"][:-1]:
+                disp.simulate(
                     win=self.window,
                     logger=self.logger,
                     condition=self.condition,
@@ -153,10 +156,30 @@ class PsychopyEnv(BaseEnv):
                     rt=self.reaction_time,
                 )
 
+            if not self.expose_last_stim:
+                self.simulate_action(info, self.previous_action, self.reaction_time)
+
         elif "psychopy" not in info.keys():
             pass
         else:
             raise NotImplementedError("Render should only be called in human mode")
+
+    def simulate_action(self, info, action, reaction_time):
+
+        out = info["psychopy"][-1].simulate(
+            win=self.window,
+            logger=self.logger,
+            condition=self.condition,
+            total_reward=self.cumulative_reward,
+            reward=self.reward,
+            location=self.agent_location,
+            key=action,
+            rt=reaction_time,
+        )
+
+        self._check_output(out, info)
+
+    def _check_output(self, out, info):
 
         if out is not None:
             self.action = out[0]
@@ -187,15 +210,8 @@ class PsychopyEnv(BaseEnv):
         condition: int = None,
     ) -> Tuple[Union[int, np.array], Dict]:
 
-        if self.render_mode == "psychopy-simulate":
-            self.action = self.agent_action
-        else:
-            self.action = None
-
+        self.action = None
         self.remainder = 0
+
         observation, info = super().reset(agent_location, condition)
         return observation, info
-
-    def set_agent_action(self, next_action: int = None, reaction_time: float = None):
-        self.agent_action = next_action
-        self.reaction_time = reaction_time
