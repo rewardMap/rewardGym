@@ -53,7 +53,6 @@ def simulate_task(envname):
             start_position=env.agent_location,
             current_location=env.agent_location,
             trial=episode,
-            condition=settings["condition"][episode],
         )
 
         if env.action is not None:
