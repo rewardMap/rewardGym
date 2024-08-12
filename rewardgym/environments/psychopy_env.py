@@ -114,6 +114,7 @@ class PsychopyEnv(BaseEnv):
             Additional information, that should be associated with a node, by default defaultdict(int)
         """
         self.previous_action = self.action
+        self.previous_remap_action = self.remap_action
         self.action = None
         self.remap_action = None
         out = None
@@ -189,10 +190,10 @@ class PsychopyEnv(BaseEnv):
             ):
                 self.remap_action = info["remap-actions"][self.action]
             else:
-                self.remap_action = None
+                self.remap_action = self.action
 
             if out[1] is not None:
-                self.remainder + out[1]
+                self.remainder = self.remainder + out[1]
         else:
             self.action = None
 
@@ -211,6 +212,7 @@ class PsychopyEnv(BaseEnv):
     ) -> Tuple[Union[int, np.array], Dict]:
 
         self.action = None
+        self.remap_action = None
         self.remainder = 0
 
         observation, info = super().reset(agent_location, condition)
