@@ -56,10 +56,15 @@ class ValenceQAgent:
         return a
 
     def get_probs(self, obs, avail_actions=None):
-        if avail_actions is None:
-            avail_actions = np.arange(len(self.q_values[obs]))
 
-        qval = self.q_values[obs][avail_actions]
+        adjusted_actions = np.zeros_like(self.q_values[obs]) - 999
+
+        if avail_actions is None:
+            adjusted_actions = self.q_values[obs]
+        else:
+            adjusted_actions[avail_actions] = self.q_values[obs][avail_actions]
+
+        qval = adjusted_actions  # self.q_values[obs][avail_actions]
         qval = qval - np.mean(qval)
 
         qs = np.exp(qval * self.temperature)
