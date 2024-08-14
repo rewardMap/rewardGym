@@ -119,6 +119,10 @@ class PsychopyEnv(BaseEnv):
         self.remap_action = None
         out = None
 
+        self.logger.update_trial_info(
+            current_location=self.agent_location, avail_actions=info["avail-actions"]
+        )
+
         if self.render_mode == "psychopy" and "psychopy" in info.keys():
 
             if not self.setup:
@@ -166,6 +170,9 @@ class PsychopyEnv(BaseEnv):
             raise NotImplementedError("Render should only be called in human mode")
 
     def simulate_action(self, info, action, reaction_time):
+
+        if "unmap-actions" in info.keys() and action in info["unmap-actions"].keys():
+            action = info["unmap-actions"][action]
 
         out = info["psychopy"][-1].simulate(
             win=self.window,

@@ -121,7 +121,6 @@ class BaseEnv(Env):
         if self.condition is None:
             avail_actions = list(self.full_graph[self.agent_location].keys())
         elif self.agent_location in self.condition.keys():
-            avail_actions = list(self.condition[self.agent_location].keys())
             c2s = {v: k for k, v in self.condition[self.agent_location].items()}
             g2s = {
                 v: k
@@ -129,7 +128,10 @@ class BaseEnv(Env):
                 for v in (v[0] if isinstance(v, tuple) else [v])
             }
             c2g = {c2s[k]: g2s[k] for k in c2s.keys() if k in g2s.keys()}
+            g2c = {v: k for k, v in c2g.items()}
             node_info_dict["remap-actions"] = c2g
+            node_info_dict["unmap-actions"] = g2c
+            avail_actions = list(c2g.values())
         else:
             avail_actions = list(self.full_graph[self.agent_location].keys())
 
@@ -215,6 +217,7 @@ class BaseEnv(Env):
 
         if self.condition is not None and self.agent_location in self.condition.keys():
             current_graph = self.condition[self.agent_location]
+
         else:
             current_graph = self.full_graph[self.agent_location]
 
