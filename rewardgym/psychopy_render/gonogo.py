@@ -14,12 +14,15 @@ from .stimuli import ActionStimulus, BaseStimulus, FeedBackStimulus, ImageStimul
 def get_info_dict(seed=None):
 
     random_state = check_seed(seed)
-    stim_properties = [generate_stimulus_properties(random_state) for _ in range(4)]
+    stim_properties = [
+        generate_stimulus_properties(random_state, patterns=[(2, 2), (3, 3)])
+        for _ in range(4)
+    ]
     image_map = {}
     stimuli = {}
 
     for n in range(4):
-        image_map[n] = make_card_stimulus(stim_properties[n])
+        image_map[n] = make_card_stimulus(stim_properties[n], height=350, width=350)
         stimuli[n] = stim_properties[n]
 
     reward_feedback = FeedBackStimulus(

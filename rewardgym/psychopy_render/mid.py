@@ -1,6 +1,7 @@
 import os
 
 from . import STIMPATH
+from .default_images import fixation_cross, mid_stimuli
 from .stimuli import (
     ActionStimulus,
     BaseStimulus,
@@ -11,32 +12,38 @@ from .stimuli import (
 
 
 def get_info_dict(seed=None):
-    reward_feedback = FeedBackStimulus(
-        1.0, text="You gain: {0}", target="reward", name="reward"
-    )
+    reward_feedback = FeedBackStimulus(1.0, text="{0}", target="reward", name="reward")
     total_reward_feedback = FeedBackStimulus(
-        1.0, text="You have gained: {0}", target="total_reward", name="reward-total"
+        1.0, text="Total: {0}", target="total_reward", name="reward-total"
     )
-    base_stim = BaseStimulus(0)
-    fix_isi = TextStimulus(text="+", duration=1.5, name="isi")
-    fix = TextStimulus(text="+", duration=1.5, name="fixation")
 
-    action_stim = ActionStimulus(duration=0.25, key_dict={"space": 0}, timeout_action=1)
+    fix = ImageStimulus(
+        image_paths=[fixation_cross()], duration=1.5, name="fixation", autodraw=False
+    )
+
+    fix_isi = ImageStimulus(
+        image_paths=[fixation_cross()], duration=1.5, name="isi", autodraw=False
+    )
+
+    delay = ImageStimulus(
+        image_paths=[fixation_cross()], duration=0.5, name="delay", autodraw=False
+    )
+
+    action_stim = ActionStimulus(duration=0.35, key_dict={"space": 0}, timeout_action=1)
 
     def first_step(img, img2):
         return [
-            base_stim,
             fix,
             ImageStimulus(
                 duration=0.5,
-                image_paths=[os.path.join(STIMPATH, img)],
+                image_paths=[img],
                 positions=[(0, 0)],
                 name="cue",
             ),
             fix_isi,
             ImageStimulus(
                 duration=0.01,
-                image_paths=[os.path.join(STIMPATH, img2)],
+                image_paths=[img2],
                 positions=[(0, 0)],
                 name="target",
             ),
@@ -44,19 +51,43 @@ def get_info_dict(seed=None):
         ]
 
     final_step = [
+        delay,
         reward_feedback,
         total_reward_feedback,
         BaseStimulus(duration=1.5, name="iti"),
     ]
 
     info_dict = {
-        1: {"psychopy": first_step("mid/stim1_high.png", "mid/probe1.png")},  # big lose
+        1: {
+            "psychopy": first_step(
+                mid_stimuli("-5", shape="square", probe=False),
+                mid_stimuli("-5", shape="square", probe=True),
+            )
+        },  # big lose
         2: {
-            "psychopy": first_step("mid/stim1_low.png", "mid/probe1.png")
+            "psychopy": first_step(
+                mid_stimuli("-1", shape="square", probe=False),
+                mid_stimuli("-1", shape="square", probe=True),
+            )
         },  # small lose
-        3: {"psychopy": first_step("mid/stim3_neut.png", "mid/probe3.png")},  # control
-        4: {"psychopy": first_step("mid/stim2_low.png", "mid/probe2.png")},  # small win
-        5: {"psychopy": first_step("mid/stim2_high.png", "mid/probe2.png")},  # big win
+        3: {
+            "psychopy": first_step(
+                mid_stimuli("0", shape="triangle_u", probe=False),
+                mid_stimuli("0", shape="triangle_u", probe=True),
+            )
+        },  # control
+        4: {
+            "psychopy": first_step(
+                mid_stimuli("+1", shape="circle", probe=False),
+                mid_stimuli("+1", shape="circle", probe=True),
+            )
+        },  # small win
+        5: {
+            "psychopy": first_step(
+                mid_stimuli("+5", shape="circle", probe=False),
+                mid_stimuli("+5", shape="circle", probe=True),
+            )
+        },  # big win
         6: {"psychopy": final_step},
         7: {"psychopy": final_step},
         8: {"psychopy": final_step},

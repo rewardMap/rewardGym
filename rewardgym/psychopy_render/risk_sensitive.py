@@ -65,12 +65,14 @@ class RiskSensitiveDisplay(BaseStimulus):
         if state1 is not None:
             imgA = self.image_dict[state1]
             imgA.pos = (-self.image_shift, self.image_position[1])
+            imgA.setOpacity(1.0)
         else:
             imgA = None
 
         if state2 is not None:
             imgB = self.image_dict[state2]
             imgB.pos = (self.image_shift, self.image_position[1])
+            imgB.setOpacity(1.0)
         else:
             imgB = None
 
@@ -81,18 +83,25 @@ class RiskSensitiveDisplay(BaseStimulus):
                     width=imgA.size[0],
                     height=imgA.size[1],
                     lineColor="white",
-                    lineWidth=5,
+                    lineWidth=7,
                     pos=imgA.pos,
                 )
+
+                if imgB is not None:
+                    imgB.setOpacity(0.25)
+
             else:
                 feedback = Rect(
                     win=win,
                     width=imgB.size[0],
                     height=imgB.size[1],
                     lineColor="white",
-                    lineWidth=5,
+                    lineWidth=7,
                     pos=imgB.pos,
                 )
+
+                if imgA is not None:
+                    imgA.setOpacity(0.25)
 
             feedback.draw()
 
@@ -127,10 +136,15 @@ def get_info_dict(seed=111):
         stimuli[n + 1] = stim_properties[n]
 
     reward_feedback = FeedBackStimulus(
-        1.0, text="You gain: {0}", target="reward", name="reward"
+        1.0, text="{0}", target="reward", name="reward", position=(0, 120)
     )
     total_reward_feedback = FeedBackStimulus(
-        1.0, text="You have gained: {0}", target="total_reward", name="reward-total"
+        1.0,
+        text="Total: {0}",
+        target="total_reward",
+        name="reward-total",
+        position=(0, 120),
+        font_height=35,
     )
     base_stim = ImageStimulus(
         image_paths=[fixation_cross()], duration=0.1, name=None, autodraw=True
