@@ -1,17 +1,134 @@
 import os
 
+try:
+    from psychopy.visual import ImageStim
+    from psychopy.visual.rect import Rect
+except ModuleNotFoundError:
+    from .psychopy_stubs import Rect, ImageStim
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+from ..utils import check_seed
 from . import STIMPATH
-from .default_images import fixation_cross
-from .stimuli import (
-    ActionStimulus,
-    BaseStimulus,
-    FeedBackStimulus,
-    ImageStimulus,
-    TextStimulus,
+from .default_images import (
+    fixation_cross,
+    generate_stimulus_properties,
+    make_card_stimulus,
 )
+from .stimuli import ActionStimulus, BaseStimulus, FeedBackStimulus, ImageStimulus
 
 
-def get_info_dict(stimulus_set=None, **kwargs):
+class TwoStepDisplay(BaseStimulus):
+    def __init__(
+        self,
+        duration,
+        name=None,
+        positions=((0, 0), (0, 0)),
+        selected=None,
+        images=[
+            os.path.join(STIMPATH, "risk_sensitive", "stim1.png"),
+            os.path.join(STIMPATH, "risk_sensitive", "stim2.png"),
+        ],
+    ):
+
+        super().__init__(name=name, duration=duration)
+
+        self.positions = positions
+        self.images = images
+        self.selected = selected
+
+    def setup(self, win, **kwargs):
+        self.image_class = []
+        for img, pos in zip(self.images, self.positions):
+            if isinstance(img, str):
+                self.image_class.append(ImageStim(win=win, image=img, pos=pos))
+            else:
+                self.image_class.append(
+                    ImageStim(
+                        win, image=img, size=(img.shape[1], img.shape[0]), pos=pos
+                    )
+                )
+
+    def display(self, win, logger, action, **kwargs):
+
+        logger.key_strokes(win)
+        stim_onset = logger.get_time()
+
+        # Reset image positions
+        for im, po in zip(self.image_class, self.positions):
+            im.setPos(po)
+
+        imgA = self.image_class[0]
+        imgA.setOpacity(1.0)
+
+        imgB = self.image_class[1]
+        imgB.setOpacity(1.0)
+
+        if action is not None:
+            if action == 0:
+                feedback = Rect(
+                    win=win,
+                    width=imgA.size[0],
+                    height=imgA.size[1],
+                    lineColor="white",
+                    lineWidth=7,
+                    pos=imgA.pos,
+                )
+
+                imgB.setOpacity(0.25)
+
+            else:
+                feedback = Rect(
+                    win=win,
+                    width=imgB.size[0],
+                    height=imgB.size[1],
+                    lineColor="white",
+                    lineWidth=7,
+                    pos=imgB.pos,
+                )
+
+                imgA.setOpacity(0.25)
+
+            feedback.draw()
+
+        imgA.draw()
+        imgB.draw()
+
+        for img in self.image_class[2:]:
+            img.draw()
+
+        win.flip()
+
+        logger.wait(win, self.duration, stim_onset)
+
+        logger.log_event(
+            {"event_type": self.name, "expected_duration": self.duration},
+            onset=stim_onset,
+        )
+
+        return None
+
+
+def get_info_dict(seed=None, **kwargs):
+
+    seed = check_seed(seed)
+    colors = [tuple([int(i * 255) for i in c]) for c in plt.cm.tab10.colors[:5]]
+    set_colors = seed.choice(np.arange(len(colors[:-1])), 3, replace=False)
+
+    stim_set = {}
+    for n in range(3):
+        stim_set[n] = [
+            generate_stimulus_properties(
+                random_state=seed,
+                colors=[tuple(colors[set_colors[n]])] * 4,
+                patterns=[(1, 1), (2, 2)],
+            )
+            for i in range(2)
+        ]
+        stim_set[n] = [
+            make_card_stimulus(stim_set[n][k], width=300, height=300) for k in range(2)
+        ]
 
     reward_feedback = FeedBackStimulus(
         1.0, text="You gain: {0}", target="reward", name="reward"
@@ -28,7 +145,14 @@ def get_info_dict(stimulus_set=None, **kwargs):
     )
     fix_iti = BaseStimulus(duration=1.5, name="iti")
 
-    image_shift = 250
+    fix2 = ImageStimulus(
+        image_paths=[fixation_cross()],
+        duration=0.5,
+        autodraw=True,
+        name="transition",
+    )
+
+    image_shift = 300
 
     final_step = [reward_feedback, total_reward_feedback, fix_iti]
 
@@ -36,12 +160,12 @@ def get_info_dict(stimulus_set=None, **kwargs):
         0: {
             "psychopy": [
                 fix,
-                ImageStimulus(
+                TwoStepDisplay(
                     duration=0.1,
                     name="decision-0",
-                    image_paths=[
-                        os.path.join(STIMPATH, "two_step", "stim11.png"),
-                        os.path.join(STIMPATH, "two_step", "stim12.png"),
+                    images=[
+                        stim_set[0][0],
+                        stim_set[0][1],
                     ],
                     positions=[(-image_shift, 0), (image_shift, 0)],
                 ),
@@ -50,92 +174,104 @@ def get_info_dict(stimulus_set=None, **kwargs):
         },
         1: {
             "psychopy": [
-                ImageStimulus(
-                    duration=0.5,
+                TwoStepDisplay(
+                    duration=0.75,
                     name="environment-select",
-                    image_paths=[
-                        os.path.join(STIMPATH, "two_step", "stim11.png"),
-                        os.path.join(STIMPATH, "two_step", "stim12.png"),
+                    images=[
+                        stim_set[0][0],
+                        stim_set[0][1],
                     ],
-                    positions=[(0, image_shift), (image_shift, 0)],
+                    positions=[(-image_shift, 0), (image_shift, 0)],
                 ),
+                fix2,
                 ImageStimulus(
                     duration=0.1,
                     name="environment-decision",
                     image_paths=[
-                        os.path.join(STIMPATH, "two_step", "stim11.png"),
-                        os.path.join(STIMPATH, "two_step", "stim21.png"),
-                        os.path.join(STIMPATH, "two_step", "stim22.png"),
+                        stim_set[1][0],
+                        stim_set[1][1],
                     ],
-                    positions=[(0, image_shift), (-image_shift, 0), (image_shift, 0)],
+                    positions=[(-image_shift, 0), (image_shift, 0)],
                 ),
                 ActionStimulus(duration=2.0),
             ]
         },
         2: {
             "psychopy": [
-                ImageStimulus(
-                    duration=0.5,
+                TwoStepDisplay(
+                    duration=0.75,
                     name="environment-select",
-                    image_paths=[
-                        os.path.join(STIMPATH, "two_step", "stim11.png"),
-                        os.path.join(STIMPATH, "two_step", "stim12.png"),
+                    images=[
+                        stim_set[0][0],
+                        stim_set[0][1],
                     ],
-                    positions=[(-image_shift, 0), (0, image_shift)],
+                    positions=[(-image_shift, 0), (image_shift, 0)],
                 ),
+                fix2,
                 ImageStimulus(
                     duration=0.1,
                     name="environment-decision",
                     image_paths=[
-                        os.path.join(STIMPATH, "two_step", "stim12.png"),
-                        os.path.join(STIMPATH, "two_step", "stim31.png"),
-                        os.path.join(STIMPATH, "two_step", "stim32.png"),
+                        stim_set[2][0],
+                        stim_set[2][1],
                     ],
-                    positions=[(0, image_shift), (-image_shift, 0), (image_shift, 0)],
+                    positions=[(-image_shift, 0), (image_shift, 0)],
                 ),
                 ActionStimulus(duration=2.0),
             ]
         },
         3: {
             "psychopy": [
-                ImageStimulus(
+                TwoStepDisplay(
                     duration=0.5,
                     name="stimulus-select",
-                    image_paths=[os.path.join(STIMPATH, "two_step", "stim21.png")],
-                    positions=[(0, image_shift)],
+                    images=[
+                        stim_set[1][0],
+                        stim_set[1][1],
+                    ],
+                    positions=[(-image_shift, 0), (image_shift, 0)],
                 )
             ]
             + final_step
         },
         4: {
             "psychopy": [
-                ImageStimulus(
+                TwoStepDisplay(
                     duration=0.5,
                     name="stimulus-select",
-                    image_paths=[os.path.join(STIMPATH, "two_step", "stim22.png")],
-                    positions=[(0, image_shift)],
+                    images=[
+                        stim_set[1][0],
+                        stim_set[1][1],
+                    ],
+                    positions=[(-image_shift, 0), (image_shift, 0)],
                 )
             ]
             + final_step
         },
         5: {
             "psychopy": [
-                ImageStimulus(
+                TwoStepDisplay(
                     duration=0.5,
                     name="stimulus-select",
-                    image_paths=[os.path.join(STIMPATH, "two_step", "stim31.png")],
-                    positions=[(0, image_shift)],
+                    images=[
+                        stim_set[2][0],
+                        stim_set[2][1],
+                    ],
+                    positions=[(-image_shift, 0), (image_shift, 0)],
                 )
             ]
             + final_step
         },
         6: {
             "psychopy": [
-                ImageStimulus(
+                TwoStepDisplay(
                     duration=0.5,
                     name="stimulus-select",
-                    image_paths=[os.path.join(STIMPATH, "two_step", "stim32.png")],
-                    positions=[(0, image_shift)],
+                    images=[
+                        stim_set[2][0],
+                        stim_set[2][1],
+                    ],
+                    positions=[(-image_shift, 0), (image_shift, 0)],
                 )
             ]
             + final_step

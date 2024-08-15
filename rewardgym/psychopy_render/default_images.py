@@ -1,10 +1,12 @@
 from itertools import permutations
 
+import matplotlib.font_manager
 import matplotlib.pyplot as plt
 import numpy as np
+from PIL import Image, ImageDraw, ImageFont
 
 from ..utils import check_seed
-from .create_images import make_stimulus
+from .create_images import draw_shape, make_stimulus
 
 win_color = tuple([int(i * 255) for i in plt.cm.Set2.colors[0]])
 lose_color = tuple([int(i * 255) for i in plt.cm.Set2.colors[1]])
@@ -20,78 +22,85 @@ colors = [tuple([int(i * 255) for i in c]) for c in plt.cm.tab10.colors[:5]] + [
 
 
 def fixation_cross(height=100, width=100, color=(150, 150, 150)):
-    fix_cross = make_stimulus(
-        height,
-        width,
-        1,
-        ["diamond + neg-circle"],
-        colors=[color],
-        sizes=[1, 0.15],
-        show_image=False,
-        return_numpy=True,
-    )
+    pattern = Image.new("RGBA", (200, 200), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(pattern)
 
+    draw_shape(draw, "diamond", [0, 0, 200, 200], (0, 0, 0), 0)
+    draw_shape(draw, "diamond", [10, 10, 190, 190], color, 0)
+    draw_shape(draw, "circle", [75, 75, 125, 125], (0, 0, 0), 0)
+    draw_shape(draw, "neg-circle", [80, 80, 120, 120], (120, 0, 0), 0)
+
+    fix_cross = np.array(pattern) / 255
     return fix_cross
 
 
 def win_cross(height=100, width=100, color=(150, 150, 150), cross_color=win_color):
-    win_cross = make_stimulus(
-        height,
-        width,
-        1,
-        ["circle + halfdiamond_u"],
-        colors=[[color, cross_color]],
-        sizes=[0.15, 1],
-        show_image=False,
-        return_numpy=True,
-    )
+    pattern = Image.new("RGBA", (200, 200), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(pattern)
+
+    draw_shape(draw, "diamond", [0, 0, 200, 200], (0, 0, 0), 0)
+    draw_shape(draw, "diamond", [10, 10, 190, 190], color, 0)
+    draw_shape(draw, "halfdiamond_u", [10, 10, 190, 190], win_color)
+    draw_shape(draw, "circle", [75, 75, 125, 125], (0, 0, 0), 0)
+    draw_shape(draw, "neg-circle", [80, 80, 120, 120], (120, 0, 0), 0)
+
+    win_cross = np.array(pattern) / 255
 
     return win_cross
 
 
 def lose_cross(height=100, width=100, color=(150, 150, 150), cross_color=lose_color):
-    lose_cross = make_stimulus(
-        height,
-        width,
-        1,
-        ["circle + halfdiamond_d"],
-        colors=[[color, cross_color]],
-        sizes=[0.15, 1],
-        show_image=False,
-        return_numpy=True,
-    )
+    pattern = Image.new("RGBA", (200, 200), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(pattern)
+
+    draw_shape(draw, "diamond", [0, 0, 200, 200], (0, 0, 0), 0)
+    draw_shape(draw, "diamond", [10, 10, 190, 190], color, 0)
+    draw_shape(draw, "halfdiamond_d", [10, 10, 190, 190], cross_color)
+    draw_shape(draw, "circle", [75, 75, 125, 125], (0, 0, 0), 0)
+    draw_shape(draw, "neg-circle", [80, 80, 120, 120], (120, 0, 0), 0)
+
+    lose_cross = np.array(pattern) / 255
 
     return lose_cross
 
 
 def zero_cross(height=100, width=100, color=(150, 150, 150), cross_color=zero_color):
-    zero_cross = make_stimulus(
-        height,
-        width,
-        1,
-        ["circle + diamond + neg-hbar_0_25 + neg-hbar_75_100"],
-        colors=[[color, cross_color, (0, 0, 0, 0), (0, 0, 0, 0)]],
-        sizes=[0.15, 1, 1, 1],
-        show_image=False,
-        return_numpy=True,
-    )
+    pattern = Image.new("RGBA", (200, 200), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(pattern)
 
+    draw_shape(draw, "diamond", [0, 0, 200, 200], (0, 0, 0), 0)
+    draw_shape(draw, "diamond", [10, 10, 190, 190], cross_color, 0)
+    draw_shape(draw, "triangle_u", np.array([50, 10, 150, 60]), color, 0)
+    draw_shape(draw, "triangle_d", np.array([50, 140, 150, 190]), color, 0)
+
+    draw_shape(draw, "circle", [75, 75, 125, 125], (0, 0, 0), 0)
+    draw_shape(draw, "neg-circle", [80, 80, 120, 120], (120, 0, 0), 0)
+
+    zero_cross = np.array(pattern) / 255
     return zero_cross
 
 
 def gonogo_probe(height=200, width=200, color=(150, 150, 150)):
-    probe = make_stimulus(
-        height,
-        width,
-        num_tiles=1,
-        shapes="circle + neg-circle",
-        colors=[color],
-        sizes=[1.0, 0.7],
-        show_image=False,
-        border_color="white",
-        border=None,
-        return_numpy=True,
-    )
+    probe_color = tuple(
+        [i + 70 for i in colors[0]]
+    )  # tuple([int(i * 255) for i in colors[1]])
+
+    # left bottom right top
+    pattern = Image.new("RGBA", (200, 200), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(pattern)
+
+    draw_shape(draw, "diamond", [0, 0, 200, 200], (0, 0, 0), 0)
+    draw_shape(draw, "diamond", [10, 10, 190, 190], color, 0)
+
+    draw_shape(draw, "circle", [75, 75, 125, 125], (0, 0, 0), 0)
+    draw_shape(draw, "neg-circle", [80, 80, 120, 120], (120, 0, 0), 0)
+
+    draw.polygon([(10, 100), (50, 140), (50, 60)], fill=probe_color)
+    draw.polygon([(190, 100), (150, 60), (150, 140)], fill=probe_color)
+    draw.polygon([(100, 190), (60, 150), (140, 150)], fill=probe_color)
+    draw.polygon([(100, 10), (140, 50), (60, 50)], fill=probe_color)
+
+    probe = np.array(pattern) / 255
 
     return probe
 
@@ -119,11 +128,11 @@ def generate_stimulus_properties(
     c_pattern = pattern[random_state.choice(np.arange(3), 1).astype(int).item()]
     s_pattern = pattern[random_state.choice(np.arange(3), 1).astype(int).item()]
     n_colors = random_state.choice([1, 2], 1).astype(int).item()
+
     if stim_shape == "square":
         n_colors = 2
 
     stim_colors = []
-
     for _ in range(n_colors):
         stim_colors.append(
             gen_colors.pop(
@@ -149,22 +158,103 @@ def generate_stimulus_properties(
     return stimulus
 
 
-def make_card_stimulus(stimulus):
+def make_card_stimulus(stimulus, width=300, height=480):
 
     card = make_stimulus(
-        320,
-        480,
+        width,
+        height,
         num_tiles=stimulus["num_tiles"],
         shapes=stimulus["shapes"],
         colors=stimulus["colors"],
         sizes=[0.9],
         show_image=False,
         bg_color=(240, 240, 240),
-        border_color="white",
-        border=5,
+        border_color="black",
+        border=3,
         shape_pattern=stimulus["shape_pattern"],
         color_pattern=stimulus["color_pattern"],
         return_numpy=True,
     )
 
     return card
+
+
+def mid_stimuli(amount="+5", shape="circle", probe=False):
+    pattern = Image.new("RGBA", (300, 300), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(pattern)
+
+    if shape == "circle":
+        stim_color = (221, 2, 211)
+    elif shape == "square":
+        stim_color = (255, 255, 2)
+    else:
+        stim_color = (1, 176, 240)
+
+    draw_shape(draw, shape, [0, 0, 300, 300], (0, 0, 0), 0)
+
+    if not probe:
+
+        offset = 4 if shape == "triangle_d" else 0
+
+        draw_shape(draw, shape, [10, 10, 290, 290 + offset], stim_color, 0)
+
+        offset = 30 if shape == "triangle_d" else 0
+        matplotlib_font = matplotlib.font_manager.findfont("arial")
+        fnt = ImageFont.truetype(matplotlib_font, 70)
+
+        draw.text(
+            [150, 150 + offset],
+            amount,
+            align="center",
+            anchor="mm",
+            font=fnt,
+            fill=(0, 0, 0),
+        )
+
+    pattern = np.array(pattern) / 255
+    pattern = pattern[::-1, :]
+    return pattern
+
+
+def posner_cue_up(color=(150, 150, 150)):
+    pattern = Image.new("RGBA", (200, 200), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(pattern)
+
+    draw_shape(draw, "diamond", [0, 0, 200, 200], (0, 0, 0), 0)
+    draw_shape(draw, "diamond", [10, 10, 190, 190], color, 0)
+
+    draw_shape(draw, "square", [50, 50, 150, 140], (0, 0, 0), 0)
+    draw_shape(draw, "square", [50, 60, 150, 140], color, 0)
+    draw_shape(draw, "neg-hbar_0_25", [0, 0, 200, 200], (0, 0, 0), 0)
+
+    draw_shape(draw, "circle", [75, 75, 125, 125], (0, 0, 0), 0)
+    draw_shape(draw, "neg-circle", [80, 80, 120, 120], (120, 0, 0), 0)
+
+    return np.array(pattern)[::-1, :] / 255
+
+
+def posner_cue_down(color=(150, 150, 150)):
+    pattern = Image.new("RGBA", (200, 200), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(pattern)
+
+    draw_shape(draw, "diamond", [0, 0, 200, 200], (0, 0, 0), 0)
+    draw_shape(draw, "diamond", [10, 10, 190, 190], color, 0)
+
+    draw_shape(draw, "square", [50, 60, 150, 150], (0, 0, 0), 0)
+    draw_shape(draw, "square", [50, 60, 150, 140], color, 0)
+    draw_shape(draw, "neg-hbar_75_100", [0, 0, 200, 200], (0, 0, 0), 0)
+
+    draw_shape(draw, "circle", [75, 75, 125, 125], (0, 0, 0), 0)
+    draw_shape(draw, "neg-circle", [80, 80, 120, 120], (120, 0, 0), 0)
+
+    return np.array(pattern)[::-1, :] / 255
+
+
+def posner_target():
+    pattern = Image.new("RGBA", (200, 200), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(pattern)
+
+    draw_shape(draw, "circle", [0, 0, 200, 200], (255, 255, 255), 0)
+    draw_shape(draw, "neg-circle", [15, 15, 185, 185], (0, 0, 0, 0), 0)
+
+    return np.array(pattern)[::-1, :] / 255

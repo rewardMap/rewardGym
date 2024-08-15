@@ -9,13 +9,11 @@ from ..utils import unpack_conditions
 
 def run_task_base(task, n_episodes=10):
 
-    env, conditions = get_env(task, render_mode=None)
+    env = get_env(task, render_mode=None)
 
     for _ in range(n_episodes):
 
-        condition, starting_position = unpack_conditions(conditions, None)
-
-        obs, info = env.reset(agent_location=starting_position, condition=condition)
+        obs, info = env.reset(agent_location=0, condition=None)
         done = False
 
         # play one episode

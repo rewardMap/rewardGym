@@ -356,8 +356,8 @@ def make_stimulus(
 
     if return_numpy:
         if normalize_color_space:
-            return np.array(pattern_image) / 255
+            return np.array(pattern_image)[::-1, :] / 255
         else:
-            return np.array(pattern_image)
+            return np.array(pattern_image)[::-1, :]
     else:
         return pattern_image

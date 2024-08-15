@@ -78,7 +78,8 @@ class ExperimentLogger:
         self.trial_type = self.na
         self.start_position = self.na
         self.current_location = self.na
-        self.condition = self.na
+
+        self.avail_actions = self.na
 
         self.trial = -1
         self.tr = 0
@@ -89,22 +90,22 @@ class ExperimentLogger:
             "onset",
             "duration",
             "trial_type",
-            "start_position",
             "event_type",
             "response_time",
             "response_button",
             "response_late",
             "reward",
             "trial",
+            "current_location",
+            "trial_time",
+            "total_reward",
+            "avail_actions",
             "TR",
+            "expexted_duration",
+            "start_position",
             "task",
             "run",
             "participant_id",
-            "expexted_duration",
-            "trial_time",
-            "total_reward",
-            "current_location",
-            "condition",
         ]
 
         # Create a dictionary of nans to be used later.
@@ -135,9 +136,9 @@ class ExperimentLogger:
         tmp_dict["trial_type"] = self.trial_type
         tmp_dict["start_position"] = self.start_position
         tmp_dict["current_location"] = self.current_location
-        tmp_dict["condition"] = self.condition
         tmp_dict["TR"] = self.tr
         tmp_dict["run"] = self.run
+        tmp_dict["avail_actions"] = self.avail_actions
 
         return tmp_dict
 
@@ -324,15 +325,36 @@ class ExperimentLogger:
 
         for k, v in kwargs.items():
             if k in [
-                "condition",
                 "trial",
                 "start_position",
                 "trial_type",
                 "current_location",
+                "avail_actions",
             ]:
                 setattr(self, k, v)
             else:
                 raise AttributeError(f"Cannot / doest not have attribute: {k}")
+
+    def wait(self, win, time: float, start: float = None):
+        """
+        Wait for a given time.
+
+
+        Parameters
+        ----------
+        time : float
+            Time to wait, in seconds.
+        start : float, optional
+            Specify a different time, than the current one of the Logger, by default None
+        """
+        if start is None:
+            start = self.get_time()
+
+        t_wait = start + time  # - self.frameDuration
+
+        # Trying to avoid unecessary checks
+        while t_wait > self.get_time():
+            self.key_strokes(win)
 
 
 class MinimalLogger(ExperimentLogger):

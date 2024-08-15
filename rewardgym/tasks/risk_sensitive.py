@@ -10,13 +10,11 @@ from .utils import check_conditions_not_following, check_conditions_present
 
 
 def get_risk_sensitive(
-    conditions: list = None,
     render_backend: Literal["pygame", "psychopy"] = None,
-    window_size: int = None,
     seed: Union[int, np.random.Generator] = 1000,
     **kwargs
 ):
-
+    seed = check_seed(seed)
     environment_graph = {
         0: [1, 2, 3, 4, 5],  # win - go (action1)
         1: [],  # Deterministic 0
@@ -43,11 +41,6 @@ def get_risk_sensitive(
         else:
             action_map[n] = {0: ii - 1}
 
-    if conditions is None:
-        condition_out = (((list(action_map.keys()),), ([0],)), action_map)
-    else:
-        condition_out = ((conditions, ([0],)), action_map)
-
     reward_meaning = {
         1: "null",
         2: "save-20",
@@ -68,12 +61,11 @@ def get_risk_sensitive(
             condition_meaning[kk] = reward_meaning[action_map[kk][0] + 1]
 
     info_dict = defaultdict(int)
-    info_dict.update({"condition": condition_meaning})
+    info_dict.update({"condition-meaning": condition_meaning})
 
     if render_backend == "pygame":
 
-        if window_size is None:
-            return ValueError("window_size needs to be defined!")
+        window_size = 256
 
         from ..pygame_render.stimuli import BaseAction, BaseDisplay, BaseText
         from ..pygame_render.task_stims import FormatTextRiskSensitive, feedback_block
@@ -97,7 +89,7 @@ def get_risk_sensitive(
 
         pygame_dict = {
             0: {
-                "human": [
+                "pygame": [
                     BaseDisplay(None, 1),
                     BaseText("+", 500, textposition=base_position),
                     BaseDisplay(None, 1),
@@ -105,19 +97,22 @@ def get_risk_sensitive(
                     BaseAction(),
                 ]
             },
-            1: {"human": final_display},
-            2: {"human": final_display},
-            3: {"human": final_display},
-            4: {"human": final_display},
-            5: {"human": final_display},
+            1: {"pygame": final_display},
+            2: {"pygame": final_display},
+            3: {"pygame": final_display},
+            4: {"pygame": final_display},
+            5: {"pygame": final_display},
         }
 
         info_dict.update(pygame_dict)
 
-    elif render_backend == "psychopy":
-        raise NotImplementedError("Psychopy integration still under deliberation.")
+    elif render_backend == "psychopy" or render_backend == "psychopy-simulate":
+        from ..psychopy_render import get_psychopy_info
 
-    return environment_graph, reward_structure, condition_out, info_dict
+        psychopy_dict, _ = get_psychopy_info("risk-sensitive", seed=seed)
+        info_dict.update(psychopy_dict)
+
+    return environment_graph, reward_structure, info_dict
 
 
 def generate_risk_sensitive_configs(stimulus_set: str = "1"):
@@ -149,6 +144,7 @@ def generate_risk_sensitive_configs(stimulus_set: str = "1"):
      * 40 vs 0 = 6 and 13
      * 0 vs 0 / 20 = 7 and 17
      * 0 vs 0 / 40 = 8 and 21
+     * 20 vs 40
 
     All other possible conditions:
     {0: 'null',
@@ -186,19 +182,112 @@ def generate_risk_sensitive_configs(stimulus_set: str = "1"):
     itis = []
     conditions = []
 
-    for b in range(blocks):
-        risky_equal_ev = [11, 18, 16, 23] * 3 + [
-            seed.choice([11, 18]),
-            seed.choice([16, 23]),
-        ]
-        risky_non_equal_ev = [12, 22] * 4
-        forced_choices = [0, 1, 2, 3, 4] * 5
+    condition_dict = {
+        # fixed choice:
+        "null_none": {0: {1: 1}},
+        "none_null": {0: {1: 1}},
+        "save-20_none": {0: {0: 2}},
+        "none_save-20": {0: {1: 2}},
+        "save-40_none": {0: {0: 3}},
+        "none_save-40": {0: {1: 3}},
+        "risky-40_none": {0: {0: 4}},
+        "none_risky-40": {0: {1: 4}},
+        "risky-80_none": {0: {0: 5}},
+        "none_risky-80": {0: {1: 5}},
+        # equal ev:
+        "save-20_risky-40": {0: {0: 2, 1: 4}},
+        "risky-40_save-20": {0: {0: 4, 1: 2}},
+        "save-40_risky-80": {0: {0: 3, 1: 5}},
+        "risky-80_save-40": {0: {0: 5, 1: 3}},
+        # non equal ev:
+        "save-20_risky-80": {0: {0: 2, 1: 5}},
+        "risky-80_save-20": {0: {0: 5, 1: 2}},
+        # Test trials:
+        "save-40_risky-40": {0: {0: 3, 1: 4}},
+        "risky-40_save-40": {0: {0: 3, 1: 4}},
+        "null_save-20": {0: {0: 1, 1: 2}},
+        "save-20_null": {0: {0: 2, 1: 1}},
+        "null_save-40": {0: {0: 1, 1: 3}},
+        "save-40_null": {0: {0: 3, 1: 1}},
+        "null_risky-40": {0: {0: 1, 1: 4}},
+        "risky-40_null": {0: {0: 4, 1: 1}},
+        "null_risky-80": {0: {0: 1, 1: 5}},
+        "risky-80_null": {0: {0: 5, 1: 1}},
+        "save-20_save-40": {0: {0: 2, 1: 3}},
+        "save-40_save-20": {0: {0: 3, 1: 2}},
+    }
 
-        test_trials = [15, 19, 5, 9, 6, 13, 7, 17, 8, 21] + [
-            seed.choice([15, 10]),
-            seed.choice([5, 9]),
-            seed.choice([6, 13]),
-            seed.choice([8, 21]),
+    for b in range(blocks):
+        risky_equal_ev = [
+            "save-20_risky-40",
+            "risky-40_save-20",
+            "save-40_risky-80",
+            "risky-80_save-40",
+        ] * 3 + [
+            seed.choice(["save-20_risky-40", "risky-40_save-20"]),
+            seed.choice(["save-40_risky-80", "risky-80_save-40"]),
+        ]
+        risky_non_equal_ev = ["save-20_risky-80", "risky-80_save-20"] * 4
+        forced_choices = (
+            [
+                "none_null",
+                "none_save-20",
+                "none_save-40",
+                "none_risky-40",
+                "none_risky-80",
+            ]
+            * 2
+            + [
+                "null_none",
+                "save-20_none",
+                "save-40_none",
+                "risky-40_none",
+                "risky-80_none",
+            ]
+            * 2
+            + [
+                seed.choice(["none_null", "null_none"]),
+                seed.choice(["none_save-20", "save-20_none"]),
+                seed.choice(["none_save-40", "save-40_none"]),
+                seed.choice(["none_risky-40", "risky-40_none"]),
+                seed.choice(["none_risky-80", "risky-80_none"]),
+            ]
+        )
+
+        test_trials = [
+            "save-40_risky-40",
+            "risky-40_save-40",
+            "null_save-20",
+            "save-20_null",
+            "null_save-40",
+            "save-40_null",
+            "null_risky-40",
+            "risky-40_null",
+            "null_risky-80",
+            "risky-80_null",
+            "save-20_save-40",
+            "save-40_save-20",
+        ] + [
+            seed.choice(
+                [
+                    "save-40_risky-40",
+                    "risky-40_save-40",
+                    "null_save-20",
+                    "save-20_null",
+                    "null_save-40",
+                    "save-40_null",
+                ]
+            ),
+            seed.choice(
+                [
+                    "null_risky-40",
+                    "risky-40_null",
+                    "null_risky-80",
+                    "risky-80_null",
+                    "save-20_save-40",
+                    "save-40_save-20",
+                ]
+            ),
         ]
 
         iti_template = [1.5, 2.125, 2.75, 3.375, 4.0] * 12 + [1.5, 2.75, 4.0]
@@ -214,12 +303,36 @@ def generate_risk_sensitive_configs(stimulus_set: str = "1"):
                 a=condition_template, size=len(condition_template), replace=False
             ).tolist()
             approve = (
-                check_conditions_not_following(conditions_proposal, [0])
-                and check_conditions_not_following(conditions_proposal, [1])
-                and check_conditions_not_following(conditions_proposal, [2])
-                and check_conditions_not_following(conditions_proposal, [3])
-                and check_conditions_not_following(conditions_proposal, [4])
-                and check_conditions_present(conditions_proposal[:15], [0, 1, 2, 3, 4])
+                check_conditions_not_following(
+                    conditions_proposal, ["none_null", "null_none"]
+                )
+                and check_conditions_not_following(
+                    conditions_proposal, ["none_save-20", "save-20_none"]
+                )
+                and check_conditions_not_following(
+                    conditions_proposal, ["none_save-40", "save-40_none"]
+                )
+                and check_conditions_not_following(
+                    conditions_proposal, ["none_risky-40", "risky-40_none"]
+                )
+                and check_conditions_not_following(
+                    conditions_proposal, ["none_risky-80", "risky-80_none"]
+                )
+                and check_conditions_present(
+                    conditions_proposal[:15],
+                    [
+                        "none_null",
+                        "none_save-20",
+                        "none_save-40",
+                        "none_risky-40",
+                        "none_risky-80",
+                        "null_none",
+                        "save-20_none",
+                        "save-40_none",
+                        "risky-40_none",
+                        "risky-80_none",
+                    ],
+                )
             )
 
         conditions.extend(conditions_proposal)
@@ -235,7 +348,7 @@ def generate_risk_sensitive_configs(stimulus_set: str = "1"):
         "isi": [],
         "iti": itis,
         "condition": conditions,
-        "condition_target": "condition",
+        "condition_dict": condition_dict,
         "ntrials": len(conditions),  # 183
         "update": ["iti"],
     }

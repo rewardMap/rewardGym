@@ -8,14 +8,13 @@ PsychoPy version (tested on at least v2023.2.3).
 
 from psychopy import core, event, visual
 
-from rewardgym.environments import BaseEnv
+from rewardgym.environments import PsychopyEnv
 from rewardgym.psychopy_render.logger import MinimalLogger
 from rewardgym.psychopy_render.stimuli import (
     ActionStimulus,
     BaseStimulus,
     FeedBackStimulus,
     TextStimulus,
-    WaitTime,
 )
 from rewardgym.reward_classes import BaseReward
 
@@ -28,8 +27,8 @@ reward2 = BaseReward(reward=[0, 1], p=[0.5, 0.5], seed=3333)
 # This creates the reward dictionary necessary for the environment.
 reward_locs = {1: reward1, 2: reward2}
 
-# We then create the environemnt.
-env = BaseEnv(environment_graph=env_graph, reward_locations=reward_locs)
+# We then create the environemnt. Note that we use a PsychopyEnv.
+env = PsychopyEnv(environment_graph=env_graph, reward_locations=reward_locs)
 
 # We then creat the stimuli we want to display. Here we use a very minimal example
 # as in the pygame example:
@@ -58,7 +57,7 @@ info_dict = {
     2: {"psychopy": [flip_screen, reward, earnings]},
 }
 
-env.info_dict = info_dict
+env.info_dict.update(info_dict)
 
 
 # For psychopy we need to create a window to render the stimuli onto.
@@ -75,14 +74,10 @@ win = visual.Window(
 # code in the root dir for advanced logging).
 Logger = MinimalLogger(global_clock=core.Clock())
 Logger.create()
-# Another required object is the WaitTime object, which keeps track of time and
-# logs responses outside of a response window.
-Wait = WaitTime(win, Logger)
 
 # Finally, the stimuli need to be setup (associating and creating the psychopy
-# objects that need a window object).
-for node in info_dict.keys():
-    [stim.setup(win) for stim in info_dict[node]["psychopy"]]
+# objects that need a window object). The pyschopy environment has a method for that:
+env.setup_render(window=win, logger=Logger)
 
 # We also show some instructions here:
 instruction = visual.TextStim(
@@ -101,40 +96,13 @@ for episode in range(n_episodes):
     obs, info = env.reset(agent_location=0)
     done = False
 
-    # differently from the pygame implementation, the psychopy implementation
-    # requires the stimuli to be drawn explictly (which is done here)
-    for stim in info["psychopy"]:
-        out = stim.display(
-            win=win,
-            logger=Logger,
-            wait=Wait,
-            reward=env.reward,
-            total_reward=env.cumulative_reward,
-        )
-
-    # extracting, if we recorded an action by the participant.
-    if out is not None:
-        action = out
-
     while not done:
 
-        next_obs, reward, terminated, truncated, info = env.step(action)
+        # The environment stores the action (and the previous action)
+        next_obs, reward, terminated, truncated, info = env.step(env.action)
 
         done = terminated or truncated
         obs = next_obs
-
-        # drawing stimuli explictly.
-        for stim in info["psychopy"]:
-            out = stim.display(
-                win=win,
-                logger=Logger,
-                wait=Wait,
-                reward=env.reward,
-                total_reward=env.cumulative_reward,
-            )
-
-        if out is not None:
-            action = out
 
 # And finally closing everything.
 env.close()

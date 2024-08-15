@@ -56,12 +56,14 @@ class ValenceQAgent:
         return a
 
     def get_probs(self, obs, avail_actions=None):
+
+        prob = np.zeros_like(self.q_values[obs])
+
         if avail_actions is None:
             avail_actions = np.arange(len(self.q_values[obs]))
 
         qval = self.q_values[obs][avail_actions]
         qval = qval - np.mean(qval)
-
         qs = np.exp(qval * self.temperature)
 
         if any(~np.isfinite(qs)):
@@ -69,7 +71,7 @@ class ValenceQAgent:
             qs[np.isposinf(qs)] = np.finfo(float).max
             qs[np.isneginf(qs)] = np.finfo(float).min
 
-        prob = qs / np.sum(qs)
+        prob[avail_actions] = qs / np.sum(qs)
 
         return prob
 
@@ -83,6 +85,7 @@ class ValenceQAgent:
     ):
         """Updates the Q-value of an action."""
         future_q_value = (not terminated) * np.max(self.q_values[next_obs])
+
         temporal_difference = (
             reward + self.discount_factor * future_q_value - self.q_values[obs][action]
         )
@@ -153,12 +156,13 @@ class RandomAgent(QAgent):
         if avail_actions is None:
             avail_actions = np.arange(self.action_space)
 
-        action_probs = np.zeros(len(avail_actions))
-        if len(action_probs) > 1:
-            action_probs[0] = self.bias
-            action_probs[1:] = (1 - self.bias) / (len(avail_actions) - 1)
+        action_probs = np.zeros(self.action_space)
+
+        if len(avail_actions) > 1:
+            action_probs[avail_actions[0]] = self.bias
+            action_probs[avail_actions[1:]] = (1 - self.bias) / (len(avail_actions) - 1)
         else:
-            action_probs[0] = 1
+            action_probs[avail_actions] = 1
 
         prob = action_probs
 

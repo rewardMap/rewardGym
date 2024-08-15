@@ -11,15 +11,18 @@ from .default_images import (
 from .stimuli import ActionStimulus, BaseStimulus, FeedBackStimulus, ImageStimulus
 
 
-def get_info_dict(stimulus_set=None):
+def get_info_dict(seed=None):
 
-    random_state = check_seed(stimulus_set)
-    stim_properties = [generate_stimulus_properties(random_state) for _ in range(4)]
+    random_state = check_seed(seed)
+    stim_properties = [
+        generate_stimulus_properties(random_state, patterns=[(2, 2), (3, 3)])
+        for _ in range(4)
+    ]
     image_map = {}
     stimuli = {}
 
     for n in range(4):
-        image_map[n] = make_card_stimulus(stim_properties[n])
+        image_map[n] = make_card_stimulus(stim_properties[n], height=350, width=350)
         stimuli[n] = stim_properties[n]
 
     reward_feedback = FeedBackStimulus(
@@ -64,14 +67,15 @@ def get_info_dict(stimulus_set=None):
     ]
 
     info_dict = {
-        0: {"psychopy": first_step(image_map[0])},
-        1: {"psychopy": first_step(image_map[1])},
-        2: {"psychopy": first_step(image_map[2])},
-        3: {"psychopy": first_step(image_map[3])},
-        4: {"psychopy": final_step},
+        0: {"psychopy": []},
+        1: {"psychopy": first_step(image_map[0])},
+        2: {"psychopy": first_step(image_map[1])},
+        3: {"psychopy": first_step(image_map[2])},
+        4: {"psychopy": first_step(image_map[3])},
         5: {"psychopy": final_step},
         6: {"psychopy": final_step},
         7: {"psychopy": final_step},
+        8: {"psychopy": final_step},
     }
 
     return info_dict, stimuli

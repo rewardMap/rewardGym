@@ -5,38 +5,29 @@ from ..reward_classes import BaseReward
 from ..utils import check_seed
 
 
-def get_mid(
-    starting_positions: list = None,
-    render_backend: Literal["pygame", "psychopy"] = None,
-    window_size: int = None,
-    **kwargs
-):
+def get_mid(render_backend: Literal["pygame", "psychopy"] = None, seed=111, **kwargs):
 
     environment_graph = {
-        0: [7, 5],  # big lose
-        1: [7, 6],  # small lose
-        2: [7, 7],  # control
-        3: [8, 7],  # small win
-        4: [9, 7],  # small lose
-        5: [],  # big lose - lose
-        6: [],  # small lose - lose
-        7: [],  # nothing
-        8: [],  # small win - win
-        9: [],  # large win - win
+        0: {0: ([1, 2, 3, 4, 5], 0.2), "skip": True},
+        1: [8, 6],  # big lose
+        2: [8, 7],  # small lose
+        3: [8, 8],  # control
+        4: [9, 8],  # small win
+        5: [10, 8],  # small lose
+        6: [],  # big lose - lose
+        7: [],  # small lose - lose
+        8: [],  # nothing
+        9: [],  # small win - win
+        10: [],  # large win - win
     }
 
     reward_structure = {
-        5: BaseReward(-5),
-        6: BaseReward(-1),
-        7: BaseReward(0),
-        8: BaseReward(1),
-        9: BaseReward(5),
+        6: BaseReward(-5),
+        7: BaseReward(-1),
+        8: BaseReward(0),
+        9: BaseReward(1),
+        10: BaseReward(5),
     }
-
-    if starting_positions is None:
-        condition_out = (None, ([0, 1, 2, 3, 4], [0.225, 0.225, 0.1, 0.225, 0.225]))
-    else:
-        condition_out = (None, starting_positions)
 
     info_dict = defaultdict(int)
     info_dict.update(
@@ -53,12 +44,10 @@ def get_mid(
 
     if render_backend == "pygame":
 
-        if window_size is None:
-            return ValueError("window_size needs to be defined!")
-
         from ..pygame_render.stimuli import BaseDisplay, BaseText, TimedAction
         from ..pygame_render.task_stims import feedback_block
 
+        window_size = 256
         base_position = (window_size // 2, window_size // 2)
 
         reward_disp, earnings_text = feedback_block(base_position)
@@ -79,31 +68,48 @@ def get_mid(
         ]
 
         pygame_dict = {
-            0: {"human": first_step("LL", "x")},
-            1: {"human": first_step("LL", "x")},
-            2: {"human": first_step("O", "o")},
-            3: {"human": first_step("W", "+")},
-            4: {"human": first_step("WW", "+")},
-            5: {"human": final_display},
-            6: {"human": final_display},
-            7: {"human": final_display},
-            8: {"human": final_display},
-            9: {"human": final_display},
+            1: {"pygame": first_step("LL", "x")},
+            2: {"pygame": first_step("LL", "x")},
+            3: {"pygame": first_step("O", "o")},
+            4: {"pygame": first_step("W", "+")},
+            5: {"pygame": first_step("WW", "+")},
+            6: {"pygame": final_display},
+            7: {"pygame": final_display},
+            8: {"pygame": final_display},
+            9: {"pygame": final_display},
+            10: {"pygame": final_display},
         }
 
         info_dict.update(pygame_dict)
 
-    elif render_backend == "psychopy":
-        raise NotImplementedError("Psychopy integration still under deliberation.")
+    elif render_backend == "psychopy" or render_backend == "psychopy-simulate":
+        from ..psychopy_render import get_psychopy_info
 
-    return environment_graph, reward_structure, condition_out, info_dict
+        psychopy_dict, _ = get_psychopy_info("mid", seed=seed)
+        info_dict.update(psychopy_dict)
+
+    return environment_graph, reward_structure, info_dict
 
 
-def generate_mid_configs(stimulus_set: str = "1"):
+def generate_mid_configs(stimulus_set: 111):
 
-    seed = check_seed(353)
+    seed = check_seed(stimulus_set)
     # 0 & 1 = win, 2  = neutral, 3 & 4 = lose
-    condition_template = [0, 1, 2, 3, 4]
+    condition_dict = {
+        "loss-large": {0: {0: 1}},
+        "loss-small": {0: {0: 2}},
+        "neutral": {0: {0: 3}},
+        "win-small": {0: {0: 4}},
+        "win-large": {0: {0: 5}},
+    }
+
+    condition_template = [
+        "loss-large",
+        "loss-small",
+        "neutral",
+        "win-small",
+        "win-large",
+    ]
     isi_template = [1.5, 2.125, 2.75, 3.375, 4.0]
 
     n_trials_per_condition = 20
@@ -128,7 +134,7 @@ def generate_mid_configs(stimulus_set: str = "1"):
         "stimulus_set": stimulus_set,
         "isi": isi,
         "condition": conditions,
-        "condition_target": "location",
+        "condition_dict": condition_dict,
         "ntrials": len(conditions),
         "update": ["isi"],
     }

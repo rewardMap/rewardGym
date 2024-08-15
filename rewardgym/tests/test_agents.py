@@ -5,7 +5,7 @@ def test_Qagent_smokescreens():
 
     for envname in ENVIRONMENTS:
         n_episodes = 20
-        env, conditions = get_env(envname)
+        env = get_env(envname)
 
         agent = base_agent.QAgent(
             learning_rate=0.25,
@@ -17,20 +17,12 @@ def test_Qagent_smokescreens():
 
         for ne in range(n_episodes):
 
-            condition, starting_position = unpack_conditions(conditions, ne)
-
-            if envname == "risk-sensitive":
-                avail_actions = list(env.condition_dict[condition].values())
-            else:
-                avail_actions = None
-
             a = run_single_episode(
                 env,
                 agent,
-                starting_position,
-                condition,
+                0,
+                None,
                 step_reward=envname == "two-step",
-                avail_actions=avail_actions,
             )
 
 
@@ -43,7 +35,7 @@ def test_ValenceQagent_smokescreens():
 
         for envname in ENVIRONMENTS:
             n_episodes = 20
-            env, conditions = get_env(envname)
+            env = get_env(envname)
 
             agent = base_agent.ValenceQAgent(
                 learning_rate_pos=lrs[0],
@@ -56,20 +48,12 @@ def test_ValenceQagent_smokescreens():
 
             for ne in range(n_episodes):
 
-                condition, starting_position = unpack_conditions(conditions, ne)
-
-                if envname == "risk-sensitive":
-                    avail_actions = list(env.condition_dict[condition].values())
-                else:
-                    avail_actions = None
-
                 a = run_single_episode(
                     env,
                     agent,
-                    starting_position,
-                    condition,
+                    0,
+                    None,
                     step_reward=envname == "two-step",
-                    avail_actions=avail_actions,
                 )
 
 
@@ -82,7 +66,7 @@ def test_RandomAgent_smokescreens():
 
         for envname in ENVIRONMENTS:
             n_episodes = 20
-            env, conditions = get_env(envname)
+            env = get_env(envname)
 
             agent = base_agent.RandomAgent(
                 bias=bias,
@@ -92,18 +76,10 @@ def test_RandomAgent_smokescreens():
 
             for ne in range(n_episodes):
 
-                condition, starting_position = unpack_conditions(conditions, ne)
-
-                if envname == "risk-sensitive":
-                    avail_actions = list(env.condition_dict[condition].values())
-                else:
-                    avail_actions = None
-
                 a = run_single_episode(
                     env,
                     agent,
-                    starting_position,
-                    condition,
+                    0,
+                    None,
                     step_reward=envname == "two-step",
-                    avail_actions=avail_actions,
                 )
