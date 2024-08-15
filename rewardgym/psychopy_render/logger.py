@@ -79,6 +79,8 @@ class ExperimentLogger:
         self.start_position = self.na
         self.current_location = self.na
 
+        self.avail_actions = self.na
+
         self.trial = -1
         self.tr = 0
 
@@ -97,6 +99,7 @@ class ExperimentLogger:
             "current_location",
             "trial_time",
             "total_reward",
+            "avail_actions",
             "TR",
             "expexted_duration",
             "start_position",
@@ -135,6 +138,7 @@ class ExperimentLogger:
         tmp_dict["current_location"] = self.current_location
         tmp_dict["TR"] = self.tr
         tmp_dict["run"] = self.run
+        tmp_dict["avail_actions"] = self.avail_actions
 
         return tmp_dict
 
@@ -325,6 +329,7 @@ class ExperimentLogger:
                 "start_position",
                 "trial_type",
                 "current_location",
+                "avail_actions",
             ]:
                 setattr(self, k, v)
             else:
