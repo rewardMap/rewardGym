@@ -1,5 +1,3 @@
-import os
-
 try:
     from psychopy.visual import ImageStim
     from psychopy.visual.rect import Rect
@@ -7,7 +5,6 @@ except ModuleNotFoundError:
     from .psychopy_stubs import Rect, ImageStim
 
 from ..utils import check_seed
-from . import STIMPATH
 from .default_images import (
     fixation_cross,
     generate_stimulus_properties,
@@ -25,11 +22,11 @@ class RiskSensitiveDisplay(BaseStimulus):
         image_shift=350,
         with_action=False,
         image_map={
-            1: os.path.join(STIMPATH, "risk_sensitive", "stim1.png"),
-            2: os.path.join(STIMPATH, "risk_sensitive", "stim2.png"),
-            3: os.path.join(STIMPATH, "risk_sensitive", "stim3.png"),
-            4: os.path.join(STIMPATH, "risk_sensitive", "stim4.png"),
-            5: os.path.join(STIMPATH, "risk_sensitive", "stim5.png"),
+            1: make_card_stimulus(generate_stimulus_properties(1)),
+            2: make_card_stimulus(generate_stimulus_properties(2)),
+            3: make_card_stimulus(generate_stimulus_properties(3)),
+            4: make_card_stimulus(generate_stimulus_properties(4)),
+            5: make_card_stimulus(generate_stimulus_properties(5)),
         },
     ):
         super().__init__(name=name, duration=duration)

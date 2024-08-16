@@ -1,5 +1,3 @@
-import os
-
 try:
     from psychopy.visual import ImageStim
     from psychopy.visual.rect import Rect
@@ -10,7 +8,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from ..utils import check_seed
-from . import STIMPATH
 from .default_images import (
     fixation_cross,
     generate_stimulus_properties,
@@ -27,8 +24,8 @@ class TwoStepDisplay(BaseStimulus):
         positions=((0, 0), (0, 0)),
         selected=None,
         images=[
-            os.path.join(STIMPATH, "risk_sensitive", "stim1.png"),
-            os.path.join(STIMPATH, "risk_sensitive", "stim2.png"),
+            make_card_stimulus(generate_stimulus_properties(12)),
+            make_card_stimulus(generate_stimulus_properties(23)),
         ],
     ):
         super().__init__(name=name, duration=duration)
