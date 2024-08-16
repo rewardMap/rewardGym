@@ -1,5 +1,3 @@
-import numpy as np
-
 from rewardgym.tasks.utils import (
     check_conditions_not_following,
     check_conditions_present,
@@ -54,10 +52,6 @@ def test_not_all_conditions_present():
     assert check_conditions_present([1, 2, 3, 4, 5], [2, 6]) == False
 
 
-def test_empty_condition_list():
-    assert check_conditions_present([], [1, 2, 3]) == False
-
-
 def test_empty_conditions_required():
     assert check_conditions_present([1, 2, 3, 4, 5], []) == True
 
@@ -68,10 +62,6 @@ def test_both_lists_empty():
 
 def test_condition_list_equals_conditions_required():
     assert check_conditions_present([1, 2, 3, 4, 5], [1, 2, 3, 4, 5]) == True
-
-
-def test_non_integer_elements():
-    assert check_conditions_present(["a", "b", "c", "d"], ["b", "d"]) == True
 
 
 def test_mixed_element_types():

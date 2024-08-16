@@ -1,14 +1,12 @@
 import pytest
 
-from rewardgym import ENVIRONMENTS, get_configs, get_env, unpack_conditions
-from rewardgym.psychopy_render import SimulationLogger, get_psychopy_info
+from rewardgym import get_configs, get_env
+from rewardgym.psychopy_render import SimulationLogger
 from rewardgym.psychopy_render.psychopy_stubs import Clock, Window
-from rewardgym.utils import get_condition_meaning, update_psychopy_trials
+from rewardgym.utils import update_psychopy_trials
 
 
 def simulate_task(envname):
-    from scipy.stats import uniform
-
     exp_dict = {"participant_id": "001", "run": 1, "task": envname}
 
     win = Window()
@@ -37,7 +35,6 @@ def simulate_task(envname):
     actions = []
 
     for episode in range(n_episodes):
-
         update_psychopy_trials(settings, env, episode)
 
         Logger.trial = episode
@@ -77,7 +74,6 @@ def simulate_task(envname):
                 actions.append(env.action)
 
         if task == "mid":
-
             win_trials += 1 if "win" in settings["condition"] else 0
 
             if (sum(actions) / (episode + 1)) < 0.4 and (win_trials % 3) == 0:
@@ -121,7 +117,6 @@ def test_smoke_screen_simulate_mid():
 
 
 def test_logger_error():
-
     Logger = SimulationLogger(
         "",
         None,

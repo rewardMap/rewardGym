@@ -1,8 +1,9 @@
-def test_Qagent_smokescreens():
-    from .. import ENVIRONMENTS, get_env
-    from ..agents import base_agent
-    from ..utils import run_single_episode, unpack_conditions
+from rewardgym import ENVIRONMENTS, get_env
+from rewardgym.agents import base_agent
+from rewardgym.utils import run_single_episode
 
+
+def test_Qagent_smokescreens():
     for envname in ENVIRONMENTS:
         n_episodes = 20
         env = get_env(envname)
@@ -15,9 +16,8 @@ def test_Qagent_smokescreens():
             state_space=env.n_states,
         )
 
-        for ne in range(n_episodes):
-
-            a = run_single_episode(
+        for _ in range(n_episodes):
+            run_single_episode(
                 env,
                 agent,
                 0,
@@ -27,12 +27,7 @@ def test_Qagent_smokescreens():
 
 
 def test_ValenceQagent_smokescreens():
-    from .. import ENVIRONMENTS, get_env
-    from ..agents import base_agent
-    from ..utils import run_single_episode, unpack_conditions
-
     for lrs in [[0.5, 0.5], [0.2, 0.5], [0.5, 0.2]]:
-
         for envname in ENVIRONMENTS:
             n_episodes = 20
             env = get_env(envname)
@@ -46,9 +41,8 @@ def test_ValenceQagent_smokescreens():
                 state_space=env.n_states,
             )
 
-            for ne in range(n_episodes):
-
-                a = run_single_episode(
+            for _ in range(n_episodes):
+                run_single_episode(
                     env,
                     agent,
                     0,
@@ -58,12 +52,7 @@ def test_ValenceQagent_smokescreens():
 
 
 def test_RandomAgent_smokescreens():
-    from .. import ENVIRONMENTS, get_env
-    from ..agents import base_agent
-    from ..utils import run_single_episode, unpack_conditions
-
     for bias in [0.25, 0.5, 0.75]:
-
         for envname in ENVIRONMENTS:
             n_episodes = 20
             env = get_env(envname)
@@ -74,9 +63,8 @@ def test_RandomAgent_smokescreens():
                 state_space=env.n_states,
             )
 
-            for ne in range(n_episodes):
-
-                a = run_single_episode(
+            for _ in range(n_episodes):
+                run_single_episode(
                     env,
                     agent,
                     0,

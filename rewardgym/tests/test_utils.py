@@ -1,10 +1,8 @@
-import types
-
 import numpy as np
 import pytest
 
-from .. import ENVIRONMENTS, get_env
-from ..utils import (
+from rewardgym import ENVIRONMENTS, get_env
+from rewardgym.utils import (
     add_to_df,
     check_elements_in_list,
     check_seed,
@@ -81,7 +79,6 @@ def test_get_condition_exceptions(conditions, episode, expected_output):
 
 
 def test_unpack_conditions_lists():
-
     l1 = [1, 2, 3]
     l2 = None
 
@@ -91,7 +88,6 @@ def test_unpack_conditions_lists():
 
 
 def test_unpack_conditions_tuple():
-
     l1 = ([1, 2, 3], [1, 0, 0])
     l2 = None
     l3 = ([0],)
@@ -151,9 +147,7 @@ def test_get_starting_nodes():
 
 
 def test_run_episode_smokescreen():
-    from .. import ENVIRONMENTS, get_env
-    from ..agents import base_agent
-    from ..utils import unpack_conditions
+    from rewardgym.agents import base_agent
 
     for envname in ENVIRONMENTS:
         n_episodes = 20
@@ -166,9 +160,8 @@ def test_run_episode_smokescreen():
             state_space=env.n_states,
         )
 
-        for ne in range(n_episodes):
-
-            a = run_single_episode(
+        for _ in range(n_episodes):
+            run_single_episode(
                 env,
                 agent,
                 0,
