@@ -1,7 +1,4 @@
-import os
-
 from ..utils import check_seed
-from . import STIMPATH
 from .default_images import (
     fixation_cross,
     generate_stimulus_properties,
@@ -12,7 +9,6 @@ from .stimuli import ActionStimulus, BaseStimulus, FeedBackStimulus, ImageStimul
 
 
 def get_info_dict(seed=None):
-
     random_state = check_seed(seed)
     stim_properties = [
         generate_stimulus_properties(random_state, patterns=[(2, 2), (3, 3)])

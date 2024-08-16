@@ -8,10 +8,10 @@ try:
 except ModuleNotFoundError:
     from ..psychopy_render.psychopy_stubs import Window
 
-from typing import Dict, Tuple, Union
+from typing import Dict, Tuple
 
 from .. import psychopy_render as psrender
-from ..psychopy_render.logger import ExperimentLogger, MinimalLogger
+from ..psychopy_render.logger import MinimalLogger
 from .base_env import BaseEnv
 
 
@@ -32,7 +32,7 @@ class PsychopyEnv(BaseEnv):
         Parameters
         ----------
         environment_graph : dict
-            The main graph showing the asssociation between states and actions.
+            The main graph showing the association between states and actions.
         reward_locations : dict
             Which location in the graph are associated with a reward.
         render_mode : str, optional
@@ -46,7 +46,7 @@ class PsychopyEnv(BaseEnv):
         window : Surface, optional
             The window / pygame surface class on which stimuli are drawn, by default None
         clock : Clock, optional
-            The pygame clock for time kepping, by default None
+            The pygame clock for time keeping, by default None
         """
 
         super().__init__(
@@ -63,7 +63,6 @@ class PsychopyEnv(BaseEnv):
         self.action = False
 
     def setup_render(self, window=None, logger=None):
-
         if window is None:
             self.window = Window(
                 size=[1680, 1050],
@@ -87,7 +86,6 @@ class PsychopyEnv(BaseEnv):
         self.setup = True
 
     def setup_simulation(self, logger=None, window=None, expose_last_stim=False):
-
         self.expose_last_stim = expose_last_stim
         self.reaction_time = None
 
@@ -124,7 +122,6 @@ class PsychopyEnv(BaseEnv):
         )
 
         if self.render_mode == "psychopy" and "psychopy" in info.keys():
-
             if not self.setup:
                 raise RuntimeError(
                     "You have to setup the environment first, using env.setup_render()"
@@ -170,7 +167,6 @@ class PsychopyEnv(BaseEnv):
             raise NotImplementedError("Render should only be called in human mode")
 
     def simulate_action(self, info, action, reaction_time):
-
         if "unmap-actions" in info.keys() and action in info["unmap-actions"].keys():
             action = info["unmap-actions"][action]
 
@@ -188,7 +184,6 @@ class PsychopyEnv(BaseEnv):
         self._check_output(out, info)
 
     def _check_output(self, out, info):
-
         if out is not None:
             self.action = out[0]
             if (
@@ -217,7 +212,6 @@ class PsychopyEnv(BaseEnv):
         agent_location: int = 0,
         condition: int = None,
     ) -> Tuple[Union[int, np.array], Dict]:
-
         self.action = None
         self.remap_action = None
         self.remainder = 0

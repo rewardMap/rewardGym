@@ -1,14 +1,5 @@
-import os
-
-from . import STIMPATH
 from .default_images import fixation_cross, mid_stimuli
-from .stimuli import (
-    ActionStimulus,
-    BaseStimulus,
-    FeedBackStimulus,
-    ImageStimulus,
-    TextStimulus,
-)
+from .stimuli import ActionStimulus, BaseStimulus, FeedBackStimulus, ImageStimulus
 
 
 def get_info_dict(seed=None):

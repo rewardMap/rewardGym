@@ -126,7 +126,6 @@ class HybridAgent(ValenceQAgent):
         terminated: bool,
         next_obs: Tuple[int, int, bool],
     ):
-
         self.q_agent.update(obs, action, reward, terminated, next_obs)
 
         if not terminated:

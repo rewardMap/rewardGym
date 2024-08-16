@@ -22,7 +22,6 @@ class FormatText(BaseText):
         self.condition_text = condition_text
 
     def display(self, window, clock=None, condition=None, total_reward=None, **kwargs):
-
         if self.font is None:
             self.font = pygame.font.Font(pygame.font.get_default_font(), self.fontsize)
 
@@ -53,7 +52,6 @@ class FormatTextReward(FormatText):
         textposition=(0, 0),
         target: Literal["reward", "total_reward"] = "total_reward",
     ):
-
         super().__init__(text, duration, name, fontcolor, fontsize, textposition)
 
         self.target = target
@@ -65,9 +63,8 @@ class FormatTextReward(FormatText):
         condition=None,
         reward=None,
         total_reward=None,
-        **kwargs
+        **kwargs,
     ):
-
         if self.font is None:
             self.font = pygame.font.Font(pygame.font.get_default_font(), self.fontsize)
 
@@ -111,7 +108,6 @@ class FormatTextRiskSensitive(BaseText):
         self.letter_map = letter_map
 
     def display(self, window, clock=None, condition=None, **kwargs):
-
         if self.font is None:
             self.font = pygame.font.Font(pygame.font.get_default_font(), self.fontsize)
 
@@ -138,7 +134,6 @@ class FormatTextRiskSensitive(BaseText):
 
 
 def feedback_block(center, duration_reward=1000, duration_total=500):
-
     cur_reward = FormatTextReward(
         "You gain: {0}",
         duration_reward,

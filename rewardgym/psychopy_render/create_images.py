@@ -245,7 +245,6 @@ def create_pattern(
 
     for y in range(num_tiles_y):
         for x in range(num_tiles_x):
-
             color = return_mod_pattern(color_pattern, x, y, colors)
             shape = return_mod_pattern(shape_pattern, x, y, shapes)
 

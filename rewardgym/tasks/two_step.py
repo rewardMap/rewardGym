@@ -1,15 +1,10 @@
-import warnings
 from collections import defaultdict
-from typing import Union
-
-import numpy as np
 
 from ..reward_classes import DriftingReward
 from ..utils import check_seed
 
 
 def get_two_step(render_backend=None, seed=111, **kwargs):
-
     seed = check_seed(seed)
 
     environment_graph = {
@@ -32,7 +27,6 @@ def get_two_step(render_backend=None, seed=111, **kwargs):
     info_dict = defaultdict(int)
 
     if render_backend == "pygame":
-
         window_size = 256
 
         from ..pygame_render.stimuli import BaseAction, BaseDisplay, BaseText
@@ -79,7 +73,6 @@ def get_two_step(render_backend=None, seed=111, **kwargs):
 
 
 def generate_two_step_configs(stimulus_set: str = "1"):
-
     condition_dict = {
         "expected-transition": {0: {0: 1, 1: 2}},
         "unexpected-transition": {0: {0: 2, 1: 1}},

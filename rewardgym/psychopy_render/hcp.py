@@ -1,9 +1,11 @@
+import importlib.util
+
 import numpy as np
 
-try:
-    from psychopy.visual import TextStim, Window
+if importlib.util.find_spec("psychopy") is not None:
+    from psychopy.visual import TextStim
     from psychopy.visual.rect import Rect
-except ModuleNotFoundError:
+else:
     from .psychopy_stubs import TextStim, Rect
 
 from .default_images import fixation_cross
@@ -27,7 +29,6 @@ class ShowCard(BaseStimulus):
         position=(0, 0),
         name=None,
     ):
-
         super().__init__(name=name, duration=duration)
 
         self.height = height
@@ -42,7 +43,6 @@ class ShowCard(BaseStimulus):
         self.font_height = font_height
 
     def setup(self, win, **kwargs):
-
         self.textStim = TextStim(
             win=win,
             name=self.name + "_text",
@@ -62,7 +62,6 @@ class ShowCard(BaseStimulus):
         )
 
     def display(self, win, logger, reward, action, **kwargs):
-
         if self.target == "action":
             reward = action
 

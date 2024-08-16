@@ -1,14 +1,14 @@
+import importlib.util
 from collections import defaultdict
 from typing import Union
 
 import numpy as np
 
-try:
+if importlib.util.find_spec("pygame") is not None:
     import pygame
-    from pygame import Surface
-    from pygame.time import Clock
-except ModuleNotFoundError:
-    from .gymnasium_stubs import Surface, Clock
+else:
+    # Handle the absence of pygame
+    pass
 
 from .base_env import BaseEnv
 
@@ -29,7 +29,7 @@ class RenderEnv(BaseEnv):
         Parameters
         ----------
         environment_graph : dict
-            The main graph showing the asssociation between states and actions.
+            The main graph showing the association between states and actions.
         reward_locations : dict
             Which location in the graph are associated with a reward.
         render_mode : str, optional
@@ -47,7 +47,6 @@ class RenderEnv(BaseEnv):
         self.setup = False
 
     def setup_render(self, window_size, window, clock):
-
         if window_size is None:
             self.window_size = 256
         else:
@@ -82,7 +81,6 @@ class RenderEnv(BaseEnv):
         self.human_reward_modifier = 1
 
         if self.render_mode == "pygame" and "pygame" in info.keys():
-
             if not self.setup:
                 raise RuntimeError(
                     "You have to setup the environment first, using env.setup()"

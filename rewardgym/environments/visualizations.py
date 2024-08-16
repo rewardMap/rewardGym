@@ -6,7 +6,6 @@ from ..utils import get_starting_nodes
 
 
 def plot_env_graph(env):
-
     strip_graph = {
         ii: (jj[0] if isinstance(jj, tuple) else jj) for ii, jj in env.graph.items()
     }

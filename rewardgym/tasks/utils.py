@@ -12,7 +12,6 @@ def get_task(
     render_backend: Literal["pygame"] = None,
     seed: Union[np.random.Generator, int] = 1000,
 ):
-
     if task_name == "hcp":
         from .hcp import get_hcp as get_task_func
 
@@ -47,7 +46,6 @@ def get_env(
     seed: Union[int, np.random.Generator] = 1000,
     **kwargs,
 ):
-
     environment_graph, reward_structure, info_dict = get_task(
         task_name,
         render_backend=render_backend,
@@ -86,9 +84,8 @@ def get_env(
 
 
 def get_configs(
-    task_name: Literal["hcp", "mid", "two-step", "risk-sensitive", "posner", "gonogo"]
+    task_name: Literal["hcp", "mid", "two-step", "risk-sensitive", "posner", "gonogo"],
 ):
-
     if task_name == "hcp":
         from .hcp import generate_hcp_configs as generate_configs
 

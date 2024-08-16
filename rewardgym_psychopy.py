@@ -3,7 +3,7 @@ import os
 
 from psychopy import core, event, gui, visual
 
-from rewardgym import ENVIRONMENTS, get_configs, get_env, unpack_conditions
+from rewardgym import ENVIRONMENTS, get_configs, get_env
 from rewardgym.psychopy_render import ExperimentLogger, get_psychopy_info
 from rewardgym.utils import update_psychopy_trials
 
@@ -107,7 +107,6 @@ instruction.setText("Please respond faster!")
 
 
 for episode in range(n_episodes):
-
     # Update timings
     update_psychopy_trials(settings, env, episode)
 
@@ -132,7 +131,6 @@ for episode in range(n_episodes):
         win.flip()
 
     while not done:
-
         next_obs, reward, terminated, truncated, info = env.step(env.action)
         Logger.current_location = env.agent_location
 
@@ -146,7 +144,6 @@ for episode in range(n_episodes):
             done = True
 
     if env.remainder > 0:
-
         rm_onset = Logger.get_time()
         Logger.wait(win, env.remainder, rm_onset)
 
@@ -156,7 +153,6 @@ for episode in range(n_episodes):
         )
 
     if task == "mid":
-
         win_trials += 1 if 0 in [3, 4] else 0
 
         if (sum(actions) / (episode + 1)) < 0.4 and (win_trials % 3) == 0:

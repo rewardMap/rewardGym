@@ -31,7 +31,6 @@ class TwoStepDisplay(BaseStimulus):
             os.path.join(STIMPATH, "risk_sensitive", "stim2.png"),
         ],
     ):
-
         super().__init__(name=name, duration=duration)
 
         self.positions = positions
@@ -51,7 +50,6 @@ class TwoStepDisplay(BaseStimulus):
                 )
 
     def display(self, win, logger, action, **kwargs):
-
         logger.key_strokes(win)
         stim_onset = logger.get_time()
 
@@ -111,7 +109,6 @@ class TwoStepDisplay(BaseStimulus):
 
 
 def get_info_dict(seed=None, **kwargs):
-
     seed = check_seed(seed)
     colors = [tuple([int(i * 255) for i in c]) for c in plt.cm.tab10.colors[:5]]
     set_colors = seed.choice(np.arange(len(colors[:-1])), 3, replace=False)

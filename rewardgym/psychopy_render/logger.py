@@ -1,4 +1,4 @@
-""" Logger classes used by the experiment."""
+"""Logger classes used by the experiment."""
 
 from typing import Dict, List, Tuple, Union
 
@@ -48,9 +48,9 @@ class ExperimentLogger:
         run : int, optional
             The run, also logged as persistent column, by default 1
         seq_tr : float, optional
-            If it is an fMRI experiment, this is echo time. Used to calculate the expected collection between acqusitions, by default 0.752
+            If it is an fMRI experiment, this is echo time. Used to calculate the expected collection between acquisitions, by default 0.752
         sep : str, optional
-            What kind of seperator to use in output file, by default "\t"
+            What kind of separator to use in output file, by default "\t"
         na : str, optional
             How NaN values are written to file, by default "n/a"
         kill_switch : str, optional
@@ -280,7 +280,6 @@ class ExperimentLogger:
 
         if presses:
             for resp in presses:
-
                 if resp[0] == self.kill_switch:
                     # Closes the window, closes the file and quits psychopy.
                     win.close()
@@ -288,7 +287,6 @@ class ExperimentLogger:
                     core.quit()
 
                 elif resp[0] == self.mr_trigger:
-
                     self.tr += 1
                     expected_time = self.mr_clock.getTime() - (self.tr * self.seq_tr)
                     # ugly fix!
@@ -322,7 +320,6 @@ class ExperimentLogger:
             return response
 
     def update_trial_info(self, **kwargs):
-
         for k, v in kwargs.items():
             if k in [
                 "trial",
@@ -352,7 +349,7 @@ class ExperimentLogger:
 
         t_wait = start + time  # - self.frameDuration
 
-        # Trying to avoid unecessary checks
+        # Trying to avoid unnecessary checks
         while t_wait > self.get_time():
             self.key_strokes(win)
 
@@ -380,7 +377,7 @@ class MinimalLogger(ExperimentLogger):
         global_clock : Clock
             Clock that is used by the experiment.
         seq_tr : float, optional
-            If it is an fMRI experiment, this is echo time. Used to calculate the expected collection between acqusitions, by default 0.752
+            If it is an fMRI experiment, this is echo time. Used to calculate the expected collection between acquisitions, by default 0.752
         na : str, optional
             How NaN values are written to file, by default "n/a"
         kill_switch : str, optional
@@ -435,7 +432,6 @@ class MinimalLogger(ExperimentLogger):
 
 class SimulationLogger(ExperimentLogger):
     def _write_to_file(self, tmp_values: List[float]):
-
         for n, ii in enumerate(self.categories):
             self.df[ii].append(tmp_values[n])
 
@@ -447,7 +443,6 @@ class SimulationLogger(ExperimentLogger):
         key,
         rt,
     ) -> Union[Tuple[str, float], None]:
-
         return (key, rt)
 
     def close(self):

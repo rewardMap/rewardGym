@@ -12,7 +12,7 @@ from .utils import check_conditions_not_following, check_conditions_present
 def get_risk_sensitive(
     render_backend: Literal["pygame", "psychopy"] = None,
     seed: Union[int, np.random.Generator] = 1000,
-    **kwargs
+    **kwargs,
 ):
     seed = check_seed(seed)
     environment_graph = {
@@ -64,7 +64,6 @@ def get_risk_sensitive(
     info_dict.update({"condition-meaning": condition_meaning})
 
     if render_backend == "pygame":
-
         window_size = 256
 
         from ..pygame_render.stimuli import BaseAction, BaseDisplay, BaseText

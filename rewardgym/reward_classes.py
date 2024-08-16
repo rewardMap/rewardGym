@@ -7,7 +7,6 @@ from .utils import check_seed
 
 class BaseReward:
     def __init__(self, reward, p=1, seed=1234):
-
         if not isinstance(reward, (list, tuple, np.ndarray)):
             reward = [reward]
 
@@ -36,7 +35,6 @@ class DriftingReward(BaseReward):
         gauss_sd: float = 0.025,
         seed: int = 1234,
     ):
-
         if not isinstance(reward, (list, tuple, np.ndarray)):
             reward = [reward]
 
@@ -72,7 +70,6 @@ class PseudoRandomReward(BaseReward):
         self._generate_sequence()
 
     def _reward_function(self, **kwargs):
-
         reward = self.rewards.pop()
 
         if len(self.rewards) == 0:

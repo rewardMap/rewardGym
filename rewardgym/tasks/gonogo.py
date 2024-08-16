@@ -12,7 +12,6 @@ def get_gonogo(
     render_backend: Literal["pygame", "psychopy"] = None,
     seed: Union[int, np.random.Generator] = 1000,
 ):
-
     environment_graph = {
         0: {0: ([1, 2, 3, 4], 0.25), "skip": True},
         1: [7, 8],  # win - go (action1)
@@ -40,9 +39,8 @@ def get_gonogo(
     )
 
     if render_backend == "pygame":
-
         from ..pygame_render.stimuli import BaseDisplay, BaseText, TimedAction
-        from ..pygame_render.task_stims import FormatText, FormatTextReward
+        from ..pygame_render.task_stims import FormatTextReward
 
         window_size = 256
 
@@ -97,7 +95,6 @@ def get_gonogo(
 
 
 def generate_gonogo_configs(stimulus_set: str = "1"):
-
     seed = check_seed(int(stimulus_set))
 
     condition_dict = {

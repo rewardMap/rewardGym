@@ -363,7 +363,6 @@ class ActionStimulus(BaseStimulus):
 
         # Main loop, keeping time and waiting for response.
         while response_window > logger.get_time() and response_present is False:
-
             response = logger.key_strokes(win, keyList=self.key_list)
 
             if response:
@@ -415,13 +414,11 @@ class ActionStimulus(BaseStimulus):
         rt: float = None,
         **kwargs,
     ):
-
         response_key, rt = logger.key_strokes(key, rt)
         response_window_onset = logger.get_time()
         logger.global_clock.time += min([rt, self.duration])
 
         if rt > self.duration:
-
             if response_key is None:
                 response_key = logger.na
 
@@ -584,7 +581,6 @@ class FeedBackStimulus(BaseStimulus):
 
         # Fills in the format string. Adds the + sign for positive rewards.
         if self.target == "reward":
-
             if reward > 0:
                 feedback_img = "win"
             elif reward < 0:

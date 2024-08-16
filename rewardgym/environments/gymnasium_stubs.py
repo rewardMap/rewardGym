@@ -1,8 +1,7 @@
 """
-    Stubs, so that environments can be used together with PsychoPy, not requiring
-    any installation of other packages into the PsychoPy env.
+Stubs, so that environments can be used together with PsychoPy, not requiring
+any installation of other packages into the PsychoPy env.
 """
-import numpy as np
 
 
 class Env:

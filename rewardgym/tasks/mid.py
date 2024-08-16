@@ -6,7 +6,6 @@ from ..utils import check_seed
 
 
 def get_mid(render_backend: Literal["pygame", "psychopy"] = None, seed=111, **kwargs):
-
     environment_graph = {
         0: {0: ([1, 2, 3, 4, 5], 0.2), "skip": True},
         1: [8, 6],  # big lose
@@ -43,7 +42,6 @@ def get_mid(render_backend: Literal["pygame", "psychopy"] = None, seed=111, **kw
     )
 
     if render_backend == "pygame":
-
         from ..pygame_render.stimuli import BaseDisplay, BaseText, TimedAction
         from ..pygame_render.task_stims import feedback_block
 
@@ -92,7 +90,6 @@ def get_mid(render_backend: Literal["pygame", "psychopy"] = None, seed=111, **kw
 
 
 def generate_mid_configs(stimulus_set: 111):
-
     seed = check_seed(stimulus_set)
     # 0 & 1 = win, 2  = neutral, 3 & 4 = lose
     condition_dict = {

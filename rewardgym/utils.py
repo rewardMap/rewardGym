@@ -34,7 +34,7 @@ def run_single_episode(
     -------
     Union[List, List, float]
         returns the agent's observations (excluding starting point), agent's actions,
-        and optained reward.
+        and obtained reward.
     """
     obs, info = env.reset(agent_location=starting_position, condition=condition)
 
@@ -43,7 +43,6 @@ def run_single_episode(
     done = False
 
     while not done:
-
         old_info = info
         action = agent.get_action(obs, info["avail-actions"])
 
@@ -170,7 +169,6 @@ def unpack_conditions(conditions: tuple = None, episode: int = None) -> Union[in
 def get_condition_state(
     conditions: Union[None, List, tuple] = None, episode: int = None
 ):
-
     if conditions is None:
         current_condition = conditions
     elif isinstance(conditions, List):

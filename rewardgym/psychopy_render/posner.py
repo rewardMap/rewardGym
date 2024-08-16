@@ -7,11 +7,10 @@ from .default_images import (
     posner_cue_up,
     posner_target,
 )
-from .stimuli import ActionStimulus, BaseStimulus, FeedBackStimulus, ImageStimulus
+from .stimuli import ActionStimulus, FeedBackStimulus, ImageStimulus
 
 
 def get_info_dict(seed=None):
-
     reward_feedback = FeedBackStimulus(
         1.0,
         text="{0}",

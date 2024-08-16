@@ -1,7 +1,5 @@
 from collections import defaultdict
-from typing import Literal, Union
-
-import numpy as np
+from typing import Literal
 
 from ..reward_classes import BaseReward
 from ..utils import check_seed
@@ -10,7 +8,6 @@ from ..utils import check_seed
 def get_posner(
     render_backend: Literal["pygame", "psychopy"] = None, seed=112, **kwargs
 ):
-
     environment_graph = {
         0: ({0: ([1, 2], 0.5), "skip": True}),
         1: ({0: ([3, 4], 0.8)}),  # cue left
@@ -41,7 +38,6 @@ def get_posner(
     )
 
     if render_backend == "pygame":
-
         window_size = 256
 
         from ..pygame_render.stimuli import BaseAction, BaseDisplay, BaseText
@@ -91,7 +87,6 @@ def get_posner(
 
 
 def generate_posner_configs(stimulus_set: str = "1"):
-
     seed = check_seed(222)
     condition_dict = {
         "cue-left-valid": {0: {0: 1}, 1: {0: 3}},

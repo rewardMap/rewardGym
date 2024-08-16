@@ -8,7 +8,6 @@ import os
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 sys.path.insert(0, os.path.abspath(os.path.pardir))
-import rewardgym
 
 project = "rewardGym"
 copyright = "2024, Simon R. Steinkamp"
@@ -46,8 +45,6 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 bibtex_bibfiles = ["references.bib"]
 bibtex_reference_style = "author_year"
 
-import glob
-import jupytext
 
 code_to_convert = ["tutorial.py"]
 for ii in code_to_convert:

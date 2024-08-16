@@ -32,7 +32,6 @@ class RiskSensitiveDisplay(BaseStimulus):
             5: os.path.join(STIMPATH, "risk_sensitive", "stim5.png"),
         },
     ):
-
         super().__init__(name=name, duration=duration)
 
         self.image_position = image_position
@@ -44,7 +43,6 @@ class RiskSensitiveDisplay(BaseStimulus):
         self.image_dict = {}
 
         for kk in self.image_map.keys():
-
             if isinstance(self.image_map[kk], str):
                 self.image_dict[kk] = ImageStim(win=win, image=self.image_map[kk])
             else:
@@ -55,7 +53,6 @@ class RiskSensitiveDisplay(BaseStimulus):
                 )
 
     def display(self, win, logger, condition, action=None, **kwargs):
-
         state1 = condition[0][0] if 0 in condition[0].keys() else None
         state2 = condition[0][1] if 1 in condition[0].keys() else None
 
@@ -124,7 +121,6 @@ class RiskSensitiveDisplay(BaseStimulus):
 
 
 def get_info_dict(seed=111):
-
     random_state = check_seed(seed)
 
     stim_properties = [generate_stimulus_properties(random_state) for _ in range(5)]

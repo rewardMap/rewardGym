@@ -5,7 +5,6 @@ import pygame
 from ..environments.render_env import RenderEnv
 from ..pygame_render.stimuli import BaseAction, BaseText
 from ..tasks.utils import get_task
-from ..utils import unpack_conditions
 
 
 def play_task(
@@ -15,7 +14,6 @@ def play_task(
     window_size: int = 500,
     n_episodes: int = 5,
 ):
-
     pygame.init()
     pygame.display.init()
     window = pygame.display.set_mode((window_size, window_size))
@@ -47,7 +45,6 @@ def play_task(
     rewards = []
 
     for episode in range(n_episodes):
-
         obs, info = env.reset(0, condition=None)
         done = False
         observations.append(obs)

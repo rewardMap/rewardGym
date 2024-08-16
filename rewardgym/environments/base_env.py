@@ -1,4 +1,3 @@
-from collections import defaultdict
 from typing import Dict, Union
 
 try:
@@ -8,7 +7,7 @@ except ModuleNotFoundError:
     from .gymnasium_stubs import Env
     from .gymnasium_stubs import Discrete
 
-from typing import Tuple, Union
+from typing import Tuple
 
 import numpy as np
 
@@ -38,7 +37,7 @@ class BaseEnv(Env):
         Parameters
         ----------
         environment_graph : dict
-            The main graph showing the asssociation between states and actions.
+            The main graph showing the association between states and actions.
         reward_locations : dict
             Which location in the graph are associated with a reward.
         render_mode : str, optional
@@ -49,7 +48,7 @@ class BaseEnv(Env):
             The random seed associated with the environment, creates a generator, by default 1000
         """
 
-        # It should be posssible to use wrapper for one-hot, so no box and other handling necessary (might need an
+        # It should be possible to use wrapper for one-hot, so no box and other handling necessary (might need an
         # implementation though).
 
         if n_actions is None:
@@ -224,7 +223,6 @@ class BaseEnv(Env):
         if action not in current_graph.keys():
             next_position = self.agent_location
         elif isinstance(current_graph[action], tuple):
-
             stochasticiy = current_graph[action][1]
 
             if self.rng.random() <= stochasticiy:

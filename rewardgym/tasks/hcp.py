@@ -6,7 +6,6 @@ from ..utils import check_seed
 
 
 def get_hcp(render_backend: Literal["pygame", "psychopy"] = None, seed=100, **kwargs):
-
     environment_graph = {
         0: [1, 2],  # go - win
         1: [],  # no go win
@@ -22,7 +21,6 @@ def get_hcp(render_backend: Literal["pygame", "psychopy"] = None, seed=100, **kw
     info_dict.update({"condition": {0: "lose", 1: "neutral", 2: "win"}})
 
     if render_backend == "pygame":
-
         window_size = 256
         from ..pygame_render.stimuli import BaseAction, BaseDisplay, BaseText
         from ..pygame_render.task_stims import FormatText, feedback_block
@@ -86,7 +84,6 @@ def get_hcp(render_backend: Literal["pygame", "psychopy"] = None, seed=100, **kw
 
 
 def generate_hcp_configs(stimulus_set: str = "1"):
-
     seed = check_seed(987)
     condition_dict = {
         "win": {"reward": 1},

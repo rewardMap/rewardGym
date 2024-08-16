@@ -5,7 +5,6 @@ except ModuleNotFoundError:
 
 
 def get_psychopy_info(task: str = "hcp", **kwargs):
-
     if task == "hcp":
         from .hcp import get_info_dict
     elif task == "mid":

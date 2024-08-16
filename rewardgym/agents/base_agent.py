@@ -1,6 +1,5 @@
 import warnings
-from collections import defaultdict
-from typing import List, Tuple, Union
+from typing import Tuple, Union
 
 import numpy as np
 
@@ -56,7 +55,6 @@ class ValenceQAgent:
         return a
 
     def get_probs(self, obs, avail_actions=None):
-
         prob = np.zeros_like(self.q_values[obs])
 
         if avail_actions is None:
@@ -140,7 +138,6 @@ class RandomAgent(QAgent):
         state_space: int = 2,
         seed: Union[int, np.random.Generator] = 1000,
     ) -> None:
-
         self.bias = bias
 
         self.action_space = action_space
@@ -148,11 +145,9 @@ class RandomAgent(QAgent):
         self.rng = check_seed(seed)
 
     def update(self, *args, **kwargs):
-
         return None
 
     def get_probs(self, obs, avail_actions=None):
-
         if avail_actions is None:
             avail_actions = np.arange(self.action_space)
 

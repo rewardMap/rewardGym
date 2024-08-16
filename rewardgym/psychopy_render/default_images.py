@@ -112,7 +112,6 @@ def generate_stimulus_properties(
     patterns=patterns,
     bg_color=bg_color,
 ):
-
     random_state = check_seed(random_state)
 
     gen_colors = colors[:]
@@ -159,7 +158,6 @@ def generate_stimulus_properties(
 
 
 def make_card_stimulus(stimulus, width=300, height=480):
-
     card = make_stimulus(
         width,
         height,
@@ -193,7 +191,6 @@ def mid_stimuli(amount="+5", shape="circle", probe=False):
     draw_shape(draw, shape, [0, 0, 300, 300], (0, 0, 0), 0)
 
     if not probe:
-
         offset = 4 if shape == "triangle_d" else 0
 
         draw_shape(draw, shape, [10, 10, 290, 290 + offset], stim_color, 0)
