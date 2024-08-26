@@ -11,6 +11,7 @@ from .utils import check_conditions_present
 def get_gonogo(
     render_backend: Literal["pygame", "psychopy"] = None,
     seed: Union[int, np.random.Generator] = 1000,
+    key_dict=None,
 ):
     environment_graph = {
         0: {0: ([1, 2, 3, 4], 0.25), "skip": True},
@@ -88,7 +89,10 @@ def get_gonogo(
     elif render_backend == "psychopy" or render_backend == "psychopy-simulate":
         from ..psychopy_render import get_psychopy_info
 
-        psychopy_dict, _ = get_psychopy_info("gonogo", seed=seed)
+        if key_dict is None:
+            key_dict = {"space": 0}
+
+        psychopy_dict, _ = get_psychopy_info("gonogo", seed=seed, key_dict=key_dict)
         info_dict.update(psychopy_dict)
 
     return environment_graph, reward_structure, info_dict

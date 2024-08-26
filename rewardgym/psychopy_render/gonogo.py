@@ -8,7 +8,7 @@ from .default_images import (
 from .stimuli import ActionStimulus, BaseStimulus, FeedBackStimulus, ImageStimulus
 
 
-def get_info_dict(seed=None):
+def get_info_dict(seed=None, key_dict={"space": 0}, **kwargs):
     random_state = check_seed(seed)
     stim_properties = [
         generate_stimulus_properties(random_state, patterns=[(2, 2), (3, 3)])
@@ -52,7 +52,7 @@ def get_info_dict(seed=None):
                 positions=[(0, 0)],
                 name="target",
             ),
-            ActionStimulus(duration=1.0, key_dict={"space": 0}, timeout_action=1),
+            ActionStimulus(duration=1.0, key_dict=key_dict, timeout_action=1),
         ]
 
     final_step = [

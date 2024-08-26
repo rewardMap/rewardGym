@@ -248,10 +248,10 @@ def posner_cue_down(color=(150, 150, 150)):
 
 
 def posner_target():
-    pattern = Image.new("RGBA", (200, 200), (0, 0, 0, 0))
+    pattern = Image.new("RGBA", (100, 100), (0, 0, 0, 0))
     draw = ImageDraw.Draw(pattern)
 
-    draw_shape(draw, "circle", [0, 0, 200, 200], (255, 255, 255), 0)
-    draw_shape(draw, "neg-circle", [15, 15, 185, 185], (0, 0, 0, 0), 0)
+    draw_shape(draw, "circle", [0, 0, 100, 100], (75, 75, 75), 0)
+    draw_shape(draw, "neg-circle", [10, 10, 90, 90], (0, 0, 0, 0), 0)
 
     return np.array(pattern)[::-1, :] / 255

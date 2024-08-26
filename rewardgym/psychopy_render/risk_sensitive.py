@@ -117,7 +117,7 @@ class RiskSensitiveDisplay(BaseStimulus):
         return None
 
 
-def get_info_dict(seed=111):
+def get_info_dict(seed=111, key_dict={"left": 0, "right": 1}, **kwargs):
     random_state = check_seed(seed)
 
     stim_properties = [generate_stimulus_properties(random_state) for _ in range(5)]
@@ -156,7 +156,7 @@ def get_info_dict(seed=111):
             "psychopy": [
                 base_stim,
                 cue_disp,
-                ActionStimulus(duration=2.0, timeout_action=None),
+                ActionStimulus(duration=2.0, timeout_action=None, key_dict=key_dict),
             ]
         },
         1: {"psychopy": final_step},

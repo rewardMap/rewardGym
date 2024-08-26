@@ -4,7 +4,7 @@ from ..reward_classes import DriftingReward
 from ..utils import check_seed
 
 
-def get_two_step(render_backend=None, seed=111, **kwargs):
+def get_two_step(render_backend=None, seed=111, key_dict=None, **kwargs):
     seed = check_seed(seed)
 
     environment_graph = {
@@ -66,7 +66,10 @@ def get_two_step(render_backend=None, seed=111, **kwargs):
     elif render_backend == "psychopy" or render_backend == "psychopy-simulate":
         from ..psychopy_render import get_psychopy_info
 
-        psychopy_dict, _ = get_psychopy_info("two-step", seed=seed)
+        if key_dict is None:
+            key_dict = {"left": 0, "right": 1}
+
+        psychopy_dict, _ = get_psychopy_info("two-step", seed=seed, key_dict=key_dict)
         info_dict.update(psychopy_dict)
 
     return environment_graph, reward_structure, info_dict

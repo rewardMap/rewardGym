@@ -88,14 +88,14 @@ class ShowCard(BaseStimulus):
         )
 
 
-def get_info_dict(seed=None):
+def get_info_dict(seed=None, key_dict={"left": 0, "right": 1}, **kwargs):
     base_stim = ImageStimulus(
         image_paths=[fixation_cross()], duration=0.5, name="fixation", autodraw=True
     )
 
     reward_feedback = FeedBackStimulus(1.0, text="{0}", target="reward", name="reward")
     total_reward_feedback = FeedBackStimulus(
-        1.0,
+        0.75,
         text="Total: {0}",
         target="total_reward",
         name="reward-total",
@@ -107,14 +107,14 @@ def get_info_dict(seed=None):
         0: {
             "psychopy": [
                 base_stim,
-                ShowCard("{0}", {0: [""]}, name="card-onset", duration=1.0),
+                ShowCard("{0}", {0: [""]}, name="card-onset", duration=0.5),
                 ShowCard(
                     "{0}",
                     {0: ["< or >"]},
                     name="response-cue",
-                    duration=0.01,
+                    duration=0.00,
                 ),
-                ActionStimulus(duration=1.0),
+                ActionStimulus(duration=1.5, key_dict=key_dict),
             ]
         },
         1: {
@@ -124,6 +124,7 @@ def get_info_dict(seed=None):
                     condition_text={0: ["< 5"], 1: ["> 5"]},
                     name="select",
                     target="action",
+                    duration=0.75,
                 ),
                 ShowCard(
                     "{0}",
@@ -142,6 +143,7 @@ def get_info_dict(seed=None):
                     condition_text={0: ["< 5"], 1: ["> 5"]},
                     name="select",
                     target="action",
+                    duration=0.75,
                 ),
                 ShowCard(
                     "{0}",

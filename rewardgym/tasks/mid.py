@@ -5,7 +5,12 @@ from ..reward_classes import BaseReward
 from ..utils import check_seed
 
 
-def get_mid(render_backend: Literal["pygame", "psychopy"] = None, seed=111, **kwargs):
+def get_mid(
+    render_backend: Literal["pygame", "psychopy"] = None,
+    seed=111,
+    key_dict=None,
+    **kwargs,
+):
     environment_graph = {
         0: {0: ([1, 2, 3, 4, 5], 0.2), "skip": True},
         1: [8, 6],  # big lose
@@ -83,7 +88,10 @@ def get_mid(render_backend: Literal["pygame", "psychopy"] = None, seed=111, **kw
     elif render_backend == "psychopy" or render_backend == "psychopy-simulate":
         from ..psychopy_render import get_psychopy_info
 
-        psychopy_dict, _ = get_psychopy_info("mid", seed=seed)
+        if key_dict is None:
+            key_dict = {"space": 0}
+
+        psychopy_dict, _ = get_psychopy_info("mid", seed=seed, key_dict=key_dict)
         info_dict.update(psychopy_dict)
 
     return environment_graph, reward_structure, info_dict
@@ -109,7 +117,8 @@ def generate_mid_configs(stimulus_set: 111):
     ]
     isi_template = [1.5, 2.125, 2.75, 3.375, 4.0]
 
-    n_trials_per_condition = 20
+    # n_trials_per_condition = 20
+    n_trials_per_condition = 10
 
     conditions = seed.choice(a=condition_template, size=5, replace=False).tolist()
     isi = seed.choice(isi_template, size=5, replace=False).tolist()
@@ -125,15 +134,17 @@ def generate_mid_configs(stimulus_set: 111):
                 reject = False
                 conditions.extend(condition_template)
                 isi.extend(seed.choice(isi_template, size=5, replace=False).tolist())
+    iti = [2] * len(conditions)
 
     config = {
         "name": "mid",
         "stimulus_set": stimulus_set,
         "isi": isi,
+        "reward": iti,
         "condition": conditions,
         "condition_dict": condition_dict,
         "ntrials": len(conditions),
-        "update": ["isi"],
+        "update": ["isi", "reward"],
     }
 
     return config

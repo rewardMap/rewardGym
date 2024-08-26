@@ -12,6 +12,7 @@ from .utils import check_conditions_not_following, check_conditions_present
 def get_risk_sensitive(
     render_backend: Literal["pygame", "psychopy"] = None,
     seed: Union[int, np.random.Generator] = 1000,
+    key_dict=None,
     **kwargs,
 ):
     seed = check_seed(seed)
@@ -108,7 +109,12 @@ def get_risk_sensitive(
     elif render_backend == "psychopy" or render_backend == "psychopy-simulate":
         from ..psychopy_render import get_psychopy_info
 
-        psychopy_dict, _ = get_psychopy_info("risk-sensitive", seed=seed)
+        if key_dict is None:
+            key_dict = {"left": 0, "right": 1}
+
+        psychopy_dict, _ = get_psychopy_info(
+            "risk-sensitive", seed=seed, key_dict=key_dict
+        )
         info_dict.update(psychopy_dict)
 
     return environment_graph, reward_structure, info_dict

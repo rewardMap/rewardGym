@@ -6,7 +6,10 @@ from ..utils import check_seed
 
 
 def get_posner(
-    render_backend: Literal["pygame", "psychopy"] = None, seed=112, **kwargs
+    render_backend: Literal["pygame", "psychopy"] = None,
+    seed=112,
+    key_dict=None,
+    **kwargs,
 ):
     environment_graph = {
         0: ({0: ([1, 2], 0.5), "skip": True}),
@@ -80,7 +83,12 @@ def get_posner(
     elif render_backend == "psychopy" or render_backend == "psychopy-simulate":
         from ..psychopy_render import get_psychopy_info
 
-        psychopy_dict, _ = get_psychopy_info("risk-sensitive", seed=seed)
+        if key_dict is None:
+            key_dict = {"left": 0, "right": 1}
+
+        psychopy_dict, _ = get_psychopy_info(
+            "risk-sensitive", seed=seed, key_dict=key_dict
+        )
         info_dict.update(psychopy_dict)
 
     return environment_graph, reward_structure, info_dict
@@ -88,6 +96,7 @@ def get_posner(
 
 def generate_posner_configs(stimulus_set: str = "1"):
     seed = check_seed(222)
+    print("Generating stimuli")
     condition_dict = {
         "cue-left-valid": {0: {0: 1}, 1: {0: 3}},
         "cue-left-invalid": {0: {0: 1}, 1: {0: 4}},
@@ -95,35 +104,68 @@ def generate_posner_configs(stimulus_set: str = "1"):
         "cue-right-invalid": {0: {0: 2}, 2: {0: 3}},
     }
 
-    condition_template = (
-        ["cue-left-valid"] * 4
-        + ["cue-left-invalid"]
-        + ["cue-right-valid"] * 4
-        + ["cue-right-invalid"]
+    condition_template_80_20 = (
+        ["cue-left-valid"] * 8
+        + ["cue-left-invalid"] * 2
+        + ["cue-right-valid"] * 8
+        + ["cue-right-invalid"] * 2
     )
 
-    iti_template = [1.5, 2.125, 2.75, 3.375, 4.0] * 2
-    isi_template = [0.4, 0.6] * 5
+    condition_template_50_50 = (
+        ["cue-left-valid"] * 5
+        + ["cue-left-invalid"] * 5
+        + ["cue-right-valid"] * 5
+        + ["cue-right-invalid"] * 5
+    )
 
-    n_trials_per_condition = 10
+    condition_template_20_80 = (
+        ["cue-left-valid"] * 2
+        + ["cue-left-invalid"] * 8
+        + ["cue-right-valid"] * 2
+        + ["cue-right-invalid"] * 8
+    )
 
-    conditions = seed.choice(a=condition_template, size=10, replace=False).tolist()
-    isi = seed.choice(isi_template, size=10, replace=False).tolist()
-    iti = seed.choice(iti_template, size=10, replace=False).tolist()
+    iti_template = [1.5, 2.125, 2.75, 3.375, 4.0] * 4
+    isi_template = [0.4, 0.6] * 10
 
-    for _ in range(n_trials_per_condition - 1):
-        reject = True
-        while reject:
-            condition_template = seed.choice(
-                a=condition_template, size=10, replace=False
-            ).tolist()
+    n_blocks_condition = 3
 
-            if conditions[-1] != condition_template[0]:
-                reject = False
-                conditions.extend(condition_template)
-                isi.extend(seed.choice(isi_template, size=10, replace=False).tolist())
-                iti.extend(seed.choice(iti_template, size=10, replace=False).tolist())
+    condition_order = seed.choice(a=[0, 1, 2], size=3, replace=False)
+    condition_assign = {
+        0: condition_template_20_80,
+        1: condition_template_50_50,
+        2: condition_template_80_20,
+    }
 
+    conditions, isi, iti = [], [], []
+    for co in condition_order:
+        for cn in range(n_blocks_condition):
+            reject = True
+            while reject:
+                condition_template = seed.choice(
+                    a=condition_assign[co], size=20, replace=False
+                ).tolist()
+
+                if len(conditions) == 0:
+                    reject = False
+                    isi.extend(
+                        seed.choice(isi_template, size=20, replace=False).tolist()
+                    )
+                    iti.extend(
+                        seed.choice(iti_template, size=20, replace=False).tolist()
+                    )
+                    conditions.extend(condition_template)
+                elif conditions[-1] != condition_template[0]:
+                    reject = False
+                    conditions.extend(condition_template)
+                    isi.extend(
+                        seed.choice(isi_template, size=20, replace=False).tolist()
+                    )
+                    iti.extend(
+                        seed.choice(iti_template, size=20, replace=False).tolist()
+                    )
+
+    print("Stimuli generated")
     config = {
         "name": "posner",
         "stimulus_set": stimulus_set,

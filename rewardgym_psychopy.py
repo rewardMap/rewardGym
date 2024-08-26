@@ -1,6 +1,7 @@
 import json
 import os
 
+import numpy as np
 from psychopy import core, event, gui, visual
 
 from rewardgym import ENVIRONMENTS, get_configs, get_env
@@ -18,10 +19,12 @@ exp_dict = {
     "task": ENVIRONMENTS,
     "condition_set": 20,
     "stimulus_set": 22,
+    "mode": ["behavior", "fmri"],
 }
 
 dlg = gui.DlgFromDict(
-    exp_dict, order=["participant_id", "task", "run", "condition_set", "stimulus_set"]
+    exp_dict,
+    order=["participant_id", "task", "run", "condition_set", "stimulus_set", "mode"],
 )
 
 if dlg.OK is False:
@@ -40,11 +43,18 @@ win = visual.Window(
     units="pix",
     waitBlanking=False,
     useFBO=False,
+    checkTiming=True,
 )
 
+if exp_dict["mode"] == "fmri":
+    extension = "events.tsv"
+    key_dict = {"9": 0, "7": 1}
+elif exp_dict["mode"] == "behavior":
+    extension = "beh.tsv"
+    key_dict = {"left": 0, "right": 1, "space": 0}  # Just use default
 
-logger_name = "sub-{0}_task-{1}_run-{2}_beh.tsv".format(
-    exp_dict["participant_id"], exp_dict["task"], exp_dict["run"]
+logger_name = "sub-{0}_task-{1}_run-{2}_{3}.tsv".format(
+    exp_dict["participant_id"], exp_dict["task"], exp_dict["run"], extension
 )
 
 config_save = "sub-{0}_task-{1}_run-{2}_config.json".format(
@@ -62,7 +72,9 @@ Logger.create()
 
 task = exp_dict["task"]
 
-info_dict, stimulus_info = get_psychopy_info(task, seed=exp_dict["stimulus_set"])
+info_dict, stimulus_info = get_psychopy_info(
+    task, seed=exp_dict["stimulus_set"], key_dict=key_dict
+)
 
 exp_dict["stimulus_info"] = stimulus_info
 
@@ -87,27 +99,36 @@ if task == "mid":
     win_trials = 0
 
 env.add_info(info_dict)
-env.setup_render(window=win, logger=Logger)
 
 actions = []
 
 # Begin the experiment
 # TODO: Add instruction screen
 instruction = visual.TextStim(
-    win=win, text=f"Hi\nyou are playing:\n{Logger.task}", color=[1, 1, 1]
+    win=win,
+    text=f"Hi\nyou are playing:\n{Logger.task}\nPress 5 to continue.",
+    color=[1, 1, 1],
 )
 
 instruction.draw()
 win.flip()
-event.waitKeys()
+event.waitKeys(keyList=["5"])
 win.flip()
+Logger.global_clock.reset()
 
 # Recycling instruction
 instruction.setText("Please respond faster!")
+env.setup_render(window=win, logger=Logger)
 
 
 for episode in range(n_episodes):
     # Update timings
+    if task == "mid":
+        settings["reward"][episode] = (
+            settings["reward"][episode] - info_dict[1]["psychopy"][-1].duration
+        )
+        print("reward duration:", settings["reward"][episode])
+
     update_psychopy_trials(settings, env, episode)
 
     Logger.trial = episode
@@ -132,6 +153,7 @@ for episode in range(n_episodes):
 
     while not done:
         next_obs, reward, terminated, truncated, info = env.step(env.action)
+        actions.append(env.previous_action)
         Logger.current_location = env.agent_location
 
         done = terminated or truncated
@@ -153,18 +175,40 @@ for episode in range(n_episodes):
         )
 
     if task == "mid":
-        win_trials += 1 if 0 in [3, 4] else 0
+        win_trials += (
+            1 if settings["condition"][episode] in ["win-large", "win-small"] else 0
+        )
+        adjust = (
+            1 if settings["condition"][episode] in ["win-large", "win-small"] else 0
+        )
 
-        if (sum(actions) / (episode + 1)) < 0.4 and (win_trials % 3) == 0:
-            if (info_dict[1]["psychopy"][-1].duration - 0.025) > 0.05:
-                info_dict[1]["psychopy"][-1].duration -= 0.025
-        elif (win_trials % 3) == 0:
-            info_dict[1]["psychopy"][-1].duration += 0.25
+        if (
+            (np.nansum(actions) / (episode + 1)) < 0.4
+            and (win_trials % 3) == 0
+            and adjust
+        ):
+            for stim in [1, 2, 3, 4, 5]:
+                if (info_dict[stim]["psychopy"][-1].duration - 0.025) >= 0.15:
+                    info_dict[stim]["psychopy"][-1].duration -= 0.025
+            adjust = 0
+        elif (win_trials % 3) == 0 and adjust:
+            for stim in [1, 2, 3, 4, 5]:
+                if (info_dict[stim]["psychopy"][-1].duration + 0.025) <= 0.5:
+                    info_dict[stim]["psychopy"][-1].duration += 0.025
+            adjust = 0
 
     Logger.log_event(
         {"event_type": "trial-end", "total_reward": env.cumulative_reward},
         reward=env.reward,
     )
+
+
+final = visual.TextStim(win=win, text="You are done!\nThank you!", color=[1, 1, 1])
+
+final.draw()
+win.flip()
+event.waitKeys()
+win.flip()
 
 
 Logger.close()

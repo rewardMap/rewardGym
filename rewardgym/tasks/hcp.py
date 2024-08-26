@@ -5,7 +5,12 @@ from ..reward_classes import BaseReward
 from ..utils import check_seed
 
 
-def get_hcp(render_backend: Literal["pygame", "psychopy"] = None, seed=100, **kwargs):
+def get_hcp(
+    render_backend: Literal["pygame", "psychopy"] = None,
+    seed=100,
+    key_dict=None,
+    **kwargs,
+):
     environment_graph = {
         0: [1, 2],  # go - win
         1: [],  # no go win
@@ -77,7 +82,10 @@ def get_hcp(render_backend: Literal["pygame", "psychopy"] = None, seed=100, **kw
     elif render_backend == "psychopy" or render_backend == "psychopy-simulate":
         from ..psychopy_render import get_psychopy_info
 
-        psychopy_dict, _ = get_psychopy_info("hcp", seed=seed)
+        if key_dict is None:
+            key_dict = {"left": 0, "right": 1}
+
+        psychopy_dict, _ = get_psychopy_info("hcp", seed=seed, key_dict=key_dict)
         info_dict.update(psychopy_dict)
 
     return environment_graph, reward_structure, info_dict

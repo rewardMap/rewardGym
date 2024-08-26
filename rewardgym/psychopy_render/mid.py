@@ -1,12 +1,12 @@
 from .default_images import fixation_cross, mid_stimuli
-from .stimuli import ActionStimulus, BaseStimulus, FeedBackStimulus, ImageStimulus
+from .stimuli import ActionStimulus, FeedBackStimulus, ImageStimulus
 
 
-def get_info_dict(seed=None):
-    reward_feedback = FeedBackStimulus(1.0, text="{0}", target="reward", name="reward")
-    total_reward_feedback = FeedBackStimulus(
-        1.0, text="Total: {0}", target="total_reward", name="reward-total"
-    )
+def get_info_dict(seed=None, key_dict={"space": 0}, **kwargs):
+    reward_feedback = FeedBackStimulus(2.0, text="{0}", target="reward", name="reward")
+    # total_reward_feedback = FeedBackStimulus(
+    #    0.75, text="Total: {0}", target="total_reward", name="reward-total"
+    # )
 
     fix = ImageStimulus(
         image_paths=[fixation_cross()], duration=1.5, name="fixation", autodraw=False
@@ -16,17 +16,21 @@ def get_info_dict(seed=None):
         image_paths=[fixation_cross()], duration=1.5, name="isi", autodraw=False
     )
 
-    delay = ImageStimulus(
-        image_paths=[fixation_cross()], duration=0.5, name="delay", autodraw=False
+    fix_iti = ImageStimulus(
+        image_paths=[fixation_cross()], duration=0.25, name="iti", autodraw=False
     )
 
-    action_stim = ActionStimulus(duration=0.35, key_dict={"space": 0}, timeout_action=1)
+    delay = ImageStimulus(
+        image_paths=[fixation_cross()], duration=0.25, name="delay", autodraw=False
+    )
+
+    action_stim = ActionStimulus(duration=0.35, timeout_action=1, key_dict=key_dict)
 
     def first_step(img, img2):
         return [
             fix,
             ImageStimulus(
-                duration=0.5,
+                duration=2.0,
                 image_paths=[img],
                 positions=[(0, 0)],
                 name="cue",
@@ -44,8 +48,7 @@ def get_info_dict(seed=None):
     final_step = [
         delay,
         reward_feedback,
-        total_reward_feedback,
-        BaseStimulus(duration=1.5, name="iti"),
+        fix_iti,
     ]
 
     info_dict = {

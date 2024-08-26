@@ -1,6 +1,3 @@
-import os
-
-from . import STIMPATH
 from .default_images import (
     fixation_cross,
     posner_cue_down,
@@ -10,7 +7,7 @@ from .default_images import (
 from .stimuli import ActionStimulus, FeedBackStimulus, ImageStimulus
 
 
-def get_info_dict(seed=None):
+def get_info_dict(seed=None, key_dict={"left": 0, "right": 1}, **kwargs):
     reward_feedback = FeedBackStimulus(
         1.0,
         text="{0}",
@@ -22,13 +19,6 @@ def get_info_dict(seed=None):
     # total_reward_feedback = FeedBackStimulus(
     #    1.0, text="You have gained: {0}", target="total_reward", name="reward-total"
     # )
-
-    fix = ImageStimulus(
-        image_paths=[os.path.join(STIMPATH, "posner/fix.png")],
-        positions=[(0, 0)],
-        duration=0.4,
-        name="fixation",
-    )
 
     fix = ImageStimulus(
         image_paths=[fixation_cross()], duration=0.4, name="fixation", autodraw=False
@@ -60,7 +50,7 @@ def get_info_dict(seed=None):
     def second_step(img2, image_shift2, to=1):
         return [
             ImageStimulus(
-                duration=0.1,
+                duration=0.05,
                 image_paths=[
                     fixation_cross(),
                     img2,
@@ -74,9 +64,7 @@ def get_info_dict(seed=None):
                 duration=0.001,
                 name="fixation",
             ),
-            ActionStimulus(
-                duration=1.0, key_dict={"left": 0, "right": 1}, timeout_action=to
-            ),
+            ActionStimulus(duration=1.0, key_dict=key_dict, timeout_action=to),
         ]
 
     final_step = [

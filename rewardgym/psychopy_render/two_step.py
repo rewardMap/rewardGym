@@ -105,7 +105,7 @@ class TwoStepDisplay(BaseStimulus):
         return None
 
 
-def get_info_dict(seed=None, **kwargs):
+def get_info_dict(seed=None, key_dict={"left": 0, "right": 1}, **kwargs):
     seed = check_seed(seed)
     colors = [tuple([int(i * 255) for i in c]) for c in plt.cm.tab10.colors[:5]]
     set_colors = seed.choice(np.arange(len(colors[:-1])), 3, replace=False)
@@ -163,7 +163,7 @@ def get_info_dict(seed=None, **kwargs):
                     ],
                     positions=[(-image_shift, 0), (image_shift, 0)],
                 ),
-                ActionStimulus(duration=2.0),
+                ActionStimulus(duration=2.0, key_dict=key_dict),
             ]
         },
         1: {
@@ -187,7 +187,7 @@ def get_info_dict(seed=None, **kwargs):
                     ],
                     positions=[(-image_shift, 0), (image_shift, 0)],
                 ),
-                ActionStimulus(duration=2.0),
+                ActionStimulus(duration=2.0, key_dict=key_dict),
             ]
         },
         2: {
@@ -211,7 +211,7 @@ def get_info_dict(seed=None, **kwargs):
                     ],
                     positions=[(-image_shift, 0), (image_shift, 0)],
                 ),
-                ActionStimulus(duration=2.0),
+                ActionStimulus(duration=2.0, key_dict=key_dict),
             ]
         },
         3: {
