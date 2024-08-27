@@ -46,7 +46,7 @@ class RenderEnv(BaseEnv):
 
         self.setup = False
 
-    def setup_render(self, window_size, window, clock):
+    def setup_render(self, window_size, window=None, clock=None):
         if window_size is None:
             self.window_size = 256
         else:

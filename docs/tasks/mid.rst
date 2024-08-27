@@ -17,7 +17,7 @@ Or in graph form:
 
     from rewardgym import get_env
     from rewardgym.environments.visualizations import plot_env_graph
-    env, conditions = get_env("mid")
+    env = get_env("mid")
     plot_env_graph(env)
 
 Task description
