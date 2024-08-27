@@ -6,6 +6,7 @@ from psychopy import core, event, gui, visual
 
 from rewardgym import ENVIRONMENTS, get_configs, get_env
 from rewardgym.psychopy_render import ExperimentLogger, get_psychopy_info
+from rewardgym.psychopy_utils import instruction_texts
 from rewardgym.utils import update_psychopy_trials
 
 outdir = "data/"
@@ -34,7 +35,7 @@ globalClock = core.Clock()
 
 win = visual.Window(
     size=[1680, 1050],
-    fullscr=False,
+    fullscr=True,
     screen=0,
     winType="pyglet",
     allowGUI=True,
@@ -47,10 +48,10 @@ win = visual.Window(
 )
 
 if exp_dict["mode"] == "fmri":
-    extension = "events.tsv"
+    extension = "events"
     key_dict = {"9": 0, "7": 1}
 elif exp_dict["mode"] == "behavior":
-    extension = "beh.tsv"
+    extension = "beh"
     key_dict = {"left": 0, "right": 1, "space": 0}  # Just use default
 
 logger_name = "sub-{0}_task-{1}_run-{2}_{3}.tsv".format(
@@ -106,7 +107,7 @@ actions = []
 # TODO: Add instruction screen
 instruction = visual.TextStim(
     win=win,
-    text=f"Hi\nyou are playing:\n{Logger.task}\nPress 5 to continue.",
+    text=f"Hi\nyou are playing:\n{Logger.task}\n{instruction_texts[Logger.task]}Press 5 to continue.",
     color=[1, 1, 1],
 )
 
@@ -127,21 +128,29 @@ for episode in range(n_episodes):
         settings["reward"][episode] = (
             settings["reward"][episode] - info_dict[1]["psychopy"][-1].duration
         )
-        print("reward duration:", settings["reward"][episode])
 
     update_psychopy_trials(settings, env, episode)
 
     Logger.trial = episode
     Logger.set_trial_time()
-    Logger.trial_type = settings["condition"][episode]
-    Logger.start_position = 0
+
+    misc = "n/a"
+    if task == "mid":
+        misc = info_dict[1]["psychopy"][-1].duration
+    elif task == "two-step":
+        misc = [round(ii.p, 5) for ii in env.reward_locations.values()]
+
+    Logger.update_trial_info(
+        trial_type=settings["condition"][episode],
+        trial=episode,
+        start_position=0,
+        misc=misc,
+    )
 
     obs, info = env.reset(
         0, condition=settings["condition_dict"][settings["condition"][episode]]
     )
 
-    reward = None
-    remainder = None
     done = False
 
     if env.action is None:
@@ -152,7 +161,13 @@ for episode in range(n_episodes):
         win.flip()
 
     while not done:
-        next_obs, reward, terminated, truncated, info = env.step(env.action)
+        if task == "hcp":
+            settings["wait"][episode] = env.remainder
+            update_psychopy_trials(settings, env, episode)
+
+        next_obs, reward, terminated, truncated, info = env.step(
+            env.action, step_reward=env == "two-step"
+        )
         actions.append(env.previous_action)
         Logger.current_location = env.agent_location
 
@@ -165,7 +180,7 @@ for episode in range(n_episodes):
             win.flip()
             done = True
 
-    if env.remainder > 0:
+    if env.remainder > 0 and settings["add_remainder"]:
         rm_onset = Logger.get_time()
         Logger.wait(win, env.remainder, rm_onset)
 
@@ -175,27 +190,27 @@ for episode in range(n_episodes):
         )
 
     if task == "mid":
-        win_trials += (
-            1 if settings["condition"][episode] in ["win-large", "win-small"] else 0
-        )
-        adjust = (
-            1 if settings["condition"][episode] in ["win-large", "win-small"] else 0
-        )
+        if settings["condition"][episode] in ["win-large", "win-small"]:
+            win_trials += 1
 
-        if (
-            (np.nansum(actions) / (episode + 1)) < 0.4
-            and (win_trials % 3) == 0
-            and adjust
-        ):
+            if (win_trials % 3) == 0:
+                adjustment = (
+                    -0.025 if (np.nansum(actions) / (episode + 1)) < 0.4 else 0.025
+                )
+            else:
+                adjustment = 0
+
             for stim in [1, 2, 3, 4, 5]:
-                if (info_dict[stim]["psychopy"][-1].duration - 0.025) >= 0.15:
-                    info_dict[stim]["psychopy"][-1].duration -= 0.025
-            adjust = 0
-        elif (win_trials % 3) == 0 and adjust:
-            for stim in [1, 2, 3, 4, 5]:
-                if (info_dict[stim]["psychopy"][-1].duration + 0.025) <= 0.5:
-                    info_dict[stim]["psychopy"][-1].duration += 0.025
-            adjust = 0
+                # Duration is at minimum 150 ms and at max 500 ms
+                new_duration = np.max(
+                    [
+                        np.min(
+                            [info_dict[stim]["psychopy"][-1].duration + adjustment, 0.5]
+                        ),
+                        0.15,
+                    ]
+                )
+                info_dict[stim]["psychopy"][-1].duration = new_duration
 
     Logger.log_event(
         {"event_type": "trial-end", "total_reward": env.cumulative_reward},
