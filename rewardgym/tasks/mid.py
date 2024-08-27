@@ -145,7 +145,7 @@ def generate_mid_configs(stimulus_set: 111):
         "condition_dict": condition_dict,
         "ntrials": len(conditions),
         "update": ["isi", "reward"],
-        "add_remainder": False,
+        "add_remainder": True,
     }
 
     return config
