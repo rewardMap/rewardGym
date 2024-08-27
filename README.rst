@@ -25,7 +25,7 @@ been greatly inspired by `neuro-nav <https://github.com/awjuliani/neuro-nav>`_ [
 Installation
 -------------------------------------------------------------------------------
 
-I recommend creating a new python enviroment (using e.g. ``venv`` or ``conda``).
+I recommend creating a new python environment (using e.g. ``venv`` or ``conda``).
 
 Then install the package and all necessary dependencies using::
 
