@@ -175,6 +175,7 @@ def generate_posner_configs(stimulus_set: str = "1"):
         "condition_dict": condition_dict,
         "ntrials": len(conditions),
         "update": ["isi", "iti"],
+        "add_remainder": True,
     }
 
     return config

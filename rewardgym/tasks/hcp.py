@@ -115,10 +115,12 @@ def generate_hcp_configs(stimulus_set: str = "1"):
         "name": "hcp",
         "stimulus_set": stimulus_set,
         "isi": [],
+        "wait": [0.0] * len(conditions),
         "condition": conditions,
         "condition_dict": condition_dict,
         "ntrials": len(conditions),
-        "update": None,
+        "update": ["wait"],
+        "add_remainder": False,
     }
 
     return config

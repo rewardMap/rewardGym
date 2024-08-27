@@ -356,6 +356,7 @@ def generate_risk_sensitive_configs(stimulus_set: str = "1"):
         "condition_dict": condition_dict,
         "ntrials": len(conditions),  # 183
         "update": ["iti"],
+        "add_remainder": True,
     }
 
     return config

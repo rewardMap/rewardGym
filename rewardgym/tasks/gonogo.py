@@ -135,10 +135,10 @@ def generate_gonogo_configs(stimulus_set: str = "1"):
         "isi": isi,
         "iti": iti,
         "condition": conditions,
-        "condition_target": "location",
         "condition_dict": condition_dict,
         "ntrials": len(conditions),
         "update": ["isi", "iti"],
+        "add_remainder": True,
     }
 
     return config

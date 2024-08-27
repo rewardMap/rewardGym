@@ -90,6 +90,7 @@ def generate_two_step_configs(stimulus_set: str = "1"):
         "condition_dict": condition_dict,
         "ntrials": 160,
         "update": None,
+        "add_remainder": True,
     }
 
     return configs

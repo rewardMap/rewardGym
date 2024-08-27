@@ -149,7 +149,15 @@ def get_info_dict(seed=111, key_dict={"left": 0, "right": 1}, **kwargs):
         1.5, with_action=True, name="selected", image_map=image_map
     )
 
-    final_step = [sel_disp, reward_feedback, total_reward_feedback, fix_iti]
+    final_step = [
+        sel_disp,
+        ImageStimulus(
+            image_paths=[fixation_cross()], duration=0.5, name="delay", autodraw=False
+        ),
+        reward_feedback,
+        total_reward_feedback,
+        fix_iti,
+    ]
 
     info_dict = {
         0: {

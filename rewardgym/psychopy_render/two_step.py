@@ -121,7 +121,7 @@ def get_info_dict(seed=None, key_dict={"left": 0, "right": 1}, **kwargs):
             for i in range(2)
         ]
         stim_set[n] = [
-            make_card_stimulus(stim_set[n][k], width=300, height=300) for k in range(2)
+            make_card_stimulus(stim_set[n][k], width=250, height=250) for k in range(2)
         ]
 
     reward_feedback = FeedBackStimulus(
@@ -137,7 +137,7 @@ def get_info_dict(seed=None, key_dict={"left": 0, "right": 1}, **kwargs):
         autodraw=True,
         name="initial-fixation",
     )
-    fix_iti = BaseStimulus(duration=1.5, name="iti")
+    fix_iti = BaseStimulus(duration=0.5, name="iti")
 
     fix2 = ImageStimulus(
         image_paths=[fixation_cross()],
@@ -146,7 +146,7 @@ def get_info_dict(seed=None, key_dict={"left": 0, "right": 1}, **kwargs):
         name="transition",
     )
 
-    image_shift = 300
+    image_shift = 325
 
     final_step = [reward_feedback, total_reward_feedback, fix_iti]
 
@@ -181,11 +181,8 @@ def get_info_dict(seed=None, key_dict={"left": 0, "right": 1}, **kwargs):
                 ImageStimulus(
                     duration=0.1,
                     name="environment-decision",
-                    image_paths=[
-                        stim_set[1][0],
-                        stim_set[1][1],
-                    ],
-                    positions=[(-image_shift, 0), (image_shift, 0)],
+                    image_paths=[stim_set[1][0], stim_set[1][1], stim_set[0][0]],
+                    positions=[(-image_shift, 0), (image_shift, 0), (0, image_shift)],
                 ),
                 ActionStimulus(duration=2.0, key_dict=key_dict),
             ]
@@ -205,11 +202,8 @@ def get_info_dict(seed=None, key_dict={"left": 0, "right": 1}, **kwargs):
                 ImageStimulus(
                     duration=0.1,
                     name="environment-decision",
-                    image_paths=[
-                        stim_set[2][0],
-                        stim_set[2][1],
-                    ],
-                    positions=[(-image_shift, 0), (image_shift, 0)],
+                    image_paths=[stim_set[2][0], stim_set[2][1], stim_set[0][1]],
+                    positions=[(-image_shift, 0), (image_shift, 0), (0, image_shift)],
                 ),
                 ActionStimulus(duration=2.0, key_dict=key_dict),
             ]
