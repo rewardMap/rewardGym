@@ -89,28 +89,28 @@ class ShowCard(BaseStimulus):
 
 
 def get_info_dict(seed=None, key_dict={"left": 0, "right": 1}, **kwargs):
-    base_stim = ImageStimulus(
-        image_paths=[fixation_cross()], duration=0.5, name="fixation", autodraw=True
+    reward_feedback = FeedBackStimulus(1.0, text="{0}", target="reward", name="reward")
+
+    base_stim_iti = ImageStimulus(
+        image_paths=[fixation_cross()],
+        duration=1.5,
+        autodraw=True,
+        name="iti",
     )
 
-    reward_feedback = FeedBackStimulus(1.0, text="{0}", target="reward", name="reward")
-    total_reward_feedback = FeedBackStimulus(
-        0.75,
-        text="Total: {0}",
-        target="total_reward",
-        name="reward-total",
-        font_height=30,
+    wait_after_response = ImageStimulus(
+        image_paths=[fixation_cross()],
+        duration=1.5,
+        autodraw=True,
+        name="wait",
     )
-    base_stim_iti = BaseStimulus(1.0, name="iti")
 
     info_dict = {
         0: {
             "psychopy": [
-                base_stim,
-                ShowCard("{0}", {0: [""]}, name="card-onset", duration=0.5),
                 ShowCard(
                     "{0}",
-                    {0: ["< or >"]},
+                    {0: ["?"]},
                     name="response-cue",
                     duration=0.00,
                 ),
@@ -119,39 +119,25 @@ def get_info_dict(seed=None, key_dict={"left": 0, "right": 1}, **kwargs):
         },
         1: {
             "psychopy": [
-                ShowCard(
-                    "{0}",
-                    condition_text={0: ["< 5"], 1: ["> 5"]},
-                    name="select",
-                    target="action",
-                    duration=0.75,
-                ),
+                wait_after_response,
                 ShowCard(
                     "{0}",
                     condition_text={1: [1, 2, 3, 4], -0.5: [6, 7, 8, 9], 0: [5]},
-                    name="lose",
+                    name="outcome",
                 ),
                 reward_feedback,
-                total_reward_feedback,
                 base_stim_iti,
             ]
         },
         2: {
             "psychopy": [
-                ShowCard(
-                    "{0}",
-                    condition_text={0: ["< 5"], 1: ["> 5"]},
-                    name="select",
-                    target="action",
-                    duration=0.75,
-                ),
+                wait_after_response,
                 ShowCard(
                     "{0}",
                     condition_text={-0.5: [1, 2, 3, 4], 1: [6, 7, 8, 9], 0: [5]},
-                    name="neutral",
+                    name="outcome",
                 ),
                 reward_feedback,
-                total_reward_feedback,
                 base_stim_iti,
             ]
         },
