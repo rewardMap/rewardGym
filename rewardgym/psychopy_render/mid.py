@@ -3,7 +3,9 @@ from .stimuli import ActionStimulus, FeedBackStimulus, ImageStimulus
 
 
 def get_info_dict(seed=None, key_dict={"space": 0}, **kwargs):
-    reward_feedback = FeedBackStimulus(2.0, text="{0}", target="reward", name="reward")
+    reward_feedback = FeedBackStimulus(
+        2.0, text="{0}", target="reward", name="reward", position=(0, 150)
+    )
 
     fix_isi = ImageStimulus(
         image_paths=[fixation_cross()], duration=1.5, name="isi", autodraw=False
