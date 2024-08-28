@@ -81,24 +81,17 @@ def zero_cross(height=100, width=100, color=(150, 150, 150), cross_color=zero_co
 
 
 def gonogo_probe(height=200, width=200, color=(150, 150, 150)):
-    probe_color = tuple(
-        [i + 70 for i in colors[0]]
-    )  # tuple([int(i * 255) for i in colors[1]])
-
     # left bottom right top
     pattern = Image.new("RGBA", (200, 200), (0, 0, 0, 0))
     draw = ImageDraw.Draw(pattern)
 
-    draw_shape(draw, "diamond", [0, 0, 200, 200], (0, 0, 0), 0)
-    draw_shape(draw, "diamond", [10, 10, 190, 190], color, 0)
+    draw_shape(draw, "diamond", [0, 0, 220, 220], (250, 250, 250), 0)
 
-    draw_shape(draw, "circle", [75, 75, 125, 125], (0, 0, 0), 0)
-    draw_shape(draw, "neg-circle", [80, 80, 120, 120], (120, 0, 0), 0)
+    draw_shape(draw, "diamond", [10, 10, 210, 210], (0, 0, 0), 0)
+    draw_shape(draw, "diamond", [20, 20, 200, 200], color, 0)
 
-    draw.polygon([(10, 100), (50, 140), (50, 60)], fill=probe_color)
-    draw.polygon([(190, 100), (150, 60), (150, 140)], fill=probe_color)
-    draw.polygon([(100, 190), (60, 150), (140, 150)], fill=probe_color)
-    draw.polygon([(100, 10), (140, 50), (60, 50)], fill=probe_color)
+    draw_shape(draw, "circle", [85, 85, 135, 135], (0, 0, 0), 0)
+    draw_shape(draw, "neg-circle", [90, 90, 130, 130], (120, 0, 0), 0)
 
     probe = np.array(pattern) / 255
 
@@ -214,35 +207,33 @@ def mid_stimuli(amount="+5", shape="circle", probe=False):
 
 
 def posner_cue_up(color=(150, 150, 150)):
-    pattern = Image.new("RGBA", (200, 200), (0, 0, 0, 0))
+    pattern = Image.new("RGBA", (200, 220), (0, 0, 0, 0))
     draw = ImageDraw.Draw(pattern)
 
-    draw_shape(draw, "diamond", [0, 0, 200, 200], (0, 0, 0), 0)
-    draw_shape(draw, "diamond", [10, 10, 190, 190], color, 0)
+    draw_shape(draw, "diamond", [0, 10, 200, 200], (0, 0, 0), 0)
+    draw_shape(draw, "diamond", [10, 20, 190, 190], color, 0)
 
-    draw_shape(draw, "square", [50, 50, 150, 140], (0, 0, 0), 0)
-    draw_shape(draw, "square", [50, 60, 150, 140], color, 0)
-    draw_shape(draw, "neg-hbar_0_25", [0, 0, 200, 200], (0, 0, 0), 0)
+    draw_shape(draw, "circle", [75, 85, 125, 135], (0, 0, 0), 0)
+    draw_shape(draw, "neg-circle", [80, 90, 120, 130], (120, 0, 0), 0)
 
-    draw_shape(draw, "circle", [75, 75, 125, 125], (0, 0, 0), 0)
-    draw_shape(draw, "neg-circle", [80, 80, 120, 120], (120, 0, 0), 0)
+    draw_shape(draw, "circle", [75, 170, 125, 220], (0, 0, 0), 0)
+    draw_shape(draw, "circle", [80, 175, 120, 215], color, 0)
 
     return np.array(pattern)[::-1, :] / 255
 
 
 def posner_cue_down(color=(150, 150, 150)):
-    pattern = Image.new("RGBA", (200, 200), (0, 0, 0, 0))
+    pattern = Image.new("RGBA", (200, 220), (0, 0, 0, 0))
     draw = ImageDraw.Draw(pattern)
 
-    draw_shape(draw, "diamond", [0, 0, 200, 200], (0, 0, 0), 0)
-    draw_shape(draw, "diamond", [10, 10, 190, 190], color, 0)
+    draw_shape(draw, "diamond", [0, 10, 200, 200], (0, 0, 0), 0)
+    draw_shape(draw, "diamond", [10, 20, 190, 190], color, 0)
 
-    draw_shape(draw, "square", [50, 60, 150, 150], (0, 0, 0), 0)
-    draw_shape(draw, "square", [50, 60, 150, 140], color, 0)
-    draw_shape(draw, "neg-hbar_75_100", [0, 0, 200, 200], (0, 0, 0), 0)
+    draw_shape(draw, "circle", [75, 85, 125, 135], (0, 0, 0), 0)
+    draw_shape(draw, "neg-circle", [80, 90, 120, 130], (120, 0, 0), 0)
 
-    draw_shape(draw, "circle", [75, 75, 125, 125], (0, 0, 0), 0)
-    draw_shape(draw, "neg-circle", [80, 80, 120, 120], (120, 0, 0), 0)
+    draw_shape(draw, "circle", [75, 0, 125, 50], (0, 0, 0), 0)
+    draw_shape(draw, "circle", [80, 5, 120, 45], color, 0)
 
     return np.array(pattern)[::-1, :] / 255
 
