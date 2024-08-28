@@ -9,6 +9,17 @@ from rewardgym.psychopy_render import ExperimentLogger, get_psychopy_info
 from rewardgym.psychopy_utils import instruction_texts
 from rewardgym.utils import update_psychopy_trials
 
+
+def draw_response_reminder(text_update, win):
+    text_update.setAutoDraw(True)
+    win.flip()
+    core.wait(1.0)
+    text_update.setAutoDraw(False)
+    win.flip()
+
+    return True
+
+
 outdir = "data/"
 
 if not os.path.isdir(outdir):
@@ -123,23 +134,21 @@ env.setup_render(window=win, logger=Logger)
 
 
 for episode in range(n_episodes):
+    done = False
     # Update timings
     if task == "mid":
         settings["reward"][episode] = (
             settings["reward"][episode] - info_dict[1]["psychopy"][-1].duration
         )
-
-    update_psychopy_trials(settings, env, episode)
-
-    Logger.trial = episode
-    Logger.set_trial_time()
-
-    misc = "n/a"
-    if task == "mid":
         misc = info_dict[1]["psychopy"][-1].duration
     elif task == "two-step":
         misc = [round(ii.p, 5) for ii in env.reward_locations.values()]
+    else:
+        misc = "n/a"
 
+    update_psychopy_trials(settings, env, episode)
+
+    Logger.set_trial_time()
     Logger.update_trial_info(
         trial_type=settings["condition"][episode],
         trial=episode,
@@ -151,14 +160,8 @@ for episode in range(n_episodes):
         0, condition=settings["condition_dict"][settings["condition"][episode]]
     )
 
-    done = False
-
     if env.action is None:
-        done = True
-        instruction.draw()
-        win.flip()
-        core.wait(1.0)
-        win.flip()
+        done = draw_response_reminder(win, instruction)
 
     while not done:
         if task == "hcp":
@@ -174,11 +177,7 @@ for episode in range(n_episodes):
         done = terminated or truncated
 
         if env.action is None and not done:
-            instruction.draw()
-            win.flip()
-            core.wait(1.0)
-            win.flip()
-            done = True
+            done = draw_response_reminder(win, instruction)
 
     if env.remainder > 0 and settings["add_remainder"]:
         rm_onset = Logger.get_time()
@@ -200,17 +199,11 @@ for episode in range(n_episodes):
             else:
                 adjustment = 0
 
-            for stim in [1, 2, 3, 4, 5]:
-                # Duration is at minimum 150 ms and at max 500 ms
-                new_duration = np.max(
-                    [
-                        np.min(
-                            [info_dict[stim]["psychopy"][-1].duration + adjustment, 0.5]
-                        ),
-                        0.15,
-                    ]
-                )
-                info_dict[stim]["psychopy"][-1].duration = new_duration
+            # Duration is at minimum 150 ms and at max 500 ms, need to only update first occurence
+            # of first stimulus, as it's reused
+            new_duration = info_dict[1]["psychopy"][-1].duration + adjustment
+            new_duration = np.max([np.min([new_duration, 0.5]), 0.15])
+            info_dict[1]["psychopy"][-1].duration = new_duration
 
     Logger.log_event(
         {"event_type": "trial-end", "total_reward": env.cumulative_reward},
