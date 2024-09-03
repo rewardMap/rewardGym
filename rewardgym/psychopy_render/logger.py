@@ -20,7 +20,7 @@ class ExperimentLogger:
     def __init__(
         self,
         file_name: str,
-        global_clock: Clock,
+        global_clock: Clock(),
         participant_id: str,
         task: str = "hcp",
         run: int = 1,
@@ -29,7 +29,7 @@ class ExperimentLogger:
         na: str = "n/a",
         kill_switch: str = "q",
         mr_trigger: str = "5",
-        mr_clock: Clock = Clock,
+        mr_clock: Clock = Clock(),
     ):
         """
         Logger class to help with logging during a potential fMRI experiment,
@@ -364,12 +364,12 @@ class MinimalLogger(ExperimentLogger):
 
     def __init__(
         self,
-        global_clock: Clock,
+        global_clock: Clock(),
         seq_tr: float = 0.752,
         na: str = "n/a",
         kill_switch: str = "q",
         mr_trigger: str = "5",
-        mr_clock: Clock = Clock,
+        mr_clock: Clock = Clock(),
     ):
         """
         Logger class to help with logging during a potential fMRI experiment,
