@@ -124,12 +124,7 @@ def get_info_dict(seed=None, key_dict={"left": 0, "right": 1}, **kwargs):
             make_card_stimulus(stim_set[n][k], width=250, height=250) for k in range(2)
         ]
 
-    reward_feedback = FeedBackStimulus(
-        1.0, text="You gain: {0}", target="reward", name="reward"
-    )
-    total_reward_feedback = FeedBackStimulus(
-        1.0, text="You have gained: {0}", target="total_reward", name="reward-total"
-    )
+    reward_feedback = FeedBackStimulus(1.0, text="{0}", target="reward", name="reward")
 
     fix = ImageStimulus(
         image_paths=[fixation_cross()],
@@ -148,7 +143,7 @@ def get_info_dict(seed=None, key_dict={"left": 0, "right": 1}, **kwargs):
 
     image_shift = 325
 
-    final_step = [reward_feedback, total_reward_feedback, fix_iti]
+    final_step = [reward_feedback, fix_iti]
 
     info_dict = {
         0: {

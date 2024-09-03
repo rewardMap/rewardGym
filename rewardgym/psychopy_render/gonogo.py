@@ -21,12 +21,7 @@ def get_info_dict(seed=None, key_dict={"space": 0}, **kwargs):
         image_map[n] = make_card_stimulus(stim_properties[n], height=350, width=350)
         stimuli[n] = stim_properties[n]
 
-    reward_feedback = FeedBackStimulus(
-        1.0, text="You gain: {0}", target="reward", name="reward"
-    )
-    total_reward_feedback = FeedBackStimulus(
-        1.0, text="You have gained: {0}", target="total_reward", name="reward-total"
-    )
+    reward_feedback = FeedBackStimulus(1.0, text="{0}", target="reward", name="reward")
 
     base_stim = ImageStimulus(
         image_paths=[fixation_cross()], duration=0.3, name="fixation", autodraw=True
@@ -58,7 +53,6 @@ def get_info_dict(seed=None, key_dict={"space": 0}, **kwargs):
     final_step = [
         BaseStimulus(duration=1.0, name="feedback-delay"),
         reward_feedback,
-        total_reward_feedback,
         BaseStimulus(name="iti", duration=1.0),
     ]
 
