@@ -463,7 +463,7 @@ class FeedBackStimulus(BaseStimulus):
         self,
         duration: float,
         text: str,
-        position: Tuple[int, int] = (0, 250),
+        position: Tuple[int, int] = (0, 125),
         name: str = None,
         target: Literal["reward", "total_reward"] = "reward",
         text_color: str = "white",
