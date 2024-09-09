@@ -81,7 +81,7 @@ class BaseStimulus:
 
         stim_onset = logger.get_time()
 
-        logger.global_clock.time += self.duration
+        logger.wait(win=None, time=self.duration, start=stim_onset)
 
         logger.log_event(
             {"event_type": self.name, "expected_duration": self.duration},
@@ -641,7 +641,7 @@ class FeedBackStimulus(BaseStimulus):
 
         stim_onset = logger.get_time()
 
-        logger.global_clock.time += self.duration
+        logger.wait(win=None, time=self.duration, start=stim_onset)
 
         logger.log_event(
             {

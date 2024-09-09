@@ -450,3 +450,20 @@ class SimulationLogger(ExperimentLogger):
 
     def close(self):
         return self.df
+
+    def wait(self, win, time: float, start: float = None):
+        """
+        Wait for a given time.
+
+
+        Parameters
+        ----------
+        time : float
+            Time to wait, in seconds.
+        start : float, optional
+            Specify a different time, than the current one of the Logger, by default None
+        """
+        if start is None:
+            start = self.get_time()
+
+        self.global_clock.time += time
