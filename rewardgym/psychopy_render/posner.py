@@ -1,9 +1,4 @@
-from .default_images import (
-    fixation_cross,
-    posner_cue_down,
-    posner_cue_up,
-    posner_target,
-)
+from .default_images import fixation_cross, posner_cue, posner_target
 from .stimuli import ActionStimulus, FeedBackStimulus, ImageStimulus
 
 
@@ -77,8 +72,8 @@ def get_info_dict(seed=None, key_dict={"left": 0, "right": 1}, **kwargs):
 
     info_dict = {
         0: {"psychopy": []},
-        1: {"psychopy": first_step(posner_cue_down())},
-        2: {"psychopy": first_step(posner_cue_up())},
+        1: {"psychopy": first_step(posner_cue(up=False))},
+        2: {"psychopy": first_step(posner_cue(up=True))},
         3: {"psychopy": second_step(posner_target(), image_shift2=-500, to=None)},
         4: {"psychopy": second_step(posner_target(), image_shift2=500, to=None)},
         5: {"psychopy": final_step},

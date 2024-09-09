@@ -21,77 +21,330 @@ colors = [tuple([int(i * 255) for i in c]) for c in plt.cm.tab10.colors[:5]] + [
 ]
 
 
-def fixation_cross(height=100, width=100, color=(150, 150, 150)):
-    pattern = Image.new("RGBA", (200, 200), (0, 0, 0, 0))
+def fixation_cross(
+    height=150,
+    width=150,
+    color=(150, 150, 150),
+    border_width=10,
+    circle_radius_outer=20,
+    circle_radius_inner=15,
+):
+    pattern = Image.new("RGBA", (height + 1, width + 1), (0, 0, 0, 0))
     draw = ImageDraw.Draw(pattern)
 
-    draw_shape(draw, "diamond", [0, 0, 200, 200], (0, 0, 0), 0)
-    draw_shape(draw, "diamond", [10, 10, 190, 190], color, 0)
-    draw_shape(draw, "circle", [75, 75, 125, 125], (0, 0, 0), 0)
-    draw_shape(draw, "neg-circle", [80, 80, 120, 120], (120, 0, 0), 0)
+    center_x = width // 2
+    center_y = height // 2
+
+    draw_shape(draw, "diamond", [0, 0, height, width], (0, 0, 0), 0)
+    draw_shape(
+        draw,
+        "diamond",
+        [border_width, border_width, width - border_width, height - border_width],
+        color,
+        0,
+    )
+
+    draw_shape(
+        draw,
+        "circle",
+        [
+            center_x - circle_radius_outer,
+            center_y - circle_radius_outer,
+            center_x + circle_radius_outer,
+            center_y + circle_radius_outer,
+        ],
+        (0, 0, 0),
+        0,
+    )
+    draw_shape(
+        draw,
+        "neg-circle",
+        [
+            center_x - circle_radius_inner,
+            center_y - circle_radius_inner,
+            center_x + circle_radius_inner,
+            center_y + circle_radius_inner,
+        ],
+        (120, 0, 0),
+        0,
+    )
 
     fix_cross = np.array(pattern) / 255
     return fix_cross
 
 
-def win_cross(height=100, width=100, color=(150, 150, 150), cross_color=win_color):
-    pattern = Image.new("RGBA", (200, 200), (0, 0, 0, 0))
+def win_cross(
+    height=150,
+    width=150,
+    color=(150, 150, 150),
+    cross_color=win_color,
+    border_width=10,
+    circle_radius_outer=20,
+    circle_radius_inner=15,
+):
+    pattern = Image.new("RGBA", (height + 1, width + 1), (0, 0, 0, 0))
     draw = ImageDraw.Draw(pattern)
 
-    draw_shape(draw, "diamond", [0, 0, 200, 200], (0, 0, 0), 0)
-    draw_shape(draw, "diamond", [10, 10, 190, 190], color, 0)
-    draw_shape(draw, "halfdiamond_u", [10, 10, 190, 190], win_color)
-    draw_shape(draw, "circle", [75, 75, 125, 125], (0, 0, 0), 0)
-    draw_shape(draw, "neg-circle", [80, 80, 120, 120], (120, 0, 0), 0)
+    center_x = width // 2
+    center_y = height // 2
 
+    draw_shape(draw, "diamond", [0, 0, height, width], (0, 0, 0), 0)
+    draw_shape(
+        draw,
+        "diamond",
+        [border_width, border_width, width - border_width, height - border_width],
+        color,
+        0,
+    )
+
+    draw_shape(
+        draw,
+        "halfdiamond_u",
+        [border_width, border_width, width - border_width, height - border_width],
+        cross_color,
+    )
+    draw_shape(
+        draw,
+        "circle",
+        [
+            center_x - circle_radius_outer,
+            center_y - circle_radius_outer,
+            center_x + circle_radius_outer,
+            center_y + circle_radius_outer,
+        ],
+        (0, 0, 0),
+        0,
+    )
+    draw_shape(
+        draw,
+        "neg-circle",
+        [
+            center_x - circle_radius_inner,
+            center_y - circle_radius_inner,
+            center_x + circle_radius_inner,
+            center_y + circle_radius_inner,
+        ],
+        (120, 0, 0),
+        0,
+    )
     win_cross = np.array(pattern) / 255
 
     return win_cross
 
 
-def lose_cross(height=100, width=100, color=(150, 150, 150), cross_color=lose_color):
-    pattern = Image.new("RGBA", (200, 200), (0, 0, 0, 0))
+def lose_cross(
+    height=150,
+    width=150,
+    color=(150, 150, 150),
+    cross_color=lose_color,
+    border_width=10,
+    circle_radius_outer=20,
+    circle_radius_inner=15,
+):
+    pattern = Image.new("RGBA", (height + 1, width + 1), (0, 0, 0, 0))
     draw = ImageDraw.Draw(pattern)
 
-    draw_shape(draw, "diamond", [0, 0, 200, 200], (0, 0, 0), 0)
-    draw_shape(draw, "diamond", [10, 10, 190, 190], color, 0)
-    draw_shape(draw, "halfdiamond_d", [10, 10, 190, 190], cross_color)
-    draw_shape(draw, "circle", [75, 75, 125, 125], (0, 0, 0), 0)
-    draw_shape(draw, "neg-circle", [80, 80, 120, 120], (120, 0, 0), 0)
+    center_x = width // 2
+    center_y = height // 2
 
+    draw_shape(draw, "diamond", [0, 0, height, width], (0, 0, 0), 0)
+    draw_shape(
+        draw,
+        "diamond",
+        [border_width, border_width, width - border_width, height - border_width],
+        color,
+        0,
+    )
+
+    draw_shape(
+        draw,
+        "halfdiamond_d",
+        [border_width, border_width, width - border_width, height - border_width],
+        cross_color,
+    )
+    draw_shape(
+        draw,
+        "circle",
+        [
+            center_x - circle_radius_outer,
+            center_y - circle_radius_outer,
+            center_x + circle_radius_outer,
+            center_y + circle_radius_outer,
+        ],
+        (0, 0, 0),
+        0,
+    )
+    draw_shape(
+        draw,
+        "neg-circle",
+        [
+            center_x - circle_radius_inner,
+            center_y - circle_radius_inner,
+            center_x + circle_radius_inner,
+            center_y + circle_radius_inner,
+        ],
+        (120, 0, 0),
+        0,
+    )
     lose_cross = np.array(pattern) / 255
 
     return lose_cross
 
 
-def zero_cross(height=100, width=100, color=(150, 150, 150), cross_color=zero_color):
-    pattern = Image.new("RGBA", (200, 200), (0, 0, 0, 0))
+def zero_cross(
+    height=150,
+    width=150,
+    color=(150, 150, 150),
+    cross_color=zero_color,
+    border_width=10,
+    circle_radius_outer=20,
+    circle_radius_inner=15,
+):
+    pattern = Image.new("RGBA", (height + 1, width + 1), (0, 0, 0, 0))
     draw = ImageDraw.Draw(pattern)
 
-    draw_shape(draw, "diamond", [0, 0, 200, 200], (0, 0, 0), 0)
-    draw_shape(draw, "diamond", [10, 10, 190, 190], cross_color, 0)
-    draw_shape(draw, "triangle_u", np.array([50, 10, 150, 60]), color, 0)
-    draw_shape(draw, "triangle_d", np.array([50, 140, 150, 190]), color, 0)
+    center_x = width // 2
+    center_y = height // 2
 
-    draw_shape(draw, "circle", [75, 75, 125, 125], (0, 0, 0), 0)
-    draw_shape(draw, "neg-circle", [80, 80, 120, 120], (120, 0, 0), 0)
+    draw_shape(draw, "diamond", [0, 0, height, width], (0, 0, 0), 0)
+    draw_shape(
+        draw,
+        "diamond",
+        [border_width, border_width, width - border_width, height - border_width],
+        cross_color,
+        0,
+    )
+
+    draw_shape(
+        draw,
+        "triangle_u",
+        np.array(
+            [
+                center_x - center_x // 2,
+                border_width,
+                center_x + center_x // 2,
+                center_y - center_y // 2 + border_width,
+            ]
+        ),
+        color,
+        0,
+    )
+    draw_shape(
+        draw,
+        "triangle_d",
+        np.array(
+            [
+                center_x + center_x // 2,
+                center_y + center_y // 2 - border_width,
+                center_x - center_x // 2,
+                height - border_width,
+            ]
+        ),
+        color,
+        0,
+    )
+
+    draw_shape(
+        draw,
+        "circle",
+        [
+            center_x - circle_radius_outer,
+            center_y - circle_radius_outer,
+            center_x + circle_radius_outer,
+            center_y + circle_radius_outer,
+        ],
+        (0, 0, 0),
+        0,
+    )
+    draw_shape(
+        draw,
+        "neg-circle",
+        [
+            center_x - circle_radius_inner,
+            center_y - circle_radius_inner,
+            center_x + circle_radius_inner,
+            center_y + circle_radius_inner,
+        ],
+        (120, 0, 0),
+        0,
+    )
 
     zero_cross = np.array(pattern) / 255
     return zero_cross
 
 
-def gonogo_probe(height=200, width=200, color=(150, 150, 150)):
+def gonogo_probe(
+    height=150,
+    width=150,
+    color=(150, 150, 150),
+    border_width=10,
+    circle_radius_outer=20,
+    circle_radius_inner=15,
+    outer_border=10,
+):
     # left bottom right top
-    pattern = Image.new("RGBA", (200, 200), (0, 0, 0, 0))
+    pattern = Image.new(
+        "RGBA",
+        (height + outer_border * 2 + 1, width + outer_border * 2 + 1),
+        (0, 0, 0, 0),
+    )
     draw = ImageDraw.Draw(pattern)
 
-    draw_shape(draw, "diamond", [0, 0, 220, 220], (250, 250, 250), 0)
+    center_x = (width + outer_border * 2) // 2
+    center_y = (height + outer_border * 2) // 2
 
-    draw_shape(draw, "diamond", [10, 10, 210, 210], (0, 0, 0), 0)
-    draw_shape(draw, "diamond", [20, 20, 200, 200], color, 0)
+    draw_shape(
+        draw,
+        "diamond",
+        [0, 0, height + outer_border * 2, width + outer_border * 2],
+        (250, 250, 250),
+        0,
+    )
 
-    draw_shape(draw, "circle", [85, 85, 135, 135], (0, 0, 0), 0)
-    draw_shape(draw, "neg-circle", [90, 90, 130, 130], (120, 0, 0), 0)
+    draw_shape(
+        draw,
+        "diamond",
+        [outer_border, outer_border, outer_border + height, outer_border + width],
+        (0, 0, 0),
+        0,
+    )
+    draw_shape(
+        draw,
+        "diamond",
+        [
+            border_width + outer_border,
+            border_width + outer_border,
+            outer_border + width - border_width,
+            outer_border + height - border_width,
+        ],
+        color,
+        0,
+    )
+
+    draw_shape(
+        draw,
+        "circle",
+        [
+            center_x - circle_radius_outer,
+            center_y - circle_radius_outer,
+            center_x + circle_radius_outer,
+            center_y + circle_radius_outer,
+        ],
+        (0, 0, 0),
+        0,
+    )
+    draw_shape(
+        draw,
+        "neg-circle",
+        [
+            center_x - circle_radius_inner,
+            center_y - circle_radius_inner,
+            center_x + circle_radius_inner,
+            center_y + circle_radius_inner,
+        ],
+        (120, 0, 0),
+        0,
+    )
 
     probe = np.array(pattern) / 255
 
@@ -206,36 +459,105 @@ def mid_stimuli(amount="+5", shape="circle", probe=False):
     return pattern
 
 
-def posner_cue_up(color=(150, 150, 150)):
-    pattern = Image.new("RGBA", (200, 220), (0, 0, 0, 0))
+def posner_cue(
+    height=150,
+    width=150,
+    color=(150, 150, 150),
+    border_width=10,
+    circle_radius_outer=20,
+    circle_radius_inner=15,
+    cue_outer_radius=20,
+    cue_inner_width=10,
+    up=True,
+):
+    pattern = Image.new(
+        "RGBA", (width + 1, height + 2 * cue_outer_radius + 1), (0, 0, 0, 0)
+    )
     draw = ImageDraw.Draw(pattern)
 
-    draw_shape(draw, "diamond", [0, 10, 200, 200], (0, 0, 0), 0)
-    draw_shape(draw, "diamond", [10, 20, 190, 190], color, 0)
+    center_x = width // 2
+    center_y = (height + 2 * cue_outer_radius) // 2
 
-    draw_shape(draw, "circle", [75, 85, 125, 135], (0, 0, 0), 0)
-    draw_shape(draw, "neg-circle", [80, 90, 120, 130], (120, 0, 0), 0)
+    draw_shape(
+        draw,
+        "diamond",
+        [
+            center_x - width // 2,
+            center_y - height // 2,
+            center_x + width // 2,
+            center_y + width // 2,
+        ],
+        (0, 0, 0),
+        0,
+    )
 
-    draw_shape(draw, "circle", [75, 170, 125, 220], (0, 0, 0), 0)
-    draw_shape(draw, "circle", [80, 175, 120, 215], color, 0)
+    draw_shape(
+        draw,
+        "diamond",
+        [
+            center_x - width // 2 + border_width,
+            center_y - height // 2 + border_width,
+            center_x + width // 2 - border_width,
+            center_y + width // 2 - border_width,
+        ],
+        color,
+        0,
+    )
 
-    return np.array(pattern)[::-1, :] / 255
+    draw_shape(
+        draw,
+        "circle",
+        [
+            center_x - circle_radius_outer,
+            center_y - circle_radius_outer,
+            center_x + circle_radius_outer,
+            center_y + circle_radius_outer,
+        ],
+        (0, 0, 0),
+        0,
+    )
+    draw_shape(
+        draw,
+        "neg-circle",
+        [
+            center_x - circle_radius_inner,
+            center_y - circle_radius_inner,
+            center_x + circle_radius_inner,
+            center_y + circle_radius_inner,
+        ],
+        (120, 0, 0),
+        0,
+    )
 
+    draw_shape(
+        draw,
+        "circle",
+        [
+            center_x - cue_outer_radius,
+            height - cue_outer_radius,
+            center_x + cue_outer_radius,
+            height + cue_outer_radius,
+        ],
+        (0, 0, 0),
+        0,
+    )
+    draw_shape(
+        draw,
+        "circle",
+        [
+            center_x - cue_outer_radius + cue_inner_width,
+            height - cue_outer_radius + cue_inner_width,
+            center_x + cue_outer_radius - cue_inner_width,
+            height + cue_outer_radius - cue_inner_width,
+        ],
+        color,
+        0,
+    )
 
-def posner_cue_down(color=(150, 150, 150)):
-    pattern = Image.new("RGBA", (200, 220), (0, 0, 0, 0))
-    draw = ImageDraw.Draw(pattern)
-
-    draw_shape(draw, "diamond", [0, 10, 200, 200], (0, 0, 0), 0)
-    draw_shape(draw, "diamond", [10, 20, 190, 190], color, 0)
-
-    draw_shape(draw, "circle", [75, 85, 125, 135], (0, 0, 0), 0)
-    draw_shape(draw, "neg-circle", [80, 90, 120, 130], (120, 0, 0), 0)
-
-    draw_shape(draw, "circle", [75, 0, 125, 50], (0, 0, 0), 0)
-    draw_shape(draw, "circle", [80, 5, 120, 45], color, 0)
-
-    return np.array(pattern)[::-1, :] / 255
+    if up:
+        return np.array(pattern)[::-1, :] / 255
+    else:
+        return np.array(pattern) / 255
 
 
 def posner_target():
