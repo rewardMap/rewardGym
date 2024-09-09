@@ -11,12 +11,18 @@ from rewardgym.psychopy_utils import instruction_texts
 from rewardgym.utils import update_psychopy_trials
 
 
-def draw_response_reminder(win, text_update, reminder_duration=1.0):
+def draw_response_reminder(win, text_update, logger, reminder_duration=1.0):
     text_update.setAutoDraw(True)
     win.flip()
-    core.wait(reminder_duration)
+    reminder_onset = logger.get_time()
+    logger.wait(win=win, time=reminder_duration, start=reminder_onset)
     text_update.setAutoDraw(False)
     win.flip()
+
+    logger.log_event(
+        {"event_type": "reminder", "expected_duration": reminder_duration},
+        onset=reminder_onset,
+    )
 
     return True
 
@@ -182,7 +188,7 @@ if __name__ == "__main__":
         )
 
         if env.action is None:
-            done = draw_response_reminder(win, instruction)
+            done = draw_response_reminder(win, instruction, Logger)
 
         while not done:
             if task == "hcp":
@@ -198,7 +204,7 @@ if __name__ == "__main__":
             done = terminated or truncated
 
             if env.action is None and not done:
-                done = draw_response_reminder(win, instruction)
+                done = draw_response_reminder(win, instruction, Logger)
 
         if env.remainder > 0 and settings["add_remainder"]:
             rm_onset = Logger.get_time()
