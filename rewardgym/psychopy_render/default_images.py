@@ -20,6 +20,8 @@ colors = [tuple([int(i * 255) for i in c]) for c in plt.cm.tab10.colors[:5]] + [
     bg_color
 ]
 
+STIMULUS_DEFAULTS = {"shapes": shapes_perm, "colors": colors, "patterns": patterns}
+
 
 def fixation_cross(
     height=150,

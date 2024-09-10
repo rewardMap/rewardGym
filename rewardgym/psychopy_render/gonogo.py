@@ -1,5 +1,6 @@
 from ..utils import check_seed
 from .default_images import (
+    STIMULUS_DEFAULTS,
     fixation_cross,
     generate_stimulus_properties,
     gonogo_probe,
@@ -10,10 +11,23 @@ from .stimuli import ActionStimulus, BaseStimulus, FeedBackStimulus, ImageStimul
 
 def get_info_dict(seed=None, key_dict={"space": 0}, **kwargs):
     random_state = check_seed(seed)
-    stim_properties = [
-        generate_stimulus_properties(random_state, patterns=[(2, 2), (3, 3)])
-        for _ in range(4)
-    ]
+    stim_properties = []
+
+    for _ in range(4):
+        st_p = generate_stimulus_properties(
+            random_state,
+            patterns=[(2, 2), (3, 3)],
+            colors=STIMULUS_DEFAULTS["colors"],
+            shapes=STIMULUS_DEFAULTS["shapes"],
+        )
+        stim_properties.append(st_p)
+        STIMULUS_DEFAULTS["colors"] = [
+            i for i in STIMULUS_DEFAULTS["colors"] if i != st_p["colors"]
+        ]
+        STIMULUS_DEFAULTS["shapes"] = [
+            i for i in STIMULUS_DEFAULTS["shapes"] if i != st_p["shapes"]
+        ]
+
     image_map = {}
     stimuli = {}
 
