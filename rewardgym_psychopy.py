@@ -6,7 +6,6 @@ from psychopy import core, event, gui, visual
 
 from rewardgym import ENVIRONMENTS, get_configs, get_env
 from rewardgym.psychopy_render import ExperimentLogger, get_psychopy_info
-from rewardgym.psychopy_render.utils import PhotoWindow
 from rewardgym.psychopy_utils import instruction_texts
 from rewardgym.utils import update_psychopy_trials
 
@@ -73,7 +72,7 @@ if __name__ == "__main__":
 
     globalClock = core.Clock()
 
-    win = PhotoWindow(
+    win = visual.Window(
         size=[1680, 1050],
         fullscr=False,
         screen=0,
@@ -160,7 +159,7 @@ if __name__ == "__main__":
     instruction.setText("Please respond faster!")
     env.setup_render(window=win, logger=Logger)
 
-    for episode in range(10):
+    for episode in range(settings["ntrials"]):
         done = False
         # Update timings
         if task == "mid":
@@ -196,7 +195,7 @@ if __name__ == "__main__":
                 update_psychopy_trials(settings, env, episode)
 
             next_obs, reward, terminated, truncated, info = env.step(
-                env.action, step_reward=env == "two-step"
+                env.action, step_reward=env.name == "two-step"
             )
             actions.append(env.previous_action)
             Logger.current_location = env.agent_location
@@ -245,8 +244,6 @@ if __name__ == "__main__":
     win.flip()
     event.waitKeys()
     win.flip()
-
-    win.saveMovieFrames(f"screenshots/{env.name}.png")
 
     Logger.close()
     win.close()
