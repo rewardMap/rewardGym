@@ -184,8 +184,8 @@ def get_info_dict(seed=None, key_dict={"left": 0, "right": 1}, **kwargs):
                 ImageStimulus(
                     duration=0.1,
                     name="environment-decision",
-                    image_paths=[stim_set[1][0], stim_set[1][1], stim_set[0][0]],
-                    positions=[(-image_shift, 0), (image_shift, 0), (0, image_shift)],
+                    image_paths=[stim_set[1][0], stim_set[1][1]],
+                    positions=[(-image_shift, 0), (image_shift, 0)],
                 ),
                 ActionStimulus(duration=2.0, key_dict=key_dict),
             ]
@@ -205,8 +205,8 @@ def get_info_dict(seed=None, key_dict={"left": 0, "right": 1}, **kwargs):
                 ImageStimulus(
                     duration=0.1,
                     name="environment-decision",
-                    image_paths=[stim_set[2][0], stim_set[2][1], stim_set[0][1]],
-                    positions=[(-image_shift, 0), (image_shift, 0), (0, image_shift)],
+                    image_paths=[stim_set[2][0], stim_set[2][1]],
+                    positions=[(-image_shift, 0), (image_shift, 0)],
                 ),
                 ActionStimulus(duration=2.0, key_dict=key_dict),
             ]
