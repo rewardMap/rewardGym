@@ -13,12 +13,26 @@ lose_color = tuple([int(i * 255) for i in plt.cm.Set2.colors[1]])
 zero_color = tuple([int(i * 255) for i in plt.cm.Set2.colors[5]])
 
 bg_color = (240, 240, 240)
-shapes = ["square", "circle", "triangle_u", "triangle_d", "diamond", "X", "cross"]
+shapes = ["square", "circle", "triangle_u", "triangle_d", "diamond"]  # , "X", "cross"]
 shapes_perm = shapes[:] + list(permutations(shapes, r=2))
-patterns = [(2, 3), (4, 6)]
-colors = [tuple([int(i * 255) for i in c]) for c in plt.cm.tab10.colors[:5]] + [
-    bg_color
-]
+patterns = [(2, 3), (4, 6), (1, 2)]
+
+colors = [
+    (1, 25, 89),
+    (16, 63, 96),
+    (28, 90, 98),
+    (60, 109, 86),
+    (104, 123, 62),
+    (157, 137, 43),
+    (210, 147, 67),
+    (248, 161, 123),
+    (253, 183, 188),
+    (250, 204, 250),
+] + [bg_color]  # batlow 10
+
+# colors = [tuple([int(i * 255) for i in c]) for c in plt.cm.tab10.colors[:5]] + [
+#    bg_color
+# ]
 
 STIMULUS_DEFAULTS = {"shapes": shapes_perm, "colors": colors, "patterns": patterns}
 
@@ -222,9 +236,9 @@ def zero_cross(
         "triangle_u",
         np.array(
             [
-                center_x - center_x // 2,
+                center_x - center_x // 2 - 1,
                 border_width,
-                center_x + center_x // 2,
+                center_x + center_x // 2 + 1,
                 center_y - center_y // 2 + border_width,
             ]
         ),
@@ -236,9 +250,9 @@ def zero_cross(
         "triangle_d",
         np.array(
             [
-                center_x + center_x // 2,
+                center_x + center_x // 2 + 1,
                 center_y + center_y // 2 - border_width,
-                center_x - center_x // 2,
+                center_x - center_x // 2 - 1,
                 height - border_width,
             ]
         ),
