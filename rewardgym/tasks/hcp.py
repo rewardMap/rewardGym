@@ -108,7 +108,7 @@ def generate_hcp_configs(stimulus_set: str = "1"):
     win3 = ["win", "win", "win", "win", "win", "win", "neutral", "lose"]
 
     conditions = []
-    for block in [lose1, win1, lose2, win2, lose3, win3]:
+    for block in [lose1, win1, lose2, win2, lose3, win3, lose2, win2]:
         conditions.extend(seed.choice(block, size=8, replace=False).tolist())
 
     config = {
@@ -121,6 +121,8 @@ def generate_hcp_configs(stimulus_set: str = "1"):
         "ntrials": len(conditions),
         "update": ["wait"],
         "add_remainder": False,
+        "breakpoints": [7, 15, 23, 31, 39, 47],
+        "break_duration": 15,
     }
 
     return config

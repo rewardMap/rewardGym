@@ -91,6 +91,8 @@ def generate_two_step_configs(stimulus_set: str = "1"):
         "ntrials": 160,
         "update": None,
         "add_remainder": True,
+        "breakpoints": [79],
+        "break_duration": 15,
     }
 
     return configs
