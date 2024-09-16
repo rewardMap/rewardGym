@@ -1,9 +1,9 @@
 import pytest
 
-from rewardgym import get_configs, get_env
+from rewardgym import get_env
+from rewardgym.psychopy_extras import run_task
 from rewardgym.psychopy_render import SimulationLogger
 from rewardgym.psychopy_render.psychopy_stubs import Clock, Window
-from rewardgym.utils import update_psychopy_trials
 
 
 def simulate_task(envname):
@@ -24,70 +24,9 @@ def simulate_task(envname):
     task = exp_dict["task"]
 
     env = get_env(task, render_backend="psychopy-simulate")
-    env.setup_simulation(logger=Logger, window=win, expose_last_stim=True)
+    env.setup(logger=Logger, window=win, expose_last_stim=True)
 
-    settings = get_configs(task)(stimulus_set=55)
-    n_episodes = settings["ntrials"]
-
-    if task == "mid":
-        win_trials = 0
-
-    actions = []
-
-    for episode in range(n_episodes):
-        update_psychopy_trials(settings, env, episode)
-
-        Logger.trial = episode
-        Logger.set_trial_time()
-        Logger.trial_type = settings["condition"][episode]
-        Logger.start_position = env.agent_location
-        Logger.current_location = env.agent_location
-
-        obs, info = env.reset()
-        env.simulate_action(info, 0, 0.1)
-
-        Logger.update_trial_info(
-            start_position=env.agent_location,
-            current_location=env.agent_location,
-            trial=episode,
-        )
-
-        if env.action is not None:
-            action = env.action
-            done = False
-            actions.append(action)
-        else:
-            done = True
-
-        while not done:
-            next_obs, reward, terminated, truncated, info = env.step(action)
-            Logger.current_location = env.agent_location
-
-            done = terminated or truncated
-
-            if not done:
-                env.simulate_action(info, 0, 0.1)
-
-            if env.action is None:
-                done = True
-            else:
-                actions.append(env.action)
-
-        if task == "mid":
-            win_trials += 1 if "win" in settings["condition"] else 0
-
-            if (sum(actions) / (episode + 1)) < 0.4 and (win_trials % 3) == 0:
-                if (env.info_dict[1]["psychopy"][-1].duration - 0.025) > 0.05:
-                    env.info_dict[1]["psychopy"][-1].duration -= 0.025
-            elif (win_trials % 3) == 0:
-                env.info_dict[1]["psychopy"][-1].duration += 0.025
-
-        Logger.log_event(
-            {"event_type": "TrialEnd", "total_reward": env.cumulative_reward},
-            reward=env.reward,
-        )
-
-    win.close()
+    run_task(env, win, Logger)
 
     return Logger.close()
 

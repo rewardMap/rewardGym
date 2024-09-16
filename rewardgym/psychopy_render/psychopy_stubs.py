@@ -21,6 +21,9 @@ class ImageStim:
     def __init__(self, *args, **kwargs) -> None:
         pass
 
+    def setAutoDraw(*args):
+        pass
+
 
 class TextStim(ImageStim):
     pass
