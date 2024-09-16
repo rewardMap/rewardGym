@@ -62,7 +62,13 @@ class PsychopyEnv(BaseEnv):
         self.setup = False
         self.action = False
 
-    def setup_render(self, window=None, logger=None):
+    def setup(self, window, logger, expose_last_stim=False):
+        if self.render_mode == "psychopy-simulate":
+            self._setup_simulation(logger, window, expose_last_stim=expose_last_stim)
+        elif self.render_mode == "psychopy":
+            self._setup_render(logger, window)
+
+    def _setup_render(self, window=None, logger=None):
         if window is None:
             self.window = Window(
                 size=[1680, 1050],
@@ -85,7 +91,7 @@ class PsychopyEnv(BaseEnv):
 
         self.setup = True
 
-    def setup_simulation(self, logger=None, window=None, expose_last_stim=False):
+    def _setup_simulation(self, logger=None, window=None, expose_last_stim=False):
         self.expose_last_stim = expose_last_stim
         self.reaction_time = None
 
@@ -164,7 +170,9 @@ class PsychopyEnv(BaseEnv):
         elif "psychopy" not in info.keys():
             pass
         else:
-            raise NotImplementedError("Render should only be called in human mode")
+            raise NotImplementedError(
+                "Render needs to be psychopy or psychopy-simulate."
+            )
 
     def simulate_action(self, info, action, reaction_time):
         if "unmap-actions" in info.keys() and action in info["unmap-actions"].keys():
