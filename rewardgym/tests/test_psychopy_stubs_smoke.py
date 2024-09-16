@@ -1,7 +1,7 @@
 import pytest
 
 from rewardgym import get_env
-from rewardgym.psychopy_extras import run_task
+from rewardgym.psychopy_core import run_task
 from rewardgym.psychopy_render import SimulationLogger
 from rewardgym.psychopy_render.psychopy_stubs import Clock, Window
 

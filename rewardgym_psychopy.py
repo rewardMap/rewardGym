@@ -3,7 +3,8 @@ import json
 from psychopy import core, event, visual
 
 from rewardgym import get_configs, get_env
-from rewardgym.psychopy_extras import run_task, set_up_experiment, show_instructions
+from rewardgym.psychopy_core import run_task
+from rewardgym.psychopy_extras import set_up_experiment, show_instructions
 from rewardgym.psychopy_render import ExperimentLogger, get_psychopy_info
 
 if __name__ == "__main__":
