@@ -81,7 +81,7 @@ def run_task(env, win, logger, settings=None, seed=111, agent=None, n_episodes=N
             0, condition=settings["condition_dict"][settings["condition"][episode]]
         )
 
-        if env.action is None:
+        if env.action is None and agent is None:
             done = draw_response_reminder(win, response_reminder, logger)
 
         while not done:
@@ -153,3 +153,5 @@ def run_task(env, win, logger, settings=None, seed=111, agent=None, n_episodes=N
         )
 
         break_point(win, logger, settings, episode)
+
+    return logger, env, agent
