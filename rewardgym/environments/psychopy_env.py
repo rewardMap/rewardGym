@@ -59,14 +59,14 @@ class PsychopyEnv(BaseEnv):
             n_actions,
         )
 
-        self.setup = False
+        self.issetup = False
         self.action = False
 
     def setup(self, window, logger, expose_last_stim=False):
         if self.render_mode == "psychopy-simulate":
-            self._setup_simulation(logger, window, expose_last_stim=expose_last_stim)
+            self._setup_simulation(window, logger, expose_last_stim=expose_last_stim)
         elif self.render_mode == "psychopy":
-            self._setup_render(logger, window)
+            self._setup_render(window, logger)
 
     def _setup_render(self, window=None, logger=None):
         if window is None:
@@ -89,9 +89,9 @@ class PsychopyEnv(BaseEnv):
             if "psychopy" in self.info_dict[node].keys():
                 [stim.setup(self.window) for stim in self.info_dict[node]["psychopy"]]
 
-        self.setup = True
+        self.issetup = True
 
-    def _setup_simulation(self, logger=None, window=None, expose_last_stim=False):
+    def _setup_simulation(self, window=None, logger=None, expose_last_stim=False):
         self.expose_last_stim = expose_last_stim
         self.reaction_time = None
 
@@ -128,7 +128,7 @@ class PsychopyEnv(BaseEnv):
         )
 
         if self.render_mode == "psychopy" and "psychopy" in info.keys():
-            if not self.setup:
+            if not self.issetup:
                 raise RuntimeError(
                     "You have to setup the environment first, using env.setup_render()"
                 )
