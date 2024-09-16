@@ -4,6 +4,8 @@ try:
 except ModuleNotFoundError:
     from .psychopy_stubs import Rect, ImageStim
 
+from copy import deepcopy
+
 import numpy as np
 
 from ..utils import check_seed
@@ -107,7 +109,9 @@ class TwoStepDisplay(BaseStimulus):
 
 def get_info_dict(seed=None, key_dict={"left": 0, "right": 1}, **kwargs):
     seed = check_seed(seed)
-    colors = STIMULUS_DEFAULTS["colors"]
+
+    stim_defaults = deepcopy(STIMULUS_DEFAULTS)
+    colors = stim_defaults["colors"]
     set_colors = seed.choice(np.arange(len(colors[:-1])), 3, replace=False)
 
     stim_set = {}
@@ -120,11 +124,11 @@ def get_info_dict(seed=None, key_dict={"left": 0, "right": 1}, **kwargs):
                 random_state=seed,
                 colors=[tuple(colors[set_colors[n]])] * 4,
                 patterns=[(1, 1), (2, 2)],
-                shapes=STIMULUS_DEFAULTS["shapes"],
+                shapes=stim_defaults["shapes"],
             )
             stimulus_properties.append(st_p)
-            STIMULUS_DEFAULTS["shapes"] = [
-                i for i in STIMULUS_DEFAULTS["shapes"] if i != st_p["shapes"]
+            stim_defaults["shapes"] = [
+                i for i in stim_defaults["shapes"] if i != st_p["shapes"]
             ]
 
         stim_set[n] = stimulus_properties

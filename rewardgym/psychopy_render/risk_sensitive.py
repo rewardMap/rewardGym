@@ -4,6 +4,8 @@ try:
 except ModuleNotFoundError:
     from .psychopy_stubs import Rect, ImageStim
 
+from copy import deepcopy
+
 from ..utils import check_seed
 from .default_images import (
     STIMULUS_DEFAULTS,
@@ -123,18 +125,19 @@ def get_info_dict(seed=111, key_dict={"left": 0, "right": 1}, **kwargs):
 
     stim_properties = []
 
+    stim_defaults = deepcopy(STIMULUS_DEFAULTS)
     for _ in range(5):
         st_p = generate_stimulus_properties(
             random_state,
-            colors=STIMULUS_DEFAULTS["colors"],
-            shapes=STIMULUS_DEFAULTS["shapes"],
+            colors=stim_defaults["colors"],
+            shapes=stim_defaults["shapes"],
         )
         stim_properties.append(st_p)
-        STIMULUS_DEFAULTS["colors"] = [
-            i for i in STIMULUS_DEFAULTS["colors"] if i != st_p["colors"]
+        stim_defaults["colors"] = [
+            i for i in stim_defaults["colors"] if i != st_p["colors"]
         ]
-        STIMULUS_DEFAULTS["shapes"] = [
-            i for i in STIMULUS_DEFAULTS["shapes"] if i != st_p["shapes"]
+        stim_defaults["shapes"] = [
+            i for i in stim_defaults["shapes"] if i != st_p["shapes"]
         ]
 
     image_map = {}
