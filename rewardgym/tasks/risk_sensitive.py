@@ -323,20 +323,73 @@ def generate_risk_sensitive_configs(stimulus_set: str = "1"):
                 and check_conditions_not_following(
                     conditions_proposal, ["none_risky-80", "risky-80_none"]
                 )
-                and check_conditions_present(
-                    conditions_proposal[:15],
-                    [
-                        "none_null",
-                        "none_save-20",
-                        "none_save-40",
-                        "none_risky-40",
-                        "none_risky-80",
-                        "null_none",
-                        "save-20_none",
-                        "save-40_none",
-                        "risky-40_none",
-                        "risky-80_none",
-                    ],
+                and (
+                    check_conditions_present(
+                        conditions_proposal[:15],
+                        [
+                            "null_none",
+                        ],
+                    )
+                    or check_conditions_present(
+                        conditions_proposal[:15],
+                        [
+                            "none_null",
+                        ],
+                    )
+                )
+                and (
+                    check_conditions_present(
+                        conditions_proposal[:15],
+                        [
+                            "save-20_none",
+                        ],
+                    )
+                    or check_conditions_present(
+                        conditions_proposal[:15],
+                        ["none_save-20"],
+                    )
+                )
+                and (
+                    check_conditions_present(
+                        conditions_proposal[:15],
+                        [
+                            "save-40_none",
+                        ],
+                    )
+                    or check_conditions_present(
+                        conditions_proposal[:15],
+                        [
+                            "none_save-40",
+                        ],
+                    )
+                )
+                and (
+                    check_conditions_present(
+                        conditions_proposal[:15],
+                        [
+                            "risky-40_none",
+                        ],
+                    )
+                    or check_conditions_present(
+                        conditions_proposal[:15],
+                        [
+                            "none_risky-40",
+                        ],
+                    )
+                )
+                and (
+                    check_conditions_present(
+                        conditions_proposal[:15],
+                        [
+                            "risky-80_none",
+                        ],
+                    )
+                    or check_conditions_present(
+                        conditions_proposal[:15],
+                        [
+                            "none_risky-80",
+                        ],
+                    )
                 )
             )
 
@@ -357,6 +410,8 @@ def generate_risk_sensitive_configs(stimulus_set: str = "1"):
         "ntrials": len(conditions),  # 183
         "update": ["iti"],
         "add_remainder": True,
+        "breakpoints": [60, 121],
+        "break_duration": 45,
     }
 
     return config

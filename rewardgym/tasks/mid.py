@@ -117,23 +117,25 @@ def generate_mid_configs(stimulus_set: 111):
     ]
     isi_template = [1.5, 2.125, 2.75, 3.375, 4.0]
 
-    # n_trials_per_condition = 20
-    n_trials_per_condition = 10
+    n_blocks = 10
 
-    conditions = seed.choice(a=condition_template, size=5, replace=False).tolist()
-    isi = seed.choice(isi_template, size=5, replace=False).tolist()
+    conditions = seed.choice(a=condition_template * 2, size=10, replace=False).tolist()
+    isi = seed.choice(isi_template * 2, size=10, replace=False).tolist()
 
-    for _ in range(n_trials_per_condition - 1):
+    for _ in range(n_blocks - 1):
         reject = True
         while reject:
             condition_template = seed.choice(
-                a=condition_template, size=5, replace=False
+                a=condition_template * 2, size=10, replace=False
             ).tolist()
 
             if conditions[-1] != condition_template[0]:
                 reject = False
                 conditions.extend(condition_template)
-                isi.extend(seed.choice(isi_template, size=5, replace=False).tolist())
+                isi.extend(
+                    seed.choice(isi_template * 2, size=10, replace=False).tolist()
+                )
+
     iti = [2] * len(conditions)
 
     config = {
@@ -146,6 +148,8 @@ def generate_mid_configs(stimulus_set: 111):
         "ntrials": len(conditions),
         "update": ["isi", "reward"],
         "add_remainder": True,
+        "breakpoints": [49],
+        "break_duration": 45,
     }
 
     return config

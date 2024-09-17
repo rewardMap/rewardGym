@@ -117,7 +117,7 @@ def generate_gonogo_configs(stimulus_set: str = "1"):
     check = False
     while not check:
         conditions = seed.choice(a=condition_template, size=60, replace=False).tolist()
-        check = check_conditions_present(conditions[:10], list(condition_dict.keys()))
+        check = check_conditions_present(conditions[:8], list(condition_dict.keys()))
 
     isi = seed.choice(isi_template, size=60, replace=False).tolist()
     iti = seed.choice(iti_template, size=60, replace=False).tolist()
@@ -140,7 +140,7 @@ def generate_gonogo_configs(stimulus_set: str = "1"):
         "update": ["isi", "iti"],
         "add_remainder": True,
         "breakpoints": [59, 119],
-        "break_duration": 15,
+        "break_duration": 45,
     }
 
     return config

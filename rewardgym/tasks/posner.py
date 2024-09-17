@@ -176,6 +176,8 @@ def generate_posner_configs(stimulus_set: str = "1"):
         "ntrials": len(conditions),
         "update": ["isi", "iti"],
         "add_remainder": True,
+        "breakpoints": [59, 119],
+        "break_duration": 45,
     }
 
     return config
