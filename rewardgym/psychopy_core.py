@@ -25,13 +25,32 @@ def draw_response_reminder(win, text_update, logger, reminder_duration=1.0):
     return True
 
 
-def break_point(win, logger, settings, episode):
+def break_point(win, text_update, logger, settings, episode, countdown_cutoff=30):
     if not ("breakpoints" in settings.keys() and "break_duration" in settings.keys()):
         pass
 
-    elif episode in settings["breakpoints"]:
+    elif (
+        episode in settings["breakpoints"]
+        and settings["break_duration"] < countdown_cutoff
+    ):
         break_onset = logger.get_time()
         logger.wait(win, settings["break_duration"], break_onset)
+
+        logger.log_event(
+            {"event_type": "break", "expected_duration": settings["break_duration"]},
+            onset=break_onset,
+        )
+
+    elif episode in settings["breakpoints"]:
+        break_onset = logger.get_time()
+        break_text = "Short break. Keep lying as still as possible!\n"
+        while logger.get_time() < (break_onset + settings["break_duration"]):
+            time_left = settings["break_duration"] - (logger.get_time() - break_onset)
+            minutes = int(time_left / 60)
+            seconds = int(time_left - minutes * 60)
+            text_update.setText(break_text + f"{minutes}:{seconds:02d}")
+            text_update.draw()
+            win.flip()
 
         logger.log_event(
             {"event_type": "break", "expected_duration": settings["break_duration"]},
@@ -46,10 +65,24 @@ def run_task(env, win, logger, settings=None, seed=111, agent=None, n_episodes=N
     if n_episodes is None:
         n_episodes = settings["ntrials"]
 
+    if env.render_mode == "psychopy-simulate":
+        break_countdown_limit = np.inf
+    else:
+        break_countdown_limit = 30
+
     response_reminder = TextStim(
         win=win,
         text="Please respond faster!",
         color=[1, 1, 1],
+        pos=(0, 100),
+        height=25,
+    )
+    break_text = TextStim(
+        win=win,
+        text="Have a break.",
+        color=[1, 1, 1],
+        pos=(0, 100),
+        height=25,
     )
     win_trials = 0
     actions = []
@@ -152,6 +185,13 @@ def run_task(env, win, logger, settings=None, seed=111, agent=None, n_episodes=N
             reward=env.reward,
         )
 
-        break_point(win, logger, settings, episode)
+        break_point(
+            win,
+            break_text,
+            logger,
+            settings,
+            episode,
+            countdown_cutoff=break_countdown_limit,
+        )
 
     return logger, env, agent
