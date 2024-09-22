@@ -6,7 +6,7 @@ from psychopy.visual import ImageStim, Rect, TextBox2, TextStim
 from rewardgym.psychopy_render.default_images import lose_cross, win_cross, zero_cross
 
 
-def hcp_instructions(win, key_map={"left": 0, "right": 1}):
+def hcp_instructions(win, key_map={"left": 0, "right": 1}, show_training=True):
     nothing = zero_cross(
         width=100, height=100, circle_radius_inner=10, circle_radius_outer=15
     )
@@ -113,12 +113,13 @@ def hcp_instructions(win, key_map={"left": 0, "right": 1}):
 
     waitKeys()
 
-    part_2_0 = TextBox2(
-        win=win, text=instructions["2.0"], letterHeight=22, alignment="center"
-    )
-    part_2_0.draw()
-    win.flip()
+    if show_training:
+        part_2_0 = TextBox2(
+            win=win, text=instructions["2.0"], letterHeight=22, alignment="center"
+        )
+        part_2_0.draw()
+        win.flip()
 
-    waitKeys()
+        waitKeys()
 
     return key_list

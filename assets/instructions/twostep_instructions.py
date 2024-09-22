@@ -7,7 +7,7 @@ from psychopy.visual import ImageStim, Line, TextBox2
 from rewardgym.psychopy_render.default_images import fixation_cross, make_card_stimulus
 
 
-def twostep_instructions(win, key_map={"left": 0, "right": 1}):
+def twostep_instructions(win, key_map={"left": 0, "right": 1}, show_training=True):
     fix = fixation_cross()
 
     card1 = make_card_stimulus(
@@ -197,14 +197,15 @@ def twostep_instructions(win, key_map={"left": 0, "right": 1}):
     win.flip()
     waitKeys()
 
-    part_3_0 = TextBox2(
-        win=win,
-        text=instructions["3.0"],
-        letterHeight=22,
-        pos=(0, 75),
-    )
-    part_3_0.draw()
-    win.flip()
-    waitKeys()
+    if show_training:
+        part_3_0 = TextBox2(
+            win=win,
+            text=instructions["3.0"],
+            letterHeight=22,
+            pos=(0, 75),
+        )
+        part_3_0.draw()
+        win.flip()
+        waitKeys()
 
     return key_list

@@ -11,7 +11,7 @@ from rewardgym.psychopy_render.default_images import (
 )
 
 
-def gonogo_instructions(win, key_map={"left": 0, "right": 1}):
+def gonogo_instructions(win, key_map={"left": 0, "right": 1}, show_training=True):
     fix = fixation_cross()
     winning = win_cross()
     target = gonogo_probe()
@@ -113,12 +113,13 @@ def gonogo_instructions(win, key_map={"left": 0, "right": 1}):
     win.flip()
     waitKeys()
 
-    part_5_0 = TextBox2(
-        win=win, text=instructions["5.0"], letterHeight=22, alignment="center"
-    )
-    part_5_0.draw()
-    win.flip()
+    if show_training:
+        part_5_0 = TextBox2(
+            win=win, text=instructions["5.0"], letterHeight=22, alignment="center"
+        )
+        part_5_0.draw()
+        win.flip()
 
-    waitKeys()
+        waitKeys()
 
     return key_list

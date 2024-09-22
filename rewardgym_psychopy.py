@@ -2,9 +2,10 @@ import json
 
 from psychopy import core, event, visual
 
+from assets import get_instructions
 from rewardgym import get_configs, get_env
 from rewardgym.psychopy_core import run_task
-from rewardgym.psychopy_extras import set_up_experiment, show_instructions
+from rewardgym.psychopy_extras import set_up_experiment
 from rewardgym.psychopy_render import ExperimentLogger, get_psychopy_info
 
 if __name__ == "__main__":
@@ -62,12 +63,10 @@ if __name__ == "__main__":
     env.add_info(info_dict)
 
     if exp_dict["instructions"]:
-        show_instructions(
-            win,
-            "assets/instructions/risk-sensitive.png",
-            key_map=exp_dict["key_map"],
-            mode=mode,
-        )
+        instructions = get_instructions(task)
+
+        if instructions:
+            instructions(win, key_map=key_dict, show_training=False)
 
     if mode == "fmri":
         scanner_info = visual.TextStim(
