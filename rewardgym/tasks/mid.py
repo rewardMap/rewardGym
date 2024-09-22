@@ -97,7 +97,7 @@ def get_mid(
     return environment_graph, reward_structure, info_dict
 
 
-def generate_mid_configs(stimulus_set: 111):
+def generate_mid_configs(stimulus_set: 111, use_abcd=True):
     seed = check_seed(stimulus_set)
     # 0 & 1 = win, 2  = neutral, 3 & 4 = lose
     condition_dict = {
@@ -108,39 +108,66 @@ def generate_mid_configs(stimulus_set: 111):
         "win-large": {0: {0: 5}},
     }
 
-    condition_template = [
-        "loss-large",
-        "loss-small",
-        "neutral",
-        "win-small",
-        "win-large",
-    ]
-    isi_template = [1.5, 2.125, 2.75, 3.375, 4.0]
+    if not use_abcd:
+        condition_template = [
+            "loss-large",
+            "loss-small",
+            "neutral",
+            "win-small",
+            "win-large",
+        ]
+        isi_template = [1.5, 2.125, 2.75, 3.375, 4.0]
 
-    n_blocks = 10
+        n_blocks = 10
 
-    conditions = seed.choice(a=condition_template * 2, size=10, replace=False).tolist()
-    isi = seed.choice(isi_template * 2, size=10, replace=False).tolist()
+        conditions = seed.choice(
+            a=condition_template * 2, size=10, replace=False
+        ).tolist()
+        isi = seed.choice(isi_template * 2, size=10, replace=False).tolist()
 
-    for _ in range(n_blocks - 1):
-        reject = True
-        while reject:
-            condition_template = seed.choice(
-                a=condition_template * 2, size=10, replace=False
-            ).tolist()
+        for _ in range(n_blocks - 1):
+            reject = True
+            while reject:
+                condition_template = seed.choice(
+                    a=condition_template * 2, size=10, replace=False
+                ).tolist()
 
-            if conditions[-1] != condition_template[0]:
-                reject = False
-                conditions.extend(condition_template)
-                isi.extend(
-                    seed.choice(isi_template * 2, size=10, replace=False).tolist()
-                )
+                if conditions[-1] != condition_template[0]:
+                    reject = False
+                    conditions.extend(condition_template)
+                    isi.extend(
+                        seed.choice(isi_template * 2, size=10, replace=False).tolist()
+                    )
+
+    if use_abcd:
+        from ._mid_abcd_order import (
+            citation_notice,
+            stimulus_combinations,
+            stimulus_sets,
+        )
+
+        print("".join(["="] * 20))
+        print(citation_notice)
+        print("".join(["="] * 20))
+        trial_order = seed.choice(
+            list(stimulus_combinations.keys()), 1, replace=False
+        ).item()
+        stim_combinations = stimulus_combinations[trial_order]
+
+        conditions = (
+            stimulus_sets[stim_combinations[0]]["condition"]
+            + stimulus_sets[stim_combinations[1]]["condition"]
+        )
+        isi = (
+            stimulus_sets[stim_combinations[0]]["isi"]
+            + stimulus_sets[stim_combinations[1]]["isi"]
+        )
 
     iti = [2] * len(conditions)
 
     config = {
         "name": "mid",
-        "stimulus_set": stimulus_set,
+        "stimulus_set": (stimulus_set, use_abcd),
         "isi": isi,
         "reward": iti,
         "condition": conditions,
