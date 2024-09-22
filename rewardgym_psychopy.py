@@ -93,8 +93,8 @@ if __name__ == "__main__":
         win=win,
         text="You are done!\nThank you!",
         color=[1, 1, 1],
-        pos=(150, 0.0),
-        height=20,
+        pos=(0, 150),
+        height=22,
     )
     final.draw()
     win.flip()

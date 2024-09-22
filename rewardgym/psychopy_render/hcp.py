@@ -25,7 +25,7 @@ class ShowCard(BaseStimulus):
         fillColor="grey",
         textColor="white",
         target="reward",
-        font_height=45,
+        font_height=150,
         position=(0, 0),
         name=None,
     ):

@@ -11,12 +11,8 @@ def get_info_dict(seed=None, key_dict={"left": 0, "right": 1}, **kwargs):
         position=(0, 150),
     )
 
-    # total_reward_feedback = FeedBackStimulus(
-    #    1.0, text="You have gained: {0}", target="total_reward", name="reward-total"
-    # )
-
     fix = ImageStimulus(
-        image_paths=[fixation_cross()], duration=0.4, name="fixation", autodraw=False
+        image_paths=[fixation_cross()], duration=0.4, name="fixation", autodraw=True
     )
 
     fix_isi = ImageStimulus(
