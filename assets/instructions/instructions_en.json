@@ -1,6 +1,6 @@
 {
     "hcp": {
-        "0.0": "This task is a game of chance.\nThink about it like drawing cards from a deck.\nThe cards have numbers from one to nine.\nYou will see a question mark on the screen and then the card will be presented.\nYou have to guess whether the number is less than or greater than five.",
+        "0.0": "This is a game of chance.\nThink about it like drawing cards from a deck.\nThe cards have numbers from one to nine.\nYou will see a question mark on the screen and then the card will be presented.\nYou have to guess whether the number is less than or greater than five.",
         "0.1": "Press LEFT to guess that the number will be less than five.\nPress RIGHT to guess that the number will be greater than five.\nYou must answer while the question mark is on the screen.",
         "1.0": "After you answer, the result will be shown.",
         "1.1": "If you guessed correctly,\na green arrow appears in the fixation cross and you WIN 1 point.",
@@ -11,7 +11,7 @@
         "3.0": "Great!\nIf you have any questions, it is now time to raise them."
     },
     "gonogo": {
-        "0.0": "In this task, you will need to figure out whether it's better to press the button or to not press the button.\nThere are some situations where it's better to press or not.\nIn some situations you can WIN points, in other you can LOSE points.",
+        "0.0": "In this game, you will need to figure out whether it's better to press the button or to not press the button.\nThere are some situations where it's better to press or not.\nIn some situations you can WIN points, in other you can LOSE points.",
         "0.1": "Each situation is introduced by one of four images.\nYou have to learn from experience whether it is better to press or not for each images.\n\n\nPress LEFT to continue",
         "1.0": "In each trial you will see an image introducing the situation:",
         "2.0": "Afterwards a fixation cross appears.",
@@ -21,12 +21,20 @@
         "5.0": "You will now play a few practice rounds.\nRemember:\nWhen the cross flashes white you have to decide!\nDo you press LEFT or NOT?"
     },
     "two-step":{
-        "0.0": "In this task you will make a series of choices.\nFirst step: You'll be given two images to choose from.\nYour pick will lead you to the second stage.",
+        "0.0": "In this game you will make a series of choices.\nFirst step: You'll be given two images to choose from.\nYour pick will lead you to the second stage.",
         "1.0": "Depending on your choice, you'll need to make another decision between two images.\nWhich images you see depend on the first choice.",
         "1.1": "Chosing an image at the second stage will gain you points or not.\nSome images might be better than others, which images these are changes slowly during the experiment.",
-        "2.0": "The structure of the task looks like this:",
+        "2.0": "The structure of the game looks like this:",
         "2.1": "Each first stage choice has a 'preferred' second stage.\nThis means if you select the image with the circles, you will more often see the blue (left) images.\nBut sometimes you will see the yellow images.",
         "2.2": "This prefference at the first stage is the same for the whole experiment.",
         "3.0": "You will now play a few practice rounds.\nRemember:\nPress LEFT to select the image on the left.\nPress RIGHT to select the image on the right."
+    },
+    "mid": {
+        "0.0": "In this game you will play with three shapes:",
+        "0.1": "The yellow squares mean you play to NOT LOSE points.\nThe pink circles mean you play to WIN points.\nThe triangle means nothing is at stake.",
+        "1.0": "The first thing that will happen in the game is one of these shapes will come up.\nAll you have to do is read the shapes to see if you play to WIN, to LOSE or if nothing is at stake.\nAfter the shape wou will see a fixation cross.\nWhen you see the cross, you should just wait.",
+        "2.0": "After the fixation there will always be a black shape that is the same shape as the one you just saw.\nYour job is to press LEFT when you see a black shape.",
+        "2.1": "If you press to soon or do not press when the black shape is up, you will not receive the outcome for that shape.",
+        "3.0": "You will now play a few practice rounds.\n\nRemember:\n\nWhen you see a pink circle, you can WIN points.\n\nWhen you see a yellow square, you can LOSE points.\n\nWhen you see a blue triangle, there is nothing at stake.\n\nPress LEFT when you see the black shape to WIN or NOT LOSE."
     }
 }

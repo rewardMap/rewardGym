@@ -439,8 +439,10 @@ def make_card_stimulus(stimulus, width=300, height=480):
     return card
 
 
-def mid_stimuli(amount="+5", shape="circle", probe=False):
-    pattern = Image.new("RGBA", (300, 300), (0, 0, 0, 0))
+def mid_stimuli(
+    amount="+5", shape="circle", shape_dim=300, border_width=10, probe=False
+):
+    pattern = Image.new("RGBA", (shape_dim, shape_dim), (0, 0, 0, 0))
     draw = ImageDraw.Draw(pattern)
 
     if shape == "circle":
@@ -450,14 +452,25 @@ def mid_stimuli(amount="+5", shape="circle", probe=False):
     else:
         stim_color = (1, 176, 240)
 
-    draw_shape(draw, shape, [0, 0, 300, 300], (0, 0, 0), 0)
+    draw_shape(draw, shape, [0, 0, shape_dim, shape_dim], (0, 0, 0), 0)
 
     if not probe:
-        offset = 4 if shape == "triangle_d" else 0
+        offset = 4 if shape == "triangle_u" else 0
 
-        draw_shape(draw, shape, [10, 10, 290, 290 + offset], stim_color, 0)
+        draw_shape(
+            draw,
+            shape,
+            [
+                border_width,
+                border_width,
+                shape_dim - border_width,
+                shape_dim - border_width + offset,
+            ],
+            stim_color,
+            0,
+        )
 
-        offset = 30 if shape == "triangle_d" else 0
+        offset = 30 if shape == "triangle_u" else 0
         matplotlib_font = matplotlib.font_manager.findfont("arial")
         fnt = ImageFont.truetype(matplotlib_font, 70)
 
