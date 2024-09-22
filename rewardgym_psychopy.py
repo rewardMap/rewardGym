@@ -66,25 +66,38 @@ if __name__ == "__main__":
         instructions = get_instructions(task)
 
         if instructions:
-            instructions(win, key_map=key_dict, show_training=False)
+            instructions(win, key_map=key_dict, show_training=True)
 
     if mode == "fmri":
         scanner_info = visual.TextStim(
             win=win,
             text="Waiting for scanner...",
             color=[1, 1, 1],
+            height=22,
         )
 
         scanner_info.draw()
         win.flip()
         event.waitKeys(keyList=["5"])
         win.flip()
+    else:
+        scanner_info = visual.TextStim(
+            win=win,
+            text="Are you ready?\nPress any key to begin!",
+            color=[1, 1, 1],
+            height=22,
+        )
+
+        scanner_info.draw()
+        win.flip()
+        event.waitKeys()
+        win.flip()
 
     Logger.global_clock.reset()
 
     env.setup(window=win, logger=Logger)
 
-    run_task(env=env, win=win, logger=Logger, settings=settings, n_episodes=3)
+    run_task(env=env, win=win, logger=Logger, settings=settings, n_episodes=None)
 
     win.to_Draw = []
 
