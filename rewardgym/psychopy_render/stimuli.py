@@ -28,6 +28,7 @@ class BaseStimulus:
         """
         self.duration = duration
         self.name = name
+        self.entity = "base"
 
     def setup(self, win: Window, **kwargs):
         """
@@ -322,6 +323,7 @@ class ActionStimulus(BaseStimulus):
         self.key_dict = key_dict
         self.timeout_action = timeout_action
         self.name_timeout = name_timeout
+        self.entity = "action"
 
     def setup(self, win: Window = None, **kwargs):
         """
@@ -638,7 +640,6 @@ class FeedBackStimulus(BaseStimulus):
         None
             Does not return anything, but logs the stimulus.
         """
-
         stim_onset = logger.get_time()
 
         logger.wait(win=None, time=self.duration, start=stim_onset)

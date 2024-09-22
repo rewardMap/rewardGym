@@ -152,17 +152,18 @@ class PsychopyEnv(BaseEnv):
                     "You have to setup the environment first, using env.setup_simulation()"
                 )
 
-            for disp in info["psychopy"][:-1]:
-                disp.simulate(
-                    win=self.window,
-                    logger=self.logger,
-                    condition=self.condition,
-                    total_reward=self.cumulative_reward,
-                    reward=self.reward,
-                    location=self.agent_location,
-                    key=self.previous_action,
-                    rt=self.reaction_time,
-                )
+            for disp in info["psychopy"]:
+                if disp.entity != "action" or not self.expose_last_stim:
+                    disp.simulate(
+                        win=self.window,
+                        logger=self.logger,
+                        condition=self.condition,
+                        total_reward=self.cumulative_reward,
+                        reward=self.reward,
+                        location=self.agent_location,
+                        key=self.previous_action,
+                        rt=self.reaction_time,
+                    )
 
             if not self.expose_last_stim:
                 self.simulate_action(info, self.previous_action, self.reaction_time)
