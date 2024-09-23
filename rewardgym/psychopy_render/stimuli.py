@@ -534,8 +534,23 @@ class FeedBackStimulus(BaseStimulus):
             color=self.text_color,
             height=self.font_height,
             pos=self.position,
+            alignText="center",
+            anchorHoriz="center",
         )
+
+        self.textStim2 = TextStim(
+            win=win,
+            name=self.name + "2",
+            text="Total: 0.0",
+            color=self.text_color,
+            height=20,
+            pos=(0, 350),
+            alignText="center",
+            anchorHoriz="center",
+        )
+
         self.textStim.setAutoDraw(False)
+        self.textStim2.setAutoDraw(False)
 
         self.feedback_image = {}
 
@@ -582,21 +597,24 @@ class FeedBackStimulus(BaseStimulus):
         """
 
         # Fills in the format string. Adds the + sign for positive rewards.
-        if self.target == "reward":
-            if reward > 0:
-                feedback_img = "win"
-            elif reward < 0:
-                feedback_img = "lose"
-            else:
-                feedback_img = "zero"
+        # if self.target == "reward":
+        if reward > 0:
+            feedback_img = "win"
+        elif reward < 0:
+            feedback_img = "lose"
+        else:
+            feedback_img = "zero"
 
-            reward = f"+{reward}" if reward > 0 else f"{reward}"
-            self.textStim.setText(self.text.format(reward))
+        reward = f"+{reward:5.1f}" if reward > 0 else f"{reward:5.1f}"
 
-        elif self.target == "total_reward":
-            total_reward = f"+{total_reward}" if total_reward > 0 else f"{total_reward}"
-            self.textStim.setText(self.text.format(total_reward))
-            feedback_img = "None"
+        total_reward = (
+            f"+{total_reward:5.1f}" if total_reward > 0 else f"{total_reward:5.1f}"
+        )
+
+        reward_stage2 = "Total: " + total_reward
+
+        self.textStim.setText(self.text.format(reward))
+        self.textStim2.setAutoDraw(False)
 
         logger.key_strokes(win)
 
@@ -605,12 +623,20 @@ class FeedBackStimulus(BaseStimulus):
             self.feedback_image[feedback_img].autoDraw = True
 
         self.textStim.draw()
+        self.textStim2.draw()
         win.flip()
+
+        self.textStim2.setText(reward_stage2)
+        self.textStim2.draw()
+        self.textStim.draw()
+
+        logger.wait(win, self.duration / 2, stim_onset)
+        win.flip()
+        self.textStim2.setAutoDraw(True)
+        logger.wait(win, self.duration / 2, stim_onset)
 
         if feedback_img in self.feedback_image.keys():
             self.feedback_image[feedback_img].autoDraw = False
-
-        logger.wait(win, self.duration, stim_onset)
 
         logger.log_event(
             {
