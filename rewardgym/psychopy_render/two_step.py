@@ -144,7 +144,7 @@ def get_info_dict(seed=None, key_dict={"left": 0, "right": 1}, **kwargs):
         autodraw=True,
         name="initial-fixation",
     )
-    fix_iti = BaseStimulus(duration=0.5, name="iti")
+    fix_iti = BaseStimulus(duration=1.0, name="iti")
 
     fix2 = ImageStimulus(
         image_paths=[fixation_cross()],

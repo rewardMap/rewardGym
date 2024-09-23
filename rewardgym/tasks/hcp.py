@@ -121,7 +121,7 @@ def generate_hcp_configs(stimulus_set: str = "1"):
         "ntrials": len(conditions),
         "update": ["wait"],
         "add_remainder": False,
-        "breakpoints": [7, 15, 23, 31, 39, 47],
+        "breakpoints": [7, 15, 23, 31, 39, 47, 56],
         "break_duration": 15,
     }
 
