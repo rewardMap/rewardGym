@@ -73,7 +73,7 @@ if __name__ == "__main__":
             win=win,
             text="Waiting for scanner...",
             color=[1, 1, 1],
-            height=22,
+            height=24,
         )
 
         scanner_info.draw()
@@ -85,7 +85,7 @@ if __name__ == "__main__":
             win=win,
             text="Are you ready?\nPress any key to begin!",
             color=[1, 1, 1],
-            height=22,
+            height=24,
         )
 
         scanner_info.draw()
@@ -97,20 +97,20 @@ if __name__ == "__main__":
 
     env.setup(window=win, logger=Logger)
 
-    run_task(env=env, win=win, logger=Logger, settings=settings, n_episodes=None)
+    run_task(env=env, win=win, logger=Logger, settings=settings, n_episodes=3)
 
     win.to_Draw = []
 
     final = visual.TextStim(
         win=win,
-        text="You are done!\nThank you!",
+        text=f"You are done!\nThank you!\nYou earned {env.cumulative_reward} points!",
         color=[1, 1, 1],
         pos=(0, 150),
-        height=22,
+        height=24,
     )
     final.draw()
     win.flip()
-    event.waitKeys()
+    event.waitKeys(keyList=["space"])
     win.flip()
 
     Logger.close()
