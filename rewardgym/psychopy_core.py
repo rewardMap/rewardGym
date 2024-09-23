@@ -143,7 +143,7 @@ def run_task(env, win, logger, settings=None, seed=111, agent=None, n_episodes=N
 
             done = terminated or truncated
 
-            if env.action is None and not done:
+            if env.previous_action is None and not done:
                 done = draw_response_reminder(win, response_reminder, logger)
 
             if agent is not None:
