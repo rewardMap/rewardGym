@@ -27,14 +27,14 @@ def hcp_instructions(win, key_map={"left": 0, "right": 1}, show_training=True):
     part_0_0 = TextBox2(
         win=win,
         text=instructions["0.0"],
-        letterHeight=22,
+        letterHeight=24,
         pos=(0, 250),
     )
 
     part_0_1 = TextBox2(
         win=win,
         text=instructions["0.1"],
-        letterHeight=22,
+        letterHeight=24,
         pos=(0, -250),
     )
 
@@ -67,7 +67,7 @@ def hcp_instructions(win, key_map={"left": 0, "right": 1}, show_training=True):
     part_1_0 = TextBox2(
         win=win,
         text=instructions["1.0"],
-        letterHeight=22,
+        letterHeight=24,
         pos=(0, start_pos),
     )
 
@@ -76,7 +76,7 @@ def hcp_instructions(win, key_map={"left": 0, "right": 1}, show_training=True):
     part_1_1 = TextBox2(
         win=win,
         text=instructions["1.1"],
-        letterHeight=22,
+        letterHeight=24,
         pos=(0, start_pos),
     )
 
@@ -88,7 +88,7 @@ def hcp_instructions(win, key_map={"left": 0, "right": 1}, show_training=True):
     part_1_2 = TextBox2(
         win=win,
         text=instructions["1.2"],
-        letterHeight=22,
+        letterHeight=24,
         pos=(0, start_pos),
     )
 
@@ -99,7 +99,7 @@ def hcp_instructions(win, key_map={"left": 0, "right": 1}, show_training=True):
     part_1_3 = TextBox2(
         win=win,
         text=instructions["1.3"],
-        letterHeight=22,
+        letterHeight=24,
         pos=(0, start_pos),
     )
 
@@ -115,7 +115,7 @@ def hcp_instructions(win, key_map={"left": 0, "right": 1}, show_training=True):
 
     if show_training:
         part_2_0 = TextBox2(
-            win=win, text=instructions["2.0"], letterHeight=22, alignment="center"
+            win=win, text=instructions["2.0"], letterHeight=24, alignment="center"
         )
         part_2_0.draw()
         win.flip()

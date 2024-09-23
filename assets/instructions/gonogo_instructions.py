@@ -37,7 +37,7 @@ def gonogo_instructions(win, key_map={"left": 0, "right": 1}, show_training=True
     part_0_0 = TextBox2(
         win=win,
         text=instructions["0.0"] + instructions["0.1"],
-        letterHeight=22,
+        letterHeight=24,
         pos=(0, 100),
     )
 
@@ -48,12 +48,12 @@ def gonogo_instructions(win, key_map={"left": 0, "right": 1}, show_training=True
     part_1_0 = TextBox2(
         win=win,
         text=instructions["1.0"],
-        letterHeight=22,
+        letterHeight=24,
         pos=(0, 150),
     )
     part_1_0.draw()
 
-    img_card = ImageStim(win=win, image=card, pos=(0, 0), size=card.shape[:2])
+    img_card = ImageStim(win=win, image=card, pos=(0, 0), size=(200, 200))
     img_card.draw()
     win.flip()
     waitKeys()
@@ -61,7 +61,7 @@ def gonogo_instructions(win, key_map={"left": 0, "right": 1}, show_training=True
     part_2_0 = TextBox2(
         win=win,
         text=instructions["2.0"],
-        letterHeight=22,
+        letterHeight=24,
         pos=(0, 150),
     )
     part_2_0.draw()
@@ -74,16 +74,16 @@ def gonogo_instructions(win, key_map={"left": 0, "right": 1}, show_training=True
     part_3_0 = TextBox2(
         win=win,
         text=instructions["3.0"],
-        letterHeight=22,
-        pos=(0, 75),
+        letterHeight=24,
+        pos=(0, 150),
     )
     part_3_0.draw()
 
     part_3_1 = TextBox2(
         win=win,
         text=instructions["3.1"],
-        letterHeight=22,
-        pos=(0, -75),
+        letterHeight=24,
+        pos=(0, -150),
     )
     part_3_1.draw()
 
@@ -95,18 +95,18 @@ def gonogo_instructions(win, key_map={"left": 0, "right": 1}, show_training=True
     part_4_0 = TextBox2(
         win=win,
         text=instructions["4.0"],
-        letterHeight=22,
-        pos=(0, 75),
+        letterHeight=24,
+        pos=(0, 150),
     )
     part_4_0.draw()
 
-    part_4_1 = TextBox2(
-        win=win,
-        text=instructions["4.1"],
-        letterHeight=22,
-        pos=(0, -75),
-    )
-    part_4_1.draw()
+    # part_4_1 = TextBox2(
+    #    win=win,
+    #    text=instructions["4.1"],
+    #    letterHeight=24,
+    #    pos=(0, -75),
+    # )
+    # part_4_1.draw()
 
     img_fix = ImageStim(win=win, image=winning, pos=(0, 0), size=winning.shape[:2])
     img_fix.draw()
@@ -115,7 +115,7 @@ def gonogo_instructions(win, key_map={"left": 0, "right": 1}, show_training=True
 
     if show_training:
         part_5_0 = TextBox2(
-            win=win, text=instructions["5.0"], letterHeight=22, alignment="center"
+            win=win, text=instructions["5.0"], letterHeight=24, alignment="center"
         )
         part_5_0.draw()
         win.flip()
