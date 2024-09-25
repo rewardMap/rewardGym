@@ -1,6 +1,6 @@
 {
     "training": "You will now play a few practice rounds.\n\n",
-    "instuctions": "You will now see the instructions for the next game.\nYou can press RIGHT to see the next instructions.\nYou can press LEFT to see the previous instructions.",
+    "instructions": "You will now see the instructions for the next game.\nYou can press RIGHT to see the next instructions.\nYou can press LEFT to see the previous instructions.",
     "instructions_perm": "Press LEFT for the previous, RIGHT for the next instructions.",
     "instructions_end": "To start the game press LEFT. If you want to see the previous screen press RIGHT.",
 
