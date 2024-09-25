@@ -26,7 +26,7 @@ def get_info_dict(seed=None, key_dict={"space": 0}, **kwargs):
         )
         stim_properties.append(st_p)
         stim_defaults["colors"] = [
-            i for i in stim_defaults["colors"] if i != st_p["colors"]
+            i for i in stim_defaults["colors"] if i not in st_p["colors"]
         ]
         stim_defaults["shapes"] = [
             i for i in stim_defaults["shapes"] if i != st_p["shapes"]
