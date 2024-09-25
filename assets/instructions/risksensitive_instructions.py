@@ -1,14 +1,9 @@
-import json
-
-from psychopy.event import waitKeys
 from psychopy.visual import ImageStim, TextBox2
 
 from rewardgym.psychopy_render.default_images import fixation_cross, make_card_stimulus
 
 
-def risksensitive_instructions(
-    win, key_map={"left": 0, "right": 1}, show_training=True
-):
+def risksensitive_instructions():
     fix = fixation_cross()
     card1 = make_card_stimulus(
         {
@@ -34,66 +29,55 @@ def risksensitive_instructions(
         width=300,
     )
 
-    with open("assets/instructions/instructions_en.json") as f:
-        instructions = json.load(f)
-
-    instructions = instructions["risk-sensitive"]
-
-    key_list = list(key_map.keys())
-
-    part_0_0 = TextBox2(
-        win=win,
-        text=instructions["0.0"],
-        letterHeight=24,
-        pos=(0, 100),
-    )
-
-    part_0_0.draw()
-    win.flip()
-    waitKeys()
-
-    part_1_0 = TextBox2(
-        win=win,
-        text=instructions["1.0"],
-        letterHeight=24,
-        pos=(0, 350),
-    )
-    part_1_0.draw()
-
     card_shape = (300, 480)
 
-    img_fix = ImageStim(win=win, image=fix, pos=(0, 0), size=fix.shape[:2])
-    img_fix.draw()
+    def part_0(win, instructions):
+        part_0_0 = TextBox2(
+            win=win,
+            text=instructions["risk-sensitive"]["0.0"],
+            letterHeight=24,
+            pos=(0, 100),
+        )
 
-    img_card = ImageStim(win=win, image=card1, pos=(-350, 0), size=card_shape)
-    img_card.draw()
-    win.flip()
-    waitKeys()
+        part_0_0.draw()
 
-    part_2_0 = TextBox2(
-        win=win,
-        text=instructions["2.0"],
-        letterHeight=24,
-        pos=(0, 350),
-    )
-    part_2_0.draw()
+    def part_1(win, instructions):
+        part_1_0 = TextBox2(
+            win=win,
+            text=instructions["risk-sensitive"]["1.0"],
+            letterHeight=24,
+            pos=(0, 350),
+        )
 
-    img_card2 = ImageStim(win=win, image=card2, pos=(350, 0), size=card_shape)
-    img_card2.draw()
-    img_card.draw()
-    img_fix.draw()
-    win.flip()
-    waitKeys()
+        img_fix = ImageStim(win=win, image=fix, pos=(0, 0), size=fix.shape[:2])
+        img_card = ImageStim(win=win, image=card1, pos=(-350, 0), size=card_shape)
+        img_card.draw()
+        img_fix.draw()
+        part_1_0.draw()
 
-    part_3_0 = TextBox2(
-        win=win,
-        text=instructions["3.0"],
-        letterHeight=24,
-        pos=(0, 0),
-    )
-    part_3_0.draw()
+    def part_2(win, instructions):
+        part_2_0 = TextBox2(
+            win=win,
+            text=instructions["risk-sensitive"]["2.0"],
+            letterHeight=24,
+            pos=(0, 350),
+        )
 
-    win.flip()
-    waitKeys()
+        img_fix = ImageStim(win=win, image=fix, pos=(0, 0), size=fix.shape[:2])
+        img_card = ImageStim(win=win, image=card1, pos=(-350, 0), size=card_shape)
+        img_card2 = ImageStim(win=win, image=card2, pos=(350, 0), size=card_shape)
+        img_card2.draw()
+        img_card.draw()
+        img_fix.draw()
+        part_2_0.draw()
 
-    return key_list
+    def part_3(win, instructions):
+        part_3_0 = TextBox2(
+            win=win,
+            text=instructions["risk-sensitive"]["3.0"],
+            letterHeight=24,
+            pos=(0, 0),
+        )
+        part_3_0.draw()
+
+    return [part_0, part_1, part_2, part_3]

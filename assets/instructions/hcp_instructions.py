@@ -1,12 +1,9 @@
-import json
-
-from psychopy.event import waitKeys
 from psychopy.visual import ImageStim, Rect, TextBox2, TextStim
 
 from rewardgym.psychopy_render.default_images import lose_cross, win_cross, zero_cross
 
 
-def hcp_instructions(win, key_map={"left": 0, "right": 1}, show_training=True):
+def hcp_instructions():
     nothing = zero_cross(
         width=100, height=100, circle_radius_inner=10, circle_radius_outer=15
     )
@@ -17,109 +14,100 @@ def hcp_instructions(win, key_map={"left": 0, "right": 1}, show_training=True):
         width=100, height=100, circle_radius_inner=10, circle_radius_outer=15
     )
 
-    with open("assets/instructions/instructions_en.json") as f:
-        instructions = json.load(f)
+    def part_0(win, instructions):
+        part_0_0 = TextBox2(
+            win=win,
+            text=instructions["hcp"]["0.0"],
+            letterHeight=24,
+            pos=(0, 250),
+        )
 
-    instructions = instructions["hcp"]
+        part_0_1 = TextBox2(
+            win=win,
+            text=instructions["hcp"]["0.1"],
+            letterHeight=24,
+            pos=(0, -250),
+        )
 
-    key_list = list(key_map.keys())
+        quest = TextStim(
+            win=win,
+            text="?",
+            color=[244, 244, 244],
+            height=150,
+        )
 
-    part_0_0 = TextBox2(
-        win=win,
-        text=instructions["0.0"],
-        letterHeight=24,
-        pos=(0, 250),
-    )
+        aspect_ratio = 250 / 350
 
-    part_0_1 = TextBox2(
-        win=win,
-        text=instructions["0.1"],
-        letterHeight=24,
-        pos=(0, -250),
-    )
+        card = Rect(
+            win=win,
+            width=int(250 * aspect_ratio),
+            height=250,
+            fillColor="grey",
+            lineWidth=3,
+            lineColor="white",
+        )
 
-    quest = TextStim(
-        win=win,
-        text="?",
-        color=[244, 244, 244],
-        height=150,
-    )
+        for ii in [card, quest, part_0_0, part_0_1]:
+            ii.draw()
 
-    aspect_ratio = 250 / 350
+    def part_1(win, instructions):
+        start_pos = 250
+        part_1_0 = TextBox2(
+            win=win,
+            text=instructions["hcp"]["1.0"],
+            letterHeight=24,
+            pos=(0, start_pos),
+        )
 
-    card = Rect(
-        win=win,
-        width=int(250 * aspect_ratio),
-        height=250,
-        fillColor="grey",
-        lineWidth=3,
-        lineColor="white",
-    )
+        start_pos -= 45
 
-    for ii in [card, quest, part_0_0, part_0_1]:
-        ii.draw()
+        part_1_1 = TextBox2(
+            win=win,
+            text=instructions["hcp"]["1.1"],
+            letterHeight=24,
+            pos=(0, start_pos),
+        )
 
-    win.flip()
-    waitKeys()
+        start_pos -= 75
+        img2 = ImageStim(
+            win=win, image=winning, pos=(0, start_pos), size=winning.shape[:2]
+        )
 
-    start_pos = 250
+        start_pos -= 85
 
-    part_1_0 = TextBox2(
-        win=win,
-        text=instructions["1.0"],
-        letterHeight=24,
-        pos=(0, start_pos),
-    )
+        part_1_2 = TextBox2(
+            win=win,
+            text=instructions["hcp"]["1.2"],
+            letterHeight=24,
+            pos=(0, start_pos),
+        )
 
-    start_pos -= 45
+        start_pos -= 65
+        img3 = ImageStim(win=win, image=lose, pos=(0, start_pos), size=lose.shape[:2])
 
-    part_1_1 = TextBox2(
-        win=win,
-        text=instructions["1.1"],
-        letterHeight=24,
-        pos=(0, start_pos),
-    )
+        start_pos -= 85
+        part_1_3 = TextBox2(
+            win=win,
+            text=instructions["hcp"]["1.3"],
+            letterHeight=24,
+            pos=(0, start_pos),
+        )
 
-    start_pos -= 75
-    img2 = ImageStim(win=win, image=winning, pos=(0, start_pos), size=winning.shape[:2])
+        start_pos -= 65
+        img4 = ImageStim(
+            win=win, image=nothing, pos=(0, start_pos), size=nothing.shape[:2]
+        )
 
-    start_pos -= 85
+        for ii in [part_1_0, part_1_1, part_1_2, part_1_3, img2, img3, img4]:
+            ii.draw()
 
-    part_1_2 = TextBox2(
-        win=win,
-        text=instructions["1.2"],
-        letterHeight=24,
-        pos=(0, start_pos),
-    )
-
-    start_pos -= 65
-    img3 = ImageStim(win=win, image=lose, pos=(0, start_pos), size=lose.shape[:2])
-
-    start_pos -= 85
-    part_1_3 = TextBox2(
-        win=win,
-        text=instructions["1.3"],
-        letterHeight=24,
-        pos=(0, start_pos),
-    )
-
-    start_pos -= 65
-    img4 = ImageStim(win=win, image=nothing, pos=(0, start_pos), size=nothing.shape[:2])
-
-    for ii in [part_1_0, part_1_1, part_1_2, part_1_3, img2, img3, img4]:
-        ii.draw()
-
-    win.flip()
-
-    waitKeys()
-
-    if show_training:
+    def part_2(win, instructions):
         part_2_0 = TextBox2(
-            win=win, text=instructions["2.0"], letterHeight=24, alignment="center"
+            win=win,
+            text=instructions["hcp"]["2.0"],
+            letterHeight=24,
+            alignment="center",
         )
         part_2_0.draw()
-        win.flip()
 
-        waitKeys()
-
-    return key_list
+    return [part_0, part_1, part_2]

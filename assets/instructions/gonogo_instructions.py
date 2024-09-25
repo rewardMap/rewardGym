@@ -1,6 +1,3 @@
-import json
-
-from psychopy.event import waitKeys
 from psychopy.visual import ImageStim, TextBox2
 
 from rewardgym.psychopy_render.default_images import (
@@ -11,7 +8,7 @@ from rewardgym.psychopy_render.default_images import (
 )
 
 
-def gonogo_instructions(win, key_map={"left": 0, "right": 1}, show_training=True):
+def gonogo_instructions():
     fix = fixation_cross()
     winning = win_cross()
     target = gonogo_probe()
@@ -27,99 +24,80 @@ def gonogo_instructions(win, key_map={"left": 0, "right": 1}, show_training=True
         height=350,
         width=350,
     )
-    with open("assets/instructions/instructions_en.json") as f:
-        instructions = json.load(f)
 
-    instructions = instructions["gonogo"]
+    def part_0(win, instructions):
+        part_0_0 = TextBox2(
+            win=win,
+            text=instructions["gonogo"]["0.0"] + instructions["gonogo"]["0.1"],
+            letterHeight=24,
+            pos=(0, 100),
+        )
 
-    key_list = list(key_map.keys())
+        part_0_0.draw()
 
-    part_0_0 = TextBox2(
-        win=win,
-        text=instructions["0.0"] + instructions["0.1"],
-        letterHeight=24,
-        pos=(0, 100),
-    )
+    def part_1(win, instructions):
+        part_1_0 = TextBox2(
+            win=win,
+            text=instructions["gonogo"]["1.0"],
+            letterHeight=24,
+            pos=(0, 150),
+        )
 
-    part_0_0.draw()
-    win.flip()
-    waitKeys()
+        img_card = ImageStim(win=win, image=card, pos=(0, 0), size=(200, 200))
+        img_card.draw()
+        part_1_0.draw()
 
-    part_1_0 = TextBox2(
-        win=win,
-        text=instructions["1.0"],
-        letterHeight=24,
-        pos=(0, 150),
-    )
-    part_1_0.draw()
+    def part_2(win, instructions):
+        part_2_0 = TextBox2(
+            win=win,
+            text=instructions["gonogo"]["2.0"],
+            letterHeight=24,
+            pos=(0, 150),
+        )
 
-    img_card = ImageStim(win=win, image=card, pos=(0, 0), size=(200, 200))
-    img_card.draw()
-    win.flip()
-    waitKeys()
+        img_fix = ImageStim(win=win, image=fix, pos=(0, 0), size=fix.shape[:2])
+        img_fix.draw()
+        part_2_0.draw()
 
-    part_2_0 = TextBox2(
-        win=win,
-        text=instructions["2.0"],
-        letterHeight=24,
-        pos=(0, 150),
-    )
-    part_2_0.draw()
+    def part_3(win, instructions):
+        part_3_0 = TextBox2(
+            win=win,
+            text=instructions["gonogo"]["3.0"],
+            letterHeight=24,
+            pos=(0, 150),
+        )
 
-    img_fix = ImageStim(win=win, image=fix, pos=(0, 0), size=fix.shape[:2])
-    img_fix.draw()
-    win.flip()
-    waitKeys()
+        part_3_1 = TextBox2(
+            win=win,
+            text=instructions["gonogo"]["3.1"],
+            letterHeight=24,
+            pos=(0, -150),
+        )
 
-    part_3_0 = TextBox2(
-        win=win,
-        text=instructions["3.0"],
-        letterHeight=24,
-        pos=(0, 150),
-    )
-    part_3_0.draw()
+        img_fix = ImageStim(win=win, image=target, pos=(0, 0), size=target.shape[:2])
+        img_fix.draw()
+        part_3_0.draw()
+        part_3_1.draw()
 
-    part_3_1 = TextBox2(
-        win=win,
-        text=instructions["3.1"],
-        letterHeight=24,
-        pos=(0, -150),
-    )
-    part_3_1.draw()
+    def part_4(win, instructions):
+        part_4_0 = TextBox2(
+            win=win,
+            text=instructions["gonogo"]["4.0"],
+            letterHeight=24,
+            pos=(0, 150),
+        )
 
-    img_fix = ImageStim(win=win, image=target, pos=(0, 0), size=target.shape[:2])
-    img_fix.draw()
-    win.flip()
-    waitKeys()
+        img_fix = ImageStim(win=win, image=winning, pos=(0, 0), size=winning.shape[:2])
+        img_fix.draw()
+        part_4_0.draw()
 
-    part_4_0 = TextBox2(
-        win=win,
-        text=instructions["4.0"],
-        letterHeight=24,
-        pos=(0, 150),
-    )
-    part_4_0.draw()
-
-    # part_4_1 = TextBox2(
-    #    win=win,
-    #    text=instructions["4.1"],
-    #    letterHeight=24,
-    #    pos=(0, -75),
-    # )
-    # part_4_1.draw()
-
-    img_fix = ImageStim(win=win, image=winning, pos=(0, 0), size=winning.shape[:2])
-    img_fix.draw()
-    win.flip()
-    waitKeys()
-
-    if show_training:
+    def part_5(win, instructions):
         part_5_0 = TextBox2(
-            win=win, text=instructions["5.0"], letterHeight=24, alignment="center"
+            win=win,
+            text=instructions["gonogo"]["5.0"],
+            letterHeight=24,
+            alignment="center",
         )
         part_5_0.draw()
-        win.flip()
 
-        waitKeys()
-
-    return key_list
+    return [part_0, part_1, part_2, part_3, part_4, part_5]
