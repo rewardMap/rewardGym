@@ -30,12 +30,13 @@ def get_posner(
     info_dict.update(
         {
             "position": {
-                0: "cue-left",
-                1: "cue-right",
-                2: "target-left",
-                3: "target-right",
-                4: "win",
-                5: "lose",
+                0: "selection",
+                1: "cue-1",
+                2: "cue-2",
+                3: "target-left",
+                4: "target-right",
+                5: "win",
+                6: "lose",
             }
         }
     )
@@ -98,31 +99,31 @@ def generate_posner_configs(stimulus_set: str = "1"):
     seed = check_seed(222)
     print("Generating stimuli")
     condition_dict = {
-        "cue-left-valid": {0: {0: 1}, 1: {0: 3}},
-        "cue-left-invalid": {0: {0: 1}, 1: {0: 4}},
-        "cue-right-valid": {0: {0: 2}, 2: {0: 4}},
-        "cue-right-invalid": {0: {0: 2}, 2: {0: 3}},
+        "cue-1-target-left": {0: {0: 1}, 1: {0: 3}},
+        "cue-1-target-right": {0: {0: 1}, 1: {0: 4}},
+        "cue-2-target-right": {0: {0: 2}, 2: {0: 4}},
+        "cue-2-target-left": {0: {0: 2}, 2: {0: 3}},
     }
 
     condition_template_80_20 = (
-        ["cue-left-valid"] * 8
-        + ["cue-left-invalid"] * 2
-        + ["cue-right-valid"] * 8
-        + ["cue-right-invalid"] * 2
+        ["cue-1-target-left"] * 8
+        + ["cue-1-target-right"] * 2
+        + ["cue-2-target-right"] * 8
+        + ["cue-2-target-left"] * 2
     )
 
     condition_template_50_50 = (
-        ["cue-left-valid"] * 5
-        + ["cue-left-invalid"] * 5
-        + ["cue-right-valid"] * 5
-        + ["cue-right-invalid"] * 5
+        ["cue-1-target-left"] * 5
+        + ["cue-1-target-right"] * 5
+        + ["cue-2-target-right"] * 5
+        + ["cue-2-target-left"] * 5
     )
 
     condition_template_20_80 = (
-        ["cue-left-valid"] * 2
-        + ["cue-left-invalid"] * 8
-        + ["cue-right-valid"] * 2
-        + ["cue-right-invalid"] * 8
+        ["cue-1-target-left"] * 2
+        + ["cue-1-target-right"] * 8
+        + ["cue-2-target-right"] * 2
+        + ["cue-2-target-left"] * 8
     )
 
     iti_template = [1.5, 2.125, 2.75, 3.375, 4.0] * 4
