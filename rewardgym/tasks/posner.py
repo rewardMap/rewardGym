@@ -96,8 +96,8 @@ def get_posner(
 
 
 def generate_posner_configs(stimulus_set: str = "1"):
-    seed = check_seed(222)
-    print("Generating stimuli")
+    seed = check_seed(int(stimulus_set))
+
     condition_dict = {
         "cue-1-target-left": {0: {0: 1}, 1: {0: 3}},
         "cue-1-target-right": {0: {0: 1}, 1: {0: 4}},
@@ -166,7 +166,6 @@ def generate_posner_configs(stimulus_set: str = "1"):
                         seed.choice(iti_template, size=20, replace=False).tolist()
                     )
 
-    print("Stimuli generated")
     config = {
         "name": "posner",
         "stimulus_set": stimulus_set,
