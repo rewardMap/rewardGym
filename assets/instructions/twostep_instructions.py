@@ -105,10 +105,11 @@ def twostep_instructions():
             pos=(0, -250),
         )
 
+        fixation = ImageStim(win=win, image=fix, pos=(0, 0), size=fix.shape[:2])
         img_card3 = ImageStim(win=win, image=card3, pos=(-325, 0), size=card1.shape[:2])
         img_card4 = ImageStim(win=win, image=card4, pos=(325, 0), size=card1.shape[:2])
 
-        for i in [img_card3, img_card4, fix, part_1_0, part_1_1]:
+        for i in [img_card3, img_card4, fixation, part_1_0, part_1_1]:
             i.draw()
 
     def part_2(win, instructions):
