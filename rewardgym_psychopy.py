@@ -2,7 +2,7 @@ import json
 
 from psychopy import core, event, visual
 
-from assets import get_instructions
+from assets import show_instructions
 from rewardgym import get_configs, get_env
 from rewardgym.psychopy_core import run_task
 from rewardgym.psychopy_extras import set_up_experiment
@@ -63,10 +63,7 @@ if __name__ == "__main__":
     env.add_info(info_dict)
 
     if exp_dict["instructions"]:
-        instructions = get_instructions(task)
-
-        if instructions:
-            instructions(win, key_map=key_dict, show_training=True)
+        show_instructions(task, win, key_map=key_dict)
 
     if mode == "fmri":
         scanner_info = visual.TextStim(
@@ -97,7 +94,7 @@ if __name__ == "__main__":
 
     env.setup(window=win, logger=Logger)
 
-    run_task(env=env, win=win, logger=Logger, settings=settings, n_episodes=3)
+    run_task(env=env, win=win, logger=Logger, settings=settings, n_episodes=None)
 
     win.to_Draw = []
 
