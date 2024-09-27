@@ -80,7 +80,7 @@ def twostep_instructions():
         part_0_0 = TextBox2(
             win=win,
             text=instructions["two-step"]["0.0"],
-            letterHeight=24,
+            letterHeight=28,
             pos=(0, 250),
         )
 
@@ -95,13 +95,13 @@ def twostep_instructions():
         part_1_0 = TextBox2(
             win=win,
             text=instructions["two-step"]["1.0"],
-            letterHeight=24,
+            letterHeight=28,
             pos=(0, 250),
         )
         part_1_1 = TextBox2(
             win=win,
             text=instructions["two-step"]["1.1"],
-            letterHeight=24,
+            letterHeight=28,
             pos=(0, -250),
         )
 
@@ -116,7 +116,7 @@ def twostep_instructions():
         part_2_0 = TextBox2(
             win=win,
             text=instructions["two-step"]["2.0"],
-            letterHeight=24,
+            letterHeight=28,
             pos=(0, 325),
         )
 
@@ -176,7 +176,7 @@ def twostep_instructions():
         part_2_1 = TextBox2(
             win=win,
             text=instructions["two-step"]["2.1"] + instructions["two-step"]["2.2"],
-            letterHeight=24,
+            letterHeight=28,
             pos=(0, -250),
         )
 
@@ -200,7 +200,7 @@ def twostep_instructions():
         part_3_0 = TextBox2(
             win=win,
             text=instructions["two-step"]["3.0"],
-            letterHeight=24,
+            letterHeight=28,
             pos=(0, 75),
         )
         part_3_0.draw()

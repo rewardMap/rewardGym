@@ -29,7 +29,7 @@ def gonogo_instructions():
         part_0_0 = TextBox2(
             win=win,
             text=instructions["gonogo"]["0.0"] + instructions["gonogo"]["0.1"],
-            letterHeight=24,
+            letterHeight=28,
             pos=(0, 100),
         )
 
@@ -39,7 +39,7 @@ def gonogo_instructions():
         part_1_0 = TextBox2(
             win=win,
             text=instructions["gonogo"]["1.0"],
-            letterHeight=24,
+            letterHeight=28,
             pos=(0, 150),
         )
 
@@ -51,7 +51,7 @@ def gonogo_instructions():
         part_2_0 = TextBox2(
             win=win,
             text=instructions["gonogo"]["2.0"],
-            letterHeight=24,
+            letterHeight=28,
             pos=(0, 150),
         )
 
@@ -63,14 +63,14 @@ def gonogo_instructions():
         part_3_0 = TextBox2(
             win=win,
             text=instructions["gonogo"]["3.0"],
-            letterHeight=24,
+            letterHeight=28,
             pos=(0, 150),
         )
 
         part_3_1 = TextBox2(
             win=win,
             text=instructions["gonogo"]["3.1"],
-            letterHeight=24,
+            letterHeight=28,
             pos=(0, -150),
         )
 
@@ -83,7 +83,7 @@ def gonogo_instructions():
         part_4_0 = TextBox2(
             win=win,
             text=instructions["gonogo"]["4.0"],
-            letterHeight=24,
+            letterHeight=28,
             pos=(0, 150),
         )
 
@@ -95,7 +95,7 @@ def gonogo_instructions():
         part_5_0 = TextBox2(
             win=win,
             text=instructions["gonogo"]["5.0"],
-            letterHeight=24,
+            letterHeight=28,
             alignment="center",
         )
         part_5_0.draw()

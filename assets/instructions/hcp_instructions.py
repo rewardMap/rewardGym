@@ -18,14 +18,14 @@ def hcp_instructions():
         part_0_0 = TextBox2(
             win=win,
             text=instructions["hcp"]["0.0"],
-            letterHeight=24,
+            letterHeight=28,
             pos=(0, 250),
         )
 
         part_0_1 = TextBox2(
             win=win,
             text=instructions["hcp"]["0.1"],
-            letterHeight=24,
+            letterHeight=28,
             pos=(0, -250),
         )
 
@@ -51,20 +51,20 @@ def hcp_instructions():
             ii.draw()
 
     def part_1(win, instructions):
-        start_pos = 250
+        start_pos = 280
         part_1_0 = TextBox2(
             win=win,
             text=instructions["hcp"]["1.0"],
-            letterHeight=24,
+            letterHeight=28,
             pos=(0, start_pos),
         )
 
-        start_pos -= 45
+        start_pos -= 65
 
         part_1_1 = TextBox2(
             win=win,
             text=instructions["hcp"]["1.1"],
-            letterHeight=24,
+            letterHeight=28,
             pos=(0, start_pos),
         )
 
@@ -78,7 +78,7 @@ def hcp_instructions():
         part_1_2 = TextBox2(
             win=win,
             text=instructions["hcp"]["1.2"],
-            letterHeight=24,
+            letterHeight=28,
             pos=(0, start_pos),
         )
 
@@ -89,7 +89,7 @@ def hcp_instructions():
         part_1_3 = TextBox2(
             win=win,
             text=instructions["hcp"]["1.3"],
-            letterHeight=24,
+            letterHeight=28,
             pos=(0, start_pos),
         )
 
@@ -105,7 +105,7 @@ def hcp_instructions():
         part_2_0 = TextBox2(
             win=win,
             text=instructions["hcp"]["2.0"],
-            letterHeight=24,
+            letterHeight=28,
             alignment="center",
         )
         part_2_0.draw()

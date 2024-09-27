@@ -13,7 +13,7 @@ def posner_instructions():
         part_0_0 = TextBox2(
             win=win,
             text=instructions["posner"]["0.0"],
-            letterHeight=24,
+            letterHeight=28,
             pos=(0, 200),
         )
 
@@ -26,7 +26,7 @@ def posner_instructions():
         part_1_0 = TextBox2(
             win=win,
             text=instructions["posner"]["1.0"],
-            letterHeight=24,
+            letterHeight=28,
             pos=(0, 250),
         )
 
@@ -51,7 +51,7 @@ def posner_instructions():
         part_2_0 = TextBox2(
             win=win,
             text=instructions["posner"]["2.0"],
-            letterHeight=24,
+            letterHeight=28,
             pos=(0, 200),
         )
 
@@ -62,7 +62,7 @@ def posner_instructions():
         part_3_0 = TextBox2(
             win=win,
             text=instructions["posner"]["3.0"],
-            letterHeight=24,
+            letterHeight=28,
             pos=(0, 0),
         )
 
@@ -73,7 +73,7 @@ def posner_instructions():
         part_4_0 = TextBox2(
             win=win,
             text=instructions["posner"]["4.0"],
-            letterHeight=24,
+            letterHeight=28,
             alignment="center",
         )
         part_4_0.draw()

@@ -38,7 +38,7 @@ def show_instructions(task, win, key_map={"left": 0, "right": 1}):
         end = TextStim(
             win=win,
             text=instructions["instructions_end"],
-            height=24,
+            height=28,
             pos=(0, 0),
         )
         end.draw()
@@ -47,7 +47,7 @@ def show_instructions(task, win, key_map={"left": 0, "right": 1}):
         end = TextStim(
             win=win,
             text=instructions["instructions"],
-            height=24,
+            height=28,
             pos=(0, 0),
         )
         end.draw()

@@ -35,7 +35,7 @@ def risksensitive_instructions():
         part_0_0 = TextBox2(
             win=win,
             text=instructions["risk-sensitive"]["0.0"],
-            letterHeight=24,
+            letterHeight=28,
             pos=(0, 100),
         )
 
@@ -45,7 +45,7 @@ def risksensitive_instructions():
         part_1_0 = TextBox2(
             win=win,
             text=instructions["risk-sensitive"]["1.0"],
-            letterHeight=24,
+            letterHeight=28,
             pos=(0, 350),
         )
 
@@ -59,7 +59,7 @@ def risksensitive_instructions():
         part_2_0 = TextBox2(
             win=win,
             text=instructions["risk-sensitive"]["2.0"],
-            letterHeight=24,
+            letterHeight=28,
             pos=(0, 350),
         )
 
@@ -75,7 +75,7 @@ def risksensitive_instructions():
         part_3_0 = TextBox2(
             win=win,
             text=instructions["risk-sensitive"]["3.0"],
-            letterHeight=24,
+            letterHeight=28,
             pos=(0, 0),
         )
         part_3_0.draw()
