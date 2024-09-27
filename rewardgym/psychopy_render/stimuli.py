@@ -15,7 +15,7 @@ class BaseStimulus:
     window.
     """
 
-    def __init__(self, duration: float = None, name: str = None):
+    def __init__(self, duration: float = None, name: str = None, wait_no_keys=False):
         """
         Stimulus presentation base class. The parameters do not really do anything.
 
@@ -29,6 +29,7 @@ class BaseStimulus:
         self.duration = duration
         self.name = name
         self.entity = "base"
+        self.wait_no_keys = wait_no_keys
 
     def setup(self, win: Window, **kwargs):
         """
@@ -54,13 +55,12 @@ class BaseStimulus:
             Should return None
 
         """
-        logger.key_strokes(win)
 
         stim_onset = logger.get_time()
 
         win.flip()
 
-        logger.wait(win, self.duration, stim_onset)
+        logger.wait(win, self.duration, stim_onset, self.wait_no_keys)
 
         logger.log_event(
             {"event_type": self.name, "expected_duration": self.duration},
@@ -159,8 +159,6 @@ class TextStimulus(BaseStimulus):
         Should return None
 
         """
-        logger.key_strokes(win)
-
         stim_onset = logger.get_time()
         self.textStim.draw()
         win.flip()
@@ -189,6 +187,7 @@ class ImageStimulus(BaseStimulus):
         width: float = None,
         height: float = None,
         autodraw: bool = False,
+        wait_no_keys: bool = False,
     ):
         """
         Stimulus class for image displays.
@@ -203,9 +202,11 @@ class ImageStimulus(BaseStimulus):
             A list of positions (where the images should be displayed), by default None
         name : str, optional
             name of the object, will be used for logging, by default None
+        wait_no_keys : str, optional
+            If the logger's wait function should get key presses - only set to True if presses that are too early should be used, by default False
         """
 
-        super().__init__(name=name, duration=duration)
+        super().__init__(name=name, duration=duration, wait_no_keys=wait_no_keys)
 
         self.image_paths = image_paths
 
@@ -266,8 +267,6 @@ class ImageStimulus(BaseStimulus):
         None
         Should return None
         """
-        logger.key_strokes(win)
-
         stim_onset = logger.get_time()
 
         # So that images are drawn on top
@@ -279,7 +278,7 @@ class ImageStimulus(BaseStimulus):
         for ii in self.imageStims:
             ii.autoDraw = self.autodraw
 
-        logger.wait(win, self.duration, stim_onset)
+        logger.wait(win, self.duration, stim_onset, self.wait_no_keys)
 
         logger.log_event(
             {"event_type": self.name, "expected_duration": self.duration},
@@ -616,8 +615,6 @@ class FeedBackStimulus(BaseStimulus):
         self.textStim.setText(self.text.format(reward))
         self.textStim2.setAutoDraw(False)
 
-        logger.key_strokes(win)
-
         stim_onset = logger.get_time()
         if feedback_img in self.feedback_image.keys():
             self.feedback_image[feedback_img].autoDraw = True
@@ -632,8 +629,9 @@ class FeedBackStimulus(BaseStimulus):
 
         logger.wait(win, self.duration / 2, stim_onset)
         win.flip()
+        stim_onset2 = logger.get_time()
         self.textStim2.setAutoDraw(True)
-        logger.wait(win, self.duration / 2, stim_onset)
+        logger.wait(win, self.duration / 2, stim_onset2)
 
         if feedback_img in self.feedback_image.keys():
             self.feedback_image[feedback_img].autoDraw = False

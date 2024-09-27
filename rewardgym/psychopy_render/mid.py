@@ -1,15 +1,22 @@
 from .default_images import fixation_cross, mid_stimuli
-from .stimuli import ActionStimulus, FeedBackStimulus, ImageStimulus
+from .special_stimuli import ActionStimulusTooEarly
+from .stimuli import FeedBackStimulus, ImageStimulus
 
 
 def get_info_dict(seed=None, key_dict={"space": 0}, **kwargs):
     reward_feedback = FeedBackStimulus(2.0, text="{0}", target="reward", name="reward")
 
     fix_isi = ImageStimulus(
-        image_paths=[fixation_cross()], duration=1.5, name="isi", autodraw=False
+        image_paths=[fixation_cross()],
+        duration=1.5,
+        name="isi",
+        autodraw=False,
+        wait_no_keys=True,
     )
 
-    action_stim = ActionStimulus(duration=0.35, timeout_action=1, key_dict=key_dict)
+    action_stim = ActionStimulusTooEarly(
+        duration=0.35, timeout_action=1, key_dict=key_dict
+    )
 
     def first_step(img, img2):
         return [
@@ -25,6 +32,7 @@ def get_info_dict(seed=None, key_dict={"space": 0}, **kwargs):
                 image_paths=[img2],
                 positions=[(0, 0)],
                 name="target",
+                wait_no_keys=True,
             ),
             action_stim,
         ]
