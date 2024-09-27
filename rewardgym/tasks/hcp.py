@@ -107,8 +107,11 @@ def generate_hcp_configs(stimulus_set: str = "1"):
     win2 = ["win", "win", "win", "win", "win", "win", "lose", "lose"]
     win3 = ["win", "win", "win", "win", "win", "win", "neutral", "lose"]
 
+    block_order = seed.choice(
+        [lose1, win1, lose2, win2, lose3, win3, lose2, win2], size=8, replace=False
+    )
     conditions = []
-    for block in [lose1, win1, lose2, win2, lose3, win3, lose2, win2]:
+    for block in block_order:
         conditions.extend(seed.choice(block, size=8, replace=False).tolist())
 
     config = {
