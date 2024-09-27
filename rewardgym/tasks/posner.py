@@ -165,7 +165,7 @@ def generate_posner_configs(stimulus_set: str = "1"):
                 ).tolist()
 
                 check = check_conditions_not_following(
-                    condition_template, dont_follow_dict[co], 3
+                    condition_template, dont_follow_dict[co], 2
                 )
 
                 if check and (
