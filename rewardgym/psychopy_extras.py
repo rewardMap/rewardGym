@@ -36,7 +36,8 @@ def make_bids_name(
     }
 
     name_elements = "_".join(
-        ["-".join([k, v]) for k, v in elements.items() if v is not None] + [extension]
+        ["-".join([k, str(v)]) for k, v in elements.items() if v is not None]
+        + [extension]
     )
 
     return name_elements
