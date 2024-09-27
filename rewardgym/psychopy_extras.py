@@ -13,6 +13,49 @@ import os
 from . import ENVIRONMENTS
 
 
+def make_bids_name(
+    subid: str,
+    session: str = None,
+    task: str = None,
+    run: str = None,
+    acquisition: str = None,
+    extension: str = "beh.tsv",
+):
+    # Some basic rewardmap specific sanitization:
+    if task is not None:
+        task = task.replace(
+            "-", ""
+        )  # two-step and risk-sensitive have non bids task names
+
+    elements = {
+        "sub": subid,
+        "ses": session,
+        "task": task,
+        "acq": acquisition,
+        "run": run,
+    }
+
+    name_elements = "_".join(
+        ["-".join([k, v]) for k, v in elements.items() if v is not None] + [extension]
+    )
+
+    return name_elements
+
+
+def overwrite_warning(filename):
+    if os.path.isfile(filename):
+        warning_dialog = Dlg(title=f"File Already Exists: {filename}")
+        warning_dialog.addField("Overwrite", choices=["Yes", "No"])
+        warning_data = warning_dialog.show()
+        # Step 4: Handle the user's response
+        if warning_data is None:
+            quit()
+        elif warning_data[0] == "Yes":
+            pass
+        else:
+            quit()
+
+
 def set_up_experiment(outdir="data/"):
     exp_dict = {
         "participant_id": "001",
@@ -61,32 +104,27 @@ def set_up_experiment(outdir="data/"):
 
     exp_dict["key_map"] = key_map
 
-    logger_name = "sub-{0}_ses-{1}_task-{2}_run-{3}_{4}.tsv".format(
-        exp_dict["participant_id"],
-        exp_dict["session"],
-        exp_dict["task"],
-        exp_dict["run"],
-        extension,
+    logger_name = make_bids_name(
+        subid=exp_dict["participant_id"],
+        session=exp_dict["session"],
+        task=exp_dict["task"],
+        run=exp_dict["run"],
+        extension=extension,
     )
+
     logger_name = os.path.join(outdir, logger_name)
 
-    config_save = "sub-{0}_ses-{1}_task-{2}_run-{3}_config.json".format(
-        exp_dict["participant_id"],
-        exp_dict["session"],
-        exp_dict["task"],
-        exp_dict["run"],
+    config_save = make_bids_name(
+        subid=exp_dict["participant_id"],
+        session=exp_dict["session"],
+        task=exp_dict["task"],
+        run=exp_dict["run"],
+        extension="config.json",
     )
+
     config_save = os.path.join(outdir, config_save)
 
-    if os.path.isfile(logger_name):
-        warning_dialog = Dlg(title=f"File Already Exists: {logger_name}")
-        warning_dialog.addField("Overwrite", choices=["Yes", "No"])
-        warning_data = warning_dialog.show()
-        # Step 4: Handle the user's response
-        if warning_data[0] == "Yes":
-            pass
-        else:
-            quit()
+    overwrite_warning(logger_name)
 
     return (
         logger_name,
