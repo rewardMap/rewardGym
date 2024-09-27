@@ -116,18 +116,16 @@ def generate_gonogo_configs(stimulus_set: str = "1"):
 
     check = False
     while not check:
-        conditions = seed.choice(a=condition_template, size=60, replace=False).tolist()
+        conditions = seed.permutation(condition_template).tolist()
         check = check_conditions_present(conditions[:8], list(condition_dict.keys()))
 
-    isi = seed.choice(isi_template, size=60, replace=False).tolist()
-    iti = seed.choice(iti_template, size=60, replace=False).tolist()
+    isi = seed.permutation(isi_template).tolist()
+    iti = seed.permutation(iti_template).tolist()
 
     for _ in range(n_blocks - 1):
-        conditions.extend(
-            seed.choice(a=condition_template, size=60, replace=False).tolist()
-        )
-        isi.extend(seed.choice(isi_template, size=60, replace=False).tolist())
-        iti.extend(seed.choice(iti_template, size=60, replace=False).tolist())
+        conditions.extend(seed.permutation(condition_template).tolist())
+        isi.extend(seed.permutation(isi_template).tolist())
+        iti.extend(seed.permutation(iti_template).tolist())
 
     config = {
         "name": "gonogo",

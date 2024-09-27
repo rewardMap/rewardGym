@@ -146,7 +146,7 @@ def generate_posner_configs(stimulus_set: str = "1"):
         1: ["cue-1-target-right", "cue2-target-left"],
         3: ["cue-1-target-right", "cue2-target-left"],
     }
-    condition_order = seed.choice(a=[0, 1, 2, 3], size=4, replace=False)
+    condition_order = seed.permutation([0, 1, 2, 3])
     condition_assign = {
         0: condition_template_10_90,
         1: condition_template_90_10,
@@ -172,12 +172,8 @@ def generate_posner_configs(stimulus_set: str = "1"):
                     len(conditions) == 0 or conditions[-1] != condition_template[0]
                 ):
                     conditions.extend(condition_template)
-                    isi.extend(
-                        seed.choice(isi_template, size=20, replace=False).tolist()
-                    )
-                    iti.extend(
-                        seed.choice(iti_template, size=20, replace=False).tolist()
-                    )
+                    isi.extend(seed.permutation(isi_template).tolist())
+                    iti.extend(seed.permutation(iti_template).tolist())
                     reject = False
 
     config = {

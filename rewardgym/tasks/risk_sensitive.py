@@ -304,9 +304,7 @@ def generate_risk_sensitive_configs(stimulus_set: str = "1"):
         approve = False
 
         while not approve:
-            conditions_proposal = seed.choice(
-                a=condition_template, size=len(condition_template), replace=False
-            ).tolist()
+            conditions_proposal = seed.permutation(condition_template).tolist()
 
             approve = (
                 all(
@@ -336,9 +334,7 @@ def generate_risk_sensitive_configs(stimulus_set: str = "1"):
 
         conditions.extend(conditions_proposal)
 
-        iti = seed.choice(
-            iti_template, size=len(condition_template), replace=False
-        ).tolist()
+        iti = seed.permutation(iti_template).tolist()
         itis.extend(iti)
 
     config = {

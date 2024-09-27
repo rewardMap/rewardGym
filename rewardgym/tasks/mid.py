@@ -120,23 +120,21 @@ def generate_mid_configs(stimulus_set: 111, use_abcd=True):
 
         n_blocks = 10
 
-        conditions = seed.choice(
-            a=condition_template * 2, size=10, replace=False
-        ).tolist()
-        isi = seed.choice(isi_template * 2, size=10, replace=False).tolist()
+        conditions = seed.permutation(condition_template * 2).tolist()
+        isi = seed.permutation(isi_template * 2).tolist()
 
         for _ in range(n_blocks - 1):
             reject = True
             while reject:
-                condition_template = seed.choice(
-                    a=condition_template * 2, size=10, replace=False
-                ).tolist()
+                condition_template = seed.permutation(condition_template * 2).tolist()
 
                 if conditions[-1] != condition_template[0]:
                     reject = False
                     conditions.extend(condition_template)
                     isi.extend(
-                        seed.choice(isi_template * 2, size=10, replace=False).tolist()
+                        seed.permutation(
+                            isi_template * 2, size=10, replace=False
+                        ).tolist()
                     )
 
     if use_abcd:
