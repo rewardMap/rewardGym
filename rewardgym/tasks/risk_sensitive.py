@@ -6,7 +6,7 @@ import numpy as np
 
 from ..reward_classes import BaseReward, PseudoRandomReward
 from ..utils import check_seed
-from .utils import check_conditions_not_following, check_conditions_present
+from .utils import check_condition_present_or, check_conditions_not_following
 
 
 def get_risk_sensitive(
@@ -307,90 +307,31 @@ def generate_risk_sensitive_configs(stimulus_set: str = "1"):
             conditions_proposal = seed.choice(
                 a=condition_template, size=len(condition_template), replace=False
             ).tolist()
+
             approve = (
-                check_conditions_not_following(
-                    conditions_proposal, ["none_null", "null_none"]
+                all(
+                    [check_condition_present_or(conditions_proposal[:10], jj)]
+                    for jj in [
+                        (["null_none"], ["none_null"]),
+                        (["none_save-20"], ["save-20_none"]),
+                        (["none_save-40"], ["save-40_none"]),
+                        (["none_risky-40"], ["risky-40_none"]),
+                        (["none_risky-80"], ["risky-80_none"]),
+                    ]
                 )
-                and check_conditions_not_following(
-                    conditions_proposal, ["none_save-20", "save-20_none"]
+                and all(
+                    [
+                        check_conditions_not_following(conditions_proposal, jj)
+                        for jj in (
+                            ["none_null", "null_none"],
+                            ["none_save-20", "save-20_none"],
+                            ["none_save-40", "save-40_none"],
+                            ["none_risky-40", "risky-40_none"],
+                            ["none_risky-80", "risky-80_none"],
+                        )
+                    ]
                 )
-                and check_conditions_not_following(
-                    conditions_proposal, ["none_save-40", "save-40_none"]
-                )
-                and check_conditions_not_following(
-                    conditions_proposal, ["none_risky-40", "risky-40_none"]
-                )
-                and check_conditions_not_following(
-                    conditions_proposal, ["none_risky-80", "risky-80_none"]
-                )
-                and (
-                    check_conditions_present(
-                        conditions_proposal[:15],
-                        [
-                            "null_none",
-                        ],
-                    )
-                    or check_conditions_present(
-                        conditions_proposal[:15],
-                        [
-                            "none_null",
-                        ],
-                    )
-                )
-                and (
-                    check_conditions_present(
-                        conditions_proposal[:15],
-                        [
-                            "save-20_none",
-                        ],
-                    )
-                    or check_conditions_present(
-                        conditions_proposal[:15],
-                        ["none_save-20"],
-                    )
-                )
-                and (
-                    check_conditions_present(
-                        conditions_proposal[:15],
-                        [
-                            "save-40_none",
-                        ],
-                    )
-                    or check_conditions_present(
-                        conditions_proposal[:15],
-                        [
-                            "none_save-40",
-                        ],
-                    )
-                )
-                and (
-                    check_conditions_present(
-                        conditions_proposal[:15],
-                        [
-                            "risky-40_none",
-                        ],
-                    )
-                    or check_conditions_present(
-                        conditions_proposal[:15],
-                        [
-                            "none_risky-40",
-                        ],
-                    )
-                )
-                and (
-                    check_conditions_present(
-                        conditions_proposal[:15],
-                        [
-                            "risky-80_none",
-                        ],
-                    )
-                    or check_conditions_present(
-                        conditions_proposal[:15],
-                        [
-                            "none_risky-80",
-                        ],
-                    )
-                )
+                and check_conditions_not_following(conditions_proposal, test_trials)
             )
 
         conditions.extend(conditions_proposal)
