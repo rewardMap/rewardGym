@@ -1,4 +1,4 @@
-from typing import Any, List, Literal, Union
+from typing import Any, List, Literal, Tuple, Union
 
 import numpy as np
 
@@ -164,3 +164,41 @@ def check_conditions_present(
     required_set = set(conditions_required)
 
     return required_set.issubset(test_set)
+
+
+def check_condition_present_or(
+    condition_list: List[Any], condition_required: Tuple[List]
+) -> bool:
+    """
+    Checks if any of the specified conditions are present in the condition list.
+
+    Parameters
+    ----------
+    condition_list : List[Any]
+        The list of conditions to check against.
+    condition_required : Tuple[List]
+        A tuple of lists, where each list represents a condition to be checked.
+        The function will return `True` if at least one of the conditions in
+        the tuple is present in the `condition_list`.
+
+    Returns
+    -------
+    bool
+        Returns `True` if at least one of the conditions in `condition_required`
+        is present in `condition_list`, otherwise `False`.
+
+    Examples
+    --------
+    >>> condition_list = ['none_risky-40', 'save-20_none']
+    >>> condition_required = (['risky-40_none'], ['none_risky-40'])
+    >>> check_condition_present_or(condition_list, condition_required)
+    True
+
+    >>> condition_list = ['save-20_none', 'save-40_none']
+    >>> condition_required = (['risky-40_none'], ['none_risky-40'])
+    >>> check_condition_present_or(condition_list, condition_required)
+    False
+    """
+    return any(
+        [check_conditions_present(condition_list, cr) for cr in condition_required]
+    )
