@@ -1,9 +1,3 @@
-try:
-    from psychopy.visual import ImageStim
-    from psychopy.visual.rect import Rect
-except ModuleNotFoundError:
-    from .psychopy_stubs import Rect, ImageStim
-
 from copy import deepcopy
 
 import numpy as np
@@ -15,96 +9,8 @@ from .default_images import (
     generate_stimulus_properties,
     make_card_stimulus,
 )
+from .special_stimuli import TwoStimuliWithSelection
 from .stimuli import ActionStimulus, BaseStimulus, FeedBackStimulus, ImageStimulus
-
-
-class TwoStepDisplay(BaseStimulus):
-    def __init__(
-        self,
-        duration,
-        name=None,
-        positions=((0, 0), (0, 0)),
-        selected=None,
-        images=[
-            make_card_stimulus(generate_stimulus_properties(12)),
-            make_card_stimulus(generate_stimulus_properties(23)),
-        ],
-    ):
-        super().__init__(name=name, duration=duration)
-
-        self.positions = positions
-        self.images = images
-        self.selected = selected
-
-    def setup(self, win, **kwargs):
-        self.image_class = []
-        for img, pos in zip(self.images, self.positions):
-            if isinstance(img, str):
-                self.image_class.append(ImageStim(win=win, image=img, pos=pos))
-            else:
-                self.image_class.append(
-                    ImageStim(
-                        win, image=img, size=(img.shape[1], img.shape[0]), pos=pos
-                    )
-                )
-
-    def display(self, win, logger, action, **kwargs):
-        logger.key_strokes(win)
-        stim_onset = logger.get_time()
-
-        # Reset image positions
-        for im, po in zip(self.image_class, self.positions):
-            im.setPos(po)
-
-        imgA = self.image_class[0]
-        imgA.setOpacity(1.0)
-
-        imgB = self.image_class[1]
-        imgB.setOpacity(1.0)
-
-        if action is not None:
-            if action == 0:
-                feedback = Rect(
-                    win=win,
-                    width=imgA.size[0],
-                    height=imgA.size[1],
-                    lineColor="white",
-                    lineWidth=7,
-                    pos=imgA.pos,
-                )
-
-                imgB.setOpacity(0.25)
-
-            else:
-                feedback = Rect(
-                    win=win,
-                    width=imgB.size[0],
-                    height=imgB.size[1],
-                    lineColor="white",
-                    lineWidth=7,
-                    pos=imgB.pos,
-                )
-
-                imgA.setOpacity(0.25)
-
-            feedback.draw()
-
-        imgA.draw()
-        imgB.draw()
-
-        for img in self.image_class[2:]:
-            img.draw()
-
-        win.flip()
-
-        logger.wait(win, self.duration, stim_onset)
-
-        logger.log_event(
-            {"event_type": self.name, "expected_duration": self.duration},
-            onset=stim_onset,
-        )
-
-        return None
 
 
 def get_info_dict(seed=None, key_dict={"left": 0, "right": 1}, **kwargs):
@@ -161,7 +67,7 @@ def get_info_dict(seed=None, key_dict={"left": 0, "right": 1}, **kwargs):
         0: {
             "psychopy": [
                 fix,
-                TwoStepDisplay(
+                TwoStimuliWithSelection(
                     duration=0.1,
                     name="decision-0",
                     images=[
@@ -175,7 +81,7 @@ def get_info_dict(seed=None, key_dict={"left": 0, "right": 1}, **kwargs):
         },
         1: {
             "psychopy": [
-                TwoStepDisplay(
+                TwoStimuliWithSelection(
                     duration=0.75,
                     name="environment-select",
                     images=[
@@ -196,7 +102,7 @@ def get_info_dict(seed=None, key_dict={"left": 0, "right": 1}, **kwargs):
         },
         2: {
             "psychopy": [
-                TwoStepDisplay(
+                TwoStimuliWithSelection(
                     duration=0.75,
                     name="environment-select",
                     images=[
@@ -217,7 +123,7 @@ def get_info_dict(seed=None, key_dict={"left": 0, "right": 1}, **kwargs):
         },
         3: {
             "psychopy": [
-                TwoStepDisplay(
+                TwoStimuliWithSelection(
                     duration=0.5,
                     name="stimulus-select",
                     images=[
@@ -231,7 +137,7 @@ def get_info_dict(seed=None, key_dict={"left": 0, "right": 1}, **kwargs):
         },
         4: {
             "psychopy": [
-                TwoStepDisplay(
+                TwoStimuliWithSelection(
                     duration=0.5,
                     name="stimulus-select",
                     images=[
@@ -245,7 +151,7 @@ def get_info_dict(seed=None, key_dict={"left": 0, "right": 1}, **kwargs):
         },
         5: {
             "psychopy": [
-                TwoStepDisplay(
+                TwoStimuliWithSelection(
                     duration=0.5,
                     name="stimulus-select",
                     images=[
@@ -259,7 +165,7 @@ def get_info_dict(seed=None, key_dict={"left": 0, "right": 1}, **kwargs):
         },
         6: {
             "psychopy": [
-                TwoStepDisplay(
+                TwoStimuliWithSelection(
                     duration=0.5,
                     name="stimulus-select",
                     images=[
