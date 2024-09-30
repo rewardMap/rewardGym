@@ -5,7 +5,7 @@
     "instructions_end": "To start the game press LEFT. If you want to see the previous screen press RIGHT.",
 
     "hcp": {
-        "0.0": "This is a game of chance.\nThink about it like drawing cards from a deck.\nThe cards have numbers from one to nine.\nFirst, you will see a question mark on the screen and and you make a guess, then the card will be presented.\nYou have to guess whether the number is LESS than or GREATER than five.",
+        "0.0": "This is a game of chance.\nThink about it like drawing cards from a deck.\nThe cards have numbers from one to nine.\nFirst, you will see a question mark on the screen and you make a guess, then the card will be presented.\nYou have to guess whether the number is LESS than or GREATER than five.",
         "0.1": "Press LEFT to guess that the number will be LESS than five.\nPress RIGHT to guess that the number will be GREATER than five.\nYou must answer while the question mark is on the screen.",
         "1.0": "After you answer, the card will be shown.",
         "1.1": "If you guessed correctly,\na green arrow appears in the fixation cross and you WIN 1 point.",
@@ -17,7 +17,7 @@
     },
     "gonogo": {
         "0.0": "In this game, you will need to figure out whether it's better to press the button or to not press the button.\nThere are some situations where it's better to press or not.\nIn some situations you can WIN points, in other you can LOSE points.\n\n",
-        "0.1": "Each situation is introduced by one of four images.\nYou have to learn from experience whether it is better to press or not for each images.\n\n\nPress LEFT to continue",
+        "0.1": "Each situation is introduced by one of four images.\nYou have to learn from experience whether it is better to press or not for each image.\n\n\nPress LEFT to continue",
         "1.0": "In each trial you will see an image introducing the situation:",
         "2.0": "Afterwards a fixation cross appears.",
         "3.0": "When the fixation cross turns white you have to decide:\nDo you press LEFT or NOT?",
@@ -31,13 +31,13 @@
         "1.1": "Choosing an image in the second stage will sometimes earn you points or not. Some images are better than others, but which ones are better changes slowly throughout the experiment.",
         "2.0": "The structure of the game looks like this:",
         "2.1": "Each first-stage choice has a 'preferred' second stage. For example, if you pick the image with the cross, you'll usually see the blue (left) images, but sometimes you'll see the yellow images instead.\n",
-        "2.2": "This prefference stays the same during the whole experiment.",
+        "2.2": "This preference stays the same during the whole experiment.",
         "3.0": "Remember:\nIn each trial you will need to make a sequence of two decisions.\nPress LEFT to select the image on the left.\nPress RIGHT to select the image on the right."
     },
     "mid": {
         "0.0": "In this game you will play with three shapes:",
         "0.1": "The yellow squares mean you play to NOT LOSE points.\nThe pink circles mean you play to WIN points.\nThe triangle means nothing is at stake.",
-        "1.0": "The first thing that will happen in the game is one of these shapes will come up.\nAll you have to do is read the shapes to see if you play to WIN, to LOSE or if nothing is at stake.\nAfter the shape wou will see a fixation cross.\nWhen you see the cross, you should just wait.",
+        "1.0": "The first thing that will happen in the game is one of these shapes will come up.\nAll you have to do is read the shapes to see if you play to WIN, to LOSE or if nothing is at stake.\nAfter the shape you will see a fixation cross.\nWhen you see the cross, you should just wait.",
         "2.0": "After the fixation there will always be a black shape that is the same shape as the one you just saw.\nYour job is to press LEFT when you see a black shape.",
         "2.1": "If you press to soon or do not press when the black shape is up, you will not receive the outcome for that shape.",
         "3.0": "Remember:\n\nWhen you see a pink circle, you can WIN points.\n\nWhen you see a yellow square, you can LOSE points.\n\nWhen you see a blue triangle, there is nothing at stake.\n\nPress LEFT when you see the black shape to WIN or NOT LOSE."
@@ -46,13 +46,13 @@
         "0.0": "In this game, you will need to respond to a stimulus appears briefly on either the left or the right side of the fixation cross.\nTo gain points, you will need to indicate the side the target appeared on using button presses.",
         "1.0": "Before the target appears, there will be a dot on the top or the bottom of the fixation cross.\nThe location of the dot can help you predict, the side where the target will appear.\nThis game can be difficult, you should pay attention to the cue.",
         "2.0": "After the cue, the target appears, on either left or right side.\nPress LEFT to indicate that the target appeared on the left.\nPress RIGHT to indicate that the target appeared on the right.",
-        "3.0": "There will be two breaks in the experiment.\nAfter each break the side each cue predicts changes, so you need to adapt you strategy.\nPlease try to focus on the fixation cross in the middle of the screen for the entire task.\nTry not to move your eyes to the target stimulus.",
+        "3.0": "There will be two breaks in the experiment.\nAfter each break the side each cue predicts changes, so you need to adapt you strategy.\nPlease try to focus on the fixation cross in the middle of the screen for the entire game.\nTry not to move your eyes to the target stimulus.",
         "4.0": "Remember:\nPress LEFT to indicate that the target appeared on the left.\nPress RIGHT to indicate that the target appeared on the right.\n\nAnswer as fast and as accurate as possible!"
     },
     "risk-sensitive":
     {
         "0.0": "In this game you will see five different images and decide between them.\nEach image has a different value. Some images will always gain you the same amount of points, some images will give you points with 50% probability.",
-        "1.0": "In the task you will sometimes see a single image on the left or the right side of the screen. You will need to select this image. Pressing LEFT if it is on the left and RIGHT if it is on the right.\n",
+        "1.0": "In the game you will sometimes see a single image on the left or the right side of the screen. You will need to select this image. Pressing LEFT if it is on the left and RIGHT if it is on the right.\n",
         "1.1": "These trials will help you to figure out the meaning of each image.",
         "2.0": "In other trial you will need to decide between two images.\nChoose in a way, that will earn you the most points.\nPress LEFT to select the image on the left.\nPress RIGHT to select the image on the right.",
         "3.0": "Remember:\nPress LEFT to select the image on the left.\nPress RIGHT to select the image on the right."
