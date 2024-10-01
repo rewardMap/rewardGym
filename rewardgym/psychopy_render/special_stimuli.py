@@ -11,7 +11,7 @@ except ModuleNotFoundError:
 import numpy as np
 
 from .default_images import generate_stimulus_properties, make_card_stimulus
-from .logger import ExperimentLogger
+from .logger import ExperimentLogger, SimulationLogger
 
 
 class ActionStimulusTooEarly(ActionStimulus):
@@ -94,9 +94,6 @@ class ActionStimulusTooEarly(ActionStimulus):
         """
 
         response_window_onset = logger.get_time()
-        response_window = response_window_onset + self.duration
-        response_present = False
-        remaining = None
 
         response = logger.key_strokes(win, keyList=self.key_list)
 
@@ -117,54 +114,21 @@ class ActionStimulusTooEarly(ActionStimulus):
         # clearing buffer
         logger.key_strokes(win)
 
-        # Main loop, keeping time and waiting for response.
-        while response_window > logger.get_time() and response_present is False:
-            response = logger.key_strokes(win, keyList=self.key_list)
+        response = self._response_handling(win, logger, response_window_onset)
 
-            if response:
-                RT = response[1] - response_window_onset
-                logger.log_event(
-                    {
-                        "event_type": self.name,
-                        "response_button": response[0],
-                        "response_time": RT,
-                    },
-                    onset=response_window_onset,
-                )
-                response_present = True
-                response_key = self.key_dict[response[0]]
+        if response is not None:
+            response_key, remaining = response
 
-                remaining = self.duration - RT
+            if RTE:
+                response_key = self.timeout_action
+                self.text_stim.draw()
+            else:
+                win.flip()
 
-        # What todo if response window timed out and now response has been given.
-        if response_present is False:
-            RT = None
+            return response_key, remaining
 
-            response_key = self.timeout_action
-
-            if response_key is None:
-                response_key = logger.na
-
-            logger.log_event(
-                {
-                    "event_type": self.name_timeout,
-                    "response_late": True,
-                    "response_time": RT,
-                    "response_button": response_key,
-                },
-                onset=response_window_onset,
-            )
-
-            if response_key == logger.na:
-                return None
-
-        if RTE:
-            response_key = self.timeout_action
-            self.text_stim.draw()
         else:
-            win.flip()
-
-        return response_key, remaining
+            return response
 
 
 class ConditionBasedDisplay(BaseStimulus):
@@ -271,23 +235,38 @@ class ConditionBasedDisplay(BaseStimulus):
         return None
 
 
-class TwoStimuliWithSelection(BaseStimulus):
+class TwoStimuliWithResponseAndSelection(ActionStimulus):
     def __init__(
         self,
-        duration,
-        name=None,
+        duration: float,
+        key_dict: Dict = {"left": 0, "right": 1},
+        name: str = "response",
+        name_phase1: str = None,
+        name_phase2: str = None,
+        duration_phase1: float = 0.0,
+        duration_phase2: float = 0.0,
+        timeout_action: int = None,
+        name_timeout="response-time-out",
         positions=((0, 0), (0, 0)),
-        selected=None,
         images=[
             make_card_stimulus(generate_stimulus_properties(12)),
             make_card_stimulus(generate_stimulus_properties(23)),
         ],
     ):
-        super().__init__(name=name, duration=duration)
+        super().__init__(
+            name=name,
+            duration=duration,
+            key_dict=key_dict,
+            timeout_action=timeout_action,
+            name_timeout=name_timeout,
+        )
 
-        self.positions = positions
         self.images = images
-        self.selected = selected
+        self.positions = positions
+        self.name_phase1 = name_phase1
+        self.name_phase2 = name_phase2
+        self.duration_phase1 = duration_phase1
+        self.duration_phase2 = duration_phase2
 
     def setup(self, win, **kwargs):
         self.image_class = []
@@ -301,8 +280,62 @@ class TwoStimuliWithSelection(BaseStimulus):
                     )
                 )
 
-    def display(self, win, logger, action, **kwargs):
+    def display(self, win, logger, **kwargs):
+        self._draw_stimulus(
+            win,
+            logger,
+            action=None,
+            name=self.name_phase1,
+            duration=self.duration_phase1,
+        )
+
         logger.key_strokes(win)
+
+        response_window_onset = logger.get_time()
+
+        response = self._response_handling(win, logger, response_window_onset)
+
+        if response is not None:
+            self._draw_stimulus(
+                win,
+                logger,
+                action=response[0],
+                name=self.name_phase2,
+                duration=self.duration_phase2,
+            )
+
+        return response
+
+    def simulate(
+        self,
+        win: Window,
+        logger=SimulationLogger,
+        key: str = None,
+        rt: float = None,
+    ):
+        stim_onset = logger.get_time()
+
+        logger.wait(win=None, time=self.duration_phase1, start=stim_onset)
+
+        logger.log_event(
+            {"event_type": self.name_phase1, "expected_duration": self.duration_phase1},
+            onset=stim_onset,
+        )
+
+        response_key, remaining = self._simulate_response(win, logger, key, rt)
+
+        stim_onset = logger.get_time()
+
+        logger.wait(win=None, time=self.duration_phase2, start=stim_onset)
+
+        logger.log_event(
+            {"event_type": self.name_phase2, "expected_duration": self.duration_phase2},
+            onset=stim_onset,
+        )
+
+        return response_key, remaining
+
+    def _draw_stimulus(self, win, logger, action, name, duration):
         stim_onset = logger.get_time()
 
         # Reset image positions
@@ -315,30 +348,29 @@ class TwoStimuliWithSelection(BaseStimulus):
         imgB = self.image_class[1]
         imgB.setOpacity(1.0)
 
-        if action is not None:
-            if action == 0:
-                feedback = Rect(
-                    win=win,
-                    width=imgA.size[0],
-                    height=imgA.size[1],
-                    lineColor="white",
-                    lineWidth=7,
-                    pos=imgA.pos,
-                )
+        if action == 0:
+            feedback = Rect(
+                win=win,
+                width=imgA.size[0],
+                height=imgA.size[1],
+                lineColor="white",
+                lineWidth=7,
+                pos=imgA.pos,
+            )
 
-                imgB.setOpacity(0.25)
+            imgB.setOpacity(0.25)
 
-            else:
-                feedback = Rect(
-                    win=win,
-                    width=imgB.size[0],
-                    height=imgB.size[1],
-                    lineColor="white",
-                    lineWidth=7,
-                    pos=imgB.pos,
-                )
+        elif action == 1:
+            feedback = Rect(
+                win=win,
+                width=imgB.size[0],
+                height=imgB.size[1],
+                lineColor="white",
+                lineWidth=7,
+                pos=imgB.pos,
+            )
 
-                imgA.setOpacity(0.25)
+            imgA.setOpacity(0.25)
 
             feedback.draw()
 
@@ -350,14 +382,12 @@ class TwoStimuliWithSelection(BaseStimulus):
 
         win.flip()
 
-        logger.wait(win, self.duration, stim_onset)
+        logger.wait(win, duration, stim_onset)
 
         logger.log_event(
-            {"event_type": self.name, "expected_duration": self.duration},
+            {"event_type": name, "expected_duration": duration},
             onset=stim_onset,
         )
-
-        return None
 
 
 class TextWithBorder(BaseStimulus):
