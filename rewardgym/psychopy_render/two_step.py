@@ -9,8 +9,8 @@ from .default_images import (
     generate_stimulus_properties,
     make_card_stimulus,
 )
-from .special_stimuli import TwoStimuliWithSelection
-from .stimuli import ActionStimulus, BaseStimulus, FeedBackStimulus, ImageStimulus
+from .special_stimuli import TwoStimuliWithResponseAndSelection
+from .stimuli import BaseStimulus, FeedBackStimulus, ImageStimulus
 
 
 def get_info_dict(seed=None, key_dict={"left": 0, "right": 1}, **kwargs):
@@ -66,57 +66,36 @@ def get_info_dict(seed=None, key_dict={"left": 0, "right": 1}, **kwargs):
     def first_state(stim1, stim2, key_dict):
         tmp_list = [
             fix,
-            TwoStimuliWithSelection(
-                duration=0.1,
-                name="decision-0",
-                images=[
-                    stim1,
-                    stim2,
-                ],
+            TwoStimuliWithResponseAndSelection(
+                duration=2.0,
+                key_dict=key_dict,
+                name_phase1="decision-0",
+                duration_phase1=0.1,
+                name_phase2="environment-select",
+                duration_phase2=0.75,
+                images=[stim1, stim2],
                 positions=[(-image_shift, 0), (image_shift, 0)],
             ),
-            ActionStimulus(duration=2.0, key_dict=key_dict),
         ]
 
         return tmp_list
 
-    def second_state(s1_img1, s1_img2, s2_img1, s2_img2, key_dict):
+    def second_state(s2_img1, s2_img2, key_dict):
         tmp_list = [
-            TwoStimuliWithSelection(
-                duration=0.75,
-                name="environment-select",
-                images=[
-                    s1_img1,
-                    s1_img2,
-                ],
-                positions=[(-image_shift, 0), (image_shift, 0)],
-            ),
             fix2,
-            ImageStimulus(
-                duration=0.1,
-                name="environment-decision",
-                image_paths=[s2_img1, s2_img2],
+            TwoStimuliWithResponseAndSelection(
+                duration=2.0,
+                key_dict=key_dict,
+                name_phase1="environment-decision",
+                duration_phase1=0.1,
+                name_phase2="stimulus-select",
+                duration_phase2=0.5,
+                images=[s2_img1, s2_img2],
                 positions=[(-image_shift, 0), (image_shift, 0)],
             ),
-            ActionStimulus(duration=2.0, key_dict=key_dict),
         ]
 
         return tmp_list
-
-    def third_state(s2_img1, s2_img2):
-        tmp_list = [
-            TwoStimuliWithSelection(
-                duration=0.5,
-                name="stimulus-select",
-                images=[
-                    s2_img1,
-                    s2_img2,
-                ],
-                positions=[(-image_shift, 0), (image_shift, 0)],
-            )
-        ]
-
-        return tmp_list + final_step
 
     info_dict = {
         0: {
@@ -126,8 +105,6 @@ def get_info_dict(seed=None, key_dict={"left": 0, "right": 1}, **kwargs):
         },
         1: {
             "psychopy": second_state(
-                s1_img1=stim_set[0][0],
-                s1_img2=stim_set[0][1],
                 s2_img1=stim_set[1][0],
                 s2_img2=stim_set[1][1],
                 key_dict=key_dict,
@@ -135,17 +112,15 @@ def get_info_dict(seed=None, key_dict={"left": 0, "right": 1}, **kwargs):
         },
         2: {
             "psychopy": second_state(
-                s1_img1=stim_set[0][0],
-                s1_img2=stim_set[0][1],
                 s2_img1=stim_set[2][0],
                 s2_img2=stim_set[2][1],
                 key_dict=key_dict,
             )
         },
-        3: {"psychopy": third_state(s2_img1=stim_set[1][0], s2_img2=stim_set[1][1])},
-        4: {"psychopy": third_state(s2_img1=stim_set[1][0], s2_img2=stim_set[1][1])},
-        5: {"psychopy": third_state(s2_img1=stim_set[2][0], s2_img2=stim_set[2][1])},
-        6: {"psychopy": third_state(s2_img1=stim_set[2][0], s2_img2=stim_set[2][1])},
+        3: {"psychopy": final_step},
+        4: {"psychopy": final_step},
+        5: {"psychopy": final_step},
+        6: {"psychopy": final_step},
     }
 
     return info_dict, None
