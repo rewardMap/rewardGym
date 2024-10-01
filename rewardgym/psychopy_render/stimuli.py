@@ -358,6 +358,16 @@ class ActionStimulus(BaseStimulus):
         logger.key_strokes(win)
 
         response_window_onset = logger.get_time()
+
+        response_key, remaining = self._response_handling(
+            win, logger, response_window_onset
+        )
+
+        win.flip()
+
+        return response_key, remaining
+
+    def _response_handling(self, win, logger, response_window_onset):
         response_window = response_window_onset + self.duration
         response_present = False
         remaining = None
@@ -403,8 +413,6 @@ class ActionStimulus(BaseStimulus):
             if response_key == logger.na:
                 return None
 
-        win.flip()
-
         return response_key, remaining
 
     def simulate(
@@ -415,6 +423,11 @@ class ActionStimulus(BaseStimulus):
         rt: float = None,
         **kwargs,
     ):
+        response_key, remaining = self._simulate_response(win, logger, key, rt)
+
+        return response_key, remaining
+
+    def _simulate_response(self, win, logger, key, rt):
         response_key, rt = logger.key_strokes(key, rt)
         response_window_onset = logger.get_time()
         logger.global_clock.time += min([rt, self.duration])
