@@ -104,53 +104,53 @@ def get_info_dict(seed=None, key_dict={"left": 0, "right": 1}, **kwargs):
                 stim1=stim_set[0][0], stim2=stim_set[0][1], key_dict=key_dict
             )
         },
-        12: {
+        3: {
             "psychopy": first_state(
                 stim1=stim_set[0][0], stim2=stim_set[0][1], key_dict=key_dict
             )
         },
-        8: {
-            "psychopy": first_state(
-                stim1=stim_set[0][1], stim2=stim_set[0][0], key_dict=key_dict
-            )
-        },
-        11: {
-            "psychopy": first_state(
-                stim1=stim_set[0][1], stim2=stim_set[0][0], key_dict=key_dict
-            )
-        },
         2: {
+            "psychopy": first_state(
+                stim1=stim_set[0][1], stim2=stim_set[0][0], key_dict=key_dict
+            )
+        },
+        4: {
+            "psychopy": first_state(
+                stim1=stim_set[0][1], stim2=stim_set[0][0], key_dict=key_dict
+            )
+        },
+        5: {
             "psychopy": second_state(
                 s2_img1=stim_set[1][0],
                 s2_img2=stim_set[1][1],
                 key_dict=key_dict,
             )
         },
-        3: {
+        7: {
             "psychopy": second_state(
                 s2_img1=stim_set[2][0],
                 s2_img2=stim_set[2][1],
                 key_dict=key_dict,
             )
         },
-        9: {
+        6: {
             "psychopy": second_state(
                 s2_img1=stim_set[1][1],
                 s2_img2=stim_set[1][0],
                 key_dict=key_dict,
             )
         },
-        10: {
+        8: {
             "psychopy": second_state(
                 s2_img1=stim_set[2][1],
                 s2_img2=stim_set[2][0],
                 key_dict=key_dict,
             )
         },
-        4: {"psychopy": final_step},
-        5: {"psychopy": final_step},
-        6: {"psychopy": final_step},
-        7: {"psychopy": final_step},
+        9: {"psychopy": final_step},
+        10: {"psychopy": final_step},
+        11: {"psychopy": final_step},
+        12: {"psychopy": final_step},
     }
 
     return info_dict, None

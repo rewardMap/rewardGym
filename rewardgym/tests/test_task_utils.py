@@ -1,6 +1,7 @@
 from rewardgym.tasks.utils import (
     check_condition_present_or,
     check_conditions_not_following,
+    check_conditions_not_following_substring,
     check_conditions_present,
 )
 
@@ -102,6 +103,136 @@ def test_empty_condition_required():
     condition_list = ["none_risky-40", "save-20_none"]
     condition_required = ()
     assert check_condition_present_or(condition_list, condition_required) == False
+
+
+def test_no_violation_with_window_1():
+    # Test where no violation happens with window_length=1
+    condition_list = ["abc-qqq", "qqq-qqq", "abc-qqq"]
+    not_following = ["abc"]
+    window_length = 1
+    assert (
+        check_conditions_not_following_substring(
+            condition_list, not_following, window_length
+        )
+        == True
+    )
+
+
+def test_violation_with_window_1():
+    # Test where a violation happens with window_length=1
+    condition_list = ["abc-qqq", "abc-qqq", "qqq-qqq"]
+    not_following = ["abc"]
+    window_length = 1
+    assert (
+        check_conditions_not_following_substring(
+            condition_list, not_following, window_length
+        )
+        == False
+    )
+
+
+def test_no_violation_with_longer_window():
+    # Test where no violation happens with a longer window_length
+    condition_list = ["abc-qqq", "qqq-qqq", "qqq-qqq", "abc-qqq"]
+    not_following = ["abc"]
+    window_length = 2
+    assert (
+        check_conditions_not_following_substring(
+            condition_list, not_following, window_length
+        )
+        == True
+    )
+
+
+def test_violation_with_longer_window():
+    # Test where a violation happens with a longer window_length
+    condition_list = ["abc-qqq", "qqq-qqq", "abc-qqq", "abc-qqq"]
+    not_following = ["abc"]
+    window_length = 2
+    assert (
+        check_conditions_not_following_substring(
+            condition_list, not_following, window_length
+        )
+        == False
+    )
+
+
+def test_no_match_in_not_following():
+    # Test where nothing from not_following is in condition_list
+    condition_list = ["qqq-qqq", "xyz-123", "123-xyz"]
+    not_following = ["abc"]
+    window_length = 1
+    assert (
+        check_conditions_not_following_substring(
+            condition_list, not_following, window_length
+        )
+        == True
+    )
+
+
+def test_empty_condition_list_not_following():
+    # Test with an empty condition_list
+    condition_list = []
+    not_following = ["abc"]
+    window_length = 1
+    assert (
+        check_conditions_not_following_substring(
+            condition_list, not_following, window_length
+        )
+        == True
+    )
+
+
+def test_empty_not_following_list():
+    # Test with an empty not_following list (nothing to violate)
+    condition_list = ["abc-qqq", "abc-qqq", "qqq-qqq"]
+    not_following = []
+    window_length = 1
+    assert (
+        check_conditions_not_following_substring(
+            condition_list, not_following, window_length
+        )
+        == True
+    )
+
+
+def test_single_element_in_condition_list():
+    # Test with only one element in the condition_list
+    condition_list = ["abc-qqq"]
+    not_following = ["abc"]
+    window_length = 1
+    assert (
+        check_conditions_not_following_substring(
+            condition_list, not_following, window_length
+        )
+        == True
+    )
+
+
+def test_window_length_exceeds_list_length():
+    # Test where the window length exceeds the condition_list length
+    condition_list = ["abc-qqq", "qqq-qqq"]
+    not_following = ["abc"]
+    window_length = 10
+    assert (
+        check_conditions_not_following_substring(
+            condition_list, not_following, window_length
+        )
+        == True
+    )
+
+
+def test_no_substring_violation_due_to_non_following():
+    # Test where substrings match but don't follow within the window
+    condition_list = ["abc-qqq", "qqq-qqq", "abc-123"]
+    not_following = ["abc"]
+    window_length = 1
+    assert (
+        check_conditions_not_following_substring(
+            condition_list, not_following, window_length
+        )
+        == True
+    )
 
 
 # To run the tests, save this in a test file and run `pytest`.

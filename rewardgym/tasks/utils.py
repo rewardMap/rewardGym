@@ -151,6 +151,40 @@ def check_conditions_not_following(
     return True
 
 
+def check_conditions_not_following_substring(
+    condition_list: List[str], not_following: List[str], window_length: int = 1
+) -> bool:
+    """
+    Checks if any substrings in the condition_list are followed by elements containing substrings from
+    the not_following list within a specified window length.
+
+    Parameters
+    ----------
+    condition_list : List[str]
+        The list of strings to check.
+    not_following : List[str]
+        The list of substrings that should not follow any string in condition_list.
+    window_length : int, optional
+        The length of the window to check after each element in condition_list, by default 1.
+
+    Returns
+    -------
+    bool
+        Returns True if no strings containing substrings from not_following appear within the window length
+        after any element in condition_list, False otherwise.
+    """
+    for n in range(len(condition_list)):
+        # Check if the current element contains any substring from not_following
+        if any(substring in condition_list[n] for substring in not_following):
+            # Check the elements within the window for the presence of not_following substrings
+            if any(
+                any(substring in condition_list[k] for substring in not_following)
+                for k in range(n + 1, min(n + 1 + window_length, len(condition_list)))
+            ):
+                return False
+    return True
+
+
 def check_conditions_present(
     condition_list: List[Any], conditions_required: List[Any]
 ) -> bool:

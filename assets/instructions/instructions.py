@@ -13,7 +13,7 @@ from .twostep_instructions import twostep_instructions
 
 
 def get_instructions(task: str):
-    if task == "two-step":
+    if task == "two-step" or task == "two-step-flip":
         return twostep_instructions
     elif task == "hcp":
         return hcp_instructions
