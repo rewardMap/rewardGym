@@ -1,6 +1,7 @@
 import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 import networkx as nx
+from networkx import NetworkXException
 
 from ..utils import get_starting_nodes, get_stripped_graph
 
@@ -15,7 +16,12 @@ def plot_env_graph(env):
     other_nodes = list(set(nodes) - set(reward_nodes) - set(starting_node))
 
     nd = nx.DiGraph(strip_graph)
-    pos = nx.planar_layout(nd, dim=2)
+
+    try:
+        pos = nx.planar_layout(nd, dim=2)
+    except NetworkXException:
+        pos = nx.shell_layout(nd, dim=2)
+
     nx.draw_networkx_nodes(
         nd,
         pos,
