@@ -22,7 +22,7 @@ def test_Qagent_smokescreens():
                 agent,
                 0,
                 None,
-                step_reward=envname == "two-step",
+                step_reward=envname in ["two-step", "two-step-flip"],
             )
 
 

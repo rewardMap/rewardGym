@@ -36,6 +36,10 @@ def test_smoke_screen_two_step_base_init():
     get_env("two-step", conditions=None, render_mode=None, render_backend=None)
 
 
+def test_smoke_screen_two_step_flip_base_init():
+    get_env("two-step-flip", conditions=None, render_mode=None, render_backend=None)
+
+
 def test_smoke_screen_risk_sensitive_base_init():
     get_env("risk-sensitive", conditions=None, render_mode=None, render_backend=None)
 
@@ -90,6 +94,16 @@ def test_smoke_screen_two_step_render_init():
     )
 
 
+def test_smoke_screen_two_step_flip_render_init():
+    get_env(
+        "two-step-flip",
+        conditions=None,
+        render_mode="human",
+        render_backend="pygame",
+        window_size=10,
+    )
+
+
 def test_smoke_screen_risk_sensitive_render_init():
     get_env(
         "risk-sensitive",
@@ -118,6 +132,10 @@ def test_smoke_screen_run_posner_base():
 
 def test_smoke_screen_run_two_step_base():
     run_task_base("two-step", n_episodes=10)
+
+
+def test_smoke_screen_run_two_step_flip_base():
+    run_task_base("two-step-flip", n_episodes=10)
 
 
 def test_smoke_screen_run_risk_sensitive_base():

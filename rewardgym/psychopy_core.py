@@ -136,7 +136,7 @@ def run_task(env, win, logger, settings=None, seed=111, agent=None, n_episodes=N
                 update_psychopy_trials(settings, env, episode)
 
             next_obs, reward, terminated, truncated, info = env.step(
-                env.action, step_reward=env.name == "two-step"
+                env.action, step_reward=env.name in ["two-step", "two-step-flip"]
             )
             actions.append(env.previous_action)
             logger.current_location = env.agent_location
