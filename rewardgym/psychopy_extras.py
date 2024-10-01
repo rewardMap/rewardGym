@@ -110,7 +110,7 @@ def set_up_experiment(outdir="data/"):
         session=exp_dict["session"],
         task=exp_dict["task"],
         run=exp_dict["run"],
-        extension=extension,
+        extension=extension + ".tsv",
     )
 
     logger_name = os.path.join(outdir, logger_name)
