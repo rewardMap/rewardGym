@@ -2,7 +2,15 @@ from .psychopy_render import get_psychopy_info
 from .tasks import get_configs, get_env
 from .utils import run_single_episode
 
-ENVIRONMENTS = ["hcp", "mid", "two-step", "risk-sensitive", "posner", "gonogo"]
+ENVIRONMENTS = [
+    "hcp",
+    "mid",
+    "two-step",
+    "risk-sensitive",
+    "posner",
+    "gonogo",
+    "two-step-flip",
+]
 
 __all__ = [
     "get_configs",

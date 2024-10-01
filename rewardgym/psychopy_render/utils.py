@@ -17,6 +17,8 @@ def get_psychopy_info(task: str = "hcp", **kwargs):
         from .gonogo import get_info_dict
     elif task == "posner":
         from .posner import get_info_dict
+    elif task == "two-step-flip":
+        from .two_step_flip import get_info_dict
 
     return get_info_dict(**kwargs)
 
