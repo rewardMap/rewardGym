@@ -63,120 +63,89 @@ def get_info_dict(seed=None, key_dict={"left": 0, "right": 1}, **kwargs):
 
     final_step = [reward_feedback, fix_iti]
 
+    def first_state(stim1, stim2, key_dict):
+        tmp_list = [
+            fix,
+            TwoStimuliWithSelection(
+                duration=0.1,
+                name="decision-0",
+                images=[
+                    stim1,
+                    stim2,
+                ],
+                positions=[(-image_shift, 0), (image_shift, 0)],
+            ),
+            ActionStimulus(duration=2.0, key_dict=key_dict),
+        ]
+
+        return tmp_list
+
+    def second_state(s1_img1, s1_img2, s2_img1, s2_img2, key_dict):
+        tmp_list = [
+            TwoStimuliWithSelection(
+                duration=0.75,
+                name="environment-select",
+                images=[
+                    s1_img1,
+                    s1_img2,
+                ],
+                positions=[(-image_shift, 0), (image_shift, 0)],
+            ),
+            fix2,
+            ImageStimulus(
+                duration=0.1,
+                name="environment-decision",
+                image_paths=[s2_img1, s2_img2],
+                positions=[(-image_shift, 0), (image_shift, 0)],
+            ),
+            ActionStimulus(duration=2.0, key_dict=key_dict),
+        ]
+
+        return tmp_list
+
+    def third_state(s2_img1, s2_img2):
+        tmp_list = [
+            TwoStimuliWithSelection(
+                duration=0.5,
+                name="stimulus-select",
+                images=[
+                    s2_img1,
+                    s2_img2,
+                ],
+                positions=[(-image_shift, 0), (image_shift, 0)],
+            )
+        ]
+
+        return tmp_list + final_step
+
     info_dict = {
         0: {
-            "psychopy": [
-                fix,
-                TwoStimuliWithSelection(
-                    duration=0.1,
-                    name="decision-0",
-                    images=[
-                        stim_set[0][0],
-                        stim_set[0][1],
-                    ],
-                    positions=[(-image_shift, 0), (image_shift, 0)],
-                ),
-                ActionStimulus(duration=2.0, key_dict=key_dict),
-            ]
+            "psychopy": first_state(
+                stim1=stim_set[0][0], stim2=stim_set[0][1], key_dict=key_dict
+            )
         },
         1: {
-            "psychopy": [
-                TwoStimuliWithSelection(
-                    duration=0.75,
-                    name="environment-select",
-                    images=[
-                        stim_set[0][0],
-                        stim_set[0][1],
-                    ],
-                    positions=[(-image_shift, 0), (image_shift, 0)],
-                ),
-                fix2,
-                ImageStimulus(
-                    duration=0.1,
-                    name="environment-decision",
-                    image_paths=[stim_set[1][0], stim_set[1][1]],
-                    positions=[(-image_shift, 0), (image_shift, 0)],
-                ),
-                ActionStimulus(duration=2.0, key_dict=key_dict),
-            ]
+            "psychopy": second_state(
+                s1_img1=stim_set[0][0],
+                s1_img2=stim_set[0][1],
+                s2_img1=stim_set[1][0],
+                s2_img2=stim_set[1][1],
+                key_dict=key_dict,
+            )
         },
         2: {
-            "psychopy": [
-                TwoStimuliWithSelection(
-                    duration=0.75,
-                    name="environment-select",
-                    images=[
-                        stim_set[0][0],
-                        stim_set[0][1],
-                    ],
-                    positions=[(-image_shift, 0), (image_shift, 0)],
-                ),
-                fix2,
-                ImageStimulus(
-                    duration=0.1,
-                    name="environment-decision",
-                    image_paths=[stim_set[2][0], stim_set[2][1]],
-                    positions=[(-image_shift, 0), (image_shift, 0)],
-                ),
-                ActionStimulus(duration=2.0, key_dict=key_dict),
-            ]
+            "psychopy": second_state(
+                s1_img1=stim_set[0][0],
+                s1_img2=stim_set[0][1],
+                s2_img1=stim_set[2][0],
+                s2_img2=stim_set[2][1],
+                key_dict=key_dict,
+            )
         },
-        3: {
-            "psychopy": [
-                TwoStimuliWithSelection(
-                    duration=0.5,
-                    name="stimulus-select",
-                    images=[
-                        stim_set[1][0],
-                        stim_set[1][1],
-                    ],
-                    positions=[(-image_shift, 0), (image_shift, 0)],
-                )
-            ]
-            + final_step
-        },
-        4: {
-            "psychopy": [
-                TwoStimuliWithSelection(
-                    duration=0.5,
-                    name="stimulus-select",
-                    images=[
-                        stim_set[1][0],
-                        stim_set[1][1],
-                    ],
-                    positions=[(-image_shift, 0), (image_shift, 0)],
-                )
-            ]
-            + final_step
-        },
-        5: {
-            "psychopy": [
-                TwoStimuliWithSelection(
-                    duration=0.5,
-                    name="stimulus-select",
-                    images=[
-                        stim_set[2][0],
-                        stim_set[2][1],
-                    ],
-                    positions=[(-image_shift, 0), (image_shift, 0)],
-                )
-            ]
-            + final_step
-        },
-        6: {
-            "psychopy": [
-                TwoStimuliWithSelection(
-                    duration=0.5,
-                    name="stimulus-select",
-                    images=[
-                        stim_set[2][0],
-                        stim_set[2][1],
-                    ],
-                    positions=[(-image_shift, 0), (image_shift, 0)],
-                )
-            ]
-            + final_step
-        },
+        3: {"psychopy": third_state(s2_img1=stim_set[1][0], s2_img2=stim_set[1][1])},
+        4: {"psychopy": third_state(s2_img1=stim_set[1][0], s2_img2=stim_set[1][1])},
+        5: {"psychopy": third_state(s2_img1=stim_set[2][0], s2_img2=stim_set[2][1])},
+        6: {"psychopy": third_state(s2_img1=stim_set[2][0], s2_img2=stim_set[2][1])},
     }
 
     return info_dict, None
