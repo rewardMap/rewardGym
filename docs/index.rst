@@ -16,6 +16,16 @@ Welcome to rewardGym's documentation!
    tutorials/psychopy.rst
 
 .. toctree::
+   :maxdepth: 2
+   :caption: Deep Dive
+
+   deepdive/graph_structure.rst
+   deepdive/psychopy_stimuli.rst
+   deepdive/controlling_experiments.rst
+   deepdive/what_is_run_task.rst
+   deepdive/writing_agents.rst
+
+.. toctree::
    :maxdepth: 1
    :caption: Tasks
 

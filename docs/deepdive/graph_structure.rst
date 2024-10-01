@@ -19,6 +19,7 @@ The basic graph
 A basic graph could be the following:
 
 .. code-block:: python
+
   graph = {0 : [1, 2], 1 : [], 2 : []}
 
 Here we have the starting node ``0`` which presupposes two actions. Each of these
@@ -27,8 +28,8 @@ actions lead to a terminal state (indicated by the empty lists).
 An important consideration for this graph structure is, that the actions are simply numbered.
 I.e. action ``0`` would lead to node ``1`` and action ``1`` would lead to node ``2``.
 
-This representation is already powerful enough to create experiments, such as the :doc:`tasks/hcp` task
-or a two-arm bandit task :doc:`tutorials/tutorial`.
+This representation is already powerful enough to create experiments, such as the :doc:`../tasks/hcp` task
+or a two-arm bandit task :doc:`../tutorials/tutorial`.
 
 
 Adding probabilistic transitions
@@ -38,6 +39,7 @@ If we want to add some randomness to the action selection, we can introduce and
 indicator for probabilistic choosing, using a tuple:
 
 .. code-block:: python
+
   graph = {0: ([1, 2], 0.7), 1 : [], 2 :[]}
 
 In this case the tuple for state ``0: ([1, 2], 0.7)`` indicates that action ``0``
@@ -48,6 +50,7 @@ and any other state with 30 % probability.
 One could use this functionality to uniformly draw form a series of possible outcome states.
 
 .. code-block:: python
+
   graph = {0: ([1, 2, 3, 4, 5], 0.2), 1: [], 2: [], 3: [], 4: [], 5: []}
 
 In this example, any of the 5 possible actions (0 - 4) will lead to a random new state.
@@ -65,6 +68,7 @@ Instead of associating a node only with a list of possible outcomes or a tuple o
 and probabilities, a node is can be associated with a dictionary.
 
 .. code-block:: python
+
   graph = {0: {0: 1, 1 : 2}, 1 : {}, 2 : {}}
 
 Here we are reiterating the first example, but how it would look like in the internal
@@ -102,6 +106,7 @@ only for selecting the tasks current condition.
 This is done by using the ``skip`` argument.
 
 .. code-block:: python
+
   graph = {0: {0: ([1, 2], 0.5), 'skip': True}, 1 : {}, 2 : {}}
 
 Adding ``skip`` to the graph tells the environment class to automatically jump to
