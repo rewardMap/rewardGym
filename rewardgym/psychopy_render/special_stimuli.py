@@ -10,6 +10,7 @@ except ModuleNotFoundError:
 
 import numpy as np
 
+from ..utils import check_seed
 from .default_images import generate_stimulus_properties, make_card_stimulus
 from .logger import ExperimentLogger, SimulationLogger
 
@@ -252,6 +253,8 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
             make_card_stimulus(generate_stimulus_properties(12)),
             make_card_stimulus(generate_stimulus_properties(23)),
         ],
+        flip_probability=0.5,
+        seed=111,
     ):
         super().__init__(
             name=name,
@@ -267,6 +270,8 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
         self.name_phase2 = name_phase2
         self.duration_phase1 = duration_phase1
         self.duration_phase2 = duration_phase2
+        self.flip_probability = flip_probability
+        self.seed = check_seed(seed)
 
     def setup(self, win, **kwargs):
         self.image_class = []
@@ -281,19 +286,33 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
                 )
 
     def display(self, win, logger, **kwargs):
+        if self.seed.random() < self.flip_probability:
+            flip = True
+            flip_key_dict = {}
+            key_list = list(self.key_dict.keys())
+            action_list = list(self.key_dict.values())
+            for kl, al in zip(key_list[::-1], action_list):
+                flip_key_dict[kl] = al
+        else:
+            flip_key_dict = self.key_dict
+            flip = False
+
         self._draw_stimulus(
             win,
             logger,
             action=None,
             name=self.name_phase1,
             duration=self.duration_phase1,
+            flip=flip,
         )
 
         logger.key_strokes(win)
 
         response_window_onset = logger.get_time()
 
-        response = self._response_handling(win, logger, response_window_onset)
+        response = self._response_handling(
+            win, logger, response_window_onset, key_dict=flip_key_dict
+        )
 
         if response is not None:
             self._draw_stimulus(
@@ -302,6 +321,7 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
                 action=response[0],
                 name=self.name_phase2,
                 duration=self.duration_phase2,
+                flip=flip,
             )
 
         return response
@@ -312,6 +332,7 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
         logger=SimulationLogger,
         key: str = None,
         rt: float = None,
+        **kwargs,
     ):
         stim_onset = logger.get_time()
 
@@ -335,7 +356,7 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
 
         return response_key, remaining
 
-    def _draw_stimulus(self, win, logger, action, name, duration):
+    def _draw_stimulus(self, win, logger, action, name, duration, flip=False):
         stim_onset = logger.get_time()
 
         # Reset image positions
@@ -347,6 +368,11 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
 
         imgB = self.image_class[1]
         imgB.setOpacity(1.0)
+        if flip:
+            posA = imgA.pos
+            posB = imgB.pos
+            imgA.setPos(posB)
+            imgB.setPos(posA)
 
         if action == 0:
             feedback = Rect(
@@ -385,7 +411,7 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
         logger.wait(win, duration, stim_onset)
 
         logger.log_event(
-            {"event_type": name, "expected_duration": duration},
+            {"event_type": name, "expected_duration": duration, "misc": f"flip-{flip}"},
             onset=stim_onset,
         )
 
