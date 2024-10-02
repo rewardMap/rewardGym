@@ -9,7 +9,6 @@ ENVIRONMENTS = [
     "risk-sensitive",
     "posner",
     "gonogo",
-    "two-step-flip",
 ]
 
 __all__ = [

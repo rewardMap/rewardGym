@@ -8,9 +8,7 @@ from ..environments import BaseEnv, PsychopyEnv, RenderEnv
 
 
 def get_task(
-    task_name: Literal[
-        "hcp", "mid", "two-step", "risk-sensitive", "posner", "gonogo", "two-step-flip"
-    ],
+    task_name: Literal["hcp", "mid", "two-step", "risk-sensitive", "posner", "gonogo"],
     render_backend: Literal["pygame"] = None,
     seed: Union[np.random.Generator, int] = 1000,
 ):
@@ -31,8 +29,6 @@ def get_task(
 
     elif task_name == "gonogo":
         from .gonogo import get_gonogo as get_task_func
-    elif task_name == "two-step-flip":
-        from .two_step_flip import get_two_step_flip as get_task_func
 
     else:
         raise NotImplementedError(f"Task {task_name} is not implemented.")
@@ -46,7 +42,12 @@ def get_task(
 
 def get_env(
     task_name: Literal[
-        "hcp", "mid", "two-step", "risk-sensitive", "posner", "gonogo", "two-step-flip"
+        "hcp",
+        "mid",
+        "two-step",
+        "risk-sensitive",
+        "posner",
+        "gonogo",
     ],
     render_backend: Literal["pygame", "psychopy", "psychopy-simulate"] = None,
     seed: Union[int, np.random.Generator] = 1000,
@@ -109,9 +110,6 @@ def get_configs(
 
     elif task_name == "gonogo":
         from .gonogo import generate_gonogo_configs as generate_configs
-
-    elif task_name == "two-step-flip":
-        from .two_step_flip import generate_two_step_flip_configs as generate_configs
 
     else:
         raise NotImplementedError(f"Task {task_name} is not implemented.")
