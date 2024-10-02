@@ -121,11 +121,18 @@ class BaseEnv(Env):
             avail_actions = list(self.full_graph[self.agent_location].keys())
         elif self.agent_location in self.condition.keys():
             c2s = {v: k for k, v in self.condition[self.agent_location].items()}
-            g2s = {
-                v: k
-                for k, v in self.full_graph[self.agent_location].items()
-                for v in (v[0] if isinstance(v, tuple) else [v])
-            }
+            g2s = dict()
+            # TODO optimize and explain
+            # Iterate over each neighbor of the agent's current location in the graph
+            for n, (k, v) in enumerate(self.full_graph[self.agent_location].items()):
+                # If the value is a tuple, extract its first element; otherwise, use the value as-is
+                for v in v[0] if isinstance(v, tuple) else [v]:
+                    # Assign a unique ID to this neighbor based on its key in the graph
+                    g2s[v] = k
+                    # If we've processed more than one item, break out of the loop (since there should only be one neighbor)
+                    if n > 0:
+                        break
+
             c2g = {c2s[k]: g2s[k] for k in c2s.keys() if k in g2s.keys()}
             g2c = {v: k for k, v in c2g.items()}
             node_info_dict["remap-actions"] = c2g

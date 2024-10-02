@@ -80,6 +80,7 @@ class ExperimentLogger:
         self.current_location = self.na
         self.misc = self.na
         self.avail_actions = self.na
+        self.action = self.na
 
         self.trial = -1
         self.tr = 0
@@ -94,6 +95,7 @@ class ExperimentLogger:
             "response_time",
             "response_button",
             "response_late",
+            "action",
             "reward",
             "trial",
             "current_location",
@@ -141,6 +143,7 @@ class ExperimentLogger:
         tmp_dict["run"] = self.run
         tmp_dict["avail_actions"] = self.avail_actions
         tmp_dict["misc"] = self.misc
+        tmp_dict["action"] = self.action
 
         return tmp_dict
 

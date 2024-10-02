@@ -367,10 +367,13 @@ class ActionStimulus(BaseStimulus):
 
         return response_key, remaining
 
-    def _response_handling(self, win, logger, response_window_onset):
+    def _response_handling(self, win, logger, response_window_onset, key_dict=None):
         response_window = response_window_onset + self.duration
         response_present = False
         remaining = None
+
+        if key_dict is None:
+            key_dict = self.key_dict
 
         # Main loop, keeping time and waiting for response.
         while response_window > logger.get_time() and response_present is False:
@@ -378,16 +381,18 @@ class ActionStimulus(BaseStimulus):
 
             if response:
                 RT = response[1] - response_window_onset
+                response_present = True
+                response_key = key_dict[response[0]]
+
                 logger.log_event(
                     {
                         "event_type": self.name,
                         "response_button": response[0],
                         "response_time": RT,
+                        "action": response_key,
                     },
                     onset=response_window_onset,
                 )
-                response_present = True
-                response_key = self.key_dict[response[0]]
 
                 remaining = self.duration - RT
 
@@ -405,7 +410,8 @@ class ActionStimulus(BaseStimulus):
                     "event_type": self.name_timeout,
                     "response_late": True,
                     "response_time": RT,
-                    "response_button": response_key,
+                    "response_button": logger.na,
+                    "action": self.timeout_action,
                 },
                 onset=response_window_onset,
             )
@@ -442,6 +448,7 @@ class ActionStimulus(BaseStimulus):
                     "response_late": True,
                     "response_time": rt,
                     "response_button": response_key,
+                    "action": response_key,
                 },
                 onset=response_window_onset,
             )
