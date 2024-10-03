@@ -1,40 +1,32 @@
 from collections import defaultdict
 from typing import Literal
 
-from ..reward_classes import ConditionReward
+from ..reward_classes import BaseReward
 from ..utils import check_seed
 
 
 def get_hcp(
-    conditions: list = None,
     render_backend: Literal["pygame", "psychopy"] = None,
-    window_size: int = None,
-    **kwargs
+    seed=100,
+    key_dict=None,
+    **kwargs,
 ):
-
     environment_graph = {
         0: [1, 2],  # go - win
         1: [],  # no go win
         2: [],  # go - no punish
     }
 
-    reward = ConditionReward()
-
-    reward_structure = {1: reward, 2: reward}
-
-    if conditions is None:
-        condition_out = (([0, 1, 2], [0.45, 0.1, 0.45]), ([0],))
-    else:
-        condition_out = (conditions, ([0],))
+    reward_structure = {
+        1: BaseReward([-0.5, 0, 1.0], p=[0.4, 0.2, 0.4]),
+        2: BaseReward([-0.5, 0, 1.0], p=[0.4, 0.2, 0.4]),
+    }
 
     info_dict = defaultdict(int)
     info_dict.update({"condition": {0: "lose", 1: "neutral", 2: "win"}})
 
     if render_backend == "pygame":
-
-        if window_size is None:
-            return ValueError("window_size needs to be defined!")
-
+        window_size = 256
         from ..pygame_render.stimuli import BaseAction, BaseDisplay, BaseText
         from ..pygame_render.task_stims import FormatText, feedback_block
 
@@ -47,7 +39,7 @@ def get_hcp(
 
         pygame_dict = {
             0: {
-                "human": [
+                "pygame": [
                     BaseDisplay(None, 1),
                     BaseText("+", 1000, textposition=base_position),
                     BaseDisplay(None, 1),
@@ -56,7 +48,7 @@ def get_hcp(
                 ]
             },
             1: {
-                "human": [
+                "pygame": [
                     BaseDisplay(None, 1),
                     BaseText("<", 1000, textposition=base_position),
                     FormatText(
@@ -70,7 +62,7 @@ def get_hcp(
                 ]
             },
             2: {
-                "human": [
+                "pygame": [
                     BaseDisplay(None, 1),
                     BaseText(">", 1000, textposition=base_position),
                     FormatText(
@@ -87,36 +79,63 @@ def get_hcp(
 
         info_dict.update(pygame_dict)
 
-    elif render_backend == "psychopy":
-        raise NotImplementedError("Psychopy integration still under deliberation.")
+    elif render_backend == "psychopy" or render_backend == "psychopy-simulate":
+        from ..psychopy_render import get_psychopy_info
 
-    return environment_graph, reward_structure, condition_out, info_dict
+        if key_dict is None:
+            key_dict = {"left": 0, "right": 1}
+
+        psychopy_dict, _ = get_psychopy_info("hcp", seed=seed, key_dict=key_dict)
+        info_dict.update(psychopy_dict)
+
+    return environment_graph, reward_structure, info_dict
 
 
 def generate_hcp_configs(stimulus_set: str = "1"):
-
     seed = check_seed(987)
+    condition_dict = {
+        "win": {"reward": 1},
+        "lose": {"reward": -0.5},
+        "neutral": {"reward": 0},
+    }
     # 0 = loss, 1, = neutral, 2= win 1
-    lose1 = [0, 0, 0, 0, 0, 0, 1, 1]
-    lose2 = [0, 0, 0, 0, 0, 0, 2, 2]
-    lose3 = [0, 0, 0, 0, 0, 0, 1, 2]
+    lose1 = ["lose", "lose", "lose", "lose", "lose", "lose", "neutral", "neutral"]
+    lose2 = ["lose", "lose", "lose", "lose", "lose", "lose", "win", "win"]
+    lose3 = ["lose", "lose", "lose", "lose", "lose", "lose", "neutral", "win"]
 
-    win1 = [2, 2, 2, 2, 2, 2, 1, 1]
-    win2 = [2, 2, 2, 2, 2, 2, 0, 0]
-    win3 = [2, 2, 2, 2, 2, 2, 1, 0]
+    win1 = ["win", "win", "win", "win", "win", "win", "neutral", "neutral"]
+    win2 = ["win", "win", "win", "win", "win", "win", "lose", "lose"]
+    win3 = ["win", "win", "win", "win", "win", "win", "neutral", "lose"]
+
+    block_order_win = (
+        seed.permutation([win1, win2, win3]).tolist()
+        + seed.choice([win1, win2, win3], size=1, replace=True).tolist()
+    )
+
+    block_order_lose = (
+        seed.permutation([lose1, lose2, lose3]).tolist()
+        + seed.choice([lose1, lose2, lose3], size=1, replace=False).tolist()
+    )
+
+    block_order1 = seed.permutation(block_order_win[:2] + block_order_lose[:2]).tolist()
+    block_order2 = seed.permutation(block_order_win[2:] + block_order_lose[2:]).tolist()
 
     conditions = []
-    for block in [lose1, win1, lose2, win2, lose3, win3]:
+    for block in block_order1 + block_order2:
         conditions.extend(seed.choice(block, size=8, replace=False).tolist())
 
     config = {
         "name": "hcp",
         "stimulus_set": stimulus_set,
         "isi": [],
+        "wait": [0.0] * len(conditions),
         "condition": conditions,
-        "condition_target": "condition",
+        "condition_dict": condition_dict,
         "ntrials": len(conditions),
-        "update": None,
+        "update": ["wait"],
+        "add_remainder": False,
+        "breakpoints": [7, 15, 23, 31, 39, 47, 56],
+        "break_duration": 15,
     }
 
     return config

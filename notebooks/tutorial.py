@@ -38,6 +38,7 @@
 # with a reward.
 
 # %%
+# noqa: E402
 # We first import the BaseEnv
 from rewardgym.environments import BaseEnv
 from rewardgym.reward_classes import BaseReward
@@ -182,7 +183,7 @@ fixation_cross = BaseText("+", duration=200, textposition=center_position)
 # Next we want to present the selection, we use a very short duration,
 # as we present an action afterwards.
 selection = BaseText("A or B", duration=1, textposition=center_position)
-# Base action has an infinite lenght, it waits until an action is ushered.
+# Base action has an infinite length, it waits until an action is ushered.
 action = BaseAction(action_map={pygame.K_LEFT: 0, pygame.K_RIGHT: 1})
 
 # To store the first step and use it in the environment later we create a
@@ -235,11 +236,11 @@ from rewardgym.environments import RenderEnv
 env = RenderEnv(
     environment_graph=env_graph,
     reward_locations=reward_locs,
-    render_mode="human",
+    render_mode="pygame",
     info_dict=info_dict,
-    window_size=window_size,
 )
 
+env.setup_render(window_size=window_size)
 # %% [markdown]
 # And again we can use a simple loop to go through the environment.
 # This time human actions will be stored and applied to the decisions, and a

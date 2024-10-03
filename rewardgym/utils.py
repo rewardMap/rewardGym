@@ -11,7 +11,6 @@ def run_single_episode(
     condition: int,
     update_agent: bool = True,
     step_reward: bool = False,
-    avail_actions: List = None,
 ) -> Union[List, List, float]:
     """
     Runs a single episode of a task.
@@ -30,34 +29,30 @@ def run_single_episode(
         If the agent should update internal states, by default True
     step_reward : bool, optional
         If all rewards should be triggered e.g. in two-step task, by default False
-    avail_actions : List, optional
-        What actions are available for the agent to take (indices in q-values), by default None
 
     Returns
     -------
     Union[List, List, float]
         returns the agent's observations (excluding starting point), agent's actions,
-        and optained reward.
+        and obtained reward.
     """
-    obs, _ = env.reset(agent_location=starting_position, condition=condition)
+    obs, info = env.reset(agent_location=starting_position, condition=condition)
 
     states, actions, rewards = [], [], []
 
     done = False
 
     while not done:
+        old_info = info
+        action = agent.get_action(obs, info["avail-actions"])
 
-        action = agent.get_action(obs, avail_actions)
-
-        next_obs, reward, terminated, truncated, _ = env.step(
+        next_obs, reward, terminated, truncated, info = env.step(
             action, step_reward=step_reward
         )
 
         if update_agent:
-            # MultiChoiceEnvs (and the risk-sensitive task) need some back and forth mapping between
-            # actions.
-            if avail_actions is not None:
-                action = avail_actions[action]
+            if "remap-actions" in old_info.keys():
+                action = old_info["remap-actions"][action]
 
             agent.update(obs, action, reward, terminated, next_obs)
 
@@ -174,7 +169,6 @@ def unpack_conditions(conditions: tuple = None, episode: int = None) -> Union[in
 def get_condition_state(
     conditions: Union[None, List, tuple] = None, episode: int = None
 ):
-
     if conditions is None:
         current_condition = conditions
     elif isinstance(conditions, List):
@@ -263,10 +257,74 @@ def get_starting_nodes(graph: dict) -> List:
     List
         the starting position of each graph.
     """
+    terminals = get_stripped_graph(graph)
+    terminals = terminals.values()
 
-    terminals = [ii[0] if isinstance(ii, tuple) else ii[:] for ii in graph.values()]
     terminals = list(itertools.chain.from_iterable(terminals))
     nodes = list(graph.keys())
     starting_nodes = list(set(nodes) - set(terminals))
 
     return starting_nodes
+
+
+def get_stripped_graph(graph: Dict):
+    """
+    Processes a graph by stripping and flattening its edges.
+
+    The function takes a graph (a dictionary where keys are nodes and values are edges)
+    and processes the edges. If the edge is a tuple, it extracts the first element.
+    If the edge is a dictionary, it extracts and flattens the first elements of the
+    tuples that are non-string keys. The function returns a new graph with the
+    processed edges.
+
+    Parameters
+    ----------
+    graph : dict
+        A dictionary representing the graph. Keys are nodes and values are edges, which
+        can be tuples, dictionaries, or other types.
+
+    Returns
+    -------
+    stripped_graph : dict
+        A dictionary representing the processed graph, where the edges have been stripped
+        and flattened as described.
+
+    Examples
+    --------
+    >>> graph = {
+    ...     'A': (['B', 'C'],),
+    ...     'B': {'1': (['D'],), 2: (['E'],), 3: ['F', 'G']},
+    ...     'C': ['H', 'I']
+    ... }
+    >>> get_stripped_graph(graph)
+    {'A': ['B', 'C'], 'B': ['D', 'E', 'F', 'G'], 'C': ['H', 'I']}
+    """
+
+    stripped_graph = {}
+    for nd, edg in graph.items():
+        if isinstance(edg, tuple):
+            edges = edg[0]
+        elif isinstance(edg, dict):
+            edges = [
+                edg[k][0] if isinstance(edg[k], tuple) else edg[k]
+                for k in edg.keys()
+                if not isinstance(k, str)
+            ]
+            edges = list(itertools.chain.from_iterable(edges))  # flatten list
+        else:
+            edges = edg
+
+        stripped_graph[nd] = edges
+
+    return stripped_graph
+
+
+def update_psychopy_trials(settings, env, episode):
+    # Update timings
+    if settings["update"] is not None and len(settings["update"]) > 0:
+        for k in settings["update"]:
+            for jj in env.info_dict.keys():
+                if "psychopy" in env.info_dict[jj].keys():
+                    for ii in env.info_dict[jj]["psychopy"]:
+                        if ii.name == k:
+                            ii.duration = settings[k][episode]

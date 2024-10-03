@@ -1,199 +1,115 @@
 import json
-import os
 
-from psychopy import core, event, gui, visual
+from psychopy import core, event, visual
 
-from rewardgym import ENVIRONMENTS, get_configs, get_env, unpack_conditions
-from rewardgym.psychopy_render import ExperimentLogger, WaitTime, get_psychopy_info
-from rewardgym.utils import get_condition_meaning
+from assets import show_instructions
+from rewardgym import get_configs, get_env
+from rewardgym.psychopy_core import run_task
+from rewardgym.psychopy_extras import set_up_experiment
+from rewardgym.psychopy_render import ExperimentLogger, get_psychopy_info
 
-outdir = "data/"
+if __name__ == "__main__":
+    (
+        logger_name,
+        config_save,
+        key_dict,
+        task,
+        fullscreen,
+        mode,
+        stimulus_set,
+        exp_dict,
+    ) = set_up_experiment()
 
-if not os.path.isdir(outdir):
-    os.mkdir(outdir)
+    globalClock = core.Clock()
 
-exp_dict = {"participant_id": "001", "run": 1, "task": ENVIRONMENTS}
-
-dlg = gui.DlgFromDict(exp_dict)
-
-if dlg.OK is False:
-    core.quit()  # user pressed cancel
-
-globalClock = core.Clock()
-
-win = visual.Window(
-    size=[1680, 1050],
-    fullscr=False,
-    screen=0,
-    winType="pyglet",
-    allowGUI=True,
-    color=[-0.5, -0.5, -0.5],
-    colorSpace="rgb",
-    units="pix",
-    waitBlanking=False,
-    useFBO=False,
-)
-
-
-logger_name = "sub-{0}_task-{1}_run-{2}_beh.tsv".format(
-    exp_dict["participant_id"], exp_dict["task"], exp_dict["run"]
-)
-
-Logger = ExperimentLogger(
-    os.path.join(outdir, logger_name),
-    globalClock,
-    participant_id=exp_dict["participant_id"],
-    run=exp_dict["run"],
-    task=exp_dict["task"],
-)
-Logger.create()
-Wait = WaitTime(win, Logger)
-
-task = exp_dict["task"]
-
-info_dict = get_psychopy_info(task)
-env, conditions = get_env(task)
-
-try:
-    settings = get_configs(task)
-    if settings["condition_target"] == "location":
-        conditions = (conditions[0], settings["condition"])
-    elif settings["condition_target"] == "condition":
-        conditions = (settings["condition"], conditions[1])
-
-    n_episodes = settings["ntrials"]
-
-    config_save = "sub-{0}_task-{1}_run-{2}_config.json".format(
-        exp_dict["participant_id"], exp_dict["task"], exp_dict["run"]
+    win = visual.Window(
+        size=[1680, 1050],
+        fullscr=fullscreen,
+        winType="pyglet",
+        allowGUI=True,
+        color=[-0.5, -0.5, -0.5],
+        colorSpace="rgb",
+        units="pix",
     )
 
-    with open(os.path.join(outdir, config_save), "w", encoding="utf-8") as f:
-        json.dump(settings, f, ensure_ascii=False, indent=4)
-
-except NotImplementedError:
-    settings = None
-    n_episodes = 5
-
-if task == "risk-sensitive":
-    action_map = env.condition_dict
-else:
-    action_map = None
-
-if task == "mid":
-    win_trials = 0
-
-for k in info_dict.keys():
-    [i.setup(win, action_map=action_map) for i in info_dict[k]["psychopy"]]
-
-env.add_info(info_dict)
-
-actions = []
-
-# Begin the experiment
-# TODO: Add instruction screen
-instruction = visual.TextStim(
-    win=win, text=f"Hi\nyou are playing:\n{Logger.task}", color=[1, 1, 1]
-)
-
-instruction.draw()
-win.flip()
-event.waitKeys()
-win.flip()
-
-# Recycling instruction
-instruction.setText("Please respond faster!")
-
-
-for episode in range(n_episodes):
-
-    condition, starting_position = unpack_conditions(conditions, episode)
-
-    # Update timings
-    if settings["update"] is not None and len(settings["update"]) > 0:
-        for k in settings["update"]:
-            for jj in info_dict.keys():
-                for ii in info_dict[jj]["psychopy"]:
-                    if ii.name == k:
-                        ii.duration = settings[k][episode]
-
-    obs, info = env.reset(starting_position, condition=condition)
-    Logger.trial = episode
-    Logger.set_trial_time()
-    Logger.trial_type = get_condition_meaning(
-        env.info_dict, starting_position=starting_position, condition=condition
+    Logger = ExperimentLogger(
+        logger_name,
+        globalClock,
+        participant_id=exp_dict["participant_id"],
+        run=exp_dict["run"],
+        task=exp_dict["task"],
+        mr_clock=globalClock,
     )
-    Logger.start_position = starting_position
-    Logger.current_location = env.agent_location
+    Logger.create()
 
-    reward = None
-    action = None
+    info_dict, stimulus_info = get_psychopy_info(
+        task, seed=stimulus_set, key_dict=key_dict
+    )
+    settings = get_configs(task)(stimulus_set)
 
-    for ii in info["psychopy"]:
-        out = ii.display(
+    exp_dict["setting"] = settings
+    exp_dict["stimulus_info"] = stimulus_info
+
+    with open(config_save, "w", encoding="utf-8") as f:
+        json.dump(exp_dict, f, ensure_ascii=False, indent=4)
+
+    env = get_env(
+        task,
+        window=win,
+        logger=Logger,
+        render_backend="psychopy",
+    )
+
+    env.add_info(info_dict)
+
+    if exp_dict["instructions"]:
+        show_instructions(task, win, key_map=key_dict)
+
+    if mode == "fmri":
+        scanner_info = visual.TextStim(
             win=win,
-            logger=Logger,
-            wait=Wait,
-            reward=env.reward,
-            condition=condition,
-            starting_position=starting_position,
-            action=None,
-            total_reward=env.cumulative_reward,
+            text="Waiting for scanner...",
+            color=[1, 1, 1],
+            height=24,
         )
 
-    if out is not None:
-        action = out[0]
-        done = False
-        actions.append(action)
-
+        scanner_info.draw()
+        win.flip()
+        event.waitKeys(keyList=["5"])
+        win.flip()
     else:
-        done = True
-        instruction.draw()
+        scanner_info = visual.TextStim(
+            win=win,
+            text="Are you ready?\nPress any key to begin!",
+            color=[1, 1, 1],
+            height=24,
+        )
+
+        scanner_info.draw()
         win.flip()
-        core.wait(1.0)
+        event.waitKeys()
         win.flip()
 
-    while not done:
-        next_obs, reward, terminated, truncated, info = env.step(action)
-        Logger.current_location = env.agent_location
-        for ii in info["psychopy"]:
-            out = ii.display(
-                win=win,
-                logger=Logger,
-                wait=Wait,
-                reward=env.reward,
-                condition=condition,
-                starting_position=starting_position,
-                action=action,
-                total_reward=env.cumulative_reward,
-            )
+    Logger.global_clock.reset()
 
-        done = terminated or truncated
+    env.setup(window=win, logger=Logger)
 
-        if out is None and not done and task == "two-step":
-            instruction.draw()
-            win.flip()
-            core.wait(1.0)
-            win.flip()
-            done = True
+    run_task(env=env, win=win, logger=Logger, settings=settings, n_episodes=None)
 
-        elif out is not None:
-            action = out[0]
+    win.to_Draw = []
 
-    if task == "mid":
-
-        win_trials += 1 if starting_position in [3, 4] else 0
-
-        if (sum(actions) / (episode + 1)) < 0.4 and (win_trials % 3) == 0:
-            info_dict[0]["psychopy"][-1].duration -= 0.025
-        elif (win_trials % 3) == 0:
-            info_dict[0]["psychopy"][-1].duration += 0.25
-
-    Logger.log_event(
-        {"event_type": "trial-end", "total_reward": env.cumulative_reward},
-        reward=env.reward,
+    final = visual.TextStim(
+        win=win,
+        text=f"You are done!\nThank you!\nYou earned {env.cumulative_reward} points!",
+        color=[1, 1, 1],
+        pos=(0, 150),
+        height=24,
     )
+    final.draw()
+    win.flip()
+    event.waitKeys(keyList=["space"])
+    win.flip()
 
-
-Logger.close()
-win.close()
-core.quit()
+    Logger.close()
+    win.close()
+    core.quit()

@@ -1,30 +1,19 @@
-import numpy as np
-import pytest
-
 from rewardgym.tasks import get_env
-
-from ..tasks import get_env
-from ..utils import unpack_conditions
 
 
 def run_task_base(task, n_episodes=10):
-
-    env, conditions = get_env(task, render_mode=None)
+    env = get_env(task, render_mode=None)
 
     for _ in range(n_episodes):
-
-        condition, starting_position = unpack_conditions(conditions, None)
-
-        obs, info = env.reset(agent_location=starting_position, condition=condition)
+        _, _ = env.reset(agent_location=0, condition=None)
         done = False
 
         # play one episode
         while not done:
             action = env.action_space.sample()
-            next_obs, reward, terminated, truncated, info = env.step(action)
+            _, _, terminated, truncated, _ = env.step(action)
 
             done = terminated or truncated
-            obs = next_obs
 
 
 def test_smoke_screen_hcp_base_init():

@@ -1,4 +1,4 @@
-from typing import Union
+from typing import List, Union
 
 import numpy as np
 
@@ -7,7 +7,6 @@ from .utils import check_seed
 
 class BaseReward:
     def __init__(self, reward, p=1, seed=1234):
-
         if not isinstance(reward, (list, tuple, np.ndarray)):
             reward = [reward]
 
@@ -19,12 +18,12 @@ class BaseReward:
 
         self.rng = check_seed(seed)
 
-    def _reward_function(self, condition=None):
+    def _reward_function(self, **kwargs):
         reward = self.rng.choice(self.reward, p=self.p)
         return reward
 
-    def __call__(self, condition=None):
-        return self._reward_function(condition)
+    def __call__(self, **kwargs):
+        return self._reward_function(**kwargs)
 
 
 class DriftingReward(BaseReward):
@@ -36,7 +35,6 @@ class DriftingReward(BaseReward):
         gauss_sd: float = 0.025,
         seed: int = 1234,
     ):
-
         if not isinstance(reward, (list, tuple, np.ndarray)):
             reward = [reward]
 
@@ -50,29 +48,36 @@ class DriftingReward(BaseReward):
         self.gauss_sd = gauss_sd
         self.borders = borders
 
-    def _reward_function(self, condition=None):
+    def _reward_function(self, **kwargs):
         reward = self.rng.choice(self.reward, p=[self.p, 1 - self.p])
 
-        step = self.rng.normal(0, self.gauss_sd)
+        next_val = self.p + self.rng.normal(0, self.gauss_sd)
 
-        if (self.p + step >= self.borders[1]) or (self.p + step <= self.borders[0]):
-            self.p -= step
-        else:
-            self.p += step
+        if next_val > self.borders[1]:
+            next_val = 2 * self.borders[1] - next_val
+        if next_val < self.borders[0]:
+            next_val = 2 * self.borders[0] - next_val
+
+        self.p = next_val
 
         return reward
 
-    def __call__(self, condition=None):
-        return self._reward_function(condition)
 
+class PseudoRandomReward(BaseReward):
+    def __init__(self, reward_list: Union[List], seed=1234):
+        self.reward_list = reward_list
+        self.rng = check_seed(seed)
+        self._generate_sequence()
 
-class ConditionReward(BaseReward):
-    def __init__(self, condition_reward={0: -0.5, 1: 0.0, 2: 1.0}):
-        self.condition_reward = condition_reward
+    def _reward_function(self, **kwargs):
+        reward = self.rewards.pop()
 
-    def _reward_function(self, condition):
-        reward = self.condition_reward[condition]
+        if len(self.rewards) == 0:
+            self._generate_sequence()
+
         return reward
 
-    def __call__(self, condition):
-        return self._reward_function(condition)
+    def _generate_sequence(self):
+        self.rewards = self.rng.choice(
+            self.reward_list, size=len(self.reward_list), replace=False
+        ).tolist()

@@ -1,16 +1,15 @@
-import types
-
 import numpy as np
 import pytest
 
-from .. import ENVIRONMENTS, get_env
-from ..utils import (
+from rewardgym import ENVIRONMENTS, get_env
+from rewardgym.utils import (
     add_to_df,
     check_elements_in_list,
     check_seed,
     get_condition_meaning,
     get_condition_state,
     get_starting_nodes,
+    get_stripped_graph,
     run_single_episode,
     unpack_conditions,
 )
@@ -80,7 +79,6 @@ def test_get_condition_exceptions(conditions, episode, expected_output):
 
 
 def test_unpack_conditions_lists():
-
     l1 = [1, 2, 3]
     l2 = None
 
@@ -90,7 +88,6 @@ def test_unpack_conditions_lists():
 
 
 def test_unpack_conditions_tuple():
-
     l1 = ([1, 2, 3], [1, 0, 0])
     l2 = None
     l3 = ([0],)
@@ -150,13 +147,11 @@ def test_get_starting_nodes():
 
 
 def test_run_episode_smokescreen():
-    from .. import ENVIRONMENTS, get_env
-    from ..agents import base_agent
-    from ..utils import unpack_conditions
+    from rewardgym.agents import base_agent
 
     for envname in ENVIRONMENTS:
         n_episodes = 20
-        env, conditions = get_env(envname)
+        env = get_env(envname)
         agent = base_agent.QAgent(
             learning_rate=0.25,
             temperature=1.0,
@@ -165,22 +160,13 @@ def test_run_episode_smokescreen():
             state_space=env.n_states,
         )
 
-        for ne in range(n_episodes):
-
-            condition, starting_position = unpack_conditions(conditions, ne)
-
-            if envname == "risk-sensitive":
-                avail_actions = list(env.condition_dict[condition].values())
-            else:
-                avail_actions = None
-
-            a = run_single_episode(
+        for _ in range(n_episodes):
+            run_single_episode(
                 env,
                 agent,
-                starting_position,
-                condition,
+                0,
+                None,
                 step_reward=envname == "two-step",
-                avail_actions=avail_actions,
             )
 
 
@@ -272,3 +258,19 @@ def test_neither_condition_nor_position_present():
         get_condition_meaning(info_dict, starting_position, condition)
         == expected_result
     )
+
+
+def test_get_stripped_graph_basic():
+    graph = {
+        "A": (["B", "C"],),
+        "B": {"1": (["D"],), 2: (["E"],), 3: ["F", "G"]},
+        "C": ["H", "I"],
+    }
+    expected = {"A": ["B", "C"], "B": ["E", "F", "G"], "C": ["H", "I"]}
+    assert get_stripped_graph(graph) == expected
+
+
+def test_get_stripped_graph_with_empty_dict():
+    graph = {}
+    expected = {}
+    assert get_stripped_graph(graph) == expected

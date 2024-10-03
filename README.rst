@@ -25,7 +25,7 @@ been greatly inspired by `neuro-nav <https://github.com/awjuliani/neuro-nav>`_ [
 Installation
 -------------------------------------------------------------------------------
 
-I recommend creating a new python enviroment (using e.g. ``venv`` or ``conda``).
+I recommend creating a new python environment (using e.g. ``venv`` or ``conda``).
 
 Then install the package and all necessary dependencies using::
 
@@ -102,19 +102,19 @@ Running a task could look like the following
 
 .. code-block:: python
 
-    from rewardgym import get_env, unpack_conditions
+    from rewardgym import get_env
     from rewardgym.agents.base_agent import QAgent
 
-    env, conditions = get_env('hcp')
-    agent = QAgent(env, 0.1, 0.2)
+    env = get_env('hcp')
+    agent = QAgent(learning_rate=0.1, temperature=0.2,
+                   action_space=env.n_actions, state_space=env.n_states)
+
 
     n_episodes = 1000
 
     for t in range(n_episodes):
 
-        condition, starting_position = unpack_conditions(conditions, t)
-
-        obs, info = env.reset(agent_location=starting_position, condition=condition)
+        obs, info = env.reset()
 
         done = False
 

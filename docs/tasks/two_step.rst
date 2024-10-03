@@ -8,7 +8,7 @@ The task has often been used to investigate the relationship between model-based
 processes in humans.
 
 In the experiment, we use the starting points of probabilities described in :cite:p:`nussenbaumMovingDevelopmentalResearch2020`,
-but with a separate drift. Furthermore, the drift in this implementation is only applied when the choice is selected.
+but with a separate drift.
 For their implementation of the task, see their GitHub `repo <https://github.com/hartleylabnyu/online_two_step_replication>`_
 
 For this project the graph structure is the following:
@@ -23,7 +23,7 @@ Or in graph form:
 
     from rewardgym import get_env
     from rewardgym.environments.visualizations import plot_env_graph
-    env, conditions = get_env("two-step")
+    env = get_env("two-step")
     plot_env_graph(env)
 
 Task description

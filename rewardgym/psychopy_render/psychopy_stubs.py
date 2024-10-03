@@ -1,10 +1,8 @@
 class Clock:
     def __init__(self):
-
         self.time = 0
 
     def getTime(self):
-
         return self.time
 
 
@@ -23,6 +21,9 @@ class ImageStim:
     def __init__(self, *args, **kwargs) -> None:
         pass
 
+    def setAutoDraw(*args):
+        pass
+
 
 class TextStim(ImageStim):
     pass
@@ -38,3 +39,20 @@ def getKeys(**kwargs):
 
 def quit():
     pass
+
+
+class Dlg:
+    def __init__(self, *args, **kwargs) -> None:
+        pass
+
+    def addField(self, *args, **kwargs):
+        pass
+
+    def show(self):
+        # Just for working with the gui dialog
+        return ["Yes"]
+
+
+class DlgFromDict:
+    def __init__(self, *args, **kwargs) -> None:
+        self.OK = True

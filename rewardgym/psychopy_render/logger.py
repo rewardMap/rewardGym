@@ -1,4 +1,4 @@
-""" Logger classes used by the experiment."""
+"""Logger classes used by the experiment."""
 
 from typing import Dict, List, Tuple, Union
 
@@ -20,7 +20,7 @@ class ExperimentLogger:
     def __init__(
         self,
         file_name: str,
-        global_clock: Clock,
+        global_clock: Clock(),
         participant_id: str,
         task: str = "hcp",
         run: int = 1,
@@ -29,7 +29,7 @@ class ExperimentLogger:
         na: str = "n/a",
         kill_switch: str = "q",
         mr_trigger: str = "5",
-        mr_clock: Clock = Clock,
+        mr_clock: Clock = Clock(),
     ):
         """
         Logger class to help with logging during a potential fMRI experiment,
@@ -48,9 +48,9 @@ class ExperimentLogger:
         run : int, optional
             The run, also logged as persistent column, by default 1
         seq_tr : float, optional
-            If it is an fMRI experiment, this is echo time. Used to calculate the expected collection between acqusitions, by default 0.752
+            If it is an fMRI experiment, this is echo time. Used to calculate the expected collection between acquisitions, by default 0.752
         sep : str, optional
-            What kind of seperator to use in output file, by default "\t"
+            What kind of separator to use in output file, by default "\t"
         na : str, optional
             How NaN values are written to file, by default "n/a"
         kill_switch : str, optional
@@ -78,6 +78,9 @@ class ExperimentLogger:
         self.trial_type = self.na
         self.start_position = self.na
         self.current_location = self.na
+        self.misc = self.na
+        self.avail_actions = self.na
+        self.action = self.na
 
         self.trial = -1
         self.tr = 0
@@ -88,21 +91,24 @@ class ExperimentLogger:
             "onset",
             "duration",
             "trial_type",
-            "start_position",
             "event_type",
             "response_time",
             "response_button",
             "response_late",
+            "action",
             "reward",
             "trial",
+            "current_location",
+            "trial_time",
+            "total_reward",
+            "avail_actions",
+            "misc",
             "TR",
+            "expected_duration",
+            "start_position",
             "task",
             "run",
             "participant_id",
-            "expexted_duration",
-            "trial_time",
-            "total_reward",
-            "current_location",
         ]
 
         # Create a dictionary of nans to be used later.
@@ -135,6 +141,9 @@ class ExperimentLogger:
         tmp_dict["current_location"] = self.current_location
         tmp_dict["TR"] = self.tr
         tmp_dict["run"] = self.run
+        tmp_dict["avail_actions"] = self.avail_actions
+        tmp_dict["misc"] = self.misc
+        tmp_dict["action"] = self.action
 
         return tmp_dict
 
@@ -276,7 +285,6 @@ class ExperimentLogger:
 
         if presses:
             for resp in presses:
-
                 if resp[0] == self.kill_switch:
                     # Closes the window, closes the file and quits psychopy.
                     win.close()
@@ -284,7 +292,6 @@ class ExperimentLogger:
                     core.quit()
 
                 elif resp[0] == self.mr_trigger:
-
                     self.tr += 1
                     expected_time = self.mr_clock.getTime() - (self.tr * self.seq_tr)
                     # ugly fix!
@@ -317,6 +324,42 @@ class ExperimentLogger:
         else:
             return response
 
+    def update_trial_info(self, **kwargs):
+        for k, v in kwargs.items():
+            if k in [
+                "trial",
+                "start_position",
+                "trial_type",
+                "current_location",
+                "avail_actions",
+                "misc",
+            ]:
+                setattr(self, k, v)
+            else:
+                raise AttributeError(f"Cannot / doest not have attribute: {k}")
+
+    def wait(self, win, time: float, start: float = None, wait_no_keys: bool = False):
+        """
+        Wait for a given time.
+
+
+        Parameters
+        ----------
+        time : float
+            Time to wait, in seconds.
+        start : float, optional
+            Specify a different time, than the current one of the Logger, by default None
+        """
+        if start is None:
+            start = self.get_time()
+
+        t_wait = start + time  # - self.frameDuration
+
+        # Trying to avoid unnecessary checks
+        while t_wait > self.get_time():
+            if not wait_no_keys:
+                self.key_strokes(win)
+
 
 class MinimalLogger(ExperimentLogger):
     """
@@ -325,12 +368,12 @@ class MinimalLogger(ExperimentLogger):
 
     def __init__(
         self,
-        global_clock: Clock,
+        global_clock: Clock(),
         seq_tr: float = 0.752,
         na: str = "n/a",
         kill_switch: str = "q",
         mr_trigger: str = "5",
-        mr_clock: Clock = Clock,
+        mr_clock: Clock = Clock(),
     ):
         """
         Logger class to help with logging during a potential fMRI experiment,
@@ -341,7 +384,7 @@ class MinimalLogger(ExperimentLogger):
         global_clock : Clock
             Clock that is used by the experiment.
         seq_tr : float, optional
-            If it is an fMRI experiment, this is echo time. Used to calculate the expected collection between acqusitions, by default 0.752
+            If it is an fMRI experiment, this is echo time. Used to calculate the expected collection between acquisitions, by default 0.752
         na : str, optional
             How NaN values are written to file, by default "n/a"
         kill_switch : str, optional
@@ -396,7 +439,6 @@ class MinimalLogger(ExperimentLogger):
 
 class SimulationLogger(ExperimentLogger):
     def _write_to_file(self, tmp_values: List[float]):
-
         for n, ii in enumerate(self.categories):
             self.df[ii].append(tmp_values[n])
 
@@ -408,8 +450,24 @@ class SimulationLogger(ExperimentLogger):
         key,
         rt,
     ) -> Union[Tuple[str, float], None]:
-
         return (key, rt)
 
     def close(self):
         return self.df
+
+    def wait(self, win, time: float, start: float = None):
+        """
+        Wait for a given time.
+
+
+        Parameters
+        ----------
+        time : float
+            Time to wait, in seconds.
+        start : float, optional
+            Specify a different time, than the current one of the Logger, by default None
+        """
+        if start is None:
+            start = self.get_time()
+
+        self.global_clock.time += time

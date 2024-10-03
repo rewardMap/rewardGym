@@ -1,0 +1,107 @@
+[build-system]
+requires = ["setuptools >= 30.0.3"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["rewardgym"]
+
+[project]
+name = "rewardgym"
+version = "0.0.1"
+authors = [
+    { name = "Simon R. Steinkamp", email= "rewardgym@mailbox.org" },
+    ]
+description = "rewardgym is a toolbox for efficiently modeling and displaying reward experiments."
+readme = "README.rst"
+license = {file = "LICENSE"}
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intendend Audience :: Research/Science",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+]
+requires-python = ">= 3.8"
+
+dependencies = [
+    "gymnasium>=0.29.1",
+    "numpy>=1.23",
+    "pygame>=2.5.2",
+    "networkx>=3.1",
+    "matplotlib",
+    "pillow",
+    "scipy"
+]
+
+[project.optional-dependencies]
+doc = [
+    "sphinx>=2.0",
+    "sphinx-argparse",
+    "sphinx_rtd_theme",
+    "myst-parser",
+    "nbsphinx",
+    "sphinxcontrib-bibtex",
+    "jupytext",
+    "nbsphinx_link"
+]
+style = [
+    "ruff",
+    "isort",
+    "pydocstyle",
+    "codespell"
+]
+test = [
+    "rewardgym[style]",
+    "pytest>=5.3",
+    "pytest-cov",
+    "coverage"
+]
+devtools = [
+    "pre-commit",
+    "jupyter"
+]
+dev = ["rewardgym[devtools,docs,tests]"]
+
+[project.urls]
+Documentation = "https://rewardmap.github.io/rewardGym/"
+Source = "https://github.com/rewardMap/rewardGym"
+
+[project.scripts]
+rewardgym_play = "rewardgym.tasks.play_task:play_cli"
+
+[tool.pytest.ini_options]
+doctest_optionflags = "NORMALIZE_WHITESPACE"
+xfail_strict = true
+addopts = "-rx"
+
+[tool.isort]
+profile = "black"
+skip_gitignore = true
+extend_skip = [
+    ".autorc",
+    ".coverage*",
+    ".readthedocs.yml",
+    ".zenodo.json",
+    "codecov.yml",
+    "setup.py",
+    "versioneer.py",
+    "rewardgym/_version.py"
+]
+skip_glob = ["docs/*"]
+
+[tool.pydocstyle]
+convention = "numpy"
+match = "rewardgym/*.py"
+match-dir = "rewardgym/[^tests]*"
+
+[tool.codespell]
+skip = [".git", "build", "./docs/_build"]
+ignore-words-list = [""]
+write-changes = true
+count = true
+quiet-level = 3
+
+[tool.ruff.lint.per-file-ignores]
+"rewardgym/tests/*" = ["E712"]
+"notebooks/*" = ["E402"]

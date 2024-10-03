@@ -1,54 +1,49 @@
 from collections import defaultdict
-from typing import Literal, Union
-
-import numpy as np
+from typing import Literal
 
 from ..reward_classes import BaseReward
 from ..utils import check_seed
+from .utils import check_conditions_not_following
 
 
 def get_posner(
-    starting_position: list = None,
     render_backend: Literal["pygame", "psychopy"] = None,
-    window_size: int = None,
-    **kwargs
+    seed=112,
+    key_dict=None,
+    **kwargs,
 ):
-
     environment_graph = {
-        0: [4, 5],  # left left
-        1: [5, 4],  # left right
-        2: [4, 5],  # right left
-        3: [5, 4],  # right right
-        4: [],  # Win
-        5: [],  # Lose
+        0: ({0: ([1, 2], 0.5), "skip": True}),
+        1: ({0: ([3, 4], 0.8)}),  # cue left
+        2: ({0: ([4, 3], 0.8)}),  # cue right
+        3: [5, 6],  # target / reward left
+        4: [6, 5],  # target /reward right
+        5: [],  # Win
+        6: [],  # Lose
     }
 
     reward_structure = {
-        4: BaseReward([1]),
-        5: BaseReward([0]),
+        5: BaseReward([1]),
+        6: BaseReward([0]),
     }
-
-    if starting_position is None:
-        condition_out = (None, ([0, 1, 2, 3], [0.4, 0.1, 0.1, 0.4]))
-    else:
-        condition_out = (None, starting_position)
 
     info_dict = defaultdict(int)
     info_dict.update(
         {
             "position": {
-                0: "valid-cue-left",
-                1: "invalid-cue-left",
-                2: "valid-cue-right",
-                3: "invalid-cue-right",
+                0: "selection",
+                1: "cue-1",
+                2: "cue-2",
+                3: "target-left",
+                4: "target-right",
+                5: "win",
+                6: "lose",
             }
         }
     )
 
     if render_backend == "pygame":
-
-        if window_size is None:
-            return ValueError("window_size needs to be defined!")
+        window_size = 256
 
         from ..pygame_render.stimuli import BaseAction, BaseDisplay, BaseText
         from ..pygame_render.task_stims import feedback_block
@@ -77,48 +72,109 @@ def get_posner(
         ]
 
         pygame_dict = {
-            0: {"human": first_step("<", left_position)},
-            1: {"human": first_step("<", right_position)},
-            2: {"human": first_step(">", left_position)},
-            3: {"human": first_step(">", right_position)},
-            4: {"human": final_display},
-            5: {"human": final_display},
+            0: {"pygame": first_step("<", left_position)},
+            1: {"pygame": first_step("<", right_position)},
+            2: {"pygame": first_step(">", left_position)},
+            3: {"pygame": first_step(">", right_position)},
+            4: {"pygame": final_display},
+            5: {"pygame": final_display},
         }
 
         info_dict.update(pygame_dict)
 
-    elif render_backend == "psychopy":
-        raise NotImplementedError("Psychopy integration still under deliberation.")
+    elif render_backend == "psychopy" or render_backend == "psychopy-simulate":
+        from ..psychopy_render import get_psychopy_info
 
-    return environment_graph, reward_structure, condition_out, info_dict
+        if key_dict is None:
+            key_dict = {"left": 0, "right": 1}
+
+        psychopy_dict, _ = get_psychopy_info(
+            "risk-sensitive", seed=seed, key_dict=key_dict
+        )
+        info_dict.update(psychopy_dict)
+
+    return environment_graph, reward_structure, info_dict
 
 
 def generate_posner_configs(stimulus_set: str = "1"):
+    seed = check_seed(int(stimulus_set))
 
-    seed = check_seed(222)
+    condition_dict = {
+        "cue-1-target-left": {0: {0: 1}, 1: {0: 3}},
+        "cue-1-target-right": {0: {0: 1}, 1: {0: 4}},
+        "cue-2-target-right": {0: {0: 2}, 2: {0: 4}},
+        "cue-2-target-left": {0: {0: 2}, 2: {0: 3}},
+    }
 
-    condition_template = [0, 0, 0, 0, 1, 2, 2, 2, 2, 3]  # 80 %
-    iti_template = [1.5, 2.125, 2.75, 3.375, 4.0] * 2
-    isi_template = [0.4, 0.6] * 5
+    # 20 trials in each condition template
+    condition_template_70_30 = (
+        ["cue-1-target-left"] * 7
+        + ["cue-1-target-right"] * 3
+        + ["cue-2-target-right"] * 7
+        + ["cue-2-target-left"] * 3
+    )
 
-    n_trials_per_condition = 10
+    condition_template_90_10 = (
+        ["cue-1-target-left"] * 9
+        + ["cue-1-target-right"] * 1
+        + ["cue-2-target-right"] * 9
+        + ["cue-2-target-left"] * 1
+    )
 
-    conditions = seed.choice(a=condition_template, size=10, replace=False).tolist()
-    isi = seed.choice(isi_template, size=10, replace=False).tolist()
-    iti = seed.choice(iti_template, size=10, replace=False).tolist()
+    condition_template_10_90 = (
+        ["cue-1-target-left"] * 1
+        + ["cue-1-target-right"] * 9
+        + ["cue-2-target-right"] * 1
+        + ["cue-2-target-left"] * 9
+    )
 
-    for _ in range(n_trials_per_condition - 1):
-        reject = True
-        while reject:
-            condition_template = seed.choice(
-                a=condition_template, size=10, replace=False
-            ).tolist()
+    condition_template_30_70 = (
+        ["cue-1-target-left"] * 3
+        + ["cue-1-target-right"] * 7
+        + ["cue-2-target-right"] * 3
+        + ["cue-2-target-left"] * 7
+    )
 
-            if conditions[-1] != condition_template[0]:
-                reject = False
-                conditions.extend(condition_template)
-                isi.extend(seed.choice(isi_template, size=10, replace=False).tolist())
-                iti.extend(seed.choice(iti_template, size=10, replace=False).tolist())
+    iti_template = [1, 1.5, 2, 2.5] * 5
+    isi_template = [0.4, 0.6] * 10
+
+    n_blocks_condition = 2
+
+    dont_follow_dict = {
+        0: ["cue-1-target-left", "cue-2-target-right"],
+        2: ["cue-1-target-left", "cue-2-target-right"],
+        1: ["cue-1-target-right", "cue2-target-left"],
+        3: ["cue-1-target-right", "cue2-target-left"],
+    }
+    condition_order = seed.permutation([0, 1, 2, 3])
+    condition_assign = {
+        0: condition_template_10_90,
+        1: condition_template_90_10,
+        2: condition_template_30_70,
+        3: condition_template_70_30,
+    }
+
+    conditions, isi, iti = [], [], []
+    for co in condition_order:
+        for cn in range(n_blocks_condition):
+            reject = True
+
+            while reject:
+                condition_template = seed.choice(
+                    a=condition_assign[co], size=20, replace=False
+                ).tolist()
+
+                check = check_conditions_not_following(
+                    condition_template, dont_follow_dict[co], 2
+                )
+
+                if check and (
+                    len(conditions) == 0 or conditions[-1] != condition_template[0]
+                ):
+                    conditions.extend(condition_template)
+                    isi.extend(seed.permutation(isi_template).tolist())
+                    iti.extend(seed.permutation(iti_template).tolist())
+                    reject = False
 
     config = {
         "name": "posner",
@@ -126,9 +182,12 @@ def generate_posner_configs(stimulus_set: str = "1"):
         "isi": isi,
         "iti": iti,
         "condition": conditions,
-        "condition_target": "location",
+        "condition_dict": condition_dict,
         "ntrials": len(conditions),
         "update": ["isi", "iti"],
+        "add_remainder": True,
+        "breakpoints": [59, 119],
+        "break_duration": 45,
     }
 
     return config

@@ -1,15 +1,13 @@
 import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 import networkx as nx
+from networkx import NetworkXException
 
-from ..utils import get_starting_nodes
+from ..utils import get_starting_nodes, get_stripped_graph
 
 
 def plot_env_graph(env):
-
-    strip_graph = {
-        ii: (jj[0] if isinstance(jj, tuple) else jj) for ii, jj in env.graph.items()
-    }
+    strip_graph = get_stripped_graph(env.graph)
 
     starting_node = get_starting_nodes(env.graph)
     reward_nodes = [ii for (ii, jj) in env.graph.items() if len(jj) == 0]
@@ -18,7 +16,12 @@ def plot_env_graph(env):
     other_nodes = list(set(nodes) - set(reward_nodes) - set(starting_node))
 
     nd = nx.DiGraph(strip_graph)
-    pos = nx.planar_layout(nd, dim=2)
+
+    try:
+        pos = nx.planar_layout(nd, dim=2)
+    except NetworkXException:
+        pos = nx.shell_layout(nd, dim=2)
+
     nx.draw_networkx_nodes(
         nd,
         pos,

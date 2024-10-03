@@ -1,136 +1,126 @@
-import os
+from copy import deepcopy
 
-from . import STIMPATH
-from .stimuli import (
-    ActionStimulus,
-    BaseStimulus,
-    FeedBackStimulus,
-    ImageStimulus,
-    TextStimulus,
+import numpy as np
+
+from ..utils import check_seed
+from .default_images import (
+    STIMULUS_DEFAULTS,
+    fixation_cross,
+    generate_stimulus_properties,
+    make_card_stimulus,
 )
+from .special_stimuli import TwoStimuliWithResponseAndSelection
+from .stimuli import BaseStimulus, FeedBackStimulus, ImageStimulus
 
-reward_feedback = FeedBackStimulus(
-    1.0, text="You gain: {0}", target="reward", name="reward"
-)
-total_reward_feedback = FeedBackStimulus(
-    1.0, text="You have gained: {0}", target="total_reward", name="reward-total"
-)
 
-base_stim = BaseStimulus(0)
-fix = TextStimulus(text="+", duration=0.2, name="fixation")
-fix_iti = TextStimulus(text="+", duration=1.5, name="iti")
+def get_info_dict(seed=None, key_dict={"left": 0, "right": 1}, **kwargs):
+    seed = check_seed(seed)
 
-image_shift = 250
+    stim_defaults = deepcopy(STIMULUS_DEFAULTS)
+    colors = stim_defaults["colors"]
+    set_colors = seed.choice(np.arange(len(colors[:-1])), 3, replace=False)
 
-final_step = [base_stim, reward_feedback, total_reward_feedback, fix_iti]
+    stim_set = {}
+    for n in range(3):
+        stim_set[n] = []
 
-info_dict = {
-    0: {
-        "psychopy": [
-            base_stim,
+        stimulus_properties = []
+        for _ in range(2):
+            st_p = generate_stimulus_properties(
+                random_state=seed,
+                colors=[tuple(colors[set_colors[n]])] * 4,
+                patterns=[(1, 1), (2, 2)],
+                shapes=stim_defaults["shapes"],
+            )
+            stimulus_properties.append(st_p)
+            stim_defaults["shapes"] = [
+                i for i in stim_defaults["shapes"] if i != st_p["shapes"]
+            ]
+
+        stim_set[n] = stimulus_properties
+        stim_set[n] = [
+            make_card_stimulus(stim_set[n][k], width=250, height=250) for k in range(2)
+        ]
+
+    reward_feedback = FeedBackStimulus(1.0, text="{0}", target="reward", name="reward")
+
+    fix = ImageStimulus(
+        image_paths=[fixation_cross()],
+        duration=0.1,
+        autodraw=True,
+        name="initial-fixation",
+    )
+    fix_iti = BaseStimulus(duration=1.0, name="iti")
+
+    fix2 = ImageStimulus(
+        image_paths=[fixation_cross()],
+        duration=0.5,
+        autodraw=True,
+        name="transition",
+    )
+
+    image_shift = 325
+
+    final_step = [reward_feedback, fix_iti]
+
+    def first_state(stim1, stim2, key_dict):
+        tmp_list = [
             fix,
-            ImageStimulus(
-                duration=0.1,
-                name="step1",
-                image_paths=[
-                    os.path.join(STIMPATH, "two_step", "stim11.png"),
-                    os.path.join(STIMPATH, "two_step", "stim12.png"),
-                ],
+            TwoStimuliWithResponseAndSelection(
+                duration=2.0,
+                key_dict=key_dict,
+                name_phase1="decision-0",
+                duration_phase1=0.1,
+                name_phase2="environment-select",
+                duration_phase2=0.75,
+                images=[stim1, stim2],
                 positions=[(-image_shift, 0), (image_shift, 0)],
             ),
-            ActionStimulus(duration=2.0),
         ]
-    },
-    1: {
-        "psychopy": [
-            ImageStimulus(
-                duration=0.5,
-                name="step1-select",
-                image_paths=[
-                    os.path.join(STIMPATH, "two_step", "stim11.png"),
-                    os.path.join(STIMPATH, "two_step", "stim12.png"),
-                ],
-                positions=[(0, image_shift), (image_shift, 0)],
+
+        return tmp_list
+
+    def second_state(s2_img1, s2_img2, key_dict):
+        tmp_list = [
+            fix2,
+            TwoStimuliWithResponseAndSelection(
+                duration=2.0,
+                key_dict=key_dict,
+                name_phase1="environment-decision",
+                duration_phase1=0.1,
+                name_phase2="stimulus-select",
+                duration_phase2=0.5,
+                images=[s2_img1, s2_img2],
+                positions=[(-image_shift, 0), (image_shift, 0)],
             ),
-            ImageStimulus(
-                duration=0.1,
-                name="step21",
-                image_paths=[
-                    os.path.join(STIMPATH, "two_step", "stim11.png"),
-                    os.path.join(STIMPATH, "two_step", "stim21.png"),
-                    os.path.join(STIMPATH, "two_step", "stim22.png"),
-                ],
-                positions=[(0, image_shift), (-image_shift, 0), (image_shift, 0)],
-            ),
-            ActionStimulus(duration=2.0),
         ]
-    },
-    2: {
-        "psychopy": [
-            ImageStimulus(
-                duration=0.5,
-                name="step2-select",
-                image_paths=[
-                    os.path.join(STIMPATH, "two_step", "stim11.png"),
-                    os.path.join(STIMPATH, "two_step", "stim12.png"),
-                ],
-                positions=[(-image_shift, 0), (0, image_shift)],
-            ),
-            ImageStimulus(
-                duration=0.1,
-                name="step22",
-                image_paths=[
-                    os.path.join(STIMPATH, "two_step", "stim12.png"),
-                    os.path.join(STIMPATH, "two_step", "stim31.png"),
-                    os.path.join(STIMPATH, "two_step", "stim32.png"),
-                ],
-                positions=[(0, image_shift), (-image_shift, 0), (image_shift, 0)],
-            ),
-            ActionStimulus(duration=2.0),
-        ]
-    },
-    3: {
-        "psychopy": [
-            ImageStimulus(
-                duration=0.5,
-                name="stim21",
-                image_paths=[os.path.join(STIMPATH, "two_step", "stim21.png")],
-                positions=[(0, image_shift)],
+
+        return tmp_list
+
+    info_dict = {
+        0: {
+            "psychopy": first_state(
+                stim1=stim_set[0][0], stim2=stim_set[0][1], key_dict=key_dict
             )
-        ]
-        + final_step
-    },
-    4: {
-        "psychopy": [
-            ImageStimulus(
-                duration=0.5,
-                name="stim22",
-                image_paths=[os.path.join(STIMPATH, "two_step", "stim22.png")],
-                positions=[(0, image_shift)],
+        },
+        1: {
+            "psychopy": second_state(
+                s2_img1=stim_set[1][0],
+                s2_img2=stim_set[1][1],
+                key_dict=key_dict,
             )
-        ]
-        + final_step
-    },
-    5: {
-        "psychopy": [
-            ImageStimulus(
-                duration=0.5,
-                name="stim31",
-                image_paths=[os.path.join(STIMPATH, "two_step", "stim31.png")],
-                positions=[(0, image_shift)],
+        },
+        2: {
+            "psychopy": second_state(
+                s2_img1=stim_set[2][0],
+                s2_img2=stim_set[2][1],
+                key_dict=key_dict,
             )
-        ]
-        + final_step
-    },
-    6: {
-        "psychopy": [
-            ImageStimulus(
-                duration=0.5,
-                name="stim32",
-                image_paths=[os.path.join(STIMPATH, "two_step", "stim32.png")],
-                positions=[(0, image_shift)],
-            )
-        ]
-        + final_step
-    },
-}
+        },
+        3: {"psychopy": final_step},
+        4: {"psychopy": final_step},
+        5: {"psychopy": final_step},
+        6: {"psychopy": final_step},
+    }
+
+    return info_dict, None

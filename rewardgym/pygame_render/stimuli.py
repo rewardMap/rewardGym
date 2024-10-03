@@ -24,9 +24,8 @@ class BaseDisplay:
         window: Type[pygame.surface.Surface],
         clock: Type[pygame.time.Clock] = None,
         condition: int = None,
-        **kwargs
+        **kwargs,
     ) -> None:
-
         window.fill(self.background)
 
         if self.image_path is not None:
@@ -58,9 +57,8 @@ class BaseAction:
         window: Type[pygame.surface.Surface],
         clock: Type[pygame.time.Clock] = None,
         condition: int = None,
-        **kwargs
+        **kwargs,
     ) -> int:
-
         pygame.event.clear()
         while True:
             for event in pygame.event.get():
@@ -70,7 +68,6 @@ class BaseAction:
                     sys.exit()
 
                 if event.type == pygame.KEYDOWN:
-
                     if event.key == pygame.K_q:
                         pygame.display.quit()
                         pygame.quit()
@@ -105,9 +102,8 @@ class BaseText:
         window: Type[pygame.surface.Surface],
         clock: Type[pygame.time.Clock] = None,
         condition: int = None,
-        **kwargs
+        **kwargs,
     ) -> None:
-
         if self.font is None:
             self.font = pygame.font.Font(pygame.font.get_default_font(), self.fontsize)
             self.text_surface = self.font.render(self.text, True, self.fontcolor)
@@ -141,9 +137,8 @@ class TimedAction:
         self,
         window: Type[pygame.surface.Surface],
         clock: Type[pygame.time.Clock] = None,
-        **kwargs
+        **kwargs,
     ) -> int:
-
         pygame.event.clear()
         current_time = pygame.time.get_ticks()
         response = None
@@ -156,7 +151,6 @@ class TimedAction:
                     sys.exit()
 
                 if event.type == pygame.KEYDOWN:
-
                     if event.key == pygame.K_q:
                         pygame.display.quit()
                         pygame.quit()

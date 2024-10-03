@@ -2,10 +2,9 @@ from typing import Literal
 
 import pygame
 
-from ..environments.render_env import RenderEnv, RenderEnvMultiChoice
+from ..environments.render_env import RenderEnv
 from ..pygame_render.stimuli import BaseAction, BaseText
 from ..tasks.utils import get_task
-from ..utils import unpack_conditions
 
 
 def play_task(
@@ -15,38 +14,23 @@ def play_task(
     window_size: int = 500,
     n_episodes: int = 5,
 ):
-
     pygame.init()
     pygame.display.init()
     window = pygame.display.set_mode((window_size, window_size))
     clock = pygame.time.Clock()
 
-    environment_graph, reward_structure, condition_out, info_dict = get_task(
-        task_name, None, render_backend="pygame", window_size=window_size
+    environment_graph, reward_structure, info_dict = get_task(
+        task_name, render_backend="pygame"
     )
 
-    if task_name == "risk-sensitive":
-        env = RenderEnvMultiChoice(
-            environment_graph=environment_graph,
-            condition_dict=condition_out[1],
-            reward_locations=reward_structure,
-            render_mode="human",
-            info_dict=info_dict,
-            window_size=window_size,
-            window=window,
-            clock=clock,
-        )
-        condition_out = condition_out[0]
-    else:
-        env = RenderEnv(
-            environment_graph=environment_graph,
-            reward_locations=reward_structure,
-            render_mode="human",
-            info_dict=info_dict,
-            window_size=window_size,
-            window=window,
-            clock=clock,
-        )
+    env = RenderEnv(
+        environment_graph=environment_graph,
+        reward_locations=reward_structure,
+        render_mode="pygame",
+        info_dict=info_dict,
+    )
+
+    env.setup_render(window_size=window_size, window=window, clock=clock)
 
     base_position = (window_size // 2, window_size // 2)
 
@@ -61,10 +45,7 @@ def play_task(
     rewards = []
 
     for episode in range(n_episodes):
-
-        condition, starting_position = unpack_conditions(condition_out, episode)
-
-        obs, info = env.reset(starting_position, condition=condition)
+        obs, info = env.reset(0, condition=None)
         done = False
         observations.append(obs)
         # play one episode

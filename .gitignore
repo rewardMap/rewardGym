@@ -1,11 +1,18 @@
 .vscode
 *.ipynb
 .DS_Store
-
-stimuli
 template_stimuli
+screenshots
+rewardmap_protocol.py
+rwm_protocol
+
+assets/questionnaires
+assets/instructions/*.png
 docs/build_
 data
+
+psychopy_utils.py
+protocol_test.py
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -135,6 +142,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+.ruff_cache
 
 # Spyder project settings
 .spyderproject
