@@ -288,11 +288,8 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
     def display(self, win, logger, **kwargs):
         if self.seed.random() < self.flip_probability:
             flip = True
-            flip_key_dict = {}
-            key_list = list(self.key_dict.keys())
-            action_list = list(self.key_dict.values())
-            for kl, al in zip(key_list[::-1], action_list):
-                flip_key_dict[kl] = al
+            flip_key_dict = {key: 1 - value for key, value in self.key_dict.items()}
+
         else:
             flip_key_dict = self.key_dict
             flip = False
@@ -368,6 +365,7 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
 
         imgB = self.image_class[1]
         imgB.setOpacity(1.0)
+
         if flip:
             posA = imgA.pos
             posB = imgB.pos
@@ -385,6 +383,7 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
             )
 
             imgB.setOpacity(0.25)
+            feedback.draw()
 
         elif action == 1:
             feedback = Rect(
