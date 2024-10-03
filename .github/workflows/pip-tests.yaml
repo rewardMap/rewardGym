@@ -20,7 +20,7 @@ jobs:
       - name: Display Python version
         run: python -c "import sys; print(sys.version)"
       - name: Install
-        run: pip install -e '.[test,style]'
+        run: pip install -e '.[test]'
       - name: Lint with ruff
         run: |
           # stop the build if there are Python syntax errors or undefined names
