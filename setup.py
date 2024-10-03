@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import sys
-
+import versioneer
 from setuptools import setup
 
 SETUP_REQUIRES = ["setuptools >= 30.3.0"]
@@ -10,4 +10,6 @@ if __name__ == "__main__":
     setup(
         name="rewardgym",
         setup_requires=SETUP_REQUIRES,
+        version=versioneer.get_version(),
+        cmdclass=versioneer.get_cmdclass(),
     )

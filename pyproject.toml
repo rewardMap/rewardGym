@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools >= 30.0.3"]
+requires = ["setuptools >= 30.0.3", "versioneer == 0.29"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
@@ -7,7 +7,7 @@ include = ["rewardgym"]
 
 [project]
 name = "rewardgym"
-version = "0.0.1"
+dynamic = ["version"]
 authors = [
     { name = "Simon R. Steinkamp", email= "rewardgym@mailbox.org" },
     ]
@@ -105,3 +105,12 @@ quiet-level = 3
 [tool.ruff.lint.per-file-ignores]
 "rewardgym/tests/*" = ["E712"]
 "notebooks/*" = ["E402"]
+
+
+[tool.versioneer]
+VCS = "git"
+style = "pep440"
+versionfile_source = "rewardgym/_version.py"
+versionfile_build = "rewardgym/_version.py"
+tag_prefix = ""
+parentdir_prefix = ""

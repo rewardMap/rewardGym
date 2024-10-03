@@ -1,3 +1,4 @@
+from . import _version
 from .psychopy_render import get_psychopy_info
 from .tasks import get_configs, get_env
 from .utils import run_single_episode
@@ -18,3 +19,5 @@ __all__ = [
     "ENVIRONMENTS",
     "get_psychopy_info",
 ]
+
+__version__ = _version.get_versions()["version"]
