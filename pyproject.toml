@@ -61,7 +61,7 @@ devtools = [
     "pre-commit",
     "jupyter"
 ]
-dev = ["rewardgym[devtools,docs,tests]"]
+dev = ["rewardgym[devtools,doc,test]"]
 
 [project.urls]
 Documentation = "https://rewardmap.github.io/rewardGym/"
