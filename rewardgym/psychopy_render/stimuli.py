@@ -359,13 +359,11 @@ class ActionStimulus(BaseStimulus):
 
         response_window_onset = logger.get_time()
 
-        response_key, remaining = self._response_handling(
-            win, logger, response_window_onset
-        )
+        response = self._response_handling(win, logger, response_window_onset)
 
         win.flip()
 
-        return response_key, remaining
+        return response
 
     def _response_handling(self, win, logger, response_window_onset, key_dict=None):
         response_window = response_window_onset + self.duration
