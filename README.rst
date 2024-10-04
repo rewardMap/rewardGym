@@ -1,9 +1,7 @@
 .. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.10942784.svg
   :target: https://doi.org/10.5281/zenodo.10942784
-
 .. image:: https://codecov.io/gh/rewardMap/rewardGym/graph/badge.svg?token=NVVNHNP38M
- :target: https://codecov.io/gh/rewardMap/rewardGym
-
+  :target: https://codecov.io/gh/rewardMap/rewardGym
 .. image:: https://github.com/rewardMap/rewardGym/actions/workflows/build-sphinx.yaml/badge.svg
 .. image:: https://github.com/rewardMap/rewardGym/actions/workflows/pip-push.yaml/badge.svg
 
@@ -21,6 +19,7 @@ The project's goal is to provide two things:
 Under the hood this module uses the `gymnasium <https://github.com/Farama-Foundation/Gymnasium>`_ [cit1]_. The general package has
 been greatly inspired by `neuro-nav <https://github.com/awjuliani/neuro-nav>`_ [cit2]_, especially the use of a graph structure to represent the tasks.
 
+Many thanks also to `physiopy <https://github.com/physiopy>`_, from where I took many of the workflows and automizaton around the repository (such as workflows and PR labels)!
 
 Installation
 -------------------------------------------------------------------------------
