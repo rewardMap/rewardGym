@@ -25,6 +25,7 @@ jobs:
         fetch-depth: 0
         # Use token with write access to the repo
         token: ${{ secrets.GH_TOKEN }}
+        ref: main
     - name: Download and install latest auto
       env:
         # OS can be linux, macos, or win
