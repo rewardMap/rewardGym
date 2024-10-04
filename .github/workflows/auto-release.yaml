@@ -24,7 +24,7 @@ jobs:
         # Fetch all history for all branches and tags
         fetch-depth: 0
         # Use token with write access to the repo
-        token: ${{ secrets.GH_TOKEN }}
+        token: ${{ secrets.GITHUB_TOKEN }}
         ref: main
     - name: Download and install latest auto
       env:
@@ -38,7 +38,7 @@ jobs:
         chmod a+x ~/auto
     - name: Create release without version prefix
       env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         # Run auto release, don't use 'v' prefix, and be verbose
       run: |
         ~/auto shipit --no-version-prefix -v
