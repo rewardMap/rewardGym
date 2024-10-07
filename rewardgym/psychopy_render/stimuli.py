@@ -622,15 +622,15 @@ class FeedBackStimulus(BaseStimulus):
         else:
             feedback_img = "zero"
 
-        reward = f"+{reward:5.1f}" if reward > 0 else f"{reward:5.1f}"
+        reward_outcome = f"+{reward:5.1f}" if reward > 0 else f"{reward:5.1f}"
 
-        total_reward = (
+        total_reward_outcome = (
             f"+{total_reward:5.1f}" if total_reward > 0 else f"{total_reward:5.1f}"
         )
 
-        reward_stage2 = "Total: " + total_reward
+        reward_stage2 = "Total: " + total_reward_outcome
 
-        self.textStim.setText(self.text.format(reward))
+        self.textStim.setText(self.text.format(reward_outcome))
         self.textStim2.setAutoDraw(False)
 
         stim_onset = logger.get_time()
