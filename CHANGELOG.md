@@ -1,3 +1,15 @@
+# 0.0.4 (Mon Oct 07 2024)
+
+#### 🐛 Bug Fix
+
+- fixed error in reward logging [#16](https://github.com/rewardMap/rewardGym/pull/16) ([@SRSteinkamp](https://github.com/SRSteinkamp))
+
+#### Authors: 1
+
+- Simon Steinkamp ([@SRSteinkamp](https://github.com/SRSteinkamp))
+
+---
+
 # 0.0.3 (Fri Oct 04 2024)
 
 #### 🐛 Bug Fix
