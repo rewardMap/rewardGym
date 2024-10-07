@@ -8,10 +8,7 @@ on:
     branches:
       - main
 
-permissions:
-  contents: write
-  pull-requests: write
-  actions: write
+permissions: write-all
 
 jobs:
   auto-release:
