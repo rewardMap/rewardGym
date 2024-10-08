@@ -92,7 +92,7 @@ def get_hcp(
 
 
 def generate_hcp_configs(stimulus_set: str = "1"):
-    seed = check_seed(987)
+    seed = check_seed(int(stimulus_set))
     condition_dict = {
         "win": {"reward": 1},
         "lose": {"reward": -0.5},

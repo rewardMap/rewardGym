@@ -132,7 +132,7 @@ def run_task(env, win, logger, settings=None, seed=111, agent=None, n_episodes=N
                 env.simulate_action(info, key, (1 - probs) / 2 + rt_extra)
 
             if env.name == "hcp":
-                settings["wait"][episode] = env.remainder
+                settings["delay"][episode] = env.remainder
                 update_psychopy_trials(settings, env, episode)
 
             next_obs, reward, terminated, truncated, info = env.step(
