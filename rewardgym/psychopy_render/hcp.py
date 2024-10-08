@@ -17,7 +17,7 @@ def get_info_dict(seed=None, key_dict={"left": 0, "right": 1}, **kwargs):
         image_paths=[fixation_cross()],
         duration=1.5,
         autodraw=True,
-        name="wait",
+        name="delay",
     )
 
     info_dict = {
@@ -26,7 +26,7 @@ def get_info_dict(seed=None, key_dict={"left": 0, "right": 1}, **kwargs):
                 TextWithBorder(
                     "{0}",
                     {0: ["?"]},
-                    name="response-cue",
+                    name="cue",
                     duration=0.00,
                 ),
                 ActionStimulus(duration=1.5, key_dict=key_dict),
@@ -38,7 +38,7 @@ def get_info_dict(seed=None, key_dict={"left": 0, "right": 1}, **kwargs):
                 TextWithBorder(
                     "{0}",
                     condition_text={1: [1, 2, 3, 4], -0.5: [6, 7, 8, 9], 0: [5]},
-                    name="outcome",
+                    name="selection",
                 ),
                 reward_feedback,
                 base_stim_iti,
@@ -50,7 +50,7 @@ def get_info_dict(seed=None, key_dict={"left": 0, "right": 1}, **kwargs):
                 TextWithBorder(
                     "{0}",
                     condition_text={-0.5: [1, 2, 3, 4], 1: [6, 7, 8, 9], 0: [5]},
-                    name="outcome",
+                    name="selection",
                 ),
                 reward_feedback,
                 base_stim_iti,

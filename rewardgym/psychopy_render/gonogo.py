@@ -80,7 +80,7 @@ def get_info_dict(seed=None, key_dict={"space": 0}, external_stimuli=None, **kwa
         ]
 
     final_step = [
-        BaseStimulus(duration=1.0, name="feedback-delay"),
+        BaseStimulus(duration=1.0, name="reward-delay"),
         reward_feedback,
         BaseStimulus(name="iti", duration=1.0),
     ]

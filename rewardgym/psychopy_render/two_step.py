@@ -84,9 +84,9 @@ def get_info_dict(
             TwoStimuliWithResponseAndSelection(
                 duration=2.0,
                 key_dict=key_dict,
-                name_phase1="decision-0",
+                name_phase1="stage-1-decision",
                 duration_phase1=0.1,
-                name_phase2="environment-select",
+                name_phase2="stage-1-selection",
                 duration_phase2=0.75,
                 images=[stim1, stim2],
                 positions=[(-image_shift, 0), (image_shift, 0)],
@@ -101,9 +101,9 @@ def get_info_dict(
             TwoStimuliWithResponseAndSelection(
                 duration=2.0,
                 key_dict=key_dict,
-                name_phase1="environment-decision",
+                name_phase1="stage-2-decision",
                 duration_phase1=0.1,
-                name_phase2="stimulus-select",
+                name_phase2="stage-2-selection",
                 duration_phase2=0.5,
                 images=[s2_img1, s2_img2],
                 positions=[(-image_shift, 0), (image_shift, 0)],

@@ -60,13 +60,16 @@ def get_info_dict(
 
     cue_disp = ConditionBasedDisplay(0.05, name="cue", image_map=image_map)
     sel_disp = ConditionBasedDisplay(
-        1.5, with_action=True, name="selected", image_map=image_map
+        1.5, with_action=True, name="selection", image_map=image_map
     )
 
     final_step = [
         sel_disp,
         ImageStimulus(
-            image_paths=[fixation_cross()], duration=0.5, name="delay", autodraw=False
+            image_paths=[fixation_cross()],
+            duration=0.5,
+            name="reward-delay",
+            autodraw=False,
         ),
         reward_feedback,
         fix_iti,
