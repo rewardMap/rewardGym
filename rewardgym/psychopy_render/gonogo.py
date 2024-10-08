@@ -11,11 +11,11 @@ from .default_images import (
 from .stimuli import ActionStimulus, BaseStimulus, FeedBackStimulus, ImageStimulus
 
 
-def get_info_dict(seed=None, key_dict={"space": 0}, **kwargs):
-    random_state = check_seed(seed)
+def gonogo_stimuli(random_state, stim_defaults=STIMULUS_DEFAULTS):
+    random_state = check_seed(random_state)
     stim_properties = []
 
-    stim_defaults = deepcopy(STIMULUS_DEFAULTS)
+    stim_defaults = deepcopy(stim_defaults)
 
     for _ in range(4):
         st_p = generate_stimulus_properties(
@@ -38,6 +38,17 @@ def get_info_dict(seed=None, key_dict={"space": 0}, **kwargs):
     for n in range(4):
         image_map[n] = make_card_stimulus(stim_properties[n], height=350, width=350)
         stimuli[n] = stim_properties[n]
+
+    return image_map, stimuli
+
+
+def get_info_dict(seed=None, key_dict={"space": 0}, external_stimuli=None, **kwargs):
+    random_state = check_seed(seed)
+
+    if external_stimuli is None:
+        image_map, stimuli = gonogo_stimuli(random_state)
+    else:
+        image_map, stimuli = external_stimuli
 
     reward_feedback = FeedBackStimulus(1.0, text="{0}", target="reward", name="reward")
 
