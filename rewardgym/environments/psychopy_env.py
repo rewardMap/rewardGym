@@ -62,7 +62,7 @@ class PsychopyEnv(BaseEnv):
         self.issetup = False
         self.action = False
 
-    def setup(self, window, logger, expose_last_stim=False):
+    def setup(self, window=None, logger=None, expose_last_stim=False):
         if self.render_mode == "psychopy-simulate":
             self._setup_simulation(window, logger, expose_last_stim=expose_last_stim)
         elif self.render_mode == "psychopy":
