@@ -361,15 +361,13 @@ class ActionStimulus(BaseStimulus):
 
         response_window_onset = logger.get_time()
 
-        response = self._response_handling(win, logger, response_window_onset, info)
+        response = self._response_handling(win, logger, response_window_onset)
 
         win.flip()
 
         return response
 
-    def _response_handling(
-        self, win, logger, response_window_onset, info, key_dict=None
-    ):
+    def _response_handling(self, win, logger, response_window_onset, key_dict=None):
         response_window = response_window_onset + self.duration
         response_present = False
         remaining = None
@@ -429,14 +427,13 @@ class ActionStimulus(BaseStimulus):
         logger=SimulationLogger,
         key: str = None,
         rt: float = None,
-        info: Dict = None,
         **kwargs,
     ):
-        response_key, remaining = self._simulate_response(logger, key, rt, info)
+        response_key, remaining = self._simulate_response(logger, key, rt)
 
         return response_key, remaining
 
-    def _simulate_response(self, logger, key, rt, info):
+    def _simulate_response(self, logger, key, rt):
         response_key, rt = logger.key_strokes(key, rt)
         response_window_onset = logger.get_time()
 
