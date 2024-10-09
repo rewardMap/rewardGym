@@ -59,8 +59,28 @@ def break_point(win, text_update, logger, settings, episode, countdown_cutoff=30
         )
 
 
+def simple_rt_simulation(agent, env, obs, info):
+    key = agent.get_action(obs, info["avail-actions"])
+    probs = agent.get_probs(obs, info["avail-actions"])
+    probs = probs[key]
+
+    if env.name == "gonogo":
+        rt_extra = key * 2.0
+    else:
+        rt_extra = 0
+
+    return (1 - probs) / 2 + rt_extra
+
+
 def run_task(
-    env, logger, win=None, settings=None, seed=111, agent=None, n_episodes=None
+    env,
+    logger,
+    win=None,
+    settings=None,
+    seed=111,
+    agent=None,
+    n_episodes=None,
+    rt_function=simple_rt_simulation,
 ):
     if settings is None:
         settings = get_configs(env.name)(seed)
@@ -127,15 +147,9 @@ def run_task(
             if agent is not None:
                 # TODO Make this nicer
                 key = agent.get_action(obs, info["avail-actions"])
-                probs = agent.get_probs(obs, info["avail-actions"])
-                probs = probs[key]
+                rt = rt_function(agent, env, obs, info)
 
-                if env.name == "gonogo":
-                    rt_extra = key * 2.0
-                else:
-                    rt_extra = 0
-
-                env.simulate_action(info, key, (1 - probs) / 2 + rt_extra)
+                env.simulate_action(info, key, rt)
 
             if env.name == "hcp":
                 settings["delay"][episode] = env.remainder
