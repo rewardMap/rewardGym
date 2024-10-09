@@ -1,11 +1,12 @@
 try:
     from psychopy.visual import TextStim
 except ModuleNotFoundError:
-    from .psychopy_render.psychopy_stubs import TextStim
+    from .psychopy_render.psychopy_stubs import TextStim, Window
 
 import numpy as np
 
 from . import get_configs
+from .psychopy_render.psychopy_stubs import Window
 from .utils import update_psychopy_trials
 
 
@@ -58,9 +59,14 @@ def break_point(win, text_update, logger, settings, episode, countdown_cutoff=30
         )
 
 
-def run_task(env, win, logger, settings=None, seed=111, agent=None, n_episodes=None):
+def run_task(
+    env, logger, win=None, settings=None, seed=111, agent=None, n_episodes=None
+):
     if settings is None:
         settings = get_configs(env.name)(seed)
+
+    if win is None:
+        win = Window()
 
     if n_episodes is None:
         n_episodes = settings["ntrials"]
