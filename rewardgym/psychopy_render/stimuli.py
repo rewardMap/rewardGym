@@ -5,6 +5,8 @@ try:
 except ModuleNotFoundError:
     from .psychopy_stubs import Window, TextStim, ImageStim
 
+import warnings
+
 from .default_images import lose_cross, win_cross, zero_cross
 from .logger import ExperimentLogger, SimulationLogger
 
@@ -427,13 +429,19 @@ class ActionStimulus(BaseStimulus):
         rt: float = None,
         **kwargs,
     ):
-        response_key, remaining = self._simulate_response(win, logger, key, rt)
+        response_key, remaining = self._simulate_response(logger, key, rt)
 
         return response_key, remaining
 
-    def _simulate_response(self, win, logger, key, rt):
+    def _simulate_response(self, logger, key, rt):
         response_key, rt = logger.key_strokes(key, rt)
         response_window_onset = logger.get_time()
+
+        if rt is None:
+            warnings.warn(
+                "Simulating environment: Consider setting expose_last_stim=True during env setup."
+            )
+
         logger.global_clock.time += min([rt, self.duration])
 
         if rt > self.duration:
