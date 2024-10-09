@@ -462,6 +462,7 @@ class ActionStimulus(BaseStimulus):
                     "event_type": self.name,
                     "response_button": response_key,
                     "response_time": rt,
+                    "action": response_key,
                 },
                 onset=response_window_onset,
             )
