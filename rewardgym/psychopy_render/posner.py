@@ -12,7 +12,7 @@ def get_info_dict(seed=None, key_dict={"left": 0, "right": 1}, **kwargs):
     )
 
     fix = ImageStimulus(
-        image_paths=[fixation_cross()], duration=0.4, name="fixation", autodraw=True
+        image_paths=[fixation_cross()], duration=0.5, name="fixation", autodraw=True
     )
 
     fix_isi = ImageStimulus(
@@ -60,7 +60,6 @@ def get_info_dict(seed=None, key_dict={"left": 0, "right": 1}, **kwargs):
 
     final_step = [
         reward_feedback,
-        # total_reward_feedback,
         ImageStimulus(
             image_paths=[fixation_cross()], duration=0.4, name="iti", autodraw=False
         ),

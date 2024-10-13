@@ -88,9 +88,7 @@ def get_posner(
         if key_dict is None:
             key_dict = {"left": 0, "right": 1}
 
-        psychopy_dict, _ = get_psychopy_info(
-            "risk-sensitive", seed=seed, key_dict=key_dict
-        )
+        psychopy_dict, _ = get_psychopy_info("posner", seed=seed, key_dict=key_dict)
         info_dict.update(psychopy_dict)
 
     return environment_graph, reward_structure, info_dict
