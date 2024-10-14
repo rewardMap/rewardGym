@@ -1,11 +1,12 @@
 try:
     from psychopy.visual import TextStim
 except ModuleNotFoundError:
-    from .psychopy_render.psychopy_stubs import TextStim
+    from .psychopy_render.psychopy_stubs import TextStim, Window
 
 import numpy as np
 
 from . import get_configs
+from .psychopy_render.psychopy_stubs import Window
 from .utils import update_psychopy_trials
 
 
@@ -58,9 +59,34 @@ def break_point(win, text_update, logger, settings, episode, countdown_cutoff=30
         )
 
 
-def run_task(env, win, logger, settings=None, seed=111, agent=None, n_episodes=None):
+def simple_rt_simulation(agent, env, obs, info):
+    key = agent.get_action(obs, info["avail-actions"])
+    probs = agent.get_probs(obs, info["avail-actions"])
+    probs = probs[key]
+
+    if env.name == "gonogo":
+        rt_extra = key * 2.0
+    else:
+        rt_extra = 0
+
+    return (1 - probs) / 2 + rt_extra
+
+
+def run_task(
+    env,
+    logger,
+    win=None,
+    settings=None,
+    seed=111,
+    agent=None,
+    n_episodes=None,
+    rt_function=simple_rt_simulation,
+):
     if settings is None:
         settings = get_configs(env.name)(seed)
+
+    if win is None:
+        win = Window()
 
     if n_episodes is None:
         n_episodes = settings["ntrials"]
@@ -121,18 +147,12 @@ def run_task(env, win, logger, settings=None, seed=111, agent=None, n_episodes=N
             if agent is not None:
                 # TODO Make this nicer
                 key = agent.get_action(obs, info["avail-actions"])
-                probs = agent.get_probs(obs, info["avail-actions"])
-                probs = probs[key]
+                rt = rt_function(agent, env, obs, info)
 
-                if env.name == "gonogo":
-                    rt_extra = key * 2.0
-                else:
-                    rt_extra = 0
-
-                env.simulate_action(info, key, (1 - probs) / 2 + rt_extra)
+                env.simulate_action(info, key, rt)
 
             if env.name == "hcp":
-                settings["wait"][episode] = env.remainder
+                settings["delay"][episode] = env.remainder
                 update_psychopy_trials(settings, env, episode)
 
             next_obs, reward, terminated, truncated, info = env.step(
@@ -146,7 +166,7 @@ def run_task(env, win, logger, settings=None, seed=111, agent=None, n_episodes=N
             if env.previous_action is None and not done:
                 done = draw_response_reminder(win, response_reminder, logger)
 
-            if agent is not None:
+            if agent is not None and not (done and env.previous_action is None):
                 agent.update(
                     obs, env.previous_remap_action, reward, terminated, next_obs
                 )

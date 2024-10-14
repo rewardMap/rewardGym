@@ -20,8 +20,8 @@ class ExperimentLogger:
     def __init__(
         self,
         file_name: str,
-        global_clock: Clock(),
-        participant_id: str,
+        global_clock: Clock = None,
+        participant_id: str = "n/a",
         task: str = "hcp",
         run: int = 1,
         seq_tr: float = 0.752,
@@ -29,7 +29,7 @@ class ExperimentLogger:
         na: str = "n/a",
         kill_switch: str = "q",
         mr_trigger: str = "5",
-        mr_clock: Clock = Clock(),
+        mr_clock: Clock = None,
     ):
         """
         Logger class to help with logging during a potential fMRI experiment,
@@ -60,6 +60,13 @@ class ExperimentLogger:
         """
 
         self.file_name = file_name
+
+        if global_clock is None:
+            global_clock = Clock()
+
+        if mr_clock is None:
+            mr_clock = global_clock
+
         self.global_clock = global_clock
         self.mr_clock = mr_clock
 
@@ -368,12 +375,12 @@ class MinimalLogger(ExperimentLogger):
 
     def __init__(
         self,
-        global_clock: Clock(),
+        global_clock: Clock = None,
         seq_tr: float = 0.752,
         na: str = "n/a",
         kill_switch: str = "q",
         mr_trigger: str = "5",
-        mr_clock: Clock = Clock(),
+        mr_clock: Clock = None,
     ):
         """
         Logger class to help with logging during a potential fMRI experiment,
@@ -392,6 +399,12 @@ class MinimalLogger(ExperimentLogger):
         mr_trigger : str, optional
             Trigger of the MRI (assuming that it is transformed to a key press), by default "5"
         """
+
+        if global_clock is None:
+            global_clock = Clock()
+
+        if mr_clock is None:
+            mr_clock = global_clock
 
         self.global_clock = global_clock
         self.mr_clock = mr_clock

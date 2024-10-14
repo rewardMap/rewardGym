@@ -340,7 +340,7 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
             onset=stim_onset,
         )
 
-        response_key, remaining = self._simulate_response(win, logger, key, rt)
+        response_key, remaining = self._simulate_response(logger, key, rt)
 
         stim_onset = logger.get_time()
 

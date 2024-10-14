@@ -11,12 +11,12 @@ from .special_stimuli import ConditionBasedDisplay
 from .stimuli import ActionStimulus, BaseStimulus, FeedBackStimulus, ImageStimulus
 
 
-def get_info_dict(seed=111, key_dict={"left": 0, "right": 1}, **kwargs):
-    random_state = check_seed(seed)
+def risksensitive_stimuli(random_state, stim_defaults=STIMULUS_DEFAULTS):
+    random_state = check_seed(random_state)
 
     stim_properties = []
 
-    stim_defaults = deepcopy(STIMULUS_DEFAULTS)
+    stim_defaults = deepcopy(stim_defaults)
     for _ in range(5):
         st_p = generate_stimulus_properties(
             random_state,
@@ -38,6 +38,19 @@ def get_info_dict(seed=111, key_dict={"left": 0, "right": 1}, **kwargs):
         image_map[n + 1] = make_card_stimulus(stim_properties[n])
         stimuli[n + 1] = stim_properties[n]
 
+    return image_map, stimuli
+
+
+def get_info_dict(
+    seed=111, key_dict={"left": 0, "right": 1}, external_stimuli=None, **kwargs
+):
+    random_state = check_seed(seed)
+
+    if external_stimuli is None:
+        image_map, stimuli = risksensitive_stimuli(random_state=random_state)
+    else:
+        image_map, stimuli = external_stimuli
+
     reward_feedback = FeedBackStimulus(1.0, text="{0}", target="reward", name="reward")
 
     base_stim = ImageStimulus(
@@ -47,13 +60,16 @@ def get_info_dict(seed=111, key_dict={"left": 0, "right": 1}, **kwargs):
 
     cue_disp = ConditionBasedDisplay(0.05, name="cue", image_map=image_map)
     sel_disp = ConditionBasedDisplay(
-        1.5, with_action=True, name="selected", image_map=image_map
+        1.5, with_action=True, name="selection", image_map=image_map
     )
 
     final_step = [
         sel_disp,
         ImageStimulus(
-            image_paths=[fixation_cross()], duration=0.5, name="delay", autodraw=False
+            image_paths=[fixation_cross()],
+            duration=0.5,
+            name="reward-delay",
+            autodraw=False,
         ),
         reward_feedback,
         fix_iti,

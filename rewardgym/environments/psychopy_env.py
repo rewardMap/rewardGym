@@ -62,7 +62,7 @@ class PsychopyEnv(BaseEnv):
         self.issetup = False
         self.action = False
 
-    def setup(self, window, logger, expose_last_stim=False):
+    def setup(self, window=None, logger=None, expose_last_stim=False):
         if self.render_mode == "psychopy-simulate":
             self._setup_simulation(window, logger, expose_last_stim=expose_last_stim)
         elif self.render_mode == "psychopy":
@@ -142,6 +142,7 @@ class PsychopyEnv(BaseEnv):
                     reward=self.reward,
                     location=self.agent_location,
                     action=self.previous_action,
+                    info=info,
                 )
 
                 self._check_output(out, info)
@@ -163,6 +164,7 @@ class PsychopyEnv(BaseEnv):
                         location=self.agent_location,
                         key=self.previous_action,
                         rt=self.reaction_time,
+                        info=info,
                     )
 
             if not self.expose_last_stim:
@@ -188,6 +190,7 @@ class PsychopyEnv(BaseEnv):
             location=self.agent_location,
             key=action,
             rt=reaction_time,
+            info=info,
         )
 
         self._check_output(out, info)
