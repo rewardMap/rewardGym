@@ -429,13 +429,15 @@ class ActionStimulus(BaseStimulus):
         rt: float = None,
         **kwargs,
     ):
-        response = self._simulate_response(logger, key, rt)
+        response_window_onset = logger.get_time()
+        response = self._simulate_response(
+            logger, key, rt, response_window_onset=response_window_onset
+        )
 
         return response
 
-    def _simulate_response(self, logger, key, rt):
+    def _simulate_response(self, logger, key, rt, response_window_onset):
         response_key, rt = logger.key_strokes(key, rt)
-        response_window_onset = logger.get_time()
 
         if rt is None:
             warnings.warn(
