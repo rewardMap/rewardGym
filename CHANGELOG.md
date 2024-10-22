@@ -1,3 +1,19 @@
+# 0.0.5 (Tue Oct 22 2024)
+
+#### 🐛 Bug Fix
+
+- Added wrappers for RL-EAM models and other models for reaction time simulations. [#18](https://github.com/rewardMap/rewardGym/pull/18) ([@SRSteinkamp](https://github.com/SRSteinkamp))
+
+#### ⚠️ Tests
+
+- Refractoring stimulus creation and small bugfixes [#17](https://github.com/rewardMap/rewardGym/pull/17) ([@SRSteinkamp](https://github.com/SRSteinkamp))
+
+#### Authors: 1
+
+- Simon Steinkamp ([@SRSteinkamp](https://github.com/SRSteinkamp))
+
+---
+
 # 0.0.4 (Mon Oct 07 2024)
 
 #### 🐛 Bug Fix
