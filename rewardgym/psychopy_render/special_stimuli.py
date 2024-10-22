@@ -1,6 +1,6 @@
-from typing import Dict, List, Union
+from typing import Dict, Union
 
-from .stimuli import ActionStimulus, BaseStimulus, ImageStimulus
+from .stimuli import ActionStimulus, BaseStimulus
 
 try:
     from psychopy.visual import ImageStim, TextStim, Window
@@ -491,73 +491,97 @@ class TextWithBorder(BaseStimulus):
         )
 
 
-class FlipImageStimulus(ImageStimulus):
+class StimuliWithResponse(ActionStimulus):
     def __init__(
         self,
         duration: float,
-        image_paths: List,
-        positions: List = None,
-        name: str = None,
-        width: float = None,
-        height: float = None,
-        autodraw: bool = False,
-        wait_no_keys: bool = False,
-        seed: float = 111,
+        key_dict: Dict = {"left": 0, "right": 1},
+        name: str = "response",
+        target_name: str = None,
+        target_duration: float = 0.0,
+        timeout_action: int = None,
+        name_timeout="response-time-out",
+        positions=((0, 0), (0, 0)),
+        images=[
+            make_card_stimulus(generate_stimulus_properties(12)),
+            make_card_stimulus(generate_stimulus_properties(23)),
+        ],
+        flip_probability=0.5,
         flip_dir: str = "horiz",
+        seed=111,
     ):
-        """
-        Stimulus class for image displays.
-
-        Parameters
-        ----------
-        duration : float
-            Duration of the stimulus presentation.
-        image_paths : List
-            A list of paths to images that should be displayed on screen.
-        positions : List, optional
-            A list of positions (where the images should be displayed), by default None
-        name : str, optional
-            name of the object, will be used for logging, by default None
-        wait_no_keys : str, optional
-            If the logger's wait function should get key presses - only set to True if presses that are too early should be used, by default False
-        seed:
-            Randome seed for the presentation
-        """
-
         super().__init__(
             name=name,
             duration=duration,
-            wait_no_keys=wait_no_keys,
-            image_paths=image_paths,
-            positions=positions,
-            width=width,
-            height=height,
-            autodraw=autodraw,
+            key_dict=key_dict,
+            timeout_action=timeout_action,
+            name_timeout=name_timeout,
         )
 
-        self.rng = check_seed(seed)
+        self.images = images
+        self.positions = positions
+        self.target_name = target_name
+        self.target_duration = target_duration
+        self.flip_probability = flip_probability
         self.flip_dir = flip_dir
+        self.rng = check_seed(seed)
 
-    def display(self, win: Window, logger: ExperimentLogger, **kwargs):
-        """
-        Calls the stimulus object. In this case drawing the images stims, flipping the window,
-        waiting and logging.
+    def setup(self, win, **kwargs):
+        self.imageStims = []
+        for img, pos in zip(self.images, self.positions):
+            if isinstance(img, str):
+                self.imageStims.append(ImageStim(win=win, image=img, pos=pos))
+            else:
+                self.imageStims.append(
+                    ImageStim(
+                        win, image=img, size=(img.shape[1], img.shape[0]), pos=pos
+                    )
+                )
 
-        Parameters
-        ----------
-        win : Window
-            The psychopy window object that is used for displaying stimuli.
-        logger : ExperimentLogger
-            The logger associated with the experiment.
+    def display(self, win, logger, **kwargs):
+        logger.key_strokes(win)
 
-        Returns
-        -------
-        None
-        Should return None
-        """
+        response_window_onset = logger.get_time()
+
+        self._draw_stimulus(
+            win,
+            logger,
+        )
+        win.flip()
+
+        response = self._response_handling(
+            win, logger, response_window_onset, key_dict=self.key_dict
+        )
+
+        return response
+
+    def simulate(
+        self,
+        win: Window,
+        logger=SimulationLogger,
+        key: str = None,
+        rt: float = None,
+        **kwargs,
+    ):
         stim_onset = logger.get_time()
 
-        flip = self.rng.random() < 0.5
+        logger.wait(win=None, time=self.target_duration, start=stim_onset)
+
+        logger.log_event(
+            {"event_type": self.target_name, "expected_duration": self.target_duration},
+            onset=stim_onset,
+        )
+
+        response = self._simulate_response(
+            logger, key, rt, response_window_onset=stim_onset
+        )
+
+        return response
+
+    def _draw_stimulus(self, win, logger, flip=False):
+        stim_onset = logger.get_time()
+
+        flip = self.rng.random() < self.flip_probability
 
         # So that images are drawn on top
         for ii in self.imageStims:
@@ -570,16 +594,15 @@ class FlipImageStimulus(ImageStimulus):
         win.flip()
 
         for ii in self.imageStims:
-            ii.autoDraw = self.autodraw
+            ii.autoDraw = False
 
-        logger.wait(win, self.duration, stim_onset, self.wait_no_keys)
+        logger.wait(win, self.target_duration, stim_onset, self.wait_no_keys)
 
         logger.log_event(
             {
-                "event_type": self.name + "_" + str(flip),
-                "expected_duration": self.duration,
+                "event_type": self.target_name,
+                "expected_duration": self.target_duration,
+                "misc": f"flip-{flip}",
             },
             onset=stim_onset,
         )
-
-        return None
