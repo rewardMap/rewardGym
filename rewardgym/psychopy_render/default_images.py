@@ -57,6 +57,7 @@ def fixation_cross(
     border_width=10,
     circle_radius_outer=20,
     circle_radius_inner=15,
+    kind=None,
 ):
     pattern = Image.new("RGBA", (height + 1, width + 1), (0, 0, 0, 0))
     draw = ImageDraw.Draw(pattern)
@@ -68,6 +69,16 @@ def fixation_cross(
     draw_centered_shape(
         draw, "diamond", [0, 0, height, width], border_width, color=color
     )
+
+    if kind == "win":
+        draw_centered_shape(
+            draw, "halfdiamond_u", [0, 0, height, width], border_width, color=win_color
+        )
+    elif kind == "lose":
+        draw_centered_shape(
+            draw, "halfdiamond_d", [0, 0, height, width], border_width, color=lose_color
+        )
+
     draw_centered_shape(
         draw,
         "circle",
@@ -91,85 +102,42 @@ def win_cross(
     height=150,
     width=150,
     color=(150, 150, 150),
-    cross_color=win_color,
     border_width=10,
     circle_radius_outer=20,
     circle_radius_inner=15,
 ):
-    pattern = Image.new("RGBA", (height + 1, width + 1), (0, 0, 0, 0))
-    draw = ImageDraw.Draw(pattern)
-
-    center_x = width // 2
-    center_y = height // 2
-
-    draw_shape(draw, "diamond", [0, 0, height, width], (0, 0, 0), 0)
-    draw_centered_shape(
-        draw, "diamond", [0, 0, height, width], border_width, color=color
+    win_c = fixation_cross(
+        height=height,
+        width=width,
+        color=color,
+        border_width=border_width,
+        circle_radius_inner=circle_radius_inner,
+        circle_radius_outer=circle_radius_outer,
+        kind="win",
     )
 
-    draw_centered_shape(
-        draw, "halfdiamond_u", [0, 0, height, width], border_width, color=cross_color
-    )
-
-    draw_centered_shape(
-        draw,
-        "circle",
-        bbox=[center_x, center_y, center_x, center_y],
-        bbox_padding=-circle_radius_outer,
-        color=(0, 0, 0),
-    )
-    draw_centered_shape(
-        draw,
-        "neg-circle",
-        bbox=[center_x, center_y, center_x, center_y],
-        bbox_padding=-circle_radius_inner,
-        color=(120, 0, 0),
-    )
-    win_cross = np.array(pattern) / 255
-
-    return win_cross
+    return win_c
 
 
 def lose_cross(
     height=150,
     width=150,
     color=(150, 150, 150),
-    cross_color=lose_color,
     border_width=10,
     circle_radius_outer=20,
     circle_radius_inner=15,
 ):
-    pattern = Image.new("RGBA", (height + 1, width + 1), (0, 0, 0, 0))
-    draw = ImageDraw.Draw(pattern)
-
-    center_x = width // 2
-    center_y = height // 2
-
-    draw_shape(draw, "diamond", [0, 0, height, width], (0, 0, 0), 0)
-    draw_centered_shape(
-        draw, "diamond", [0, 0, height, width], border_width, color=color
-    )
-    draw_centered_shape(
-        draw, "halfdiamond_u", [0, 0, height, width], border_width, color=cross_color
+    lose_c = fixation_cross(
+        height=height,
+        width=width,
+        color=color,
+        border_width=border_width,
+        circle_radius_inner=circle_radius_inner,
+        circle_radius_outer=circle_radius_outer,
+        kind="lose",
     )
 
-    draw_centered_shape(
-        draw,
-        "circle",
-        bbox=[center_x, center_y, center_x, center_y],
-        bbox_padding=-circle_radius_outer,
-        color=(0, 0, 0),
-    )
-    draw_centered_shape(
-        draw,
-        "neg-circle",
-        bbox=[center_x, center_y, center_x, center_y],
-        bbox_padding=-circle_radius_inner,
-        color=(120, 0, 0),
-    )
-    lose_cross = np.array(pattern) / 255
-
-    return lose_cross
+    return lose_c
 
 
 def zero_cross(
@@ -248,6 +216,8 @@ def gonogo_probe(
     circle_radius_outer=20,
     circle_radius_inner=15,
     outer_border=10,
+    under_shape="diamond",
+    return_pattern=False,
 ):
     # left bottom right top
     pattern = Image.new(
@@ -262,7 +232,7 @@ def gonogo_probe(
 
     draw_shape(
         draw,
-        "diamond",
+        under_shape,
         [0, 0, height + outer_border * 2, width + outer_border * 2],
         (250, 250, 250),
         0,
@@ -297,9 +267,12 @@ def gonogo_probe(
         bbox_padding=-circle_radius_inner,
         color=(120, 0, 0),
     )
-    probe = np.array(pattern) / 255
 
-    return probe
+    if return_pattern:
+        return pattern
+    else:
+        probe = np.array(pattern) / 255
+        return probe
 
 
 def generate_stimulus_properties(
@@ -433,55 +406,16 @@ def posner_cue(
     outer_border=10,
     left=True,
 ):
-    actual_height = height + outer_border * 2
-    actual_width = width + outer_border * 2
-
-    pattern = Image.new(
-        "RGBA",
-        (actual_height + 1, actual_width + 1),
-        (0, 0, 0, 0),
-    )
-    draw = ImageDraw.Draw(pattern)
-
-    center_x = actual_width // 2
-    center_y = actual_height // 2
-
-    draw_shape(
-        draw,
-        "halfdiamond_d",
-        [0, 0, actual_height, actual_width],
-        (250, 250, 250),
-        0,
-    )
-
-    draw_shape(
-        draw,
-        "diamond",
-        [outer_border, outer_border, outer_border + height, outer_border + width],
-        (0, 0, 0),
-        0,
-    )
-    draw_centered_shape(
-        draw,
-        "diamond",
-        bbox=[outer_border, outer_border, width + outer_border, height + outer_border],
-        bbox_padding=border_width,
+    pattern = gonogo_probe(
+        height=height,
+        width=width,
         color=color,
-    )
-
-    draw_centered_shape(
-        draw,
-        "circle",
-        bbox=[center_x, center_y, center_x, center_y],
-        bbox_padding=-circle_radius_outer,
-        color=(0, 0, 0),
-    )
-    draw_centered_shape(
-        draw,
-        "neg-circle",
-        bbox=[center_x, center_y, center_x, center_y],
-        bbox_padding=-circle_radius_inner,
-        color=(120, 0, 0),
+        border_width=border_width,
+        circle_radius_inner=circle_radius_inner,
+        circle_radius_outer=circle_radius_outer,
+        outer_border=outer_border,
+        under_shape="halfdiamond_u",
+        return_pattern=True,
     )
 
     if left:
