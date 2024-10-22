@@ -562,10 +562,10 @@ class FlipImageStimulus(ImageStimulus):
         # So that images are drawn on top
         for ii in self.imageStims:
             ii.autoDraw = True
-            if self.flip_dir == "horiz":
-                ii.flipHoriz = flip
-            elif self.flip_dir == "vert":
-                ii.flipVert = flip
+            if self.flip_dir == "vert":
+                ii.flip = [flip, False]
+            elif self.flip_dir == "horiz":
+                ii.flip = [False, flip]
 
         win.flip()
 
