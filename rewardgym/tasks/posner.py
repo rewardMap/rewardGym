@@ -32,8 +32,8 @@ def get_posner(
         {
             "position": {
                 0: "selection",
-                1: "cue-1",
-                2: "cue-2",
+                1: "cue-left",
+                2: "cue-right",
                 3: "target-left",
                 4: "target-right",
                 5: "win",
@@ -98,81 +98,46 @@ def generate_posner_configs(stimulus_set: str = "1"):
     seed = check_seed(int(stimulus_set))
 
     condition_dict = {
-        "cue-1-target-left": {0: {0: 1}, 1: {0: 3}},
-        "cue-1-target-right": {0: {0: 1}, 1: {0: 4}},
-        "cue-2-target-right": {0: {0: 2}, 2: {0: 4}},
-        "cue-2-target-left": {0: {0: 2}, 2: {0: 3}},
+        "cue-left-target-left": {0: {0: 1}, 1: {0: 3}},
+        "cue-left-target-right": {0: {0: 1}, 1: {0: 4}},
+        "cue-right-target-right": {0: {0: 2}, 2: {0: 4}},
+        "cue-right-target-left": {0: {0: 2}, 2: {0: 3}},
     }
 
     # 20 trials in each condition template
-    condition_template_70_30 = (
-        ["cue-1-target-left"] * 7
-        + ["cue-1-target-right"] * 3
-        + ["cue-2-target-right"] * 7
-        + ["cue-2-target-left"] * 3
-    )
-
-    condition_template_90_10 = (
-        ["cue-1-target-left"] * 9
-        + ["cue-1-target-right"] * 1
-        + ["cue-2-target-right"] * 9
-        + ["cue-2-target-left"] * 1
-    )
-
-    condition_template_10_90 = (
-        ["cue-1-target-left"] * 1
-        + ["cue-1-target-right"] * 9
-        + ["cue-2-target-right"] * 1
-        + ["cue-2-target-left"] * 9
-    )
-
-    condition_template_30_70 = (
-        ["cue-1-target-left"] * 3
-        + ["cue-1-target-right"] * 7
-        + ["cue-2-target-right"] * 3
-        + ["cue-2-target-left"] * 7
+    condition_template_80_20 = (
+        ["cue-left-target-left"] * 8
+        + ["cue-left-target-right"] * 2
+        + ["cue-right-target-right"] * 8
+        + ["cue-right-target-left"] * 2
     )
 
     iti_template = [1, 1.5, 2, 2.5] * 5
     isi_template = [0.4, 0.6] * 10
 
-    n_blocks_condition = 2
+    n_blocks_condition = 8
 
-    dont_follow_dict = {
-        0: ["cue-1-target-left", "cue-2-target-right"],
-        2: ["cue-1-target-left", "cue-2-target-right"],
-        1: ["cue-1-target-right", "cue2-target-left"],
-        3: ["cue-1-target-right", "cue2-target-left"],
-    }
-    condition_order = seed.permutation([0, 1, 2, 3])
-    condition_assign = {
-        0: condition_template_10_90,
-        1: condition_template_90_10,
-        2: condition_template_30_70,
-        3: condition_template_70_30,
-    }
+    dont_follow = ["cue-left-target-right", "cue-right-target-left"]
 
     conditions, isi, iti = [], [], []
-    for co in condition_order:
-        for cn in range(n_blocks_condition):
-            reject = True
 
-            while reject:
-                condition_template = seed.choice(
-                    a=condition_assign[co], size=20, replace=False
-                ).tolist()
+    for cn in range(n_blocks_condition):
+        reject = True
 
-                check = check_conditions_not_following(
-                    condition_template, dont_follow_dict[co], 2
-                )
+        while reject:
+            condition_template = seed.choice(
+                a=condition_template_80_20, size=20, replace=False
+            ).tolist()
 
-                if check and (
-                    len(conditions) == 0 or conditions[-1] != condition_template[0]
-                ):
-                    conditions.extend(condition_template)
-                    isi.extend(seed.permutation(isi_template).tolist())
-                    iti.extend(seed.permutation(iti_template).tolist())
-                    reject = False
+            check = check_conditions_not_following(condition_template, dont_follow, 2)
+
+            if check and (
+                len(conditions) == 0 or conditions[-1] != condition_template[0]
+            ):
+                conditions.extend(condition_template)
+                isi.extend(seed.permutation(isi_template).tolist())
+                iti.extend(seed.permutation(iti_template).tolist())
+                reject = False
 
     config = {
         "name": "posner",
@@ -184,7 +149,7 @@ def generate_posner_configs(stimulus_set: str = "1"):
         "ntrials": len(conditions),
         "update": ["isi", "iti"],
         "add_remainder": True,
-        "breakpoints": [59, 119],
+        "breakpoints": [79],
         "break_duration": 45,
     }
 
