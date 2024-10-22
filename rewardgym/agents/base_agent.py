@@ -1,5 +1,5 @@
 import warnings
-from typing import Tuple, Union
+from typing import List, Tuple, Union
 
 import numpy as np
 
@@ -7,6 +7,12 @@ from ..utils import check_seed
 
 
 class ValenceQAgent:
+    """
+    A reinforcement learning agent implementing a Valence-based Q-learning algorithm.
+    The agent maintains state-action values (Q-values) and updates them using different
+    learning rates for positive and negative temporal differences.
+    """
+
     def __init__(
         self,
         learning_rate_pos: float,
@@ -17,17 +23,28 @@ class ValenceQAgent:
         state_space: int = 2,
         seed: Union[int, np.random.Generator] = 1000,
     ):
-        """Initialize a Reinforcement Learning agent with an empty dictionary
-        of state-action values (q_values), a learning rate and an epsilon.
-
-        Args:
-            learning_rate: The learning rate
-            initial_epsilon: The initial epsilon value
-            epsilon_decay: The decay for epsilon
-            final_epsilon: The final epsilon value
-            discount_factor: The discount factor for computing the Q-value
         """
-        self.q_values = np.zeros((state_space, action_space))
+        Initializes the ValenceQAgent with parameters for learning, exploration, and environment size.
+
+        Parameters
+        ----------
+        learning_rate_pos : float
+            The learning rate used for updating Q-values when the temporal difference is positive.
+        learning_rate_neg : float
+            The learning rate used for updating Q-values when the temporal difference is negative.
+        temperature : float
+            The softmax temperature controlling exploration during action selection.
+        discount_factor : float, optional
+            The discount factor for future rewards, by default 0.99.
+        action_space : int, optional
+            The number of actions available in the environment, by default 2.
+        state_space : int, optional
+            The number of states in the environment, by default 2.
+        seed : Union[int, np.random.Generator], optional
+            Seed or random number generator for reproducibility, by default 1000.
+        """
+
+        self.q_values = np.zeros((state_space, action_space)) + 1 / action_space
 
         self.n_states = state_space
         self.n_actions = action_space
@@ -41,12 +58,22 @@ class ValenceQAgent:
 
         self.training_error = []
 
-    def get_action(self, obs: Tuple[int, int, bool], avail_actions: list = None) -> int:
+    def get_action(self, obs: Tuple[int, int, bool], avail_actions: List = None) -> int:
         """
-        Returns the best action with probability (1 - epsilon)
-        otherwise a random action with probability epsilon to ensure exploration.
+        Selects an action based on the current state observation using a softmax policy.
+
+        Parameters
+        ----------
+        obs : Tuple[int, int, bool]
+            The current state observation represented as a tuple.
+        avail_actions : list, optional
+            A list of available actions. If None, all actions are assumed available, by default None.
+
+        Returns
+        -------
+        int
+            The selected action index.
         """
-        # with probability epsilon return a random action to explore the environment
 
         prob = self.get_probs(obs, avail_actions)
 
@@ -54,7 +81,23 @@ class ValenceQAgent:
 
         return a
 
-    def get_probs(self, obs, avail_actions=None):
+    def get_probs(self, obs: Tuple[int, int, bool], avail_actions: List = None):
+        """
+        Computes the softmax probability distribution over actions based on Q-values.
+
+        Parameters
+        ----------
+        obs : Tuple[int, int, bool]
+            The current state observation represented as a tuple.
+        avail_actions : list, optional
+            A list of available actions. If None, all actions are assumed available, by default None.
+
+        Returns
+        -------
+        np.ndarray
+            A probability distribution over the available actions.
+        """
+
         prob = np.zeros_like(self.q_values[obs])
 
         if avail_actions is None:
@@ -81,7 +124,29 @@ class ValenceQAgent:
         terminated: bool,
         next_obs: Tuple[int, int, bool],
     ):
-        """Updates the Q-value of an action."""
+        """
+        Updates the Q-value for a given action taken in a particular state using a
+        valence-based learning rate (positive or negative) depending on the temporal difference.
+
+        Parameters
+        ----------
+        obs : Tuple[int, int, bool]
+            The current state observation represented as a tuple.
+        action : int
+            The action taken in the current state.
+        reward : float
+            The reward received after taking the action.
+        terminated : bool
+            Whether the episode has ended after this action.
+        next_obs : Tuple[int, int, bool]
+            The next state observation after taking the action.
+
+        Returns
+        -------
+        np.ndarray
+            The updated Q-value table.
+        """
+
         future_q_value = (not terminated) * np.max(self.q_values[next_obs])
 
         temporal_difference = (
@@ -108,15 +173,23 @@ class QAgent(ValenceQAgent):
         state_space: int = 2,
         seed: Union[int, np.random.Generator] = 1000,
     ):
-        """Initialize a Reinforcement Learning agent with an empty dictionary
-        of state-action values (q_values), a learning rate and an epsilon.
+        """
+        Initializes a QAgents with parameters for learning, exploration, and environment size.
 
-        Args:
-            learning_rate: The learning rate
-            initial_epsilon: The initial epsilon value
-            epsilon_decay: The decay for epsilon
-            final_epsilon: The final epsilon value
-            discount_factor: The discount factor for computing the Q-value
+        Parameters
+        ----------
+        learning_rate : float
+            The learning rate used for updating Q-values.
+        temperature : float
+            The softmax temperature controlling exploration during action selection.
+        discount_factor : float, optional
+            The discount factor for future rewards, by default 0.99.
+        action_space : int, optional
+            The number of actions available in the environment, by default 2.
+        state_space : int, optional
+            The number of states in the environment, by default 2.
+        seed : Union[int, np.random.Generator], optional
+            Seed or random number generator for reproducibility, by default 1000.
         """
 
         super().__init__(
@@ -177,15 +250,30 @@ class ValenceQAgent_eligibility(ValenceQAgent):
         state_space: int = 2,
         seed: Union[int, np.random.Generator] = 1000,
     ):
-        """Initialize a Reinforcement Learning agent with an empty dictionary
-        of state-action values (q_values), a learning rate and an epsilon.
+        """
+        Initializes the ValenceQAgent with eligibility traces, and
+        parameters for learning, exploration, and environment size.
 
-        Args:
-            learning_rate: The learning rate
-            initial_epsilon: The initial epsilon value
-            epsilon_decay: The decay for epsilon
-            final_epsilon: The final epsilon value
-            discount_factor: The discount factor for computing the Q-value
+        Parameters
+        ----------
+        learning_rate_pos : float
+            The learning rate used for updating Q-values when the temporal difference is positive.
+        learning_rate_neg : float
+            The learning rate used for updating Q-values when the temporal difference is negative.
+        temperature : float
+            The softmax temperature controlling exploration during action selection.
+        discount_factor : float, optional
+            The discount factor for future rewards, by default 0.99.
+        eligibility_decay : float, optional
+            The decay rate of the eligibility traces, by default 0.0.
+        reset_traces : bool, optional
+            Whether to reset the eligibility traces each episode or not, by default True.
+        action_space : int, optional
+            The number of actions available in the environment, by default 2.
+        state_space : int, optional
+            The number of states in the environment, by default 2.
+        seed : Union[int, np.random.Generator], optional
+            Seed or random number generator for reproducibility, by default 1000.
         """
 
         super().__init__(
@@ -251,15 +339,28 @@ class QAgent_eligibility(ValenceQAgent_eligibility):
         state_space: int = 2,
         seed: Union[int, np.random.Generator] = 1000,
     ):
-        """Initialize a Reinforcement Learning agent with an empty dictionary
-        of state-action values (q_values), a learning rate and an epsilon.
+        """
+        Initializes the QAgent with eligibility traces, and
+        parameters for learning, exploration, and environment size.
 
-        Args:
-            learning_rate: The learning rate
-            initial_epsilon: The initial epsilon value
-            epsilon_decay: The decay for epsilon
-            final_epsilon: The final epsilon value
-            discount_factor: The discount factor for computing the Q-value
+        Parameters
+        ----------
+        learning_rate : float
+            The learning rate used for updating Q-values.
+        temperature : float
+            The softmax temperature controlling exploration during action selection.
+        discount_factor : float, optional
+            The discount factor for future rewards, by default 0.99.
+        eligibility_decay : float, optional
+            The decay rate of the eligibility traces, by default 0.0.
+        reset_traces : bool, optional
+            Whether to reset the eligibility traces each episode or not, by default True.
+        action_space : int, optional
+            The number of actions available in the environment, by default 2.
+        state_space : int, optional
+            The number of states in the environment, by default 2.
+        seed : Union[int, np.random.Generator], optional
+            Seed or random number generator for reproducibility, by default 1000.
         """
 
         super().__init__(
