@@ -27,7 +27,7 @@ class ValenceQAgent:
             final_epsilon: The final epsilon value
             discount_factor: The discount factor for computing the Q-value
         """
-        self.q_values = np.zeros((state_space, action_space))
+        self.q_values = np.zeros((state_space, action_space)) + 1 / action_space
 
         self.n_states = state_space
         self.n_actions = action_space
