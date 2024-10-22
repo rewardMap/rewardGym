@@ -365,17 +365,13 @@ def mid_stimuli(
     if not probe:
         offset = 4 if shape == "triangle_u" else 0
 
-        draw_shape(
+        draw_centered_shape(
             draw,
             shape,
-            [
-                border_width,
-                border_width,
-                shape_dim - border_width,
-                shape_dim - border_width + offset,
-            ],
-            stim_color,
-            0,
+            [0, 0, shape_dim, shape_dim + offset],
+            bbox_padding=border_width,
+            color=stim_color,
+            padding=0,
         )
 
         offset = 30 if shape == "triangle_u" else 0
@@ -393,6 +389,7 @@ def mid_stimuli(
 
     pattern = np.array(pattern) / 255
     pattern = pattern[::-1, :]
+
     return pattern
 
 
@@ -419,9 +416,9 @@ def posner_cue(
     )
 
     if left:
-        pattern = pattern.transpose(Image.ROTATE_90)
-    else:
         pattern = pattern.transpose(Image.ROTATE_270)
+    else:
+        pattern = pattern.transpose(Image.ROTATE_90)
 
     return np.array(pattern) / 255
 
