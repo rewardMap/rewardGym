@@ -67,17 +67,9 @@ def gonogo_instructions():
             pos=(0, 150),
         )
 
-        part_3_1 = TextBox2(
-            win=win,
-            text=instructions["gonogo"]["3.1"],
-            letterHeight=28,
-            pos=(0, -150),
-        )
-
         img_fix = ImageStim(win=win, image=target, pos=(0, 0), size=target.shape[:2])
         img_fix.draw()
         part_3_0.draw()
-        part_3_1.draw()
 
     def part_4(win, instructions):
         part_4_0 = TextBox2(

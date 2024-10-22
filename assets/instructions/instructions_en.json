@@ -21,7 +21,6 @@
         "1.0": "In each trial you will see an image introducing the situation:",
         "2.0": "Afterwards a fixation cross appears.",
         "3.0": "When the fixation cross turns white you have to decide:\nDo you press LEFT or NOT?",
-        "3.1": "For this instruction please press LEFT.",
         "4.0": "After a while you will get feedback if you made the correct decision or not.",
         "5.0": "Remember:\nWhen the cross flashes white you have to decide!\nDo you press LEFT or NOT?"
     },
@@ -43,10 +42,10 @@
         "3.0": "Remember:\n\nWhen you see a pink circle, you can WIN points.\n\nWhen you see a yellow square, you can LOSE points.\n\nWhen you see a blue triangle, there is nothing at stake.\n\nPress LEFT when you see the black shape to WIN or NOT LOSE."
     },
     "posner": {
-        "0.0": "In this game, you will need to respond to a stimulus appears briefly on either the left or the right side of the fixation cross.\nTo gain points, you will need to indicate the side the target appeared on using button presses.",
-        "1.0": "Before the target appears, there will be a dot on the top or the bottom of the fixation cross.\nThe location of the dot can help you predict, the side where the target will appear.\nThis game can be difficult, you should pay attention to the cue.",
-        "2.0": "After the cue, the target appears, on either left or right side.\nPress LEFT to indicate that the target appeared on the left.\nPress RIGHT to indicate that the target appeared on the right.",
-        "3.0": "There will be two breaks in the experiment.\nAfter each break the side each cue predicts changes, so you need to adapt you strategy.\nPlease try to focus on the fixation cross in the middle of the screen for the entire game.\nTry not to move your eyes to the target stimulus.",
+        "0.0": "In this game, you will need to respond to a target stimulus appears briefly on either the left or the right side of the fixation cross.\nTo gain points, you will need to indicate the side the target appeared on using button presses.",
+        "1.0": "Before the target appears, there an arrow appears on the left or the right side of the fixation cross.\nThe location arrow can help you predict, the side where the target will appear.\nThis game can be difficult, you should pay attention to the cue.",
+        "2.0": "After the cue, the target appears, on either left or right side and a distractor on the opposite side. The target is a diamond, where the top or bottom corner is cut off.\nPress LEFT to indicate that the target appeared on the left.\nPress RIGHT to indicate that the target appeared on the right.",
+        "3.0": "There will be one break in the experiment.\nPlease try to focus on the fixation cross in the middle of the screen for the entire game.\nTry not to move your eyes to the target stimulus.",
         "4.0": "Remember:\nPress LEFT to indicate that the target appeared on the left.\nPress RIGHT to indicate that the target appeared on the right.\n\nAnswer as fast and as accurate as possible!"
     },
     "risk-sensitive":

@@ -30,23 +30,25 @@ def posner_instructions():
             pos=(0, 250),
         )
 
-        cue_up = posner_cue(up=True)
-        cue_down = posner_cue(up=False)
+        cue_left = posner_cue(left=True)
+        cue_right = posner_cue(left=False)
 
-        cue_up_stim = ImageStim(
-            win=win, pos=(-200, 0), image=cue_up, size=cue_up.shape[:2]
+        cue_left_stim = ImageStim(
+            win=win, pos=(-200, 0), image=cue_left, size=cue_left.shape[:2]
         )
-        cue_down_stim = ImageStim(
-            win=win, pos=(200, 0), image=cue_down, size=cue_down.shape[:2]
+        cue_right_stim = ImageStim(
+            win=win, pos=(200, 0), image=cue_right, size=cue_right.shape[:2]
         )
 
-        for i in [part_1_0, cue_up_stim, cue_down_stim]:
+        for i in [part_1_0, cue_left_stim, cue_right_stim]:
             i.draw()
 
     def part_2(win, instructions):
-        pt = posner_target()
+        pt = posner_target(target=True)
         pt_left = ImageStim(win=win, pos=(-300, 0), image=pt, size=pt.shape[:2])
-        pt_right = ImageStim(win=win, pos=(300, 0), image=pt, size=pt.shape[:2])
+        pt_right = ImageStim(
+            win=win, pos=(300, 0), image=posner_target(target=False), size=pt.shape[:2]
+        )
 
         part_2_0 = TextBox2(
             win=win,
