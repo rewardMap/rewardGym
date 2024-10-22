@@ -429,9 +429,9 @@ class ActionStimulus(BaseStimulus):
         rt: float = None,
         **kwargs,
     ):
-        response_key, remaining = self._simulate_response(logger, key, rt)
+        response = self._simulate_response(logger, key, rt)
 
-        return response_key, remaining
+        return response
 
     def _simulate_response(self, logger, key, rt):
         response_key, rt = logger.key_strokes(key, rt)
