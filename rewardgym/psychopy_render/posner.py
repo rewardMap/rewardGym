@@ -1,4 +1,5 @@
 from .default_images import fixation_cross, posner_cue, posner_target
+from .special_stimuli import FlipImageStimulus
 from .stimuli import ActionStimulus, FeedBackStimulus, ImageStimulus
 
 
@@ -24,7 +25,7 @@ def get_info_dict(seed=None, key_dict={"left": 0, "right": 1}, **kwargs):
             fix,
             ImageStimulus(
                 image_paths=[img],
-                duration=0.5,
+                duration=0.4,
                 positions=[(0, 0)],
                 name="cue",
             ),
@@ -38,16 +39,19 @@ def get_info_dict(seed=None, key_dict={"left": 0, "right": 1}, **kwargs):
             ),
         ]
 
-    def second_step(img2, image_shift2, to=1):
+    def second_step(img1, img2, image_shift, to=1):
         return [
-            ImageStimulus(
-                duration=0.05,
+            FlipImageStimulus(
+                duration=0.35,
                 image_paths=[
+                    img1,
                     fixation_cross(),
                     img2,
                 ],
-                positions=[(0, 0), (image_shift2, 0)],
+                positions=[(-image_shift, 0), (0, 0), (image_shift, 0)],
                 name="target",
+                seed=seed,
+                flip_dir="horiz",
             ),
             ImageStimulus(
                 image_paths=[fixation_cross()],
@@ -55,7 +59,7 @@ def get_info_dict(seed=None, key_dict={"left": 0, "right": 1}, **kwargs):
                 duration=0.001,
                 name="fixation",
             ),
-            ActionStimulus(duration=1.0, key_dict=key_dict, timeout_action=to),
+            ActionStimulus(duration=2.0, key_dict=key_dict, timeout_action=to),
         ]
 
     final_step = [
@@ -67,10 +71,24 @@ def get_info_dict(seed=None, key_dict={"left": 0, "right": 1}, **kwargs):
 
     info_dict = {
         0: {"psychopy": []},
-        1: {"psychopy": first_step(posner_cue(up=False))},
-        2: {"psychopy": first_step(posner_cue(up=True))},
-        3: {"psychopy": second_step(posner_target(), image_shift2=-500, to=None)},
-        4: {"psychopy": second_step(posner_target(), image_shift2=500, to=None)},
+        1: {"psychopy": first_step(posner_cue(left=True))},
+        2: {"psychopy": first_step(posner_cue(left=False))},
+        3: {
+            "psychopy": second_step(
+                posner_target(target=False),
+                posner_target(target=True),
+                image_shift=-500,
+                to=None,
+            )
+        },
+        4: {
+            "psychopy": second_step(
+                posner_target(target=True),
+                posner_target(target=False),
+                image_shift=500,
+                to=None,
+            )
+        },
         5: {"psychopy": final_step},
         6: {"psychopy": final_step},
     }
