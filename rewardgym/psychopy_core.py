@@ -69,7 +69,7 @@ def simple_rt_simulation(agent, env, obs, info):
     else:
         rt_extra = 0
 
-    return (1 - probs) / 2 + rt_extra
+    return key, (1 - probs) / 2 + rt_extra
 
 
 def run_task(
@@ -80,7 +80,6 @@ def run_task(
     seed=111,
     agent=None,
     n_episodes=None,
-    rt_function=simple_rt_simulation,
 ):
     if settings is None:
         settings = get_configs(env.name)(seed)
@@ -145,9 +144,10 @@ def run_task(
 
         while not done:
             if agent is not None:
-                # TODO Make this nicer
-                key = agent.get_action(obs, info["avail-actions"])
-                rt = rt_function(agent, env, obs, info)
+                if hasattr(agent, "get_rt_action") and callable(agent.get_rt_action):
+                    key, rt = agent.get_rt_action(obs, info["avail-actions"])
+                else:
+                    key, rt = simple_rt_simulation(agent, env, obs, info)
 
                 env.simulate_action(info, key, rt)
 
