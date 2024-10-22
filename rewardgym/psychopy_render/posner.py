@@ -1,5 +1,5 @@
 from .default_images import fixation_cross, posner_cue, posner_target
-from .special_stimuli import FlipImageStimulus
+from .special_stimuli import StimuliWithResponse
 from .stimuli import ActionStimulus, FeedBackStimulus, ImageStimulus
 
 
@@ -41,25 +41,18 @@ def get_info_dict(seed=None, key_dict={"left": 0, "right": 1}, **kwargs):
 
     def second_step(img1, img2, image_shift, to=1):
         return [
-            FlipImageStimulus(
-                duration=0.35,
-                image_paths=[
-                    img1,
-                    fixation_cross(),
-                    img2,
-                ],
-                positions=[(-image_shift, 0), (0, 0), (image_shift, 0)],
-                name="target",
+            StimuliWithResponse(
+                duration=2.0,
+                key_dict=key_dict,
+                name="response",
+                target_name="target",
+                target_duration=0.35,
+                timeout_action=None,
+                positions=((-image_shift, 0), (image_shift, 0)),
+                images=[img1, img2],
+                flip_probability=0.5,
                 seed=seed,
-                flip_dir="horiz",
-            ),
-            ImageStimulus(
-                image_paths=[fixation_cross()],
-                positions=[(0, 0)],
-                duration=0.001,
-                name="fixation",
-            ),
-            ActionStimulus(duration=2.0, key_dict=key_dict, timeout_action=to),
+            )
         ]
 
     final_step = [
@@ -75,16 +68,16 @@ def get_info_dict(seed=None, key_dict={"left": 0, "right": 1}, **kwargs):
         2: {"psychopy": first_step(posner_cue(left=False))},
         3: {
             "psychopy": second_step(
-                posner_target(target=False),
                 posner_target(target=True),
-                image_shift=-500,
+                posner_target(target=False),
+                image_shift=500,
                 to=None,
             )
         },
         4: {
             "psychopy": second_step(
-                posner_target(target=True),
                 posner_target(target=False),
+                posner_target(target=True),
                 image_shift=500,
                 to=None,
             )
