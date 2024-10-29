@@ -330,6 +330,12 @@ def generate_risk_sensitive_configs(stimulus_set: str = "1"):
                     ]
                 )
                 and check_conditions_not_following(conditions_proposal, test_trials)
+                and all(
+                    [
+                        check_conditions_not_following(conditions_proposal, [jj])
+                        for jj in risky_non_equal_ev + risky_equal_ev
+                    ]
+                )
             )
 
         conditions.extend(conditions_proposal)
