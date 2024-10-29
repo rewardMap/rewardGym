@@ -1,3 +1,4 @@
+from ..tasks import FULLPOINTS
 from .default_images import fixation_cross
 from .special_stimuli import TextWithBorder
 from .stimuli import ActionStimulus, FeedBackStimulus, ImageStimulus
@@ -5,7 +6,7 @@ from .stimuli import ActionStimulus, FeedBackStimulus, ImageStimulus
 
 def get_info_dict(seed=None, key_dict={"left": 0, "right": 1}, **kwargs):
     reward_feedback = FeedBackStimulus(
-        1.0, text="{0}", target="reward", name="reward", bar_total=13.5
+        1.0, text="{0}", target="reward", name="reward", bar_total=FULLPOINTS["hcp"]
     )
 
     base_stim_iti = ImageStimulus(

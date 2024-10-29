@@ -1,3 +1,4 @@
+from ..tasks import FULLPOINTS
 from .default_images import fixation_cross, mid_stimuli
 from .special_stimuli import ActionStimulusTooEarly
 from .stimuli import FeedBackStimulus, ImageStimulus
@@ -5,7 +6,7 @@ from .stimuli import FeedBackStimulus, ImageStimulus
 
 def get_info_dict(seed=None, key_dict={"space": 0}, **kwargs):
     reward_feedback = FeedBackStimulus(
-        2.0, text="{0}", target="reward", name="reward", bar_total=48
+        2.0, text="{0}", target="reward", name="reward", bar_total=FULLPOINTS["mid"]
     )
 
     fix_isi = ImageStimulus(
