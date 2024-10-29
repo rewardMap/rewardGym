@@ -57,7 +57,9 @@ def get_info_dict(
     else:
         stim_set, stimuli = external_stimuli
 
-    reward_feedback = FeedBackStimulus(1.0, text="{0}", target="reward", name="reward")
+    reward_feedback = FeedBackStimulus(
+        1.0, text="{0}", target="reward", name="reward", bar_total=100
+    )
 
     fix = ImageStimulus(
         image_paths=[fixation_cross()],
