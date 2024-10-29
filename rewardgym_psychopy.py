@@ -7,6 +7,7 @@ from rewardgym import get_configs, get_env
 from rewardgym.psychopy_core import run_task
 from rewardgym.psychopy_extras import set_up_experiment
 from rewardgym.psychopy_render import ExperimentLogger, get_psychopy_info
+from rewardgym.tasks import FULLPOINTS
 
 if __name__ == "__main__":
     (
@@ -97,10 +98,11 @@ if __name__ == "__main__":
     run_task(env=env, win=win, logger=Logger, settings=settings, n_episodes=None)
 
     win.to_Draw = []
+    proportion = max([min([env.cumulative_reward / FULLPOINTS[task], 1.0]), 0])
 
     final = visual.TextStim(
         win=win,
-        text=f"You are done!\nThank you!\nYou earned {env.cumulative_reward} points!",
+        text=f"You are done!\nThank you!\nYou got {env.cumulative_reward} points!\nWhich is a score of {proportion:4.2f} %!",
         color=[1, 1, 1],
         pos=(0, 150),
         height=24,
