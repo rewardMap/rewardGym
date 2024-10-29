@@ -61,7 +61,7 @@ class ActionStimulusTooEarly(ActionStimulus):
         self.name_tooearly = name_tooearly
         self.text_tooearly = text_tooearly
 
-    def setup(self, win: Window = None, **kwargs):
+    def _setup(self, win: Window = None, **kwargs):
         """
         Does not need a special setup, including the function, to make easy looping possible.
 
@@ -155,7 +155,7 @@ class ConditionBasedDisplay(BaseStimulus):
         self.image_shift = image_shift
         self.with_action = with_action
 
-    def setup(self, win, **kwargs):
+    def _setup(self, win, **kwargs):
         self.image_dict = {}
 
         for kk in self.image_map.keys():
@@ -273,7 +273,7 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
         self.flip_probability = flip_probability
         self.seed = check_seed(seed)
 
-    def setup(self, win, **kwargs):
+    def _setup(self, win, **kwargs):
         self.image_class = []
         for img, pos in zip(self.images, self.positions):
             if isinstance(img, str):
@@ -529,7 +529,7 @@ class StimuliWithResponse(ActionStimulus):
         self.flip_dir = flip_dir
         self.rng = check_seed(seed)
 
-    def setup(self, win, **kwargs):
+    def _setup(self, win, **kwargs):
         self.imageStims = []
         for img, pos in zip(self.images, self.positions):
             if isinstance(img, str):

@@ -2,8 +2,9 @@ from typing import Dict, List, Literal, Tuple, Union
 
 try:
     from psychopy.visual import ImageStim, TextStim, Window
+    from psychopy.visual.rect import Rect
 except ModuleNotFoundError:
-    from .psychopy_stubs import Window, TextStim, ImageStim
+    from .psychopy_stubs import Window, TextStim, ImageStim, Rect
 
 import warnings
 
@@ -32,6 +33,7 @@ class BaseStimulus:
         self.name = name
         self.entity = "base"
         self.wait_no_keys = wait_no_keys
+        self.is_setup = False
 
     def setup(self, win: Window, **kwargs):
         """
@@ -44,7 +46,8 @@ class BaseStimulus:
             The psychopy window object that is used for displaying stimuli.
         """
 
-        self.win = win
+        self._setup(win, **kwargs)
+        self.is_setup = True
 
     def display(self, win: Window, logger: ExperimentLogger, **kwargs) -> None:
         """
@@ -91,6 +94,9 @@ class BaseStimulus:
             onset=stim_onset,
         )
 
+    def _setup(self, win: Window, **kwargs):
+        pass
+
 
 class TextStimulus(BaseStimulus):
     """
@@ -128,7 +134,7 @@ class TextStimulus(BaseStimulus):
         self.position = position
         self.text_color = text_color
 
-    def setup(self, win: Window, **kwargs):
+    def _setup(self, win: Window, **kwargs):
         """
         Performs the setup for the stimulus object. Initiating a PsychoPy.TextStim,
         object, using the parameters given parameters.
@@ -220,7 +226,7 @@ class ImageStimulus(BaseStimulus):
         self.height = height
         self.autodraw = autodraw
 
-    def setup(self, win: Window, image_paths=None, **kwargs):
+    def _setup(self, win: Window, image_paths=None, **kwargs):
         """
         Performs the setup for the stimulus object. Initiating PsychoPy.ImageStim objects,
         given the provides paths and positions.
@@ -326,7 +332,7 @@ class ActionStimulus(BaseStimulus):
         self.name_timeout = name_timeout
         self.entity = "action"
 
-    def setup(self, win: Window = None, **kwargs):
+    def _setup(self, win: Window = None, **kwargs):
         """
         Does not need a special setup, including the function, to make easy looping possible.
 
@@ -499,6 +505,9 @@ class FeedBackStimulus(BaseStimulus):
         text_color: str = "white",
         font_height: float = 50,
         feedback_stim: Dict = True,
+        simple: bool = False,
+        bar_total: float = None,
+        bar_labels: Dict = {"left": "0 kr", "right": "75 kr"},
     ):
         """
         FeedBack class, provides feedback to the participant, by creating
@@ -543,42 +552,67 @@ class FeedBackStimulus(BaseStimulus):
             self.feedback_stim = feedback_stim
 
         self.font_height = font_height
+        self.simple = simple
+        self.bar_total = bar_total
+        self.bar_labels = bar_labels
+        self.bar_length = 400
+        self.bar_height = 50
 
-    def setup(self, win: Window, **kwargs):
-        """
-        Performs the setup for the stimulus object. Initiating a PsychoPy.TextStim,
-        object, using the parameters given parameters.
-
-        Parameters
-        ----------
-        win : Window
-            The psychopy window object that is used for displaying stimuli.
-        """
-
-        self.textStim = TextStim(
+    def _setup(self, win, **kwargs):
+        self.is_setup = True
+        self.reward_text = TextStim(
             win=win,
             name=self.name,
             text=self.text,
             color=self.text_color,
             height=self.font_height,
             pos=self.position,
+            font="arial",
             alignText="center",
             anchorHoriz="center",
+            units="pix",
         )
 
-        self.textStim2 = TextStim(
-            win=win,
-            name=self.name + "2",
-            text="Total: 0.0",
-            color=self.text_color,
-            height=20,
-            pos=(0, 350),
-            alignText="center",
-            anchorHoriz="center",
-        )
+        if self.bar_total is None:
+            self.total_reward_ind = TextStim(
+                win=win,
+                name=self.name + "2",
+                text="Total: 0.0",
+                font="arial",
+                color=self.text_color,
+                height=20,
+                pos=(0, 350),
+                alignText="center",
+                anchorHoriz="center",
+                units="pix",
+            )
+            self.total_reward_ind.autoDraw = True
 
-        self.textStim.setAutoDraw(False)
-        self.textStim2.setAutoDraw(False)
+        else:
+            self.point_bar = Rect(
+                win=win,
+                name=self.name + "total_bar",
+                width=self.bar_length,
+                height=self.bar_height,
+                lineColor="white",
+                fillColor=[0.25, 0.25, 0.75],
+                lineWidth=5,
+                pos=(0, 350),
+                units="pix",
+            )
+
+            self.point_bar.autoDraw = True
+            self.total_reward_ind = Rect(
+                win=win,
+                name=self.name + "total_indicator",
+                width=10,
+                height=self.bar_height + 10,
+                lineColor=None,
+                fillColor="white",
+                lineWidth=0,
+                pos=(-self.bar_length // 2, 350),
+            )
+            self.total_reward_ind.autoDraw = True
 
         self.feedback_image = {}
 
@@ -635,35 +669,32 @@ class FeedBackStimulus(BaseStimulus):
 
         reward_outcome = f"+{reward:5.1f}" if reward > 0 else f"{reward:5.1f}"
 
-        total_reward_outcome = (
-            f"+{total_reward:5.1f}" if total_reward > 0 else f"{total_reward:5.1f}"
-        )
-
-        reward_stage2 = "Total: " + total_reward_outcome
-
-        self.textStim.setText(self.text.format(reward_outcome))
-        self.textStim2.setAutoDraw(False)
+        self.reward_text.setText(self.text.format(reward_outcome))
 
         stim_onset = logger.get_time()
         if feedback_img in self.feedback_image.keys():
-            self.feedback_image[feedback_img].autoDraw = True
+            self.feedback_image[feedback_img].setAutoDraw(True)
 
-        self.textStim.draw()
-        self.textStim2.draw()
+        self.reward_text.setAutoDraw(True)
+
+        if not self.simple:
+            if self.bar_total is None:
+                self._draw_total_reward(total_reward=total_reward, win=win)
+            else:
+                self._update_reward_bar(total_reward=total_reward)
+
         win.flip()
-
-        self.textStim2.setText(reward_stage2)
-        self.textStim2.draw()
-        self.textStim.draw()
-
-        logger.wait(win, self.duration / 2, stim_onset)
-        win.flip()
-        stim_onset2 = logger.get_time()
-        self.textStim2.setAutoDraw(True)
-        logger.wait(win, self.duration / 2, stim_onset2)
+        logger.wait(win, self.duration, stim_onset)
 
         if feedback_img in self.feedback_image.keys():
-            self.feedback_image[feedback_img].autoDraw = False
+            self.feedback_image[feedback_img].setAutoDraw(False)
+
+        self.reward_text.setAutoDraw(False)
+
+        if not self.simple:
+            self.total_reward_ind.setAutoDraw(True)
+
+        win.flip()
 
         logger.log_event(
             {
@@ -676,6 +707,22 @@ class FeedBackStimulus(BaseStimulus):
         )
 
         return None
+
+    def _draw_total_reward(self, total_reward, win):
+        total_reward_outcome = (
+            f"+{total_reward:5.1f}" if total_reward > 0 else f"{total_reward:5.1f}"
+        )
+        reward_stage2 = "Total: " + total_reward_outcome
+        self.total_reward_ind.setText(reward_stage2)
+        self.total_reward_ind.setAutoDraw(False)
+        self.total_reward_ind.draw()
+
+    def _update_reward_bar(self, total_reward):
+        move_bar = int((total_reward / self.bar_total) * self.bar_length)
+        move_bar = min([max([move_bar, 0]), self.bar_length])
+        self.total_reward_ind.setPos((-self.bar_length // 2 + move_bar, 350))
+        self.total_reward_ind.setAutoDraw(True)
+        self.total_reward_ind.draw()
 
     def simulate(
         self,
