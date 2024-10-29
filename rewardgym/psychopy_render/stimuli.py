@@ -601,7 +601,6 @@ class FeedBackStimulus(BaseStimulus):
                 units="pix",
             )
 
-            self.point_bar.autoDraw = True
             self.total_reward_ind = Rect(
                 win=win,
                 name=self.name + "total_indicator",
@@ -612,6 +611,27 @@ class FeedBackStimulus(BaseStimulus):
                 lineWidth=0,
                 pos=(-self.bar_length // 2, 350),
             )
+
+            self.text_left = TextStim(
+                win=win,
+                name="label_left",
+                text=self.bar_labels["left"],
+                color="white",
+                height=25,
+                pos=(-self.bar_length // 2 - 40, 350),
+            )
+            self.text_right = TextStim(
+                win=win,
+                name="label_right",
+                text=self.bar_labels["right"],
+                color="white",
+                height=25,
+                pos=(self.bar_length // 2 + 40, 350),
+            )
+
+            self.text_right.setAutoDraw(True)
+            self.text_left.setAutoDraw(True)
+            self.point_bar.autoDraw = True
             self.total_reward_ind.autoDraw = True
 
         self.feedback_image = {}
