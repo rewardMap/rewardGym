@@ -25,13 +25,20 @@
         "5.0": "Remember:\nWhen the outside of the diamond turns white you need to decide, whether to press LEFT or NOT?"
     },
     "two-step":{
-        "0.0": "In this game you will make a series of choices.\nFirst, you will be given two images to choose from.\nYour choice will take you to the second level.",
-        "1.0": "Your first choice will lead to another choice between two images. The images you see will depend on your first choice.",
-        "1.1": "Choosing an image in the second stage will sometimes earn you points and sometimes not. Some images are better than others, but which ones are better changes slowly during the experiment.",
-        "2.0": "The structure of the game is as follows:",
-        "2.1": "Each first-level choice has a 'preferred' second level. For example, if you choose the image with the cross, you'll usually see the blue (left) images, but sometimes you'll see the yellow images instead.\n",
-        "2.2": "This preference stays the same throughout the game.",
-        "3.0": "Remember:\nIn each trial you will have to make two choices.\nPress LEFT to select the image on the left.\nPress RIGHT to select the image on the right."
+        "0.0": "In this task there are four images.\nEach image can win you 1 point, bue each image has a different probability of winning.\nYour goal is to figure out, based on your experience, which image is mostly likely to give you a point.\n\nFor example, the images might have the following probabilities to win a point:",
+        "0.1": "50 %",
+        "0.2": "60 %",
+        "0.3": "70 %",
+        "0.4": "35 %",
+        "1.0": "You will get to choose between either these two images:",
+        "1.1": "Or these two images:",
+        "1.2": "Your choice sould be based on what you've learned about each image's probability of winning a point\nThe probabilities change slowly over time, so stay observant and adjust your choices accordingly.",
+        "2.0": "Before choosing between images, you'll first choose between two doors.\nEach door leads to a different pair of images.\nDoor 1 gives you a higher chance of seeing this pair:",
+        "2.1": "Door 2 gives you a higher chance of seeing this pair.",
+        "2.2": "In the real experiment, the doors and images will of course look differently.",
+        "3.0": "To summarize, the structure of the game looks as follow:",
+        "3.1": "First you pick a door: This determines which pair of images you will mostly likely see next.\n\nThen you choose which image you believe is most likely to win a point.",
+        "4.0": "Remember:\nPress LEFT to select the door or image on the left.\nPress RIGHT to select the door or image on the right."
     },
     "mid": {
         "0.0": "In this game you will see one of five images",
