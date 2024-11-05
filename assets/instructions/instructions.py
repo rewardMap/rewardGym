@@ -2,7 +2,7 @@ import json
 import warnings
 
 from psychopy.event import waitKeys
-from psychopy.visual import TextStim
+from psychopy.visual import TextBox2
 
 from .gonogo_instructions import gonogo_instructions
 from .hcp_instructions import hcp_instructions
@@ -35,19 +35,19 @@ def show_instructions(task, win, key_map={"left": 0, "right": 1}):
         instructions = json.load(f)
 
     def end_screen(win, instructions):
-        end = TextStim(
+        end = TextBox2(
             win=win,
             text=instructions["instructions_end"],
-            height=28,
+            letterHeight=28,
             pos=(0, 0),
         )
         end.draw()
 
     def first_screen(win, instructions):
-        end = TextStim(
+        end = TextBox2(
             win=win,
             text=instructions["instructions"],
-            height=28,
+            letterHeight=28,
             pos=(0, 0),
         )
         end.draw()
@@ -67,9 +67,9 @@ def show_instructions(task, win, key_map={"left": 0, "right": 1}):
             outkey = waitKeys(keyList=list(key_map.keys()))[0]
 
             if slide_index == max_slide:
-                if key_map[outkey] == 0:
+                if key_map[outkey] == 1:
                     running = False
-                elif key_map[outkey] == 1:
+                elif key_map[outkey] == 0:
                     slide_index -= 1
 
             elif key_map[outkey] == 0:
