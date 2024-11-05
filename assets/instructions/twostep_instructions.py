@@ -7,7 +7,7 @@ from rewardgym.psychopy_render.default_images import make_card_stimulus
 def twostep_instructions():
     card1 = make_card_stimulus(
         {
-            "num_tiles": (1, 1),
+            "num_tiles": (1, 2),
             "shapes": ["cross"],
             "shape_pattern": "alternating",
             "color_pattern": "alternating",
@@ -19,7 +19,7 @@ def twostep_instructions():
 
     card2 = make_card_stimulus(
         {
-            "num_tiles": (1, 1),
+            "num_tiles": (2, 1),
             "shapes": ["X"],
             "shape_pattern": "alternating",
             "color_pattern": "alternating",
@@ -191,8 +191,8 @@ def twostep_instructions():
         img_card3 = ImageStim(win=win, image=card5, pos=(-120, -100), size=size)
         img_card4 = ImageStim(win=win, image=card6, pos=(120, -100), size=size)
 
-        img_door1 = ImageStim(win=win, image=card1, pos=(-500, 100), size=(150, 100))
-        img_door2 = ImageStim(win=win, image=card2, pos=(-500, -50), size=(150, 100))
+        img_door1 = ImageStim(win=win, image=card1, pos=(-510, 90), size=(100, 150))
+        img_door2 = ImageStim(win=win, image=card2, pos=(-510, -80), size=(100, 150))
 
         for i in [
             img_card1,
@@ -213,7 +213,7 @@ def twostep_instructions():
             win=win,
             text=instructions["two-step"]["3.0"],
             letterHeight=28,
-            pos=(0, 325),
+            pos=(0, 350),
         )
 
         part_3_1 = TextBox2(
@@ -223,14 +223,14 @@ def twostep_instructions():
             pos=(0, -250),
         )
 
-        small_shape1 = np.array(card1.shape[:2]) // 2
-        small_shape2 = np.array(card4.shape[:2]) // 2
+        small_shape1 = np.array(card1.shape[:2])[::-1] // 2
+        small_shape2 = np.array(card4.shape[:2])[::-1] // 2
 
         img_card1 = ImageStim(
-            win=win, image=card1, pos=(-100, 150 + y_offset), size=small_shape1
+            win=win, image=card1, pos=(-100, 175 + y_offset), size=small_shape1
         )
         img_card2 = ImageStim(
-            win=win, image=card2, pos=(100, 150 + y_offset), size=small_shape1
+            win=win, image=card2, pos=(100, 175 + y_offset), size=small_shape1
         )
 
         img_card3 = ImageStim(
