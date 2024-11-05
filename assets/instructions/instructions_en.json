@@ -36,7 +36,9 @@
     "mid": {
         "0.0": "In this game you will see one of five images",
         "0.1": "In the middle of the image is how many points are at stake.\n You will see the image first, then you will see the diamond shape.\nAfter this you will se a black shape.\nWhen you see the black shape, you will need to press LEFT as fast as you can to win points or to avoid losing the points indicated by the image. ",
-        "1.0": "The first thing that will happen in the game is one of these shapes will come up.\nAll you have to do is read the shapes to see if you play to WIN, to LOSE or if nothing is at stake.\nAfter the shape you will see a fixation cross.\nWhen you see the cross, you should just wait.",
+        "1.0": "So for example if you saw this image:",
+        "1.1": "then if you respond (press LEFT) to the black shape in time, you will receive 5 points.\n\nWhereas, if you see this image:",
+        "1.2": "then if you respond (press LEFT) to the black shape in time, you will avoid losing 5 points.",
         "2.0": "After the fixation there will always be a black shape that is the same shape as the one you just saw.\nYour job is to press LEFT when you see a black shape.",
         "2.1": "If you press to soon or do not press when the black shape is up, you will not receive the outcome for that shape.",
         "3.0": "Remember:\n\nWhen you see a pink circle, you can WIN points.\n\nWhen you see a yellow square, you can LOSE points.\n\nWhen you see a blue triangle, there is nothing at stake.\n\nPress LEFT when you see the black shape to WIN or AVOID LOSING indicated in the image."
