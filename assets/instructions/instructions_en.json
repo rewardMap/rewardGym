@@ -1,27 +1,28 @@
 {
     "training": "You will now play a few practice rounds.\n\n",
-    "instructions": "You will now see the instructions for the next game.\nYou can press RIGHT to see the next instructions.\nYou can press LEFT to see the previous instructions.",
-    "instructions_perm": "Press LEFT for the previous, RIGHT for the next instructions.",
-    "instructions_end": "To start the game press LEFT. If you want to see the previous screen press RIGHT.",
-
+    "instructions": "You will now see the instructions for the next game.\n\nPress RIGHT to see next instructions.\nPress LEFT to see previous instructions.",
+    "instructions_perm": "Press LEFT to go back, RIGHT to proceed.",
+    "instructions_end": "To start the game press RIGHT. To review the instructions press LEFT.",
     "hcp": {
-        "0.0": "This is a game of chance.\nThink of it as drawing cards from a deck.\nThe cards have numbers from one to nine.\nFirst, you will see a question mark on the screen and you make a guess, then the card will be presented.\nYou must guess whether the number is LESS than or GREATER than five.",
-        "0.1": "Press LEFT to guess that the number is LESS than five.\nPress RIGHT to guess that the number will be GREATER than five.\nYou must answer while the question mark is on the screen.",
+        "0.0": "This is a game of chance.\nThink of it as drawing from a deck of cards.\nThe cards are numbered from one to nine.\nYou have to guess if the number you are about to see is LESS than or GREATER than five.",
+        "0.1": "Press LEFT to guess LESS than five.\nPress RIGHT to guess GREATER than five.\nYou must answer while the question mark is shown.",
         "1.0": "After you answer, the card will be shown.",
-        "1.1": "If you guessed correctly,\na green arrow appears in the fixation cross and you WIN 1 point.",
-        "1.2": "If not, a red arrow will appear and you LOSE 0.5 points.",
-        "1.3": "If the result is five, the fixation cross turns yellow and you gain nothing.",
+        "1.1": "If you guess correctly,\nthe diamond shape will go green and you WIN 1 point.",
+        "1.2": "If you guess incorrectly the dimaond shape will go red and you LOSE 0.5 points.",
+        "1.3": "If the card is five, the diamond shape goes yellow and your points don't change.",
         "1.4": "After each round, we shuffle the deck.",
         "2.0": "Remember:\nPress LEFT to guess the number is LESS less than five.\nPress RIGHT to guess the number is GREATER than five."
     },
     "gonogo": {
-        "0.0": "In this game, you have to figure out whether it's better to press LEFT or to not to press the LEFT.\nThere are some situations where it's better to press or not to press the LEFT.\nIn some situations you can WIN points, in other you can LOSE points.\n\n",
-        "0.1": "Each situation is introduced by one of four images.\nYou have to learn from experience whether it is better to press or not for each image.",
-        "1.0": "In each trial, you will see an image that introduces the situation:",
-        "2.0": "Then a fixation cross appears.",
-        "3.0": "When the fixation cross turns white you have to decide:\nDo you press LEFT or NOT?",
-        "4.0": "After a while you will get feedback if you made the right decision or not.",
-        "5.0": "Remember:\nWhen the cross flashes white you have to decide!\nDo you press LEFT or NOT?"
+        "0.0": "In this game, you have to figure out whether it's better to press LEFT or NOT.\nThere are some situations where it's better to press LEFT\n .. and in others it would be better NOT to press.\nIn some situations you will play to WIN points,\n in other you will play to avoid LOSING points.\n\n",
+        "0.1": "Each situation is signalled by one of four images.\nFor each image, you have to learn from experience if it is better to press LEFT or NOT",
+        "1.0": "On each trial, you will see an image like this that signals the situation:",
+        "2.0": "Then a diamond shape appears in the middle of the screen.",
+        "3.0": "When the outside turns white you need to decide, whether to press LEFT or NOT?",
+        "4.1": "If you win points, you wil see green.",
+        "4.2": "If you lose points you will see red.",
+        "4.3": "If your points don't change, you will see yellow.",
+        "5.0": "Remember:\nWhen the outside of the diamond turns white you need to decide, whether to press LEFT or NOT?"
     },
     "two-step":{
         "0.0": "In this game you will make a series of choices.\nFirst, you will be given two images to choose from.\nYour choice will take you to the second level.",
@@ -33,26 +34,27 @@
         "3.0": "Remember:\nIn each trial you will have to make two choices.\nPress LEFT to select the image on the left.\nPress RIGHT to select the image on the right."
     },
     "mid": {
-        "0.0": "In this game you will play with three shapes:",
-        "0.1": "The yellow squares mean you play to NOT LOSE points.\nThe pink circles mean you play to WIN points.\nThe triangle means nothing is at stake.",
+        "0.0": "In this game you will see one of five images",
+        "0.1": "In the middle of the image is how many points are at stake.\n You will see the image first, then you will see the diamond shape.\nAfter this you will se a black shape.\nWhen you see the black shape, you will need to press LEFT as fast as you can to win points or to avoid losing the points indicated by the image. ",
         "1.0": "The first thing that will happen in the game is one of these shapes will come up.\nAll you have to do is read the shapes to see if you play to WIN, to LOSE or if nothing is at stake.\nAfter the shape you will see a fixation cross.\nWhen you see the cross, you should just wait.",
         "2.0": "After the fixation there will always be a black shape that is the same shape as the one you just saw.\nYour job is to press LEFT when you see a black shape.",
         "2.1": "If you press to soon or do not press when the black shape is up, you will not receive the outcome for that shape.",
-        "3.0": "Remember:\n\nWhen you see a pink circle, you can WIN points.\n\nWhen you see a yellow square, you can LOSE points.\n\nWhen you see a blue triangle, there is nothing at stake.\n\nPress LEFT when you see the black shape to WIN or NOT LOSE."
+        "3.0": "Remember:\n\nWhen you see a pink circle, you can WIN points.\n\nWhen you see a yellow square, you can LOSE points.\n\nWhen you see a blue triangle, there is nothing at stake.\n\nPress LEFT when you see the black shape to WIN or AVOID LOSING indicated in the image."
     },
     "posner": {
-        "0.0": "In this game, you must respond to a target stimulus that briefly appears on either the left or the right side of the fixation cross.\nTo gain points, you must indicate the side on which the target appeared by pressing either LEFT or RIGHT.",
-        "1.0": "Before the target appears, an arrow will appear on either the left or the right side of the fixation cross.\nThe location arrow can help you predict, the side where the target will appear.\nThis game can be difficult, so pay attention to the cue.",
-        "2.0": "After the cue, the target will appear, on either left or right side and a distractor will appear on the opposite side. The target is a diamond, with the top or bottom corner is cut off.\nPress LEFT to indicate that the target appeared on the left.\nPress RIGHT to indicate that the target appeared on the right.",
-        "3.0": "Please try to focus on the fixation cross in the center of the screen for the entire game.\nTry not to move your eyes to the target stimulus.",
+        "0.0": "In this game, you must respond to a target stimulus that briefly appears on either the left or the right side of the diamond shape.\nTo gain points, you must indicate the side on which the target appeared by pressing LEFT or RIGHT.",
+        "1.0": "Before the target appears, an arrow will appear on either the left or the right side of the diamond.\nThe arrow can help you predict, the side where the target will appear next.\nThis game can be difficult, so pay attention to the arrow.",
+        "2.0": "The target is a diamond with a missing corner. After the arrow disappears, the target will appear, on either left or right.",
+        "2.1": "Another  shape will appear on the opposite side of the target.",
+        "2.2": "Press LEFT if the target was on the left.\nPress RIGHT if the target was on the right.",
+        "3.0": "Please try to focus on the diamond shape for the entire game.\nDo not move your eyes to the target.",
         "4.0": "Remember:\nPress LEFT to indicate that the target appeared on the left.\nPress RIGHT to indicate that the target appeared on the right.\n\nPlease respond as quickly and accurately as possible!"
     },
     "risk-sensitive":
     {
-        "0.0": "In this game you will see five different images and choose between them.\nEach image has a different value. Some images will always give you the same amount of points, some images will give you points with a 50% probability.",
-        "1.0": "In the game you will sometimes see a single image on the left or the right side of the screen. You must select this image. Pressing LEFT if it is on the left and RIGHT if it is on the right.\n",
-        "1.1": "These trials will help you to figure out the meaning of each image.",
-        "2.0": "In other trials you have to decide between two images.\nChoose in a way, that will earn you the most points.\nPress LEFT to select the image on the left.\nPress RIGHT to select the image on the right.",
+        "0.0": "In this game you will see five different images.\nEach image has a different value.\nSome images will always give you the same points, some images will give you points with 50% probability.",
+        "1.0": "You will sometimes see a single image on the left or the right side of the screen. You must select this image by pressing LEFT if it is on the left and RIGHT if it is on the right.\n",
+        "2.0": "Sometimes, you have to decide between two images.\nChoose in a way, that will earn you the most points.\nPress LEFT to select the image on the left.\nPress RIGHT to select the image on the right.",
         "3.0": "Remember:\nPress LEFT to select the image on the left.\nPress RIGHT to select the image on the right."
     }
 }
