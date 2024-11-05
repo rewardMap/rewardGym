@@ -45,19 +45,47 @@ def posner_instructions():
 
     def part_2(win, instructions):
         pt = posner_target(target=True)
-        pt_left = ImageStim(win=win, pos=(-300, 0), image=pt, size=pt.shape[:2])
+        pt_left = ImageStim(
+            win=win,
+            pos=(-300, 100),
+            image=posner_target(target=True),
+            size=pt.shape[:2],
+        )
         pt_right = ImageStim(
-            win=win, pos=(300, 0), image=posner_target(target=False), size=pt.shape[:2]
+            win=win,
+            pos=(300, 100),
+            image=posner_target(target=True)[::-1],
+            size=pt.shape[:2],
+        )
+
+        pt_dist = ImageStim(
+            win=win,
+            pos=(0, -125),
+            image=posner_target(target=False)[::-1],
+            size=pt.shape[:2],
         )
 
         part_2_0 = TextBox2(
             win=win,
             text=instructions["posner"]["2.0"],
             letterHeight=28,
-            pos=(0, 200),
+            pos=(0, 250),
+        )
+        part_2_1 = TextBox2(
+            win=win,
+            text=instructions["posner"]["2.1"],
+            letterHeight=28,
+            pos=(0, -10),
         )
 
-        for ii in [part_2_0, pt_left, pt_right]:
+        part_2_2 = TextBox2(
+            win=win,
+            text=instructions["posner"]["2.2"],
+            letterHeight=28,
+            pos=(0, -250),
+        )
+
+        for ii in [part_2_0, part_2_1, part_2_2, pt_left, pt_right, pt_dist]:
             ii.draw()
 
     def part_3(win, instructions):
