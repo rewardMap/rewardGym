@@ -1,3 +1,15 @@
+# 0.0.6 (Tue Nov 05 2024)
+
+#### 🐛 Bug Fix
+
+- Display and instruction change up. Adapted Posner task. [#19](https://github.com/rewardMap/rewardGym/pull/19) ([@SRSteinkamp](https://github.com/SRSteinkamp))
+
+#### Authors: 1
+
+- Simon Steinkamp ([@SRSteinkamp](https://github.com/SRSteinkamp))
+
+---
+
 # 0.0.5 (Tue Oct 22 2024)
 
 #### 🐛 Bug Fix
