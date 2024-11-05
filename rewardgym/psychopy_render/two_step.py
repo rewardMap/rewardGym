@@ -39,9 +39,10 @@ def twostep_stimuli(random_state, stim_defaults=STIMULUS_DEFAULTS):
                 i for i in stim_defaults["shapes"] if i != st_p["shapes"]
             ]
 
+        height = 375 if n == 0 else 250
         stim_properties[n] = stimulus_properties
         stim_set[n] = [
-            make_card_stimulus(stim_properties[n][k], width=250, height=250)
+            make_card_stimulus(stim_properties[n][k], width=250, height=height)
             for k in range(2)
         ]
 
