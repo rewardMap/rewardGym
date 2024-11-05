@@ -1,6 +1,6 @@
 from psychopy.visual import ImageStim, TextBox2
 
-from rewardgym.psychopy_render.default_images import fixation_cross, mid_stimuli
+from rewardgym.psychopy_render.default_images import mid_stimuli
 
 
 def mid_instructions():
@@ -25,32 +25,51 @@ def mid_instructions():
         ]
 
         stims = [
-            ImageStim(win=win, image=i, pos=(lp, 0), size=size)
+            ImageStim(win=win, image=i, pos=(lp, 75), size=size)
             for i, lp in zip(stims, left_pos)
         ]
         part_0_1 = TextBox2(
             win=win,
             text=instructions["mid"]["0.1"],
             letterHeight=28,
-            pos=(0, -200),
+            pos=(0, -150),
         )
 
         for ii in stims + [part_0_0, part_0_1]:
             ii.draw()
 
     def part_1(win, instructions):
-        fix = fixation_cross()
-
         part_1_0 = TextBox2(
             win=win,
             text=instructions["mid"]["1.0"],
             letterHeight=28,
-            pos=(0, 250),
+            pos=(0, 275),
+        )
+        size = (125, 125)
+
+        img1 = ImageStim(
+            win=win, image=mid_stimuli("+5", "circle"), size=size, pos=(0, 170)
         )
 
-        fix = ImageStim(win=win, image=fix, size=fix.shape[:2])
+        img2 = ImageStim(
+            win=win, image=mid_stimuli("-5", "square"), size=size, pos=(0, -125)
+        )
 
-        for i in [part_1_0, fix]:
+        part_1_1 = TextBox2(
+            win=win,
+            text=instructions["mid"]["1.1"],
+            letterHeight=28,
+            pos=(0, 20),
+        )
+
+        part_1_2 = TextBox2(
+            win=win,
+            text=instructions["mid"]["1.2"],
+            letterHeight=28,
+            pos=(0, -225),
+        )
+
+        for i in [part_1_0, part_1_1, part_1_2, img1, img2]:
             i.draw()
 
     def part_2(win, instructions, size=size):

@@ -61,7 +61,7 @@ class ActionStimulusTooEarly(ActionStimulus):
         self.name_tooearly = name_tooearly
         self.text_tooearly = text_tooearly
 
-    def setup(self, win: Window = None, **kwargs):
+    def _setup(self, win: Window = None, **kwargs):
         """
         Does not need a special setup, including the function, to make easy looping possible.
 
@@ -155,7 +155,7 @@ class ConditionBasedDisplay(BaseStimulus):
         self.image_shift = image_shift
         self.with_action = with_action
 
-    def setup(self, win, **kwargs):
+    def _setup(self, win, **kwargs):
         self.image_dict = {}
 
         for kk in self.image_map.keys():
@@ -273,7 +273,7 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
         self.flip_probability = flip_probability
         self.seed = check_seed(seed)
 
-    def setup(self, win, **kwargs):
+    def _setup(self, win, **kwargs):
         self.image_class = []
         for img, pos in zip(self.images, self.positions):
             if isinstance(img, str):
@@ -340,7 +340,10 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
             onset=stim_onset,
         )
 
-        response_key, remaining = self._simulate_response(logger, key, rt)
+        response_window_onset = logger.get_time()
+        response_key, remaining = self._simulate_response(
+            logger, key, rt, response_window_onset=response_window_onset
+        )
 
         stim_onset = logger.get_time()
 
@@ -487,5 +490,122 @@ class TextWithBorder(BaseStimulus):
 
         logger.log_event(
             {"event_type": self.name, "expected_duration": self.duration},
+            onset=stim_onset,
+        )
+
+
+class StimuliWithResponse(ActionStimulus):
+    def __init__(
+        self,
+        duration: float,
+        key_dict: Dict = {"left": 0, "right": 1},
+        name: str = "response",
+        target_name: str = None,
+        target_duration: float = 0.0,
+        timeout_action: int = None,
+        name_timeout="response-time-out",
+        positions=((0, 0), (0, 0)),
+        images=[
+            make_card_stimulus(generate_stimulus_properties(12)),
+            make_card_stimulus(generate_stimulus_properties(23)),
+        ],
+        flip_probability=0.5,
+        flip_dir: str = "horiz",
+        seed=111,
+    ):
+        super().__init__(
+            name=name,
+            duration=duration,
+            key_dict=key_dict,
+            timeout_action=timeout_action,
+            name_timeout=name_timeout,
+        )
+
+        self.images = images
+        self.positions = positions
+        self.target_name = target_name
+        self.target_duration = target_duration
+        self.flip_probability = flip_probability
+        self.flip_dir = flip_dir
+        self.rng = check_seed(seed)
+
+    def _setup(self, win, **kwargs):
+        self.imageStims = []
+        for img, pos in zip(self.images, self.positions):
+            if isinstance(img, str):
+                self.imageStims.append(ImageStim(win=win, image=img, pos=pos))
+            else:
+                self.imageStims.append(
+                    ImageStim(
+                        win, image=img, size=(img.shape[1], img.shape[0]), pos=pos
+                    )
+                )
+
+    def display(self, win, logger, **kwargs):
+        logger.key_strokes(win)
+
+        response_window_onset = logger.get_time()
+
+        self._draw_stimulus(
+            win,
+            logger,
+        )
+        win.flip()
+
+        response = self._response_handling(
+            win, logger, response_window_onset, key_dict=self.key_dict
+        )
+
+        return response
+
+    def simulate(
+        self,
+        win: Window,
+        logger=SimulationLogger,
+        key: str = None,
+        rt: float = None,
+        **kwargs,
+    ):
+        stim_onset = logger.get_time()
+
+        logger.wait(win=None, time=self.target_duration, start=stim_onset)
+
+        logger.log_event(
+            {"event_type": self.target_name, "expected_duration": self.target_duration},
+            onset=stim_onset,
+        )
+
+        response = self._simulate_response(
+            logger, key, rt, response_window_onset=stim_onset
+        )
+
+        return response
+
+    def _draw_stimulus(self, win, logger, flip=False):
+        stim_onset = logger.get_time()
+
+        flip = self.rng.random() < self.flip_probability
+
+        # So that images are drawn on top
+        for ii in self.imageStims:
+            ii.autoDraw = True
+            if self.flip_dir == "vert":
+                ii.flip = [flip, False]
+            elif self.flip_dir == "horiz":
+                ii.flip = [False, flip]
+
+        win.flip()
+
+        for ii in self.imageStims:
+            ii.autoDraw = False
+
+        logger.wait(win, self.target_duration, stim_onset, self.wait_no_keys)
+
+        logger.log_event(
+            {
+                "event_type": self.target_name,
+                "expected_duration": self.target_duration,
+                "misc": f"flip-{flip}",
+            },
             onset=stim_onset,
         )

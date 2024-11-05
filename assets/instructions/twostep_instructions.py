@@ -1,33 +1,31 @@
 import numpy as np
 from psychopy.visual import ImageStim, Line, TextBox2
 
-from rewardgym.psychopy_render.default_images import fixation_cross, make_card_stimulus
+from rewardgym.psychopy_render.default_images import make_card_stimulus
 
 
 def twostep_instructions():
-    fix = fixation_cross()
-
     card1 = make_card_stimulus(
         {
-            "num_tiles": (1, 1),
+            "num_tiles": (1, 2),
             "shapes": ["cross"],
             "shape_pattern": "alternating",
             "color_pattern": "alternating",
             "colors": ((200, 0, 0), (200, 0, 0)),
         },
-        height=250,
+        height=375,
         width=250,
     )
 
     card2 = make_card_stimulus(
         {
-            "num_tiles": (1, 1),
+            "num_tiles": (2, 1),
             "shapes": ["X"],
             "shape_pattern": "alternating",
             "color_pattern": "alternating",
             "colors": ((200, 0, 0), (200, 0, 0)),
         },
-        height=250,
+        height=375,
         width=250,
     )
 
@@ -81,14 +79,55 @@ def twostep_instructions():
             win=win,
             text=instructions["two-step"]["0.0"],
             letterHeight=28,
-            pos=(0, 250),
+            pos=(0, 200),
         )
 
-        img_card1 = ImageStim(win=win, image=card1, pos=(-325, 0), size=card1.shape[:2])
-        img_card2 = ImageStim(win=win, image=card2, pos=(325, 0), size=card1.shape[:2])
-        fixation = ImageStim(win=win, image=fix, pos=(0, 0), size=fix.shape[:2])
+        size = (100, 100)
+        img_card1 = ImageStim(win=win, image=card3, pos=(-320, -60), size=size)
+        img_card2 = ImageStim(win=win, image=card4, pos=(-120, -60), size=size)
+        img_card3 = ImageStim(win=win, image=card5, pos=(120, -60), size=size)
+        img_card4 = ImageStim(win=win, image=card6, pos=(320, -60), size=size)
 
-        for i in [img_card1, img_card2, fixation, part_0_0]:
+        part_0_1 = TextBox2(
+            win=win,
+            text=instructions["two-step"]["0.1"],
+            letterHeight=28,
+            pos=(-320, -130),
+            size=(100, None),
+        )
+        part_0_2 = TextBox2(
+            win=win,
+            text=instructions["two-step"]["0.2"],
+            letterHeight=28,
+            pos=(-120, -130),
+            size=(100, None),
+        )
+        part_0_3 = TextBox2(
+            win=win,
+            text=instructions["two-step"]["0.3"],
+            letterHeight=28,
+            pos=(120, -130),
+            size=(100, None),
+        )
+        part_0_4 = TextBox2(
+            win=win,
+            text=instructions["two-step"]["0.4"],
+            letterHeight=28,
+            pos=(320, -130),
+            size=(100, None),
+        )
+
+        for i in [
+            img_card1,
+            img_card2,
+            img_card3,
+            img_card4,
+            part_0_0,
+            part_0_1,
+            part_0_2,
+            part_0_3,
+            part_0_4,
+        ]:
             i.draw()
 
     def part_1(win, instructions):
@@ -102,14 +141,29 @@ def twostep_instructions():
             win=win,
             text=instructions["two-step"]["1.1"],
             letterHeight=28,
-            pos=(0, -250),
+            pos=(0, 80),
         )
+        part_1_2 = TextBox2(
+            win=win,
+            text=instructions["two-step"]["1.2"],
+            letterHeight=28,
+            pos=(0, -175),
+        )
+        size = (100, 100)
+        img_card1 = ImageStim(win=win, image=card3, pos=(-120, 150), size=size)
+        img_card2 = ImageStim(win=win, image=card4, pos=(120, 150), size=size)
+        img_card3 = ImageStim(win=win, image=card5, pos=(-120, 0), size=size)
+        img_card4 = ImageStim(win=win, image=card6, pos=(120, 0), size=size)
 
-        fixation = ImageStim(win=win, image=fix, pos=(0, 0), size=fix.shape[:2])
-        img_card3 = ImageStim(win=win, image=card3, pos=(-325, 0), size=card1.shape[:2])
-        img_card4 = ImageStim(win=win, image=card4, pos=(325, 0), size=card1.shape[:2])
-
-        for i in [img_card3, img_card4, fixation, part_1_0, part_1_1]:
+        for i in [
+            img_card1,
+            img_card2,
+            img_card3,
+            img_card4,
+            part_1_0,
+            part_1_1,
+            part_1_2,
+        ]:
             i.draw()
 
     def part_2(win, instructions):
@@ -117,67 +171,109 @@ def twostep_instructions():
             win=win,
             text=instructions["two-step"]["2.0"],
             letterHeight=28,
-            pos=(0, 325),
+            pos=(0, 250),
+        )
+        part_2_1 = TextBox2(
+            win=win,
+            text=instructions["two-step"]["2.1"],
+            letterHeight=28,
+            pos=(0, -20),
+        )
+        part_2_2 = TextBox2(
+            win=win,
+            text=instructions["two-step"]["2.2"],
+            letterHeight=28,
+            pos=(0, -200),
+        )
+        size = (100, 100)
+        img_card1 = ImageStim(win=win, image=card3, pos=(-120, 50), size=size)
+        img_card2 = ImageStim(win=win, image=card4, pos=(120, 50), size=size)
+        img_card3 = ImageStim(win=win, image=card5, pos=(-120, -100), size=size)
+        img_card4 = ImageStim(win=win, image=card6, pos=(120, -100), size=size)
+
+        img_door1 = ImageStim(win=win, image=card1, pos=(-510, 90), size=(100, 150))
+        img_door2 = ImageStim(win=win, image=card2, pos=(-510, -80), size=(100, 150))
+
+        for i in [
+            img_card1,
+            img_card2,
+            img_card3,
+            img_card4,
+            part_2_0,
+            part_2_1,
+            part_2_2,
+            img_door1,
+            img_door2,
+        ]:
+            i.draw()
+
+    def part_3(win, instructions):
+        y_offset = 60
+        part_3_0 = TextBox2(
+            win=win,
+            text=instructions["two-step"]["3.0"],
+            letterHeight=28,
+            pos=(0, 350),
         )
 
-        y_offset = 75
-        small_shape = np.array(card1.shape[:2]) // 2
+        part_3_1 = TextBox2(
+            win=win,
+            text=instructions["two-step"]["3.1"],
+            letterHeight=28,
+            pos=(0, -250),
+        )
+
+        small_shape1 = np.array(card1.shape[:2])[::-1] // 2
+        small_shape2 = np.array(card4.shape[:2])[::-1] // 2
 
         img_card1 = ImageStim(
-            win=win, image=card1, pos=(-75, 150 + y_offset), size=small_shape
+            win=win, image=card1, pos=(-100, 175 + y_offset), size=small_shape1
         )
         img_card2 = ImageStim(
-            win=win, image=card2, pos=(75, 150 + y_offset), size=small_shape
+            win=win, image=card2, pos=(100, 175 + y_offset), size=small_shape1
         )
 
         img_card3 = ImageStim(
-            win=win, image=card3, pos=(-300, -125 + y_offset), size=small_shape
+            win=win, image=card3, pos=(-320, -125 + y_offset), size=small_shape2
         )
         img_card4 = ImageStim(
-            win=win, image=card4, pos=(-150, -125 + y_offset), size=small_shape
+            win=win, image=card4, pos=(-150, -125 + y_offset), size=small_shape2
         )
 
         img_card5 = ImageStim(
-            win=win, image=card5, pos=(150, -125 + y_offset), size=small_shape
+            win=win, image=card5, pos=(150, -125 + y_offset), size=small_shape2
         )
         img_card6 = ImageStim(
-            win=win, image=card6, pos=(300, -125 + y_offset), size=small_shape
+            win=win, image=card6, pos=(320, -125 + y_offset), size=small_shape2
         )
 
         line1 = Line(
             win=win,
-            start=(-80, 70 + y_offset),
-            end=((-450) // 2 - 5, -60 + y_offset),
+            start=(-100, 70 + y_offset),
+            end=((-460) // 2 - 5, -55 + y_offset),
             lineWidth=20,
             color=[0.25, 0.25, 0.25],
         )
         line2 = Line(
             win=win,
-            start=(-70, 70 + y_offset),
-            end=((450) // 2 - 5, -60 + y_offset),
+            start=(-100, 70 + y_offset),
+            end=((440) // 2 - 5, -55 + y_offset),
             lineWidth=10,
             color=[0.25, 0.25, 0.25],
         )
         line3 = Line(
             win=win,
-            start=(70, 70 + y_offset),
-            end=((-450) // 2 + 5, -60 + y_offset),
+            start=(100, 70 + y_offset),
+            end=((-440) // 2 + 5, -55 + y_offset),
             lineWidth=10,
             color=[0.25, 0.25, 0.25],
         )
         line4 = Line(
             win=win,
-            start=(80, 70 + y_offset),
-            end=((450) // 2 + 5, -60 + y_offset),
+            start=(100, 70 + y_offset),
+            end=((460) // 2 + 5, -55 + y_offset),
             lineWidth=20,
             color=[0.25, 0.25, 0.25],
-        )
-
-        part_2_1 = TextBox2(
-            win=win,
-            text=instructions["two-step"]["2.1"] + instructions["two-step"]["2.2"],
-            letterHeight=28,
-            pos=(0, -250),
         )
 
         for i in [
@@ -191,18 +287,18 @@ def twostep_instructions():
             img_card4,
             img_card5,
             img_card6,
-            part_2_0,
-            part_2_1,
+            part_3_0,
+            part_3_1,
         ]:
             i.draw()
 
-    def part_3(win, instructions):
-        part_3_0 = TextBox2(
+    def part_4(win, instructions):
+        part_4_0 = TextBox2(
             win=win,
-            text=instructions["two-step"]["3.0"],
+            text=instructions["two-step"]["4.0"],
             letterHeight=28,
             pos=(0, 75),
         )
-        part_3_0.draw()
+        part_4_0.draw()
 
-    return [part_0, part_1, part_2, part_3]
+    return [part_0, part_1, part_2, part_3, part_4]

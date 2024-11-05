@@ -2,6 +2,7 @@ from copy import deepcopy
 
 import numpy as np
 
+from ..tasks import FULLPOINTS
 from ..utils import check_seed
 from .default_images import (
     STIMULUS_DEFAULTS,
@@ -38,9 +39,10 @@ def twostep_stimuli(random_state, stim_defaults=STIMULUS_DEFAULTS):
                 i for i in stim_defaults["shapes"] if i != st_p["shapes"]
             ]
 
+        height = 375 if n == 0 else 250
         stim_properties[n] = stimulus_properties
         stim_set[n] = [
-            make_card_stimulus(stim_properties[n][k], width=250, height=250)
+            make_card_stimulus(stim_properties[n][k], width=250, height=height)
             for k in range(2)
         ]
 
@@ -57,7 +59,13 @@ def get_info_dict(
     else:
         stim_set, stimuli = external_stimuli
 
-    reward_feedback = FeedBackStimulus(1.0, text="{0}", target="reward", name="reward")
+    reward_feedback = FeedBackStimulus(
+        1.0,
+        text="{0}",
+        target="reward",
+        name="reward",
+        bar_total=FULLPOINTS["two-step"],
+    )
 
     fix = ImageStimulus(
         image_paths=[fixation_cross()],

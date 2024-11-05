@@ -1,5 +1,6 @@
 from copy import deepcopy
 
+from ..tasks import FULLPOINTS
 from ..utils import check_seed
 from .default_images import (
     STIMULUS_DEFAULTS,
@@ -51,7 +52,13 @@ def get_info_dict(
     else:
         image_map, stimuli = external_stimuli
 
-    reward_feedback = FeedBackStimulus(1.0, text="{0}", target="reward", name="reward")
+    reward_feedback = FeedBackStimulus(
+        1.0,
+        text="{0}",
+        target="reward",
+        name="reward",
+        bar_total=FULLPOINTS["risk-sensitive"],
+    )
 
     base_stim = ImageStimulus(
         image_paths=[fixation_cross()], duration=0.1, name=None, autodraw=True

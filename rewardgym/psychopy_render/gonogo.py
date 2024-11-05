@@ -1,5 +1,6 @@
 from copy import deepcopy
 
+from ..tasks import FULLPOINTS
 from ..utils import check_seed
 from .default_images import (
     STIMULUS_DEFAULTS,
@@ -50,7 +51,9 @@ def get_info_dict(seed=None, key_dict={"space": 0}, external_stimuli=None, **kwa
     else:
         image_map, stimuli = external_stimuli
 
-    reward_feedback = FeedBackStimulus(1.0, text="{0}", target="reward", name="reward")
+    reward_feedback = FeedBackStimulus(
+        1.0, text="{0}", target="reward", name="reward", bar_total=FULLPOINTS["gonogo"]
+    )
 
     base_stim = ImageStimulus(
         image_paths=[fixation_cross()], duration=0.3, name="fixation", autodraw=True
