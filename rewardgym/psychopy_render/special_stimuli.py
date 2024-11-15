@@ -599,7 +599,7 @@ class StimuliWithResponse(ActionStimulus):
         for ii in self.imageStims:
             ii.autoDraw = False
 
-        logger.wait(win, self.target_duration, stim_onset, self.wait_no_keys)
+        logger.wait(win, self.target_duration, stim_onset, wait_no_keys=True)
 
         logger.log_event(
             {
