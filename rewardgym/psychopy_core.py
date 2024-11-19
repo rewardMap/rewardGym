@@ -138,7 +138,6 @@ def run_task(
         obs, info = env.reset(
             0, condition=settings["condition_dict"][settings["condition"][episode]]
         )
-
         if env.action is None and agent is None:
             done = draw_response_reminder(win, response_reminder, logger)
 
@@ -162,8 +161,8 @@ def run_task(
             logger.current_location = env.agent_location
 
             done = terminated or truncated
-
-            if env.previous_action is None and not done:
+            # TODO check if this should be action, not previous action!
+            if env.action is None and not done:
                 done = draw_response_reminder(win, response_reminder, logger)
 
             if agent is not None and not (done and env.previous_action is None):
