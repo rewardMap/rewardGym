@@ -162,10 +162,11 @@ def run_task(
 
             done = terminated or truncated
             # TODO check if this should be action, not previous action!
-            if env.action is None and not done:
-                done = draw_response_reminder(win, response_reminder, logger)
+            if agent is None:
+                if env.action is None and not done:
+                    done = draw_response_reminder(win, response_reminder, logger)
 
-            if agent is not None and not (done and env.previous_action is None):
+            elif not (done and env.previous_action is None):
                 agent.update(
                     obs, env.previous_remap_action, reward, terminated, next_obs
                 )
