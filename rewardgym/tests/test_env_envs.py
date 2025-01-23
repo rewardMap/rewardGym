@@ -18,7 +18,12 @@ class TestBaseEnv:
         obs, info = env.reset(agent_location=0)
         print(info)
         assert obs == 0
-        assert info == {"avail-actions": [0, 1], "skip-node": False, "obs": 0}
+        assert info == {
+            "avail-actions": [0, 1],
+            "skip-node": False,
+            "obs": 0,
+            "behav_remap": [0, 1],
+        }
 
     def test_step(self):
         environment_graph = {0: [1, 2], 1: [], 2: []}
