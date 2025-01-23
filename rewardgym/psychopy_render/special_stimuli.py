@@ -169,8 +169,8 @@ class ConditionBasedDisplay(BaseStimulus):
                 )
 
     def display(self, win, logger, condition, action=None, **kwargs):
-        state1 = condition[0][0] if 0 in condition[0].keys() else None
-        state2 = condition[0][1] if 1 in condition[0].keys() else None
+        state1 = condition[0][list(condition[0].keys())[0]]
+        state2 = condition[0][list(condition[0].keys())[1]]
 
         logger.key_strokes(win)
         stim_onset = logger.get_time()
@@ -190,7 +190,7 @@ class ConditionBasedDisplay(BaseStimulus):
             imgB = None
 
         if self.with_action:
-            if action == 0:
+            if action == list(condition[0].keys())[0]:
                 feedback = Rect(
                     win=win,
                     width=imgA.size[0],
