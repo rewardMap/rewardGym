@@ -199,12 +199,15 @@ class PsychopyEnv(BaseEnv):
     def _check_output(self, out, info, remap=False):
         if out is not None:
             if remap:
-                tmp_action = info["avail-actions"][out[0]]
+                tmp_action = info["behav_remap"][out[0]]
             else:
                 tmp_action = out[0]
 
             if tmp_action in info["avail-actions"]:
                 self.action = tmp_action
+            else:
+                self.action = None
+                self.remainder = self.remainder
 
             if out[1] is not None:
                 self.remainder = self.remainder + out[1]

@@ -130,7 +130,9 @@ class BaseEnv(Env):
         else:
             avail_actions = list(self.full_graph[self.agent_location].keys())
 
-        node_info_dict["avail-actions"] = avail_actions
+        node_info_dict["avail-actions"] = [i for i in avail_actions if i is not None]
+        node_info_dict["behav_remap"] = avail_actions
+
         node_info_dict["obs"] = self.agent_location
 
         return node_info_dict
