@@ -43,7 +43,6 @@ def run_single_episode(
     done = False
 
     while not done:
-        old_info = info
         action = agent.get_action(obs, info["avail-actions"])
 
         next_obs, reward, terminated, truncated, info = env.step(
@@ -51,9 +50,6 @@ def run_single_episode(
         )
 
         if update_agent:
-            if "remap-actions" in old_info.keys():
-                action = old_info["remap-actions"][action]
-
             agent.update(obs, action, reward, terminated, next_obs)
 
         done = terminated or truncated
