@@ -24,7 +24,8 @@ class PsychopyEnv(BaseEnv):
         info_dict: dict = defaultdict(int),
         seed: Union[int, np.random.Generator] = 1000,
         name: str = None,
-        n_actions=2,
+        n_actions=None,
+        reduced_actions=None,
     ):
         """
         Environment to render tasks to the screen using pygame.
@@ -57,6 +58,7 @@ class PsychopyEnv(BaseEnv):
             seed,
             name,
             n_actions,
+            reduced_actions=reduced_actions,
         )
 
         self.is_setup = False

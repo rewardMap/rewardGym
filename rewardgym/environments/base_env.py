@@ -30,6 +30,7 @@ class BaseEnv(Env):
         seed: Union[int, np.random.Generator] = 1000,
         name: str = None,
         n_actions: int = None,
+        reduced_actions: int = None,
     ):
         """
         The core environment used for modeling and in part for displays.
@@ -62,6 +63,11 @@ class BaseEnv(Env):
             environment_graph
         )  # Assuming nodes are states (different from neuro-nav)
         self.action_space = Discrete(self.n_actions)
+        if reduced_actions is None:
+            self.reduced_actions = self.n_actions
+        else:
+            self.reduced_actions = reduced_actions
+
         self.observation_space = Discrete(self.n_states)
 
         self.rng = check_seed(seed)
@@ -156,7 +162,7 @@ class BaseEnv(Env):
 
         if condition is not None:
             self.condition = condition
-        elif self.n_actions < len(self.full_graph[self.agent_location]):
+        elif self.reduced_actions < len(self.full_graph[self.agent_location]):
             locs = self.rng.choice(
                 list(self.full_graph[self.agent_location].keys()), size=self.n_actions
             )
