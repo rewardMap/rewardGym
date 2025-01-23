@@ -367,13 +367,17 @@ class ActionStimulus(BaseStimulus):
 
         response_window_onset = logger.get_time()
 
-        response = self._response_handling(win, logger, response_window_onset)
+        response = self._response_handling(
+            win, logger, response_window_onset, info=info
+        )
 
         win.flip()
 
         return response
 
-    def _response_handling(self, win, logger, response_window_onset, key_dict=None):
+    def _response_handling(
+        self, win, logger, response_window_onset, key_dict=None, info=None
+    ):
         response_window = response_window_onset + self.duration
         response_present = False
         remaining = None
@@ -388,6 +392,10 @@ class ActionStimulus(BaseStimulus):
             if response:
                 RT = response[1] - response_window_onset
                 response_present = True
+
+                if info is not None and "behav_remap" in info.keys():
+                    action = info["behav_remap"][key_dict[response[0]]]
+
                 response_key = key_dict[response[0]]
 
                 logger.log_event(
@@ -395,7 +403,7 @@ class ActionStimulus(BaseStimulus):
                         "event_type": self.name,
                         "response_button": response[0],
                         "response_time": RT,
-                        "action": response_key,
+                        "action": action,
                     },
                     onset=response_window_onset,
                 )
@@ -433,17 +441,34 @@ class ActionStimulus(BaseStimulus):
         logger=SimulationLogger,
         key: str = None,
         rt: float = None,
+        info: Dict = None,
         **kwargs,
     ):
         response_window_onset = logger.get_time()
         response = self._simulate_response(
-            logger, key, rt, response_window_onset=response_window_onset
+            logger,
+            key,
+            rt,
+            response_window_onset=response_window_onset,
+            info=info,
         )
 
         return response
 
-    def _simulate_response(self, logger, key, rt, response_window_onset):
+    def _simulate_response(self, logger, key, rt, response_window_onset, info):
         response_key, rt = logger.key_strokes(key, rt)
+
+        if info is not None and "behav_remap" in info.keys():
+            response_button = [
+                n for n, b in enumerate(info["behav_remap"]) if b == response_key
+            ]
+            if len(response_button) == 1:
+                response_button = response_button[0]
+            else:
+                response_button = response_key
+
+        else:
+            response_button = response_key
 
         if rt is None:
             warnings.warn(
@@ -455,13 +480,14 @@ class ActionStimulus(BaseStimulus):
         if rt > self.duration:
             if response_key is None:
                 response_key = logger.na
+                response_button = logger.na
 
             logger.log_event(
                 {
                     "event_type": self.name_timeout,
                     "response_late": True,
                     "response_time": rt,
-                    "response_button": response_key,
+                    "response_button": response_button,
                     "action": response_key,
                 },
                 onset=response_window_onset,
@@ -476,7 +502,7 @@ class ActionStimulus(BaseStimulus):
             logger.log_event(
                 {
                     "event_type": self.name,
-                    "response_button": response_key,
+                    "response_button": response_button,
                     "response_time": rt,
                     "action": response_key,
                 },

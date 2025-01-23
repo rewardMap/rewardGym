@@ -74,7 +74,7 @@ class ActionStimulusTooEarly(ActionStimulus):
         self.text_stim = TextStim(win=win, **self.text_tooearly)
 
     def display(
-        self, win: Window, logger: ExperimentLogger, **kwargs
+        self, win: Window, logger: ExperimentLogger, info: Dict, **kwargs
     ) -> Union[int, str]:
         """
         Calls the stimulus object. In this case waiting for a specific response,
@@ -115,7 +115,9 @@ class ActionStimulusTooEarly(ActionStimulus):
         # clearing buffer
         logger.key_strokes(win)
 
-        response = self._response_handling(win, logger, response_window_onset)
+        response = self._response_handling(
+            win, logger, response_window_onset, info=info
+        )
 
         if response is not None:
             response_key, remaining = response
@@ -285,7 +287,7 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
                     )
                 )
 
-    def display(self, win, logger, **kwargs):
+    def display(self, win, logger, info, **kwargs):
         if self.seed.random() < self.flip_probability:
             flip = True
             flip_key_dict = {key: 1 - value for key, value in self.key_dict.items()}
@@ -308,7 +310,7 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
         response_window_onset = logger.get_time()
 
         response = self._response_handling(
-            win, logger, response_window_onset, key_dict=flip_key_dict
+            win, logger, response_window_onset, key_dict=flip_key_dict, info=info
         )
 
         if response is not None:
@@ -329,6 +331,7 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
         logger=SimulationLogger,
         key: str = None,
         rt: float = None,
+        info: Dict = None,
         **kwargs,
     ):
         stim_onset = logger.get_time()
@@ -342,7 +345,7 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
 
         response_window_onset = logger.get_time()
         response_key, remaining = self._simulate_response(
-            logger, key, rt, response_window_onset=response_window_onset
+            logger, key, rt, response_window_onset=response_window_onset, info=info
         )
 
         stim_onset = logger.get_time()
@@ -541,7 +544,7 @@ class StimuliWithResponse(ActionStimulus):
                     )
                 )
 
-    def display(self, win, logger, **kwargs):
+    def display(self, win, logger, info, **kwargs):
         logger.key_strokes(win)
 
         response_window_onset = logger.get_time()
@@ -553,7 +556,7 @@ class StimuliWithResponse(ActionStimulus):
         win.flip()
 
         response = self._response_handling(
-            win, logger, response_window_onset, key_dict=self.key_dict
+            win, logger, response_window_onset, key_dict=self.key_dict, info=info
         )
 
         return response
@@ -564,6 +567,7 @@ class StimuliWithResponse(ActionStimulus):
         logger=SimulationLogger,
         key: str = None,
         rt: float = None,
+        info: Dict = None,
         **kwargs,
     ):
         stim_onset = logger.get_time()
@@ -576,7 +580,11 @@ class StimuliWithResponse(ActionStimulus):
         )
 
         response = self._simulate_response(
-            logger, key, rt, response_window_onset=stim_onset
+            logger,
+            key,
+            rt,
+            response_window_onset=stim_onset,
+            info=info,
         )
 
         return response
