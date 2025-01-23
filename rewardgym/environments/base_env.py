@@ -179,8 +179,7 @@ class BaseEnv(Env):
             )
             self.condition = {
                 self.agent_location: {
-                    n: self.full_graph[self.agent_location][i]
-                    for n, i in enumerate(locs)
+                    i: self.full_graph[self.agent_location][i] for i in locs
                 }
             }
         else:
