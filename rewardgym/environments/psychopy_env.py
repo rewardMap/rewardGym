@@ -122,9 +122,7 @@ class PsychopyEnv(BaseEnv):
             Additional information, that should be associated with a node, by default defaultdict(int)
         """
         self.previous_action = self.action
-        self.previous_remap_action = self.remap_action
         self.action = None
-        self.remap_action = None
         out = None
 
         self.logger.update_trial_info(
@@ -149,7 +147,7 @@ class PsychopyEnv(BaseEnv):
                     info=info,
                 )
 
-                self._check_output(out, info)
+                self._check_output(out, info, remap=True)
 
         elif self.render_mode == "psychopy-simulate" and "psychopy" in info.keys():
             if not self.sim_setup:
@@ -182,9 +180,6 @@ class PsychopyEnv(BaseEnv):
             )
 
     def simulate_action(self, info, action, reaction_time):
-        if "unmap-actions" in info.keys() and action in info["unmap-actions"].keys():
-            action = info["unmap-actions"][action]
-
         out = info["psychopy"][-1].simulate(
             win=self.window,
             logger=self.logger,
@@ -199,16 +194,15 @@ class PsychopyEnv(BaseEnv):
 
         self._check_output(out, info)
 
-    def _check_output(self, out, info):
+    def _check_output(self, out, info, remap=False):
         if out is not None:
-            self.action = out[0]
-            if (
-                "remap-actions" in info.keys()
-                and self.action in info["remap-actions"].keys()
-            ):
-                self.remap_action = info["remap-actions"][self.action]
+            if remap:
+                tmp_action = info["avail-actions"][out[0]]
             else:
-                self.remap_action = self.action
+                tmp_action = out[0]
+
+            if tmp_action in info["avail-actions"]:
+                self.action = tmp_action
 
             if out[1] is not None:
                 self.remainder = self.remainder + out[1]
