@@ -22,9 +22,7 @@ been greatly inspired by `neuro-nav <https://github.com/awjuliani/neuro-nav>`_ [
 Many thanks also to `physiopy <https://github.com/physiopy>`_, from where I took many of the workflows and
 automatization around the repository (such as workflows and PR labels)!
 
-.. raw:: html
-  :file: docs/images/rewardGym_structure.svg
-  :alt: Overview of the rewardGym framework. At the core is the task specification using a graph structure. Using this structure, the user can do classical reinforcement learning experiments (left side) using the BaseEnv class (see also code 1). By augmenting the basic graph with stimulus information, the PsychopyEnv can be used to collect data from human participants, but also to use artificial agents to simulate data. This can be done using the convenience function run_task, which will also store simulated and real data in BIDS format.
+.. image:: docs/images/rewardGym_structure.svg
 
 Installation
 -------------------------------------------------------------------------------
