@@ -19,7 +19,11 @@ The project's goal is to provide two things:
 Under the hood this module uses the `gymnasium <https://github.com/Farama-Foundation/Gymnasium>`_ [cit1]_. The general package has
 been greatly inspired by `neuro-nav <https://github.com/awjuliani/neuro-nav>`_ [cit2]_, especially the use of a graph structure to represent the tasks.
 
-Many thanks also to `physiopy <https://github.com/physiopy>`_, from where I took many of the workflows and automizaton around the repository (such as workflows and PR labels)!
+Many thanks also to `physiopy <https://github.com/physiopy>`_, from where I took many of the workflows and
+automatization around the repository (such as workflows and PR labels)!
+
+.. raw:: html
+  <img src="docs/images/rewardGym_structure.svg" alt="Overview of the rewardGym framework. At the core is the task specification using a graph structure. Using this structure, the user can do classical reinforcement learning experiments (left side) using the BaseEnv class (see also code 1). By augmenting the basic graph with stimulus information, the PsychopyEnv can be used to collect data from human participants, but also to use artificial agents to simulate data. This can be done using the convenience function run_task, which will also store simulated and real data in BIDS format."/>
 
 Installation
 -------------------------------------------------------------------------------
@@ -40,33 +44,7 @@ Alternatively, download / clone the repository and install from there::
 Usage
 -------------------------------------------------------------------------------
 
-The package should be importable as usually.
-
-
-Play a task
-********************************************************************************
-
-To play one of the tasks using a simplified pygame implementation, you can e.g.
-run::
-
-    rg_play hcp --window 700 --n 5
-
-To play the gambling task from the human connectome project, in a window of 700 x 700 pixels for 5 trials.
-
-The available tasks are:
-
-hcp
-    Gambling task from the human connectome project. Response buttons are: left + right.
-mid
-    Monetary incentive delay task. Response button is: space
-two-step
-    The classic two-step task. Response buttons are: left + right
-risk-sensitive
-    Risk sensitive decision making task, contains both decision tasks between to outcome and singular event. Response buttons are: Left + right
-posner
-    Posner task. Response buttons are left + right.
-gonogo
-    Go / No-Go task, different stimuli indicate go to win, go to punish etc. Response button is: space.
+The package should be importable as usually. See the `documentation <https://rewardmap.github.io/rewardGym/>`_ for further information.
 
 
 Use PsychoPy for data collection
@@ -74,9 +52,9 @@ Use PsychoPy for data collection
 
 There might be cases, where you want to use this package purely for data collection.
 
-In the current release, basic logging is supported.
+The current release, basic logging is supported.
 
-This is also possible using `PsychoPy <https://psychopy.org/>`_ Standalone [cit3]_ (only tested version v2023.2.3).
+This is also possible using `PsychoPy <https://psychopy.org/>`_ Standalone [cit3]_ (only tested version v2023.2.3, early v2024 versions were incompatible due to the GUI structure).
 
 For this clone or download the repository.
 
@@ -86,10 +64,7 @@ E.g.::
 
 **IMPORTANT:**
 
-In it's current form, the stimuli files are not shipped with the package, please ask SRSteinkamp to get the files.
-
-
-Afterwards, you can use the PsychoPy coder to run ``rewardGym.py``, which is located in the root directory.
+Afterwards, you can use the PsychoPy coder to run ``rewardgym_psychopy.py``, which is located in the root directory.
 
 Outputs of this program will be saved by default in the ``data`` directory.
 
@@ -126,6 +101,50 @@ Running a task could look like the following
             agent.update(obs, action, reward, terminated, next_obs)
             done = terminated or truncated
             obs = next_obs
+
+
+Contributing
+********************************************************************************
+
+First off, thanks for taking the time to contribute! ❤️
+
+All types of contributions are encouraged and valued! Unfortunately, there is
+no detailed contribution guide - but it is planned!
+
+If you have a question and do not find any answers in the `Documentation <https://rewardmap.github.io/rewardGym/>`_
+or the documentation is unclear, please do not hesitate to open an `Issue <https://github.com/rewardMap/rewardGym/issues/new>`_.
+
+The same goes for any kind of bug report.
+
+Before you make an enhancement, please open an issue first, where we will discuss if this is in the scope of the toolbox.
+
+Finally, if you want to add a new task, also open an issue, and we will help you with implementing it in the toolbox.
+
+
+Play a task (currently out of order)
+********************************************************************************
+
+To play one of the tasks using a simplified pygame implementation, you can e.g.
+run::
+
+    rg_play hcp --window 700 --n 5
+
+To play the gambling task from the human connectome project, in a window of 700 x 700 pixels for 5 trials.
+
+The available tasks are:
+
+hcp
+    Gambling task from the human connectome project. Response buttons are: left + right.
+mid
+    Monetary incentive delay task. Response button is: space
+two-step
+    The classic two-step task. Response buttons are: left + right
+risk-sensitive
+    Risk sensitive decision making task, contains both decision tasks between to outcome and singular event. Response buttons are: Left + right
+posner
+    Posner task. Response buttons are left + right.
+gonogo
+    Go / No-Go task, different stimuli indicate go to win, go to punish etc. Response button is: space.
 
 
 References
