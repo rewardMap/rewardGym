@@ -23,7 +23,8 @@ Many thanks also to `physiopy <https://github.com/physiopy>`_, from where I took
 automatization around the repository (such as workflows and PR labels)!
 
 .. raw:: html
-  <img src="docs/images/rewardGym_structure.svg" alt="Overview of the rewardGym framework. At the core is the task specification using a graph structure. Using this structure, the user can do classical reinforcement learning experiments (left side) using the BaseEnv class (see also code 1). By augmenting the basic graph with stimulus information, the PsychopyEnv can be used to collect data from human participants, but also to use artificial agents to simulate data. This can be done using the convenience function run_task, which will also store simulated and real data in BIDS format."/>
+  :file: docs/images/rewardGym_structure.svg
+  :alt: Overview of the rewardGym framework. At the core is the task specification using a graph structure. Using this structure, the user can do classical reinforcement learning experiments (left side) using the BaseEnv class (see also code 1). By augmenting the basic graph with stimulus information, the PsychopyEnv can be used to collect data from human participants, but also to use artificial agents to simulate data. This can be done using the convenience function run_task, which will also store simulated and real data in BIDS format.
 
 Installation
 -------------------------------------------------------------------------------
@@ -119,6 +120,7 @@ The same goes for any kind of bug report.
 Before you make an enhancement, please open an issue first, where we will discuss if this is in the scope of the toolbox.
 
 Finally, if you want to add a new task, also open an issue, and we will help you with implementing it in the toolbox.
+
 
 
 Play a task (currently out of order)
