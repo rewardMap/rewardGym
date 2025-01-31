@@ -296,6 +296,9 @@ def get_stripped_graph(graph: Dict):
     {'A': ['B', 'C'], 'B': ['D', 'E', 'F', 'G'], 'C': ['H', 'I']}
     """
 
+    def is_flattened(lst):
+        return all(not isinstance(i, (list, tuple)) for i in lst)
+
     stripped_graph = {}
     for nd, edg in graph.items():
         if isinstance(edg, tuple):
@@ -306,7 +309,10 @@ def get_stripped_graph(graph: Dict):
                 for k in edg.keys()
                 if not isinstance(k, str)
             ]
-            edges = list(itertools.chain.from_iterable(edges))  # flatten list
+
+            if not is_flattened(edges):
+                edges = list(itertools.chain.from_iterable(edges))  # flatten list
+
         else:
             edges = edg
 
