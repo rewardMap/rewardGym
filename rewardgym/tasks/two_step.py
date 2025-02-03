@@ -84,7 +84,7 @@ def generate_two_step_configs(stimulus_set: str = "1"):
     configs = {
         "name": "two-step",
         "set": stimulus_set,
-        "iti": [1.0] * 160,
+        "iti": [0.0] * 160,
         "isi": None,
         "condition": [None] * 160,
         "condition_dict": condition_dict,

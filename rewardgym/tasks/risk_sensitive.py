@@ -295,7 +295,8 @@ def generate_risk_sensitive_configs(stimulus_set: str = "1"):
             ),
         ]
 
-        iti_template = [1.5, 2.125, 2.75, 3.375, 4.0] * 12 + [1.5, 2.75, 4.0]
+        # iti_template = [1.5, 2.125, 2.75, 3.375, 4.0] * 12 + [1.5, 2.75, 4.0]
+        iti_template = [0.5, 0.75, 1.0, 1.25, 1.5] * 12 + [1.0, 2.0, 3.0]
 
         condition_template = (
             forced_choices + risky_equal_ev + risky_non_equal_ev + test_trials
