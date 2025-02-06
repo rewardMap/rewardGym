@@ -2,6 +2,7 @@ from collections import defaultdict
 
 from ..reward_classes import DriftingReward
 from ..utils import check_seed
+from .utils import check_conditions_not_following
 
 
 def get_two_step(render_backend=None, seed=111, key_dict=None, **kwargs):
@@ -81,18 +82,45 @@ def generate_two_step_configs(stimulus_set: str = "1"):
         "unexpected-transition": {0: {0: 2, 1: 1}},
         None: None,
     }
+    seed = check_seed(int(stimulus_set))
+
+    # Actually create pseudo-random transitions:
+    transition_list = ["expected-transition"] * 7 + ["unexpected-transition"] * 3
+    iti_jitter = [0.1, 0.15, 0.2, 0.25, 0.05, 0.3] * 2
+
+    conditions = []
+    itis = []
+
+    for _ in range(17):
+        reject = True
+        itis.extend(
+            seed.choice(a=iti_jitter, size=len(iti_jitter), replace=False).tolist()
+        )
+
+        while reject:
+            condition_proposal = seed.choice(
+                a=transition_list, size=len(transition_list), replace=False
+            ).tolist()
+            check = check_conditions_not_following(
+                condition_proposal, ["unexpected-transition"], 1
+            )
+
+            if check:
+                reject = False
+                conditions.extend(condition_proposal)
+
     configs = {
         "name": "two-step",
         "set": stimulus_set,
-        "iti": [0.0] * 160,
+        "iti": itis,
         "isi": None,
-        "condition": [None] * 160,
+        "condition": conditions,
         "condition_dict": condition_dict,
-        "ntrials": 160,
+        "ntrials": len(conditions),
         "update": ["iti"],
         "add_remainder": True,
-        "breakpoints": [79],
-        "break_duration": 15,
+        "breakpoints": [int(len(conditions) // 2 - 1)],
+        "break_duration": 45,
     }
 
     return configs
