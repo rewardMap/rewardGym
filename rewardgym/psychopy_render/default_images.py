@@ -427,11 +427,11 @@ def posner_target(target=True):
     pattern = Image.new("RGBA", (151, 151), (0, 0, 0, 0))
     draw = ImageDraw.Draw(pattern)
 
-    draw_shape(draw, "diamond", [0, 0, 150, 150], color=(40, 40, 40), padding=0)
+    draw_shape(draw, "diamond", [0, 0, 150, 150], color=(0, 0, 0), padding=0)
 
     if target:
         draw_shape(
-            draw, "neg-hbar_85_100", [0, 0, 150, 150], color=(40, 40, 40), padding=0
+            draw, "neg-hbar_85_100", [0, 0, 150, 150], color=(0, 0, 0), padding=0
         )
 
     return np.array(pattern)[::-1, :] / 255
