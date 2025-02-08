@@ -167,7 +167,9 @@ def run_task(
                     done = draw_response_reminder(win, response_reminder, logger)
 
             elif not (done and env.previous_action is None):
-                agent.update(obs, env.previous_action, reward, terminated, next_obs)
+                agent.update(
+                    obs, env.previous_action, reward, terminated, next_obs, info
+                )
                 obs = next_obs
 
         # TODO: Also a different function?

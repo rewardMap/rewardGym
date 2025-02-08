@@ -162,6 +162,7 @@ class ValenceHybridAgent(ValenceQAgent):
         reward: float,
         terminated: bool,
         next_obs: Tuple[int, int, bool],
+        **kwargs,
     ):
         """
         Updates the Q-values for both model-based and model-free learning and updates
