@@ -168,7 +168,7 @@ def run_task(
 
             elif not (done and env.previous_action is None):
                 agent.update(
-                    obs, env.previous_action, reward, terminated, next_obs, info
+                    obs, env.previous_action, reward, terminated, next_obs, info=info
                 )
                 obs = next_obs
 
