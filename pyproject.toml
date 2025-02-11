@@ -3,7 +3,7 @@ requires = ["setuptools >= 30.0.3", "versioneer == 0.29"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
-include = ["rewardgym"]
+include = ["rewardgym*"]
 
 [project]
 name = "rewardgym"

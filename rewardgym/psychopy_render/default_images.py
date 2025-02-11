@@ -400,7 +400,7 @@ def posner_cue(
     border_width=10,
     circle_radius_outer=20,
     circle_radius_inner=15,
-    outer_border=10,
+    outer_border=20,
     left=True,
 ):
     pattern = gonogo_probe(

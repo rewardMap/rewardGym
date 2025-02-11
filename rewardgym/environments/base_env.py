@@ -30,6 +30,7 @@ class BaseEnv(Env):
         seed: Union[int, np.random.Generator] = 1000,
         name: str = None,
         n_actions: int = None,
+        reduced_actions: int = None,
     ):
         """
         The core environment used for modeling and in part for displays.
@@ -62,6 +63,11 @@ class BaseEnv(Env):
             environment_graph
         )  # Assuming nodes are states (different from neuro-nav)
         self.action_space = Discrete(self.n_actions)
+        if reduced_actions is None:
+            self.reduced_actions = self.n_actions
+        else:
+            self.reduced_actions = reduced_actions
+
         self.observation_space = Discrete(self.n_states)
 
         self.rng = check_seed(seed)
@@ -120,28 +126,13 @@ class BaseEnv(Env):
         if self.condition is None:
             avail_actions = list(self.full_graph[self.agent_location].keys())
         elif self.agent_location in self.condition.keys():
-            c2s = {v: k for k, v in self.condition[self.agent_location].items()}
-            g2s = dict()
-            # TODO optimize and explain
-            # Iterate over each neighbor of the agent's current location in the graph
-            for n, (k, v) in enumerate(self.full_graph[self.agent_location].items()):
-                # If the value is a tuple, extract its first element; otherwise, use the value as-is
-                for v in v[0] if isinstance(v, tuple) else [v]:
-                    # Assign a unique ID to this neighbor based on its key in the graph
-                    g2s[v] = k
-                    # If we've processed more than one item, break out of the loop (since there should only be one neighbor)
-                    if n > 0:
-                        break
-
-            c2g = {c2s[k]: g2s[k] for k in c2s.keys() if k in g2s.keys()}
-            g2c = {v: k for k, v in c2g.items()}
-            node_info_dict["remap-actions"] = c2g
-            node_info_dict["unmap-actions"] = g2c
-            avail_actions = list(c2g.values())
+            avail_actions = list(self.condition[self.agent_location].keys())
         else:
             avail_actions = list(self.full_graph[self.agent_location].keys())
 
-        node_info_dict["avail-actions"] = avail_actions
+        node_info_dict["avail-actions"] = [i for i in avail_actions if i is not None]
+        node_info_dict["behav_remap"] = avail_actions
+
         node_info_dict["obs"] = self.agent_location
 
         return node_info_dict
@@ -173,14 +164,13 @@ class BaseEnv(Env):
 
         if condition is not None:
             self.condition = condition
-        elif self.n_actions < len(self.full_graph[self.agent_location]):
+        elif self.reduced_actions < len(self.full_graph[self.agent_location]):
             locs = self.rng.choice(
                 list(self.full_graph[self.agent_location].keys()), size=self.n_actions
             )
             self.condition = {
                 self.agent_location: {
-                    n: self.full_graph[self.agent_location][i]
-                    for n, i in enumerate(locs)
+                    i: self.full_graph[self.agent_location][i] for i in locs
                 }
             }
         else:

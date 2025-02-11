@@ -25,8 +25,12 @@ def risksensitive_stimuli(random_state, stim_defaults=STIMULUS_DEFAULTS):
             shapes=stim_defaults["shapes"],
         )
         stim_properties.append(st_p)
+        # Filtering colors used, but keeping background color (which is at -1,
+        # not an ideal solution).
         stim_defaults["colors"] = [
-            i for i in stim_defaults["colors"] if i not in st_p["colors"]
+            i
+            for i in stim_defaults["colors"]
+            if (i not in st_p["colors"] or i == stim_defaults["colors"][-1])
         ]
         stim_defaults["shapes"] = [
             i for i in stim_defaults["shapes"] if i != st_p["shapes"]

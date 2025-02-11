@@ -123,6 +123,7 @@ class ValenceQAgent:
         reward: float,
         terminated: bool,
         next_obs: Tuple[int, int, bool],
+        **kwargs,
     ):
         """
         Updates the Q-value for a given action taken in a particular state using a
@@ -297,6 +298,7 @@ class ValenceQAgent_eligibility(ValenceQAgent):
         reward: float,
         terminated: bool,
         next_obs: Tuple[int, int, bool],
+        **kwargs,
     ):
         """Updates the Q-value of an action."""
         future_q_value = (not terminated) * np.max(self.q_values[next_obs])

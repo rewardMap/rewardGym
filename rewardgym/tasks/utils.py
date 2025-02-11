@@ -67,6 +67,7 @@ def get_env(
             info_dict=info_dict,
             seed=seed,
             name=task_name,
+            reduced_actions=2 if task_name == "risk-sensitive" else None,
         )
     elif render_backend == "pygame":
         env = RenderEnv(
@@ -84,7 +85,7 @@ def get_env(
             info_dict=info_dict,
             seed=seed,
             name=task_name,
-            n_actions=2 if task_name == "risk-sensitive" else None,
+            reduced_actions=2 if task_name == "risk-sensitive" else None,
         )
 
     return env

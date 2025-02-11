@@ -189,37 +189,37 @@ def generate_risk_sensitive_configs(stimulus_set: str = "1"):
 
     condition_dict = {
         # fixed choice:
-        "null_none": {0: {1: 1}},
-        "none_null": {0: {1: 1}},
-        "save-20_none": {0: {0: 2}},
-        "none_save-20": {0: {1: 2}},
-        "save-40_none": {0: {0: 3}},
-        "none_save-40": {0: {1: 3}},
-        "risky-40_none": {0: {0: 4}},
-        "none_risky-40": {0: {1: 4}},
-        "risky-80_none": {0: {0: 5}},
-        "none_risky-80": {0: {1: 5}},
+        "null_none": {0: {0: 1, None: None}},
+        "none_null": {0: {None: None, 0: 1}},
+        "save-20_none": {0: {1: 2, None: None}},
+        "none_save-20": {0: {None: None, 1: 2}},
+        "save-40_none": {0: {2: 3, None: None}},
+        "none_save-40": {0: {None: None, 2: 3}},
+        "risky-40_none": {0: {3: 4, None: None}},
+        "none_risky-40": {0: {None: None, 3: 4}},
+        "risky-80_none": {0: {4: 5, None: None}},
+        "none_risky-80": {0: {None: None, 4: 5}},
         # equal ev:
-        "save-20_risky-40": {0: {0: 2, 1: 4}},
-        "risky-40_save-20": {0: {0: 4, 1: 2}},
-        "save-40_risky-80": {0: {0: 3, 1: 5}},
-        "risky-80_save-40": {0: {0: 5, 1: 3}},
+        "save-20_risky-40": {0: {1: 2, 3: 4}},
+        "risky-40_save-20": {0: {3: 4, 1: 2}},
+        "save-40_risky-80": {0: {2: 3, 4: 5}},
+        "risky-80_save-40": {0: {4: 5, 2: 3}},
         # non equal ev:
-        "save-20_risky-80": {0: {0: 2, 1: 5}},
-        "risky-80_save-20": {0: {0: 5, 1: 2}},
+        "save-20_risky-80": {0: {1: 2, 4: 5}},
+        "risky-80_save-20": {0: {4: 5, 1: 2}},
         # Test trials:
-        "save-40_risky-40": {0: {0: 3, 1: 4}},
-        "risky-40_save-40": {0: {0: 3, 1: 4}},
+        "save-40_risky-40": {0: {2: 3, 3: 4}},
+        "risky-40_save-40": {0: {2: 3, 3: 4}},
         "null_save-20": {0: {0: 1, 1: 2}},
-        "save-20_null": {0: {0: 2, 1: 1}},
-        "null_save-40": {0: {0: 1, 1: 3}},
-        "save-40_null": {0: {0: 3, 1: 1}},
-        "null_risky-40": {0: {0: 1, 1: 4}},
-        "risky-40_null": {0: {0: 4, 1: 1}},
-        "null_risky-80": {0: {0: 1, 1: 5}},
-        "risky-80_null": {0: {0: 5, 1: 1}},
-        "save-20_save-40": {0: {0: 2, 1: 3}},
-        "save-40_save-20": {0: {0: 3, 1: 2}},
+        "save-20_null": {0: {1: 2, 0: 1}},
+        "null_save-40": {0: {0: 1, 2: 3}},
+        "save-40_null": {0: {2: 3, 0: 1}},
+        "null_risky-40": {0: {0: 1, 3: 4}},
+        "risky-40_null": {0: {3: 4, 0: 1}},
+        "null_risky-80": {0: {0: 1, 4: 5}},
+        "risky-80_null": {0: {4: 5, 0: 1}},
+        "save-20_save-40": {0: {1: 2, 2: 3}},
+        "save-40_save-20": {0: {2: 3, 1: 2}},
     }
 
     for b in range(blocks):
@@ -295,7 +295,8 @@ def generate_risk_sensitive_configs(stimulus_set: str = "1"):
             ),
         ]
 
-        iti_template = [1.5, 2.125, 2.75, 3.375, 4.0] * 12 + [1.5, 2.75, 4.0]
+        # iti_template = [1.5, 2.125, 2.75, 3.375, 4.0] * 12 + [1.5, 2.75, 4.0]
+        iti_template = [0.5, 0.75, 1.0, 1.25, 1.5] * 12 + [0.5, 1.0, 1.5]
 
         condition_template = (
             forced_choices + risky_equal_ev + risky_non_equal_ev + test_trials

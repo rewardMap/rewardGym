@@ -72,7 +72,7 @@ def get_info_dict(seed=None, key_dict={"left": 0, "right": 1}, **kwargs):
             "psychopy": second_step(
                 posner_target(target=True),
                 posner_target(target=False),
-                image_shift=500,
+                image_shift=550,
                 to=None,
             )
         },
@@ -80,7 +80,7 @@ def get_info_dict(seed=None, key_dict={"left": 0, "right": 1}, **kwargs):
             "psychopy": second_step(
                 posner_target(target=False),
                 posner_target(target=True),
-                image_shift=500,
+                image_shift=550,
                 to=None,
             )
         },

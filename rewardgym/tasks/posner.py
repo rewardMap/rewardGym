@@ -112,7 +112,7 @@ def generate_posner_configs(stimulus_set: str = "1"):
         + ["cue-right-target-left"] * 2
     )
 
-    iti_template = [1, 1.5, 2, 2.5] * 5
+    iti_template = [0.5, 0.75, 1.0, 1.25] * 5
     isi_template = [0.4, 0.6] * 10
 
     n_blocks_condition = 8
