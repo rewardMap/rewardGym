@@ -50,7 +50,7 @@ def run_single_episode(
         )
 
         if update_agent:
-            agent.update(obs, action, reward, terminated, next_obs)
+            agent.update(obs, action, reward, terminated, next_obs, info=info)
 
         done = terminated or truncated
         obs = next_obs
