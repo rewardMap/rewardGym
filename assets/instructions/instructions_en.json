@@ -42,7 +42,7 @@
     },
     "mid": {
         "0.0": "In this game you will see one of five images",
-        "0.1": "In the middle of the image is how many points are at stake.\n You will see the image first, then you will see the diamond shape.\nAfter this you will se a black shape.\nWhen you see the black shape, you will need to press LEFT as fast as you can to win points or to avoid losing the points indicated by the image. ",
+        "0.1": "In the middle of the image is how many points are at stake.\nYou will see the image first, then you will see the diamond shape.\nAfter this you will se a black shape.\nWhen you see the black shape, you will need to press LEFT as fast as you can to win points or to avoid losing the points indicated by the image.",
         "1.0": "So for example if you saw this image:",
         "1.1": "then if you respond (press LEFT) to the black shape in time, you will receive 5 points.\n\nWhereas, if you see this image:",
         "1.2": "then if you respond (press LEFT) to the black shape in time, you will avoid losing 5 points.",
