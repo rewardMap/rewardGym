@@ -109,7 +109,7 @@ def generate_gonogo_configs(stimulus_set: str = "1"):
     }
 
     condition_template = ["go-win", "go-punish", "nogo-win", "nogo-punish"] * 15  # 80 %
-    iti_template = [0.25, 0.5, 0.75, 1.0] * 15
+    iti_template = [0.5, 0.75, 1.0, 1.25] * 15
     isi_template = [0.25, 0.75, 1.125, 1.75, 2.0] * 12  # 5 * 12 = 60
 
     n_blocks = 3
