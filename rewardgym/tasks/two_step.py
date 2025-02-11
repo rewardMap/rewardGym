@@ -85,13 +85,13 @@ def generate_two_step_configs(stimulus_set: str = "1"):
     seed = check_seed(int(stimulus_set))
 
     # Actually create pseudo-random transitions:
-    transition_list = ["expected-transition"] * 7 + ["unexpected-transition"] * 3
-    iti_jitter = [0.1, 0.15, 0.2, 0.25, 0.05, 0.3] * 2
+    transition_list = ["expected-transition"] * 14 + ["unexpected-transition"] * 6
+    iti_jitter = [0.1, 0.15, 0.2, 0.25, 0.3] * 4
 
     conditions = []
     itis = []
 
-    for _ in range(17):
+    for _ in range(9):
         reject = True
         itis.extend(
             seed.choice(a=iti_jitter, size=len(iti_jitter), replace=False).tolist()
