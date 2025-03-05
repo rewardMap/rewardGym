@@ -112,10 +112,42 @@ def generate_posner_configs(stimulus_set: str = "1"):
         + ["cue-right-target-left"] * 2
     )
 
-    iti_template = [0.5, 0.75, 1.0, 1.25] * 5
-    isi_template = [0.4, 0.6] * 10
+    condition_template_90_10 = (
+        ["cue-left-target-left"] * 9
+        + ["cue-left-target-right"] * 1
+        + ["cue-right-target-right"] * 9
+        + ["cue-right-target-left"] * 1
+    )
 
-    n_blocks_condition = 8
+    condition_template_70_30 = (
+        ["cue-left-target-left"] * 7
+        + ["cue-left-target-right"] * 3
+        + ["cue-right-target-right"] * 7
+        + ["cue-right-target-left"] * 3
+    )
+
+    condition_template_60_40 = (
+        ["cue-left-target-left"] * 6
+        + ["cue-left-target-right"] * 4
+        + ["cue-right-target-right"] * 6
+        + ["cue-right-target-left"] * 4
+    )
+
+    iti_template = [0.5, 0.75, 1.0, 1.25] * 10
+    isi_template = [0.4, 0.6] * 20
+
+    n_blocks_condition = 4
+
+    condition_template_sets = seed.choice(
+        [
+            condition_template_60_40 * 2,
+            condition_template_70_30 * 2,
+            condition_template_80_20 * 2,
+            condition_template_90_10 * 2,
+        ],
+        size=n_blocks_condition,
+        replace=False,
+    )
 
     dont_follow = ["cue-left-target-right", "cue-right-target-left"]
 
@@ -126,10 +158,10 @@ def generate_posner_configs(stimulus_set: str = "1"):
 
         while reject:
             condition_template = seed.choice(
-                a=condition_template_80_20, size=20, replace=False
+                a=condition_template_sets[cn], size=40, replace=False
             ).tolist()
 
-            check = check_conditions_not_following(condition_template, dont_follow, 2)
+            check = check_conditions_not_following(condition_template, dont_follow, 1)
 
             if check and (
                 len(conditions) == 0 or conditions[-1] != condition_template[0]
