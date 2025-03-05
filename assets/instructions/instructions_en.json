@@ -14,15 +14,15 @@
         "2.0": "Remember:\nPress LEFT to guess the number is LESS less than five.\nPress RIGHT to guess the number is GREATER than five."
     },
     "gonogo": {
-        "0.0": "In this game, you have to figure out whether it's better to press LEFT or NOT.\n\nThere are four situations:\n1. It is better to press LEFT to win points.\n2. It is better to press LEFT to avoid losing points.\n3. It is better to NOT press to win points.\n4. It is better to NOT press to avoid losing points.\n\n",
-        "0.1": "Each situation is signaled by one of four images.\nYou have to learn from experience which image signals which situation.",
+        "0.0": "In this game, you have to figure out whether it's better to press LEFT or NOT.\n\nThere are four situations.\n1. It is usually better to press LEFT to win points.\n2. It is usually better to press LEFT to avoid losing points.\n3. It is usually better to NOT press to win points.\n4. It is usually better to NOT press to avoid losing points.\n\n",
+        "0.1": "Each situation is signaled by one of four images. You have to learn from experience which image signals which situation. The outcomes are probabilistic, this means in situation 1 pressing LEFT might sometimes not earn you points and you will sometimes earn points if you do NOT press. You will need to observe patterns over time to make the best possible decisions.",
         "1.0": "On each trial, you will see an image like this that signals the situation:",
         "2.0": "Then a diamond shape appears in the middle of the screen.",
         "3.0": "When the outside turns white you need to decide, whether to press LEFT or NOT?",
         "4.1": "If you win points, you will see green.",
         "4.2": "If you lose points you will see red.",
         "4.3": "If your points don't change, you will see yellow.",
-        "5.0": "Remember:\nWhen the outside of the diamond turns white you need to decide, whether to press LEFT or NOT?"
+        "5.0": "Remember:\nWhen the outside of the diamond turns white you need to decide, whether to press LEFT or NOT?\n\nThe outcomes are probabilistic, but over time, the right strategy will earn you more points."
     },
     "two-step":{
         "0.0": "In this task there are four images.\nEach image can win you 1 point, but each image has a different probability of winning.\nYour goal is to figure out, based on your experience, which image is mostly likely to give you a point.\n\nFor example, the images might have the following probabilities to win a point:",
@@ -52,11 +52,11 @@
     },
     "posner": {
         "0.0": "In this game, you must respond to a target stimulus that briefly appears on either the left or the right side of the diamond shape.\nTo gain points, you must indicate the side on which the target appeared by pressing LEFT or RIGHT.",
-        "1.0": "Before the target appears, an arrow will appear on either the left or the right side of the diamond.\nThe arrow can help you predict, the side where the target will appear next.\nThis game can be difficult, so pay attention to the arrow.",
+        "1.0": "Before the target appears, an arrow will appear on either the left or the right side of the diamond.\nThe arrow can help you predict, the side where the target will likely appear next.\nThis game can be difficult, so pay attention to the arrow.",
         "2.0": "The target is a diamond with a missing corner. After the arrow disappears, the target will appear, on either left or right.",
-        "2.1": "Another  shape will appear on the opposite side of the target.",
+        "2.1": "Another shape will appear on the opposite side of the target.",
         "2.2": "Press LEFT if the target was on the left.\nPress RIGHT if the target was on the right.",
-        "3.0": "Please try to focus on the diamond shape for the entire game.\nDo not move your eyes to the target.",
+        "3.0": "Please try to focus on the diamond shape for the entire game.\nTry to only move your attention and not your eyes to the target.",
         "4.0": "Remember:\nPress LEFT to indicate that the target appeared on the left.\nPress RIGHT to indicate that the target appeared on the right.\n\nPlease respond as quickly and accurately as possible!"
     },
     "risk-sensitive":
