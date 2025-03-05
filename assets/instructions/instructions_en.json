@@ -25,20 +25,20 @@
         "5.0": "Remember:\nWhen the outside of the diamond turns white you need to decide, whether to press LEFT or NOT?\n\nThe outcomes are probabilistic, but over time, the right strategy will earn you more points."
     },
     "two-step":{
-        "0.0": "In this task there are four images.\nEach image can win you 1 point, but each image has a different probability of winning.\nYour goal is to figure out, based on your experience, which image is mostly likely to give you a point.\n\nFor example, the images might have the following probabilities to win a point:",
+        "0.0": "In this task there are four aliens.\nEach alien might give you 1 point, but each alien does so with a different probability.\nYour goal is to figure out, based on your experience, which alien is most likely to give you a point.\n\nFor example, the aliens might have the following probabilities of giving you a point:",
         "0.1": "50 %",
         "0.2": "60 %",
         "0.3": "70 %",
         "0.4": "35 %",
-        "1.0": "You will get to choose between either these two images:",
-        "1.1": "Or these two images:",
-        "1.2": "Your choice should be based on what you've learned about each image's probability of winning a point\nThe probabilities change slowly over time, so stay observant and adjust your choices accordingly.",
-        "2.0": "Before choosing between images, you'll first choose between two doors.\nEach door leads to a different pair of images.\nDoor 1 gives you a higher chance of seeing this pair:",
-        "2.1": "Door 2 gives you a higher chance of seeing this pair.",
-        "2.2": "In the real experiment, the doors and images will of course look differently.",
-        "3.0": "To summarize, the structure of the game looks as follow:",
-        "3.1": "First you pick a door: This determines which pair of images you will mostly likely see next.\n\nThen you choose which image you believe is most likely to win a point.",
-        "4.0": "Remember:\nPress LEFT to select the door or image on the left.\nPress RIGHT to select the door or image on the right."
+        "1.0": "You will get to choose between either these two aliens:",
+        "1.1": "Or these two aliens:",
+        "1.2": "Your choice should be based on what you've learned about each alien's probability of giving you a point.\nThe probabilities change slowly over time, so stay observant and adjust your choices accordingly.",
+        "2.0": "Before choosing between aliens, you'll first choose between two spaceships.\nEach spaceship leads to a different pair of aliens.\nSpaceship 1 gives you a higher chance of seeing this pair of aliens:",
+        "2.1": "Spaceship 2 gives you a higher chance of seeing this pair:",
+        "2.2": "In the real experiment, the spaceships and aliens will look differently.",
+        "3.0": "To summarize, the structure of the game looks as follows:",
+        "3.1": "First, you pick a spaceship: This spaceship determines which pair of aliens you will most likely see next. But sometimes the spaceship diverges from its route and you see the other pair of aliens.\n\nThen you choose which alien you believe is most likely to give you a point.",
+        "4.0": "Remember:\nPress LEFT to select the spaceship or alien on the left.\nPress RIGHT to select the spaceship or alien on the right."
     },
     "mid": {
         "0.0": "In this game you will see one of five images",
