@@ -1,17 +1,78 @@
 import numpy as np
 from psychopy.visual import ImageStim, Line, TextBox2
 
-from rewardgym.psychopy_render.task_images import draw_alien, draw_spaceship
+from rewardgym.psychopy_render.default_images import make_card_stimulus
 
 
 def twostep_instructions():
-    card3 = draw_alien(0, 300, 300, (0, 0, 200))
-    card4 = draw_alien(1, 300, 300, (0, 0, 200))
-    card5 = draw_alien(2, 300, 300, (200, 200, 0))
-    card6 = draw_alien(3, 300, 300, (200, 200, 0))
+    card1 = make_card_stimulus(
+        {
+            "num_tiles": (1, 2),
+            "shapes": ["cross"],
+            "shape_pattern": "alternating",
+            "color_pattern": "alternating",
+            "colors": ((200, 0, 0), (200, 0, 0)),
+        },
+        height=375,
+        width=250,
+    )
 
-    card1 = draw_spaceship(0, 400, 400, (0, 150, 200))
-    card2 = draw_spaceship(1, 400, 400, (0, 150, 200))
+    card2 = make_card_stimulus(
+        {
+            "num_tiles": (2, 1),
+            "shapes": ["X"],
+            "shape_pattern": "alternating",
+            "color_pattern": "alternating",
+            "colors": ((200, 0, 0), (200, 0, 0)),
+        },
+        height=375,
+        width=250,
+    )
+
+    card3 = make_card_stimulus(
+        {
+            "num_tiles": (2, 2),
+            "shapes": ["circle"],
+            "shape_pattern": "alternating",
+            "color_pattern": "alternating",
+            "colors": ((0, 0, 200), (0, 0, 200)),
+        },
+        height=250,
+        width=250,
+    )
+    card4 = make_card_stimulus(
+        {
+            "num_tiles": (2, 2),
+            "shapes": ["diamond"],
+            "shape_pattern": "alternating",
+            "color_pattern": "alternating",
+            "colors": ((0, 0, 200), (0, 0, 200)),
+        },
+        height=250,
+        width=250,
+    )
+    card5 = make_card_stimulus(
+        {
+            "num_tiles": (1, 1),
+            "shapes": ["triangle_u"],
+            "shape_pattern": "alternating",
+            "color_pattern": "alternating",
+            "colors": ((200, 200, 0), (200, 200, 0)),
+        },
+        height=250,
+        width=250,
+    )
+    card6 = make_card_stimulus(
+        {
+            "num_tiles": (2, 2),
+            "shapes": ["diamond", "circle"],
+            "shape_pattern": "alternating",
+            "color_pattern": "alternating",
+            "colors": ((200, 200, 0), (200, 200, 0)),
+        },
+        height=250,
+        width=250,
+    )
 
     def part_0(win, instructions):
         part_0_0 = TextBox2(
