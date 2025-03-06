@@ -1,3 +1,19 @@
+# 0.1.1 (Thu Mar 06 2025)
+
+#### 🐛 Bug Fix
+
+- Pilot study updates: Instructions to tasks and stimuli [#24](https://github.com/rewardMap/rewardGym/pull/24) ([@SRSteinkamp](https://github.com/SRSteinkamp))
+
+#### 🏠 Internal
+
+- Create .codecov.yml [#21](https://github.com/rewardMap/rewardGym/pull/21) ([@SRSteinkamp](https://github.com/SRSteinkamp))
+
+#### Authors: 1
+
+- Simon Steinkamp ([@SRSteinkamp](https://github.com/SRSteinkamp))
+
+---
+
 # 0.0.6 (Tue Nov 05 2024)
 
 #### 🐛 Bug Fix
