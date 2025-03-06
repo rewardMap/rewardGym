@@ -134,6 +134,7 @@ def gonogo_instructions():
             text=instructions["gonogo"]["5.0"],
             letterHeight=28,
             alignment="center",
+            pos=(0, 150),
         )
         part_5_0.draw()
 
