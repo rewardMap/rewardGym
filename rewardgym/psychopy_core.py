@@ -197,7 +197,7 @@ def run_task(
                 # Duration is at minimum 150 ms and at max 500 ms, need to only update first occurence
                 # of first stimulus, as it's reused
                 new_duration = env.info_dict[1]["psychopy"][-1].duration + adjustment
-                new_duration = np.max([np.min([new_duration, 0.5]), 0.15])
+                new_duration = np.max([np.min([new_duration, 0.5]), 0.20])
                 env.info_dict[1]["psychopy"][-1].duration = new_duration
 
         logger.log_event(

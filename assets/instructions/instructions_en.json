@@ -13,7 +13,7 @@
         "1.4": "After each round, we shuffle the deck.",
         "2.0": "Remember:\nPress LEFT to guess the number is LESS less than five.\nPress RIGHT to guess the number is GREATER than five."
     },
-    "gonogo": {
+    "gonogo_card": {
         "0.0": "In this game, you have to figure out whether it's better to press LEFT or NOT.\n\nThere are four situations.\n1. It is usually better to press LEFT to win points.\n2. It is usually better to press LEFT to avoid losing points.\n3. It is usually better to NOT press to win points.\n4. It is usually better to NOT press to avoid losing points.\n\n",
         "0.1": "Each situation is signaled by one of four images. You have to learn from experience which image signals which situation. The outcomes are probabilistic, this means in situation 1 pressing LEFT might sometimes not earn you points and you will sometimes earn points if you do NOT press. You will need to observe patterns over time to make the best possible decisions.",
         "1.0": "On each trial, you will see an image like this that signals the situation:",
@@ -65,5 +65,16 @@
         "1.0": "You will sometimes see a single image on the left or the right side of the screen. You must select this image by pressing LEFT if it is on the left and RIGHT if it is on the right.\n",
         "2.0": "Sometimes, you have to decide between two images.\nChoose in a way, that will earn you the most points.\nPress LEFT to select the image on the left.\nPress RIGHT to select the image on the right.",
         "3.0": "Remember:\nPress LEFT to select the image on the left.\nPress RIGHT to select the image on the right."
+    },
+    "gonogo": {
+        "0.0": "In this game, you have to figure out whether it's better to press a robot's central button (LEFT) or NOT.\n\nThere are four robots.\n1. One robot usually gives you a point if you press LEFT.\n2. Pressing LEFT usually prevents losing a point, but sometimes the robot takes one.\n3. One robot usually gives you a point if you do NOT press.\n4. NOT pressing usually prevents losing a point, but sometimes the robot takes one.\n\n",
+        "0.1": "You have to learn from experience how each robot reacts.\nThe robots do not always act predictably when you press the button.\n\nThis means if you press the first robot's button, it will sometimes not give you any points and it will sometimes give you points even if you do NOT press.\n\nBut robots are consistent:\nRobots that take points never give points\nand robots that give points never take points.",
+        "1.0": "On each trial, you will see a robot like this:",
+        "2.0": "Then a diamond shape appears in the middle of the screen.",
+        "3.0": "When the button appears you need to decide, whether to press it (LEFT) or NOT?",
+        "4.1": "If you win points, you will see green.",
+        "4.2": "If you lose points you will see red.",
+        "4.3": "If your points don't change, you will see yellow.",
+        "5.0": "Remember:\nWhen the button appears you need to decide, whether to press it (LEFT) or NOT?\n\nThe robots are not fully predictable, but over time, the right strategy will earn you the most points."
     }
 }

@@ -6,9 +6,10 @@ from .default_images import (
     STIMULUS_DEFAULTS,
     fixation_cross,
     generate_stimulus_properties,
-    gonogo_probe,
     make_card_stimulus,
+    mid_stimuli,
 )
+from .gonogo_images import draw_robot
 from .stimuli import ActionStimulus, BaseStimulus, FeedBackStimulus, ImageStimulus
 
 
@@ -43,11 +44,35 @@ def gonogo_stimuli(random_state, stim_defaults=STIMULUS_DEFAULTS):
     return image_map, stimuli
 
 
+def gonogo_robots(random_state, stim_defaults=STIMULUS_DEFAULTS):
+    random_state = check_seed(random_state)
+    colors = stim_defaults["colors"][:-1]
+    no_colors = len(colors)
+    allow_set = colors + colors
+
+    start_color = random_state.integers(0, no_colors)
+
+    color_set = colors[start_color::2][:4]
+    color_set = random_state.permutation(color_set)
+
+    image_map = {}
+    for n in range(4):
+        image_map[n] = draw_robot(
+            height=450,
+            width=450,
+            body_color=allow_set[n],
+            second_color=allow_set[n],
+            button_color="gray",
+        )
+
+    return image_map, None
+
+
 def get_info_dict(seed=None, key_dict={"space": 0}, external_stimuli=None, **kwargs):
     random_state = check_seed(seed)
 
     if external_stimuli is None:
-        image_map, stimuli = gonogo_stimuli(random_state)
+        image_map, stimuli = gonogo_robots(random_state)
     else:
         image_map, stimuli = external_stimuli
 
@@ -75,7 +100,15 @@ def get_info_dict(seed=None, key_dict={"space": 0}, external_stimuli=None, **kwa
             fix_isi,
             ImageStimulus(
                 duration=0.001,
-                image_paths=[gonogo_probe()],
+                image_paths=[
+                    mid_stimuli(
+                        other_color="gray",
+                        shape="circle",
+                        probe=False,
+                        amount="",
+                        shape_dim=250,
+                    )
+                ],
                 positions=[(0, 0)],
                 name="target",
             ),
