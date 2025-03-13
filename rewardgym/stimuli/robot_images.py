@@ -1,7 +1,7 @@
 import numpy as np
 from PIL import Image, ImageDraw
 
-from .advanced_shapes import rotate_rectangle
+from .create_images import rotate_rectangle
 
 
 def draw_robot(

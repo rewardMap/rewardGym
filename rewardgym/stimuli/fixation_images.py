@@ -2,8 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image, ImageDraw
 
-from .advanced_shapes import draw_centered_shape
-from .create_images import draw_shape
+from .create_images import draw_centered_shape, draw_shape
 
 win_color = tuple([int(i * 255) for i in plt.cm.Set2.colors[0]])
 lose_color = tuple([int(i * 255) for i in plt.cm.Set2.colors[1]])

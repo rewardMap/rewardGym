@@ -1,11 +1,31 @@
+from itertools import permutations
+
 import matplotlib.font_manager
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
 from ..utils import check_seed
-from . import bg_color, colors, patterns, shapes_perm
-from .advanced_shapes import draw_centered_shape
-from .create_images import draw_shape, make_stimulus
+from .create_images import draw_centered_shape, draw_shape, make_stimulus
+
+bg_color = (240, 240, 240)
+shapes = ["square", "circle", "triangle_u", "triangle_d", "diamond"]
+shapes_perm = shapes[:] + list(permutations(shapes, r=2))
+patterns = [(2, 3), (4, 6), (1, 2)]
+
+colors = [
+    (1, 25, 89),
+    (16, 63, 96),
+    (28, 90, 98),
+    (60, 109, 86),
+    (104, 123, 62),
+    (157, 137, 43),
+    (210, 147, 67),
+    (248, 161, 123),
+    (253, 183, 188),
+    (250, 204, 250),
+] + [bg_color]  # batlow 10
+
+STIMULUS_DEFAULTS = {"shapes": shapes_perm, "colors": colors, "patterns": patterns}
 
 
 def generate_stimulus_properties(
