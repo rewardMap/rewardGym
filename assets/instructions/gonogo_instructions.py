@@ -2,29 +2,35 @@ from psychopy.visual import ImageStim, TextBox2
 
 from rewardgym.psychopy_render.default_images import (
     fixation_cross,
-    gonogo_probe,
     lose_cross,
-    make_card_stimulus,
+    mid_stimuli,
     win_cross,
     zero_cross,
 )
+from rewardgym.psychopy_render.gonogo_images import draw_robot
 
 
 def gonogo_instructions():
     fix = fixation_cross()
     winning = win_cross()
-    target = gonogo_probe()
+    target = mid_stimuli(
+        other_color="gray", shape="circle", probe=False, amount="", shape_dim=250
+    )
 
-    card = make_card_stimulus(
-        {
-            "num_tiles": (2, 2),
-            "shapes": ["cross", "X"],
-            "shape_pattern": "alternating",
-            "color_pattern": "alternating",
-            "colors": ((0, 125, 125), (125, 125, 0)),
-        },
-        height=350,
-        width=350,
+    robot = draw_robot(
+        height=450,
+        width=450,
+        body_color=(100, 250, 100),
+        second_color=(100, 250, 100),
+        button_color="gray",
+    )
+
+    robot_w = draw_robot(
+        height=450,
+        width=450,
+        body_color="white",
+        second_color="white",
+        button_color="gray",
     )
 
     nothing = zero_cross(
@@ -40,7 +46,20 @@ def gonogo_instructions():
     def part_0(win, instructions):
         part_0_0 = TextBox2(
             win=win,
-            text=instructions["gonogo"]["0.0"] + instructions["gonogo"]["0.1"],
+            text=instructions["gonogo"]["0.0"],
+            letterHeight=28,
+            pos=(0, 120),
+        )
+
+        img_card = ImageStim(win=win, image=robot_w, pos=(0, -100), size=(200, 200))
+        img_card.draw()
+
+        part_0_0.draw()
+
+    def part_01(win, instructions):
+        part_0_0 = TextBox2(
+            win=win,
+            text=instructions["gonogo"]["0.1"],
             letterHeight=28,
             pos=(0, 100),
         )
@@ -52,10 +71,10 @@ def gonogo_instructions():
             win=win,
             text=instructions["gonogo"]["1.0"],
             letterHeight=28,
-            pos=(0, 150),
+            pos=(0, 200),
         )
 
-        img_card = ImageStim(win=win, image=card, pos=(0, 0), size=(200, 200))
+        img_card = ImageStim(win=win, image=robot, pos=(0, 0), size=(350, 350))
         img_card.draw()
         part_1_0.draw()
 
@@ -76,7 +95,7 @@ def gonogo_instructions():
             win=win,
             text=instructions["gonogo"]["3.0"],
             letterHeight=28,
-            pos=(0, 150),
+            pos=(0, 175),
         )
 
         img_fix = ImageStim(win=win, image=target, pos=(0, 0), size=target.shape[:2])
@@ -141,4 +160,4 @@ def gonogo_instructions():
         img_fix = ImageStim(win=win, image=target, pos=(0, -150), size=target.shape[:2])
         img_fix.draw()
 
-    return [part_0, part_1, part_2, part_3, part_4, part_5]
+    return [part_0, part_01, part_1, part_2, part_3, part_4, part_5]
