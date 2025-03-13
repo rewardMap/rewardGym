@@ -1,3 +1,15 @@
+# 0.1.3 (Thu Mar 13 2025)
+
+#### 🐛 Bug Fix
+
+- Merge branch 'gonogo_robots' [#26](https://github.com/rewardMap/rewardGym/pull/26) ([@SRSteinkamp](https://github.com/SRSteinkamp))
+
+#### Authors: 1
+
+- Simon Steinkamp ([@SRSteinkamp](https://github.com/SRSteinkamp))
+
+---
+
 # 0.1.2 (Thu Mar 13 2025)
 
 #### 🐛 Bug Fix
