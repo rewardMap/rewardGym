@@ -1,3 +1,15 @@
+# 0.1.2 (Thu Mar 13 2025)
+
+#### 🐛 Bug Fix
+
+- Implemented robot stimuli for gonogo task [#25](https://github.com/rewardMap/rewardGym/pull/25) ([@SRSteinkamp](https://github.com/SRSteinkamp))
+
+#### Authors: 1
+
+- Simon Steinkamp ([@SRSteinkamp](https://github.com/SRSteinkamp))
+
+---
+
 # 0.1.1 (Thu Mar 06 2025)
 
 #### 🐛 Bug Fix
