@@ -67,7 +67,7 @@
         "3.0": "Remember:\nPress LEFT to select the image on the left.\nPress RIGHT to select the image on the right."
     },
     "gonogo": {
-        "0.0": "In this game, you have to figure out whether it's better to press a robot's central button (LEFT) or NOT.\n\nThere are four robots.\n1. One robot usually gives you a point if you press LEFT.\n2. One robot only sometimes takes a point if you press LEFT.\n3. One robot usually gives you a point if you do NOT press.\n4. One robot only sometimes takes a point if you do NOT press.\n\n",
+        "0.0": "In this game, you have to figure out whether it's better to press a robot's central button (LEFT) or NOT.\n\nThere are four robots.\n1. One robot usually gives you a point if you press LEFT.\n2. Pressing LEFT usually prevents losing a point, but sometimes the robot takes one.\n3. One robot usually gives you a point if you do NOT press.\n4. NOT pressing usually prevents losing a point, but sometimes the robot takes one.\n\n",
         "0.1": "You have to learn from experience how each robot reacts.\nThe robots do not always act predictably when you press the button.\n\nThis means if you press the first robot's button, it will sometimes not give you any points and it will sometimes give you points even if you do NOT press.\n\nBut robots are consistent:\nRobots that take points never give points\nand robots that give points never take points.",
         "1.0": "On each trial, you will see a robot like this:",
         "2.0": "Then a diamond shape appears in the middle of the screen.",
