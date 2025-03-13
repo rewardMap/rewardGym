@@ -8,7 +8,7 @@ except ModuleNotFoundError:
 
 import warnings
 
-from .default_images import lose_cross, win_cross, zero_cross
+from ..stimuli import lose_cross, win_cross, zero_cross
 from .logger import ExperimentLogger, SimulationLogger
 
 
