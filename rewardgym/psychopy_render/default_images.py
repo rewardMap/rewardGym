@@ -348,7 +348,13 @@ def make_card_stimulus(stimulus, width=300, height=480):
 
 
 def mid_stimuli(
-    amount="+5", shape="circle", shape_dim=300, border_width=10, probe=False
+    amount="+5",
+    shape="circle",
+    shape_dim=300,
+    border_width=10,
+    probe=False,
+    probe_color=(0, 0, 0),
+    other_color=None,
 ):
     pattern = Image.new("RGBA", (shape_dim, shape_dim), (0, 0, 0, 0))
     draw = ImageDraw.Draw(pattern)
@@ -360,7 +366,10 @@ def mid_stimuli(
     else:
         stim_color = (1, 176, 240)
 
-    draw_shape(draw, shape, [0, 0, shape_dim, shape_dim], (0, 0, 0), 0)
+    if other_color is not None:
+        stim_color = other_color
+
+    draw_shape(draw, shape, [0, 0, shape_dim, shape_dim], probe_color, 0)
 
     if not probe:
         offset = 4 if shape == "triangle_u" else 0
