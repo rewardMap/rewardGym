@@ -48,10 +48,10 @@ def gonogo_instructions():
             win=win,
             text=instructions["gonogo"]["0.0"],
             letterHeight=28,
-            pos=(0, 120),
+            pos=(0, 150),
         )
 
-        img_card = ImageStim(win=win, image=robot_w, pos=(0, -100), size=(200, 200))
+        img_card = ImageStim(win=win, image=robot_w, pos=(0, -160), size=(200, 200))
         img_card.draw()
 
         part_0_0.draw()
