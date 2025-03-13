@@ -1,16 +1,21 @@
 from copy import deepcopy
 
-from ..tasks import FULLPOINTS
-from ..utils import check_seed
-from .default_images import (
+from ..stimuli import (
     STIMULUS_DEFAULTS,
+    draw_robot,
     fixation_cross,
     generate_stimulus_properties,
     make_card_stimulus,
     mid_stimuli,
 )
-from .gonogo_images import draw_robot
-from .stimuli import ActionStimulus, BaseStimulus, FeedBackStimulus, ImageStimulus
+from ..tasks import FULLPOINTS
+from ..utils import check_seed
+from .psychopy_display import (
+    ActionStimulus,
+    BaseStimulus,
+    FeedBackStimulus,
+    ImageStimulus,
+)
 
 
 def gonogo_stimuli(random_state, stim_defaults=STIMULUS_DEFAULTS):

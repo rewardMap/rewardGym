@@ -1,7 +1,7 @@
+from ..stimuli import fixation_cross, mid_stimuli
 from ..tasks import FULLPOINTS
-from .default_images import fixation_cross, mid_stimuli
-from .special_stimuli import ActionStimulusTooEarly
-from .stimuli import FeedBackStimulus, ImageStimulus
+from .advanced_display import ActionStimulusTooEarly
+from .psychopy_display import FeedBackStimulus, ImageStimulus
 
 
 def get_info_dict(seed=None, key_dict={"space": 0}, **kwargs):

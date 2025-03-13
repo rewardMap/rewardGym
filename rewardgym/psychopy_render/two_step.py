@@ -2,16 +2,18 @@ from copy import deepcopy
 
 import numpy as np
 
-from ..tasks import FULLPOINTS
-from ..utils import check_seed
-from .default_images import (
+from ..stimuli import (
     STIMULUS_DEFAULTS,
+    draw_alien,
+    draw_spaceship,
     fixation_cross,
     generate_stimulus_properties,
     make_card_stimulus,
 )
-from .special_stimuli import TwoStimuliWithResponseAndSelection
-from .stimuli import BaseStimulus, FeedBackStimulus, ImageStimulus
+from ..tasks import FULLPOINTS
+from ..utils import check_seed
+from .advanced_display import TwoStimuliWithResponseAndSelection
+from .psychopy_display import BaseStimulus, FeedBackStimulus, ImageStimulus
 
 
 def twostep_card_stimuli(random_state, stim_defaults=STIMULUS_DEFAULTS):
@@ -50,8 +52,6 @@ def twostep_card_stimuli(random_state, stim_defaults=STIMULUS_DEFAULTS):
 
 
 def twostep_alien_stimuli(random_state, stim_defaults=STIMULUS_DEFAULTS):
-    from .task_images import draw_alien, draw_spaceship
-
     random_state = check_seed(random_state)
 
     stim_defaults = deepcopy(stim_defaults)

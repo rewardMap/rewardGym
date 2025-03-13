@@ -1,15 +1,20 @@
 from copy import deepcopy
 
-from ..tasks import FULLPOINTS
-from ..utils import check_seed
-from .default_images import (
+from ..stimuli import (
     STIMULUS_DEFAULTS,
     fixation_cross,
     generate_stimulus_properties,
     make_card_stimulus,
 )
-from .special_stimuli import ConditionBasedDisplay
-from .stimuli import ActionStimulus, BaseStimulus, FeedBackStimulus, ImageStimulus
+from ..tasks import FULLPOINTS
+from ..utils import check_seed
+from .advanced_display import ConditionBasedDisplay
+from .psychopy_display import (
+    ActionStimulus,
+    BaseStimulus,
+    FeedBackStimulus,
+    ImageStimulus,
+)
 
 
 def risksensitive_stimuli(random_state, stim_defaults=STIMULUS_DEFAULTS):
