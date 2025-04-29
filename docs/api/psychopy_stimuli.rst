@@ -13,20 +13,30 @@ rewardgym.psychopy_render.logger
     :exclude-members: __weakref__
 
 
-rewardgym.psychopy_render.special_stimuli
+rewardgym.psychopy_render.psychopy_display
 ********************************************************************************
 
-.. automodule:: rewardgym.psychopy_render.special_stimuli
+.. automodule:: rewardgym.psychopy_render.psychopy_display
     :special-members: __init__
     :members:
     :show-inheritance:
     :exclude-members: __weakref__
 
 
-rewardgym.psychopy_render.stimuli
+rewardgym.psychopy_render.advanced_display
 ********************************************************************************
 
-.. automodule:: rewardgym.psychopy_render.stimuli
+.. automodule:: rewardgym.psychopy_render.advanced_display
+    :special-members: __init__
+    :members:
+    :show-inheritance:
+    :exclude-members: __weakref__
+
+
+rewardgym.stimuli
+********************************************************************************
+
+.. automodule:: rewardgym.stimuli
     :special-members: __init__
     :members:
     :show-inheritance:
