@@ -1,3 +1,15 @@
+# 0.1.4 (Tue Apr 29 2025)
+
+#### 🐛 Bug Fix
+
+- Restructuring stimulus repository [#27](https://github.com/rewardMap/rewardGym/pull/27) ([@SRSteinkamp](https://github.com/SRSteinkamp))
+
+#### Authors: 1
+
+- Simon Steinkamp ([@SRSteinkamp](https://github.com/SRSteinkamp))
+
+---
+
 # 0.1.3 (Thu Mar 13 2025)
 
 #### 🐛 Bug Fix
