@@ -1,6 +1,6 @@
 from psychopy.visual import ImageStim, TextBox2
 
-from rewardgym.psychopy_render.default_images import (
+from rewardgym.stimuli.default_images import (
     fixation_cross,
     gonogo_probe,
     lose_cross,

@@ -1,7 +1,7 @@
 import numpy as np
 from psychopy.visual import ImageStim, Line, TextBox2
 
-from rewardgym.psychopy_render.default_images import make_card_stimulus
+from rewardgym.stimuli.default_images import make_card_stimulus
 
 
 def twostep_instructions():

@@ -1,7 +1,7 @@
-import math
-
 import numpy as np
 from PIL import Image, ImageDraw
+
+from .create_images import rotate_rectangle
 
 
 def draw_robot(
@@ -31,16 +31,6 @@ def draw_robot(
             int(coords[2] * scale_x),
             int(coords[3] * scale_y),
         ]
-
-    def rotate_rectangle(cx, cy, w, h, angle):
-        rad = math.radians(angle)
-        cos_a, sin_a = math.cos(rad), math.sin(rad)
-        hw, hh = w / 2, h / 2
-        points = [(-hw, -hh), (hw, -hh), (hw, hh), (-hw, hh)]
-        rotated = [
-            (cx + x * cos_a - y * sin_a, cy + x * sin_a + y * cos_a) for x, y in points
-        ]
-        return [tuple(map(int, rotated[i])) for i in range(4)]
 
     left_arm = rotate_rectangle(
         50 * scale_x, 140 * scale_y, 45 * scale_x, 20 * scale_y, -70

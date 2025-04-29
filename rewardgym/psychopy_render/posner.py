@@ -1,7 +1,7 @@
+from ..stimuli import fixation_cross, posner_cue, posner_target
 from ..tasks import FULLPOINTS
-from .default_images import fixation_cross, posner_cue, posner_target
-from .special_stimuli import StimuliWithResponse
-from .stimuli import ActionStimulus, FeedBackStimulus, ImageStimulus
+from .advanced_display import StimuliWithResponse
+from .psychopy_display import ActionStimulus, FeedBackStimulus, ImageStimulus
 
 
 def get_info_dict(seed=None, key_dict={"left": 0, "right": 1}, **kwargs):

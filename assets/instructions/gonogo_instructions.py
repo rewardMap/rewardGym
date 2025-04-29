@@ -1,13 +1,13 @@
 from psychopy.visual import ImageStim, TextBox2
 
-from rewardgym.psychopy_render.default_images import (
+from rewardgym.stimuli.default_images import mid_stimuli
+from rewardgym.stimuli.fixation_images import (
     fixation_cross,
     lose_cross,
-    mid_stimuli,
     win_cross,
     zero_cross,
 )
-from rewardgym.psychopy_render.gonogo_images import draw_robot
+from rewardgym.stimuli.robot_images import draw_robot
 
 
 def gonogo_instructions():

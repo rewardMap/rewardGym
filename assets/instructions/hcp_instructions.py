@@ -1,6 +1,6 @@
 from psychopy.visual import ImageStim, Rect, TextBox2, TextStim
 
-from rewardgym.psychopy_render.default_images import lose_cross, win_cross, zero_cross
+from rewardgym.stimuli.fixation_images import lose_cross, win_cross, zero_cross
 
 
 def hcp_instructions():

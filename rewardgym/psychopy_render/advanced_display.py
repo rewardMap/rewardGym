@@ -1,6 +1,6 @@
 from typing import Dict, Union
 
-from .stimuli import ActionStimulus, BaseStimulus
+from .psychopy_display import ActionStimulus, BaseStimulus
 
 try:
     from psychopy.visual import ImageStim, TextStim, Window
@@ -10,8 +10,8 @@ except ModuleNotFoundError:
 
 import numpy as np
 
+from ..stimuli import generate_stimulus_properties, make_card_stimulus
 from ..utils import check_seed
-from .default_images import generate_stimulus_properties, make_card_stimulus
 from .logger import ExperimentLogger, SimulationLogger
 
 

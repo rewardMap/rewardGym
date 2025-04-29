@@ -1,6 +1,6 @@
 from psychopy.visual import ImageStim, TextBox2
 
-from rewardgym.psychopy_render.default_images import mid_stimuli
+from rewardgym.stimuli.default_images import mid_stimuli
 
 
 def mid_instructions():

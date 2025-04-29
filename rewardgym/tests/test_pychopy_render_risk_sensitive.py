@@ -1,7 +1,7 @@
 import numpy as np
 
-from rewardgym.psychopy_render.default_images import STIMULUS_DEFAULTS
 from rewardgym.psychopy_render.risk_sensitive import risksensitive_stimuli
+from rewardgym.stimuli import STIMULUS_DEFAULTS
 
 
 def test_smoke_risksensitive_stimuli():
