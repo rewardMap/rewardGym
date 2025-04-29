@@ -10,7 +10,7 @@ from psychopy import core, event, visual
 
 from rewardgym.environments import PsychopyEnv
 from rewardgym.psychopy_render.logger import MinimalLogger
-from rewardgym.psychopy_render.stimuli import (
+from rewardgym.psychopy_render.psychopy_display import (
     ActionStimulus,
     BaseStimulus,
     FeedBackStimulus,

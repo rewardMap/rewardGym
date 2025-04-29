@@ -1,6 +1,7 @@
 from psychopy.visual import ImageStim, TextBox2
 
-from rewardgym.psychopy_render.default_images import fixation_cross, make_card_stimulus
+from rewardgym.stimuli.default_images import make_card_stimulus
+from rewardgym.stimuli.fixation_images import fixation_cross
 
 
 def risksensitive_instructions():

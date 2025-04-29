@@ -1,7 +1,8 @@
 import numpy as np
 from psychopy.visual import ImageStim, Line, TextBox2
 
-from rewardgym.psychopy_render.task_images import draw_alien, draw_spaceship
+from rewardgym.stimuli.alien_images import draw_alien
+from rewardgym.stimuli.spaceship_images import draw_spaceship
 
 
 def twostep_instructions():

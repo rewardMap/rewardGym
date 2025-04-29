@@ -1,10 +1,7 @@
 from psychopy.visual import ImageStim, TextBox2
 
-from rewardgym.psychopy_render.default_images import (
-    fixation_cross,
-    posner_cue,
-    posner_target,
-)
+from rewardgym.stimuli.default_images import posner_target
+from rewardgym.stimuli.fixation_images import fixation_cross, posner_cue
 
 
 def posner_instructions():
