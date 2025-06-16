@@ -319,3 +319,14 @@ def get_stripped_graph(graph: Dict):
         stripped_graph[nd] = edges
 
     return stripped_graph
+
+
+def update_psychopy_trials(settings, env, episode):
+    # Update timings
+    if settings["update"] is not None and len(settings["update"]) > 0:
+        for k in settings["update"]:
+            for jj in env.info_dict.keys():
+                if "psychopy" in env.info_dict[jj].keys():
+                    for ii in env.info_dict[jj]["psychopy"]:
+                        if ii.name == k:
+                            ii.duration = settings[k][episode]
