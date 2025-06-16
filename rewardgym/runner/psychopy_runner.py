@@ -94,7 +94,7 @@ class AddRemainder(PsyPyPlugin):
 
 {
     "pre-trial": [],
-    "after-action": [],
+    "post-action": [],
     "post-trial": [],
 }
 
@@ -102,8 +102,44 @@ plugin_registry = {
     "mid": {
         "pre-trial": [MiscUpdateMid(), TimeUpdateMid()],
         "post-trial": [AddRemainder(), StairCaseMid(0)],
-    }
+    },
+    "hcp": {
+        "post-action": [DelayUpdateHcp()],
+    },
+    "risk-sensitive": {"post-trial": [AddRemainder()]},
+    "two-step": {"pre-trial": [MiscUpdateTwoStep()], "post-trial": [AddRemainder]},
+    "posner": {"post-trial": [AddRemainder()]},
+    "gonogo": {"post-trial": [AddRemainder()]},
 }
+
+
+def check_plug_in_entry(plugins: Dict, entry_point: str):
+    if plugins is None:
+        return []
+
+    if entry_point in plugins.keys():
+        return plugins[entry_point]
+    else:
+        return []
+
+
+def apply_plug_ins(
+    *,
+    plugins: Dict,
+    entry_point: str,
+    env,
+    logger,
+    settings,
+    episode,
+    actions,
+    **kwargs,
+):
+    plugin_list = check_plug_in_entry(plugins=plugins, entry_point=entry_point)
+
+    for pl in plugin_list:
+        pl.modify(
+            env=env, logger=logger, settings=settings, episode=episode, actions=actions
+        )
 
 
 def pspy_run_task(
@@ -114,13 +150,15 @@ def pspy_run_task(
     seed=111,
     agent=None,
     n_episodes=None,
-    plugins: Dict = None,
+    plugins: Dict = plugin_registry,
 ):
     if settings is None:
         settings = get_configs(env.name)(seed)
 
     if win is None:
         win = Window()
+
+    plugins = plugins[env.name]
 
     if n_episodes is None:
         n_episodes = settings["ntrials"]
@@ -145,7 +183,6 @@ def pspy_run_task(
         height=25,
     )
 
-    win_trials = 0
     actions = []
 
     for episode in range(n_episodes):
@@ -157,16 +194,16 @@ def pspy_run_task(
             misc="n/a",
         )
 
-        # Update timings
-        if env.name == "mid":
-            settings["reward"][episode] = (
-                settings["reward"][episode] - env.info_dict[1]["psychopy"][-1].duration
-            )
-            misc = env.info_dict[1]["psychopy"][-1].duration
-        elif env.name == "two-step":
-            misc = [round(ii.p, 5) for ii in env.reward_locations.values()]
+        apply_plug_ins(
+            plugins=plugins,
+            entry_point="pre-trial",
+            env=env,
+            logger=logger,
+            settings=settings,
+            episode=episode,
+            actions=actions,
+        )
 
-        print(misc)  # Going to remove in next commit
         update_psychopy_trials(settings, env, episode)
 
         logger.set_trial_time()
@@ -189,9 +226,15 @@ def pspy_run_task(
 
                 env.simulate_action(info, key, rt)
 
-            if env.name == "hcp":
-                settings["delay"][episode] = env.remainder
-                update_psychopy_trials(settings, env, episode)
+            apply_plug_ins(
+                plugins=plugins,
+                entry_point="post-action",
+                env=env,
+                logger=logger,
+                settings=settings,
+                episode=episode,
+                actions=actions,
+            )
 
             next_obs, reward, terminated, truncated, info = env.step(
                 env.action, step_reward=env.name in ["two-step"]
@@ -211,33 +254,15 @@ def pspy_run_task(
                 )
                 obs = next_obs
 
-        # TODO: Also a different function?
-        if env.remainder > 0 and settings["add_remainder"]:
-            rm_onset = logger.get_time()
-            logger.wait(win, env.remainder, rm_onset)
-
-            logger.log_event(
-                {"event_type": "adjusting-time", "expected_duration": env.remainder},
-                onset=rm_onset,
+            apply_plug_ins(
+                plugins=plugins,
+                entry_point="post-trial",
+                env=env,
+                logger=logger,
+                settings=settings,
+                episode=episode,
+                actions=actions,
             )
-
-        # TODO how to deal with this nicely?
-        if env.name == "mid":
-            if settings["condition"][episode] in ["win-large", "win-small"]:
-                win_trials += 1
-
-                if (win_trials % 3) == 0:
-                    adjustment = (
-                        -0.025 if (np.nansum(actions) / (episode + 1)) < 0.4 else 0.025
-                    )
-                else:
-                    adjustment = 0
-
-                # Duration is at minimum 150 ms and at max 500 ms, need to only update first occurence
-                # of first stimulus, as it's reused
-                new_duration = env.info_dict[1]["psychopy"][-1].duration + adjustment
-                new_duration = np.max([np.min([new_duration, 0.5]), 0.20])
-                env.info_dict[1]["psychopy"][-1].duration = new_duration
 
         logger.log_event(
             {"event_type": "trial-end", "total_reward": env.cumulative_reward},
