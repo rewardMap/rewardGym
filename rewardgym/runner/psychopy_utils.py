@@ -2,45 +2,52 @@ try:
     from psychopy.core import quit
     from psychopy.gui import Dlg, DlgFromDict
 except ModuleNotFoundError:
-    from .psychopy_render.psychopy_stubs import (
+    from ..psychopy_render.psychopy_stubs import (
         DlgFromDict,
         Dlg,
         quit,
     )
 
 import os
+from typing import Dict
 
-from . import ENVIRONMENTS
+from .. import ENVIRONMENTS
+from .file_utils import make_bids_name
 
 
-def make_bids_name(
-    subid: str,
-    session: str = None,
-    task: str = None,
-    run: str = None,
-    acquisition: str = None,
-    extension: str = "beh.tsv",
+def check_plugin_entry(plugins: Dict, entry_point: str):
+    if plugins is None:
+        return []
+
+    if entry_point in plugins.keys():
+        return plugins[entry_point]
+    else:
+        return []
+
+
+def apply_plugins(
+    *,
+    plugins: Dict,
+    entry_point: str,
+    env,
+    logger,
+    settings,
+    episode,
+    actions,
+    win,
+    **kwargs,
 ):
-    # Some basic rewardmap specific sanitization:
-    if task is not None:
-        task = task.replace(
-            "-", ""
-        )  # two-step and risk-sensitive have non bids task names
+    plugin_list = check_plugin_entry(plugins=plugins, entry_point=entry_point)
 
-    elements = {
-        "sub": subid,
-        "ses": session,
-        "task": task,
-        "acq": acquisition,
-        "run": run,
-    }
-
-    name_elements = "_".join(
-        ["-".join([k, str(v)]) for k, v in elements.items() if v is not None]
-        + [extension]
-    )
-
-    return name_elements
+    for pl in plugin_list:
+        pl.modify(
+            env=env,
+            logger=logger,
+            win=win,
+            settings=settings,
+            episode=episode,
+            actions=actions,
+        )
 
 
 def overwrite_warning(filename):
@@ -48,16 +55,14 @@ def overwrite_warning(filename):
         warning_dialog = Dlg(title=f"File Already Exists: {filename}")
         warning_dialog.addField("Overwrite", choices=["Yes", "No"])
         warning_data = warning_dialog.show()
-        # Step 4: Handle the user's response
-        if warning_data is None:
+
+        if warning_data is None or warning_data[0] != "Yes":
             quit()
-        elif warning_data[0] == "Yes":
-            pass
         else:
-            quit()
+            pass
 
 
-def set_up_experiment(outdir="data/"):
+def pspy_set_up_experiment(outdir="data/"):
     exp_dict = {
         "participant_id": "001",
         "run": 1,
@@ -137,3 +142,14 @@ def set_up_experiment(outdir="data/"):
         exp_dict["stimulus_set"],
         exp_dict,
     )
+
+
+def update_psychopy_trials(settings, env, episode):
+    # Update timings
+    if settings["update"] is not None and len(settings["update"]) > 0:
+        for k in settings["update"]:
+            for jj in env.info_dict.keys():
+                if "psychopy" in env.info_dict[jj].keys():
+                    for ii in env.info_dict[jj]["psychopy"]:
+                        if ii.name == k:
+                            ii.duration = settings[k][episode]
