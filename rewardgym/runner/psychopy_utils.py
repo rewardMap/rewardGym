@@ -9,8 +9,7 @@ except ModuleNotFoundError:
     )
 
 import os
-
-from tyiping import Dict
+from typing import Dict
 
 from .. import ENVIRONMENTS
 from .file_utils import make_bids_name
@@ -56,13 +55,11 @@ def overwrite_warning(filename):
         warning_dialog = Dlg(title=f"File Already Exists: {filename}")
         warning_dialog.addField("Overwrite", choices=["Yes", "No"])
         warning_data = warning_dialog.show()
-        # Step 4: Handle the user's response
-        if warning_data is None:
+
+        if warning_data is None or warning_data[0] != "Yes":
             quit()
-        elif warning_data[0] == "Yes":
-            pass
         else:
-            quit()
+            pass
 
 
 def pspy_set_up_experiment(outdir="data/"):
