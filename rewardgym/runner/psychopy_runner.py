@@ -90,14 +90,6 @@ class AddRemainder(PsyPyPlugin):
             )
 
 
-# Plugins use different entrypoints:
-
-{
-    "pre-trial": [],
-    "post-action": [],
-    "post-trial": [],
-}
-
 plugin_registry = {
     "mid": {
         "pre-trial": [MiscUpdateMid(), TimeUpdateMid()],
@@ -132,13 +124,19 @@ def apply_plug_ins(
     settings,
     episode,
     actions,
+    win,
     **kwargs,
 ):
     plugin_list = check_plug_in_entry(plugins=plugins, entry_point=entry_point)
 
     for pl in plugin_list:
         pl.modify(
-            env=env, logger=logger, settings=settings, episode=episode, actions=actions
+            env=env,
+            logger=logger,
+            win=win,
+            settings=settings,
+            episode=episode,
+            actions=actions,
         )
 
 
@@ -202,6 +200,7 @@ def pspy_run_task(
             settings=settings,
             episode=episode,
             actions=actions,
+            win=win,
         )
 
         update_psychopy_trials(settings, env, episode)
@@ -234,6 +233,7 @@ def pspy_run_task(
                 settings=settings,
                 episode=episode,
                 actions=actions,
+                win=win,
             )
 
             next_obs, reward, terminated, truncated, info = env.step(
@@ -262,6 +262,7 @@ def pspy_run_task(
                 settings=settings,
                 episode=episode,
                 actions=actions,
+                win=win,
             )
 
         logger.log_event(
