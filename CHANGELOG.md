@@ -1,3 +1,28 @@
+# 0.2.0 (Mon Jun 16 2025)
+
+#### 💥 Breaking Change during development
+
+- Modular run taks [#36](https://github.com/rewardMap/rewardGym/pull/36) ([@SRSteinkamp](https://github.com/SRSteinkamp))
+
+#### 🐛 Bug Fix
+
+- Merge changes in main [#35](https://github.com/rewardMap/rewardGym/pull/35) ([@SRSteinkamp](https://github.com/SRSteinkamp))
+
+#### ⚠️ Tests
+
+- Revert "Modular run taks" [#34](https://github.com/rewardMap/rewardGym/pull/34) ([@SRSteinkamp](https://github.com/SRSteinkamp))
+- Modular run taks [#33](https://github.com/rewardMap/rewardGym/pull/33) ([@SRSteinkamp](https://github.com/SRSteinkamp))
+
+#### 🏠 Internal
+
+- fixing permissions in auto-relase workflow [#29](https://github.com/rewardMap/rewardGym/pull/29) ([@SRSteinkamp](https://github.com/SRSteinkamp))
+
+#### Authors: 1
+
+- Simon Steinkamp ([@SRSteinkamp](https://github.com/SRSteinkamp))
+
+---
+
 # 0.1.4 (Tue Apr 29 2025)
 
 #### 🐛 Bug Fix
