@@ -2,7 +2,7 @@ try:
     from psychopy.core import quit
     from psychopy.gui import Dlg, DlgFromDict
 except ModuleNotFoundError:
-    from .psychopy_render.psychopy_stubs import (
+    from ..psychopy_render.psychopy_stubs import (
         DlgFromDict,
         Dlg,
         quit,
@@ -10,37 +10,8 @@ except ModuleNotFoundError:
 
 import os
 
-from . import ENVIRONMENTS
-
-
-def make_bids_name(
-    subid: str,
-    session: str = None,
-    task: str = None,
-    run: str = None,
-    acquisition: str = None,
-    extension: str = "beh.tsv",
-):
-    # Some basic rewardmap specific sanitization:
-    if task is not None:
-        task = task.replace(
-            "-", ""
-        )  # two-step and risk-sensitive have non bids task names
-
-    elements = {
-        "sub": subid,
-        "ses": session,
-        "task": task,
-        "acq": acquisition,
-        "run": run,
-    }
-
-    name_elements = "_".join(
-        ["-".join([k, str(v)]) for k, v in elements.items() if v is not None]
-        + [extension]
-    )
-
-    return name_elements
+from .. import ENVIRONMENTS
+from .file_utils import make_bids_name
 
 
 def overwrite_warning(filename):
@@ -57,7 +28,7 @@ def overwrite_warning(filename):
             quit()
 
 
-def set_up_experiment(outdir="data/"):
+def pspy_set_up_experiment(outdir="data/"):
     exp_dict = {
         "participant_id": "001",
         "run": 1,
@@ -137,3 +108,14 @@ def set_up_experiment(outdir="data/"):
         exp_dict["stimulus_set"],
         exp_dict,
     )
+
+
+def update_psychopy_trials(settings, env, episode):
+    # Update timings
+    if settings["update"] is not None and len(settings["update"]) > 0:
+        for k in settings["update"]:
+            for jj in env.info_dict.keys():
+                if "psychopy" in env.info_dict[jj].keys():
+                    for ii in env.info_dict[jj]["psychopy"]:
+                        if ii.name == k:
+                            ii.duration = settings[k][episode]
