@@ -9,86 +9,18 @@ import numpy as np
 
 from ..psychopy_render.psychopy_stubs import Window
 from ..tasks.utils import get_configs
-from .psychopy_plugins import break_point, draw_response_reminder, simple_rt_simulation
-from .psychopy_utils import update_psychopy_trials
-
-
-class PsyPyPlugin:
-    def __init__(self):
-        pass
-
-    def modify(self, **kwargs):
-        pass
-
-
-class MiscUpdateMid(PsyPyPlugin):
-    def modify(self, *, env, logger, **kwargs):
-        misc = env.info_dict[1]["psychopy"][-1].duration
-        logger.update_trial_info(
-            misc=misc,
-        )
-        return None
-
-
-class MiscUpdateTwoStep(PsyPyPlugin):
-    def modify(self, *, env, logger, **kwargs):
-        misc = [round(ii.p, 5) for ii in env.reward_locations.values()]
-        logger.update_trial_info(
-            misc=misc,
-        )
-        return None
-
-
-class TimeUpdateMid(PsyPyPlugin):
-    def modify(self, *, episode, settings, env, **kwargs):
-        settings["reward"][episode] = (
-            settings["reward"][episode] - env.info_dict[1]["psychopy"][-1].duration
-        )
-
-        return None
-
-
-class DelayUpdateHcp(PsyPyPlugin):
-    def modify(self, *, settings, env, episode, **kwargs):
-        settings["delay"][episode] = env.remainder
-        update_psychopy_trials(settings, env, episode)
-
-        return None
-
-
-class StairCaseMid(PsyPyPlugin):
-    def __init__(self, trial_counter=0):
-        self.trial_counter = trial_counter
-
-    def modify(self, *, settings, episode, env, actions, **kwargs):
-        if settings["condition"][episode] in ["win-large", "win-small"]:
-            self.trial_counter += 1
-
-            if (self.trial_counter % 3) == 0:
-                adjustment = (
-                    -0.025 if (np.nansum(actions) / (episode + 1)) < 0.4 else 0.025
-                )
-            else:
-                adjustment = 0
-
-            # Duration is at minimum 150 ms and at max 500 ms, need to only update first occurence
-            # of first stimulus, as it's reused
-            new_duration = env.info_dict[1]["psychopy"][-1].duration + adjustment
-            new_duration = np.max([np.min([new_duration, 0.5]), 0.20])
-            env.info_dict[1]["psychopy"][-1].duration = new_duration
-
-
-class AddRemainder(PsyPyPlugin):
-    def modify(self, *, env, settings, win, logger, **kwargs):
-        if env.remainder > 0 and settings["add_remainder"]:
-            rm_onset = logger.get_time()
-            logger.wait(win, env.remainder, rm_onset)
-
-            logger.log_event(
-                {"event_type": "adjusting-time", "expected_duration": env.remainder},
-                onset=rm_onset,
-            )
-
+from .psychopy_plugins import (
+    AddRemainder,
+    DelayUpdateHcp,
+    MiscUpdateMid,
+    MiscUpdateTwoStep,
+    StairCaseMid,
+    TimeUpdateMid,
+    break_point,
+    draw_response_reminder,
+    simple_rt_simulation,
+)
+from .psychopy_utils import apply_plugins, update_psychopy_trials
 
 plugin_registry = {
     "mid": {
@@ -103,41 +35,6 @@ plugin_registry = {
     "posner": {"post-trial": [AddRemainder()]},
     "gonogo": {"post-trial": [AddRemainder()]},
 }
-
-
-def check_plug_in_entry(plugins: Dict, entry_point: str):
-    if plugins is None:
-        return []
-
-    if entry_point in plugins.keys():
-        return plugins[entry_point]
-    else:
-        return []
-
-
-def apply_plug_ins(
-    *,
-    plugins: Dict,
-    entry_point: str,
-    env,
-    logger,
-    settings,
-    episode,
-    actions,
-    win,
-    **kwargs,
-):
-    plugin_list = check_plug_in_entry(plugins=plugins, entry_point=entry_point)
-
-    for pl in plugin_list:
-        pl.modify(
-            env=env,
-            logger=logger,
-            win=win,
-            settings=settings,
-            episode=episode,
-            actions=actions,
-        )
 
 
 def pspy_run_task(
@@ -192,7 +89,7 @@ def pspy_run_task(
             misc="n/a",
         )
 
-        apply_plug_ins(
+        apply_plugins(
             plugins=plugins,
             entry_point="pre-trial",
             env=env,
@@ -225,7 +122,7 @@ def pspy_run_task(
 
                 env.simulate_action(info, key, rt)
 
-            apply_plug_ins(
+            apply_plugins(
                 plugins=plugins,
                 entry_point="post-action",
                 env=env,
@@ -254,7 +151,7 @@ def pspy_run_task(
                 )
                 obs = next_obs
 
-            apply_plug_ins(
+            apply_plugins(
                 plugins=plugins,
                 entry_point="post-trial",
                 env=env,

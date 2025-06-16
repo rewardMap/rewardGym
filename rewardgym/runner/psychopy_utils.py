@@ -10,8 +10,45 @@ except ModuleNotFoundError:
 
 import os
 
+from tyiping import Dict
+
 from .. import ENVIRONMENTS
 from .file_utils import make_bids_name
+
+
+def check_plugin_entry(plugins: Dict, entry_point: str):
+    if plugins is None:
+        return []
+
+    if entry_point in plugins.keys():
+        return plugins[entry_point]
+    else:
+        return []
+
+
+def apply_plugins(
+    *,
+    plugins: Dict,
+    entry_point: str,
+    env,
+    logger,
+    settings,
+    episode,
+    actions,
+    win,
+    **kwargs,
+):
+    plugin_list = check_plugin_entry(plugins=plugins, entry_point=entry_point)
+
+    for pl in plugin_list:
+        pl.modify(
+            env=env,
+            logger=logger,
+            win=win,
+            settings=settings,
+            episode=episode,
+            actions=actions,
+        )
 
 
 def overwrite_warning(filename):
