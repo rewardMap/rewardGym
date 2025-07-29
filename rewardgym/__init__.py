@@ -1,7 +1,10 @@
 from . import _version
 from .psychopy_render import get_psychopy_info
-from .tasks import get_configs, get_env
+from .tasks import get_configs, get_env, task_loader
 from .utils import run_single_episode
+
+_task_registry = task_loader._discover_plugins()
+
 
 ENVIRONMENTS = [
     "hcp",

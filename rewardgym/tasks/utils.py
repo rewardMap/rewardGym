@@ -3,41 +3,7 @@ from typing import Any, List, Literal, Tuple, Union
 import numpy as np
 
 from ..environments import BaseEnv, PsychopyEnv, RenderEnv
-
-# TODO Maybe enums are the way to go, for now staying with literal.
-
-
-def get_task(
-    task_name: Literal["hcp", "mid", "two-step", "risk-sensitive", "posner", "gonogo"],
-    render_backend: Literal["pygame"] = None,
-    seed: Union[np.random.Generator, int] = 1000,
-):
-    if task_name == "hcp":
-        from .hcp import get_hcp as get_task_func
-
-    elif task_name == "mid":
-        from .mid import get_mid as get_task_func
-
-    elif task_name == "two-step":
-        from .two_step import get_two_step as get_task_func
-
-    elif task_name == "risk-sensitive":
-        from .risk_sensitive import get_risk_sensitive as get_task_func
-
-    elif task_name == "posner":
-        from .posner import get_posner as get_task_func
-
-    elif task_name == "gonogo":
-        from .gonogo import get_gonogo as get_task_func
-
-    else:
-        raise NotImplementedError(f"Task {task_name} is not implemented.")
-
-    environment_graph, reward_structure, info_dict = get_task_func(
-        render_backend=render_backend, seed=seed
-    )
-
-    return environment_graph, reward_structure, info_dict
+from .task_loader import get_task
 
 
 def get_env(
@@ -51,6 +17,7 @@ def get_env(
     ],
     render_backend: Literal["pygame", "psychopy", "psychopy-simulate"] = None,
     seed: Union[int, np.random.Generator] = 1000,
+    reduced_actions=None,
     **kwargs,
 ):
     environment_graph, reward_structure, info_dict = get_task(
@@ -67,7 +34,7 @@ def get_env(
             info_dict=info_dict,
             seed=seed,
             name=task_name,
-            reduced_actions=2 if task_name == "risk-sensitive" else None,
+            reduced_actions=reduced_actions,
         )
     elif render_backend == "pygame":
         env = RenderEnv(
@@ -85,37 +52,10 @@ def get_env(
             info_dict=info_dict,
             seed=seed,
             name=task_name,
-            reduced_actions=2 if task_name == "risk-sensitive" else None,
+            reduced_actions=reduced_actions,
         )
 
     return env
-
-
-def get_configs(
-    task_name: Literal["hcp", "mid", "two-step", "risk-sensitive", "posner", "gonogo"],
-):
-    if task_name == "hcp":
-        from .hcp import generate_hcp_configs as generate_configs
-
-    elif task_name == "mid":
-        from .mid import generate_mid_configs as generate_configs
-
-    elif task_name == "two-step":
-        from .two_step import generate_two_step_configs as generate_configs
-
-    elif task_name == "risk-sensitive":
-        from .risk_sensitive import generate_risk_sensitive_configs as generate_configs
-
-    elif task_name == "posner":
-        from .posner import generate_posner_configs as generate_configs
-
-    elif task_name == "gonogo":
-        from .gonogo import generate_gonogo_configs as generate_configs
-
-    else:
-        raise NotImplementedError(f"Task {task_name} is not implemented.")
-
-    return generate_configs
 
 
 def check_conditions_not_following(
