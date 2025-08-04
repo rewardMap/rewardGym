@@ -26,6 +26,10 @@ def get_env(
         seed=seed,
     )
 
+    if "meta" in info_dict.keys():
+        if "reduced_actions" in info_dict["meta"].keys():
+            reduced_actions = info_dict["meta"]["reduced_actions"]
+
     if render_backend is None:
         env = BaseEnv(
             environment_graph=environment_graph,
