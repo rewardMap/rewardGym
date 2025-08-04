@@ -78,3 +78,16 @@ def get_pygame_info(task_name, **kwargs):
     if get_configs_func is None:
         raise NotImplementedError(f"get_pygame_info not implemented for {task_name}")
     return get_configs_func(**kwargs)
+
+
+def get_instructions_psychopy(task_name, **kwargs):
+    from .. import _task_registry
+
+    if task_name not in _task_registry:
+        raise ValueError(f"Task '{task_name}' not registered.")
+    get_configs_func = _task_registry[task_name]["instructions_psychopy"]
+    if get_configs_func is None:
+        raise NotImplementedError(
+            f"instructions_psychopy not implemented for {task_name}"
+        )
+    return get_configs_func(**kwargs)
