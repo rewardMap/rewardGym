@@ -13,6 +13,9 @@ def _discover_plugins():
         if not (TASKS_DIR / task_folder).is_dir():
             continue
 
+        if task_folder == "task_template":
+            continue
+
         if "__" in task_folder:
             continue
 
