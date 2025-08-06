@@ -37,6 +37,10 @@ class Rect(ImageStim):
     pass
 
 
+class Line(ImageStim):
+    pass
+
+
 def getKeys(**kwargs):
     pass
 
