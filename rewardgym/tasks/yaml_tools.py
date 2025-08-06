@@ -23,7 +23,6 @@ def load_environment_graph(raw_data: Dict):
         elif isinstance(value, dict):
             processed = {}
             for k, v in value.items():
-                print(k)
                 if isinstance(v, dict) and "next" in v and "prob" in v:
                     # convert to (list, prob) tuple
                     processed[int(k)] = (v["next"], v["prob"])
