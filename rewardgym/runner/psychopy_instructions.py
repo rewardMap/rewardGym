@@ -4,17 +4,14 @@ try:
     from psychopy.event import waitKeys
     from psychopy.visual import TextBox2
 except ImportError:
-    from ..psychopy_render.psychopy_stubs import TextBox2, waitKeys
+    from ...psychopy_render.psychopy_stubs import TextBox2, waitKeys
 
-import pathlib
-
+from .. import ASSETS_PATH
 from ..tasks.task_loader import get_instructions_psychopy
 
 
 def show_instructions(task, win, key_map={"left": 0, "right": 1}):
-    instructions_path = (
-        pathlib.Path(__file__).parents[1].resolve() / "assets" / "instructions_en.json"
-    )
+    instructions_path = ASSETS_PATH / "instructions_en.json"
     print(instructions_path)
     instructions = json.loads(instructions_path.read_text())
 
