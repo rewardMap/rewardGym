@@ -1,2 +1,2 @@
 include rewardgym/assets/*
-recursive-include rewardgym/tasks/*/core/assets/*
+include rewardgym/tasks/*/core/assets/*
