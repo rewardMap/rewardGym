@@ -29,11 +29,23 @@ class TextStim(ImageStim):
     pass
 
 
+class TextBox2(ImageStim):
+    pass
+
+
 class Rect(ImageStim):
     pass
 
 
+class Line(ImageStim):
+    pass
+
+
 def getKeys(**kwargs):
+    pass
+
+
+def waitKeys(**kwargs):
     pass
 
 

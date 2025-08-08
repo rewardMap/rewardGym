@@ -8,7 +8,7 @@ from typing import Dict
 import numpy as np
 
 from ..psychopy_render.psychopy_stubs import Window
-from ..tasks.utils import get_configs
+from ..tasks import get_configs
 from .psychopy_plugins import (
     AddRemainder,
     DelayUpdateHcp,

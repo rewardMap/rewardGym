@@ -1,38 +1,19 @@
 import json
-import warnings
 
-from psychopy.event import waitKeys
-from psychopy.visual import TextBox2
+try:
+    from psychopy.event import waitKeys
+    from psychopy.visual import TextBox2
+except ImportError:
+    from ...psychopy_render.psychopy_stubs import TextBox2, waitKeys
 
-from .gonogo_instructions import gonogo_instructions
-from .hcp_instructions import hcp_instructions
-from .mid_instructions import mid_instructions
-from .posner_instructions import posner_instructions
-from .risksensitive_instructions import risksensitive_instructions
-from .twostep_instructions import twostep_instructions
-
-
-def get_instructions(task: str):
-    if task == "two-step":
-        return twostep_instructions
-    elif task == "hcp":
-        return hcp_instructions
-    elif task == "gonogo":
-        return gonogo_instructions
-    elif task == "mid":
-        return mid_instructions
-    elif task == "posner":
-        return posner_instructions
-    elif task == "risk-sensitive":
-        return risksensitive_instructions
-    else:
-        warnings.warn("Instructions are not yet implemented.")
-        return False
+from .. import ASSETS_PATH
+from ..tasks.task_loader import get_instructions_psychopy
 
 
 def show_instructions(task, win, key_map={"left": 0, "right": 1}):
-    with open("assets/instructions/instructions_en.json") as f:
-        instructions = json.load(f)
+    instructions_path = ASSETS_PATH / "instructions_en.json"
+    print(instructions_path)
+    instructions = json.loads(instructions_path.read_text())
 
     def end_screen(win, instructions):
         end = TextBox2(
@@ -52,10 +33,11 @@ def show_instructions(task, win, key_map={"left": 0, "right": 1}):
         )
         end.draw()
 
-    instruction_funs = get_instructions(task)
+    instructions_list, instructions_dict = get_instructions_psychopy(task)
+    instructions.update(instructions_dict)
 
-    if instruction_funs:
-        instruction_screen = [first_screen] + instruction_funs() + [end_screen]
+    if instructions_list:
+        instruction_screen = [first_screen] + instructions_list + [end_screen]
         max_slide = len(instruction_screen) - 1
         slide_index = 0
         running = True

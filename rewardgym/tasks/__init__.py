@@ -1,4 +1,5 @@
-from .utils import get_configs, get_env, get_task
+from .task_loader import get_configs, get_psychopy_info
+from .utils import get_env, get_task
 
 FULLPOINTS = {
     "posner": 152,
@@ -9,4 +10,4 @@ FULLPOINTS = {
     "gonogo": 43,
 }
 
-__all__ = ["get_configs", "get_env", "get_task", "FULLPOINTS"]
+__all__ = ["get_configs", "get_env", "get_task", "FULLPOINTS", "get_psychopy_info"]

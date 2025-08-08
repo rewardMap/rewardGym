@@ -1,0 +1,18 @@
+[submodule "rewardgym/tasks/risksensitive"]
+	path = rewardgym/tasks/risksensitive
+	url = https://github.com/rewardMap/risksensitive.git
+[submodule "rewardgym/tasks/gonogo"]
+	path = rewardgym/tasks/gonogo
+	url = https://github.com/rewardMap/gonogo.git
+[submodule "rewardgym/tasks/hcp_gambling"]
+	path = rewardgym/tasks/hcp_gambling
+	url = https://github.com/rewardMap/hcp_gambling.git
+[submodule "rewardgym/tasks/mid"]
+	path = rewardgym/tasks/mid
+	url = https://github.com/rewardMap/mid.git
+[submodule "rewardgym/tasks/posner"]
+	path = rewardgym/tasks/posner
+	url = https://github.com/rewardMap/posner.git
+[submodule "rewardgym/tasks/twostep"]
+	path = rewardgym/tasks/twostep
+	url = https://github.com/rewardMap/twostep.git
