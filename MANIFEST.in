@@ -1,2 +1,3 @@
 include rewardgym/assets/*
 include rewardgym/tasks/*/core/assets/*
+include rewardgym/tasks/*/*.yaml
