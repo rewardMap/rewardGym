@@ -258,6 +258,8 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
         flip_probability=0.5,
         seed=111,
         rl_label: str = None,
+        rl_label_phase1: str = None,
+        rl_label_phase2: str = None,
     ):
         super().__init__(
             name=name,
@@ -274,6 +276,8 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
         self.name_phase2 = name_phase2
         self.duration_phase1 = duration_phase1
         self.duration_phase2 = duration_phase2
+        self.rl_label_phase1 = rl_label_phase1
+        self.rl_label_phase2 = rl_label_phase2
         self.flip_probability = flip_probability
         self.seed = check_seed(seed)
 
@@ -305,6 +309,7 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
             name=self.name_phase1,
             duration=self.duration_phase1,
             flip=flip,
+            rl_label=self.rl_label_phase1,
         )
 
         logger.key_strokes(win)
@@ -323,6 +328,7 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
                 name=self.name_phase2,
                 duration=self.duration_phase2,
                 flip=flip,
+                rl_label=self.rl_label_phase2,
             )
 
         return response
@@ -341,7 +347,11 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
         logger.wait(win=None, time=self.duration_phase1, start=stim_onset)
 
         logger.log_event(
-            {"event_type": self.name_phase1, "expected_duration": self.duration_phase1},
+            {
+                "event_type": self.name_phase1,
+                "expected_duration": self.duration_phase1,
+                "rl_label": self.rl_label_phase1,
+            },
             onset=stim_onset,
         )
 
@@ -355,13 +365,19 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
         logger.wait(win=None, time=self.duration_phase2, start=stim_onset)
 
         logger.log_event(
-            {"event_type": self.name_phase2, "expected_duration": self.duration_phase2},
+            {
+                "event_type": self.name_phase2,
+                "expected_duration": self.duration_phase2,
+                "rl_label": self.rl_label_phase2,
+            },
             onset=stim_onset,
         )
 
         return response_key, remaining
 
-    def _draw_stimulus(self, win, logger, action, name, duration, flip=False):
+    def _draw_stimulus(
+        self, win, logger, action, name, duration, flip=False, rl_label=None
+    ):
         stim_onset = logger.get_time()
 
         # Reset image positions
@@ -418,7 +434,14 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
         logger.wait(win, duration, stim_onset)
 
         self._log_event(
-            logger=logger, stim_onset=stim_onset, extra_info={"misc": f"flip-{flip}"}
+            logger=logger,
+            stim_onset=stim_onset,
+            extra_info={
+                "misc": f"flip-{flip}",
+                "event_type": name,
+                "duration": duration,
+                "rl_label": rl_label,
+            },
         )
 
 
@@ -504,6 +527,7 @@ class StimuliWithResponse(ActionStimulus):
         name: str = "response",
         target_name: str = None,
         target_duration: float = 0.0,
+        target_rl_label: str = None,
         timeout_action: int = None,
         name_timeout="response-time-out",
         positions=((0, 0), (0, 0)),
@@ -531,6 +555,7 @@ class StimuliWithResponse(ActionStimulus):
         self.target_duration = target_duration
         self.flip_probability = flip_probability
         self.flip_dir = flip_dir
+        self.target_rl_label = target_rl_label
         self.rng = check_seed(seed)
 
     def _setup(self, win, **kwargs):
@@ -608,5 +633,12 @@ class StimuliWithResponse(ActionStimulus):
         logger.wait(win, self.target_duration, stim_onset, wait_no_keys=True)
 
         self._log_event(
-            logger=logger, stim_onset=stim_onset, extra_info={"misc": f"flip-{flip}"}
+            logger=logger,
+            stim_onset=stim_onset,
+            extra_info={
+                "misc": f"flip-{flip}",
+                "event_type": self.target_name,
+                "duration": self.target_duration,
+                "rl_label": self.target_rl_label,
+            },
         )

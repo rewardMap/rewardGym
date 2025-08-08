@@ -17,7 +17,6 @@ def get_env(
     ],
     render_backend: Literal["pygame", "psychopy", "psychopy-simulate"] = None,
     seed: Union[int, np.random.Generator] = 1000,
-    reduced_actions=None,
     **kwargs,
 ):
     environment_graph, reward_structure, info_dict = get_task(
