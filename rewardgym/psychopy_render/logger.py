@@ -88,6 +88,7 @@ class ExperimentLogger:
         self.misc = self.na
         self.avail_actions = self.na
         self.action = self.na
+        self.rllabel = self.na
 
         self.trial = -1
         self.tr = 0
@@ -116,6 +117,7 @@ class ExperimentLogger:
             "task",
             "run",
             "participant_id",
+            "rl_label",
         ]
 
         # Create a dictionary of nans to be used later.
@@ -151,6 +153,7 @@ class ExperimentLogger:
         tmp_dict["avail_actions"] = self.avail_actions
         tmp_dict["misc"] = self.misc
         tmp_dict["action"] = self.action
+        tmp_dict["rl_label"] = self.rllabel
 
         return tmp_dict
 
@@ -188,7 +191,8 @@ class ExperimentLogger:
         # TODO check, that onset is not in info_dict!
         if info_dict is not None:
             for key in info_dict.keys():
-                tmp_dict[key] = info_dict[key]
+                if info_dict[key] is not None:
+                    tmp_dict[key] = info_dict[key]
 
         tmp_values = self._create_log_list(tmp_dict)
 

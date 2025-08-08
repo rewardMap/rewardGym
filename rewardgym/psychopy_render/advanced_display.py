@@ -34,6 +34,7 @@ class ActionStimulusTooEarly(ActionStimulus):
             "height": 28,
             "color": "white",
         },
+        rl_label: str = None,
     ):
         """
         Setting up the action object.
@@ -56,6 +57,7 @@ class ActionStimulusTooEarly(ActionStimulus):
             key_dict=key_dict,
             timeout_action=timeout_action,
             name_timeout=name_timeout,
+            rl_label=rl_label,
         )
 
         self.name_tooearly = name_tooearly
@@ -149,8 +151,9 @@ class ConditionBasedDisplay(BaseStimulus):
             4: make_card_stimulus(generate_stimulus_properties(4)),
             5: make_card_stimulus(generate_stimulus_properties(5)),
         },
+        rl_label: str = None,
     ):
-        super().__init__(name=name, duration=duration)
+        super().__init__(name=name, duration=duration, rl_label=rl_label)
 
         self.image_position = image_position
         self.image_map = image_map
@@ -230,10 +233,7 @@ class ConditionBasedDisplay(BaseStimulus):
 
         logger.wait(win, self.duration, stim_onset)
 
-        logger.log_event(
-            {"event_type": self.name, "expected_duration": self.duration},
-            onset=stim_onset,
-        )
+        self._log_event(logger=logger, stim_onset=stim_onset)
 
         return None
 
@@ -257,6 +257,9 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
         ],
         flip_probability=0.5,
         seed=111,
+        rl_label: str = None,
+        rl_label_phase1: str = None,
+        rl_label_phase2: str = None,
     ):
         super().__init__(
             name=name,
@@ -264,6 +267,7 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
             key_dict=key_dict,
             timeout_action=timeout_action,
             name_timeout=name_timeout,
+            rl_label=rl_label,
         )
 
         self.images = images
@@ -272,6 +276,8 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
         self.name_phase2 = name_phase2
         self.duration_phase1 = duration_phase1
         self.duration_phase2 = duration_phase2
+        self.rl_label_phase1 = rl_label_phase1
+        self.rl_label_phase2 = rl_label_phase2
         self.flip_probability = flip_probability
         self.seed = check_seed(seed)
 
@@ -303,6 +309,7 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
             name=self.name_phase1,
             duration=self.duration_phase1,
             flip=flip,
+            rl_label=self.rl_label_phase1,
         )
 
         logger.key_strokes(win)
@@ -321,6 +328,7 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
                 name=self.name_phase2,
                 duration=self.duration_phase2,
                 flip=flip,
+                rl_label=self.rl_label_phase2,
             )
 
         return response
@@ -339,7 +347,11 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
         logger.wait(win=None, time=self.duration_phase1, start=stim_onset)
 
         logger.log_event(
-            {"event_type": self.name_phase1, "expected_duration": self.duration_phase1},
+            {
+                "event_type": self.name_phase1,
+                "expected_duration": self.duration_phase1,
+                "rl_label": self.rl_label_phase1,
+            },
             onset=stim_onset,
         )
 
@@ -353,13 +365,19 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
         logger.wait(win=None, time=self.duration_phase2, start=stim_onset)
 
         logger.log_event(
-            {"event_type": self.name_phase2, "expected_duration": self.duration_phase2},
+            {
+                "event_type": self.name_phase2,
+                "expected_duration": self.duration_phase2,
+                "rl_label": self.rl_label_phase2,
+            },
             onset=stim_onset,
         )
 
         return response_key, remaining
 
-    def _draw_stimulus(self, win, logger, action, name, duration, flip=False):
+    def _draw_stimulus(
+        self, win, logger, action, name, duration, flip=False, rl_label=None
+    ):
         stim_onset = logger.get_time()
 
         # Reset image positions
@@ -415,9 +433,15 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
 
         logger.wait(win, duration, stim_onset)
 
-        logger.log_event(
-            {"event_type": name, "expected_duration": duration, "misc": f"flip-{flip}"},
-            onset=stim_onset,
+        self._log_event(
+            logger=logger,
+            stim_onset=stim_onset,
+            extra_info={
+                "misc": f"flip-{flip}",
+                "event_type": name,
+                "duration": duration,
+                "rl_label": rl_label,
+            },
         )
 
 
@@ -437,8 +461,9 @@ class TextWithBorder(BaseStimulus):
         font_height=150,
         position=(0, 0),
         name=None,
+        rl_label: str = None,
     ):
-        super().__init__(name=name, duration=duration)
+        super().__init__(name=name, duration=duration, rl_label=rl_label)
 
         self.height = height
         self.width = width
@@ -491,10 +516,7 @@ class TextWithBorder(BaseStimulus):
 
         logger.wait(win, self.duration, stim_onset)
 
-        logger.log_event(
-            {"event_type": self.name, "expected_duration": self.duration},
-            onset=stim_onset,
-        )
+        self._log_event(logger=logger, stim_onset=stim_onset)
 
 
 class StimuliWithResponse(ActionStimulus):
@@ -505,6 +527,7 @@ class StimuliWithResponse(ActionStimulus):
         name: str = "response",
         target_name: str = None,
         target_duration: float = 0.0,
+        target_rl_label: str = None,
         timeout_action: int = None,
         name_timeout="response-time-out",
         positions=((0, 0), (0, 0)),
@@ -515,6 +538,7 @@ class StimuliWithResponse(ActionStimulus):
         flip_probability=0.5,
         flip_dir: str = "horiz",
         seed=111,
+        rl_label: str = None,
     ):
         super().__init__(
             name=name,
@@ -522,6 +546,7 @@ class StimuliWithResponse(ActionStimulus):
             key_dict=key_dict,
             timeout_action=timeout_action,
             name_timeout=name_timeout,
+            rl_label=rl_label,
         )
 
         self.images = images
@@ -530,6 +555,7 @@ class StimuliWithResponse(ActionStimulus):
         self.target_duration = target_duration
         self.flip_probability = flip_probability
         self.flip_dir = flip_dir
+        self.target_rl_label = target_rl_label
         self.rng = check_seed(seed)
 
     def _setup(self, win, **kwargs):
@@ -574,10 +600,7 @@ class StimuliWithResponse(ActionStimulus):
 
         logger.wait(win=None, time=self.target_duration, start=stim_onset)
 
-        logger.log_event(
-            {"event_type": self.target_name, "expected_duration": self.target_duration},
-            onset=stim_onset,
-        )
+        self._log_event(logger=logger, stim_onset=stim_onset)
 
         response = self._simulate_response(
             logger,
@@ -609,11 +632,13 @@ class StimuliWithResponse(ActionStimulus):
 
         logger.wait(win, self.target_duration, stim_onset, wait_no_keys=True)
 
-        logger.log_event(
-            {
-                "event_type": self.target_name,
-                "expected_duration": self.target_duration,
+        self._log_event(
+            logger=logger,
+            stim_onset=stim_onset,
+            extra_info={
                 "misc": f"flip-{flip}",
+                "event_type": self.target_name,
+                "duration": self.target_duration,
+                "rl_label": self.target_rl_label,
             },
-            onset=stim_onset,
         )
