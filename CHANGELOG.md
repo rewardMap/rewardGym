@@ -1,3 +1,15 @@
+# 0.4.0 (Fri Aug 08 2025)
+
+#### 🚀 Enhancement
+
+- Adding RL label to logger [#38](https://github.com/rewardMap/rewardGym/pull/38) ([@SRSteinkamp](https://github.com/SRSteinkamp))
+
+#### Authors: 1
+
+- Simon Steinkamp ([@SRSteinkamp](https://github.com/SRSteinkamp))
+
+---
+
 # 0.3.0 (Fri Aug 08 2025)
 
 #### 🚀 Enhancement
