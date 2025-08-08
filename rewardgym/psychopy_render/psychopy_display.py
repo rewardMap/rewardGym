@@ -18,7 +18,13 @@ class BaseStimulus:
     window.
     """
 
-    def __init__(self, duration: float = None, name: str = None, wait_no_keys=False):
+    def __init__(
+        self,
+        duration: float = None,
+        name: str = None,
+        wait_no_keys=False,
+        rl_label=None,
+    ):
         """
         Stimulus presentation base class. The parameters do not really do anything.
 
@@ -34,6 +40,7 @@ class BaseStimulus:
         self.entity = "base"
         self.wait_no_keys = wait_no_keys
         self.is_setup = False
+        self.rl_label = rl_label
 
     def setup(self, win: Window, **kwargs):
         """
@@ -89,10 +96,20 @@ class BaseStimulus:
 
         logger.wait(win=None, time=self.duration, start=stim_onset)
 
-        logger.log_event(
-            {"event_type": self.name, "expected_duration": self.duration},
-            onset=stim_onset,
-        )
+        self._log_event(logger=logger, stim_onset=stim_onset)
+
+    def _log_event(
+        self, logger: ExperimentLogger, stim_onset=None, extra_info={}, **kwargs
+    ):
+        base_dict = {
+            "event_type": self.name,
+            "expected_duration": self.duration,
+            "rl_label": self.rl_label,
+        }
+
+        base_dict.update(extra_info)
+
+        logger.log_event(base_dict, onset=stim_onset, **kwargs)
 
     def _setup(self, win: Window, **kwargs):
         pass
@@ -110,6 +127,7 @@ class TextStimulus(BaseStimulus):
         position: Tuple[int, int] = None,
         name: str = None,
         text_color: str = "white",
+        rl_label: str = None,
     ):
         """
         Stimulus class for text displays.
@@ -128,7 +146,7 @@ class TextStimulus(BaseStimulus):
             Color of the text string, by default "white"
         """
 
-        super().__init__(name=name, duration=duration)
+        super().__init__(name=name, duration=duration, rl_label=rl_label)
 
         self.text = text
         self.position = position
@@ -173,10 +191,7 @@ class TextStimulus(BaseStimulus):
 
         logger.wait(win, self.duration, stim_onset)
 
-        logger.log_event(
-            {"event_type": self.name, "expected_duration": self.duration},
-            onset=stim_onset,
-        )
+        self._log_event(logger=logger, stim_onset=stim_onset)
 
         return None
 
@@ -196,6 +211,7 @@ class ImageStimulus(BaseStimulus):
         height: float = None,
         autodraw: bool = False,
         wait_no_keys: bool = False,
+        rl_label: str = None,
     ):
         """
         Stimulus class for image displays.
@@ -214,7 +230,9 @@ class ImageStimulus(BaseStimulus):
             If the logger's wait function should get key presses - only set to True if presses that are too early should be used, by default False
         """
 
-        super().__init__(name=name, duration=duration, wait_no_keys=wait_no_keys)
+        super().__init__(
+            name=name, duration=duration, wait_no_keys=wait_no_keys, rl_label=rl_label
+        )
 
         self.image_paths = image_paths
 
@@ -288,10 +306,7 @@ class ImageStimulus(BaseStimulus):
 
         logger.wait(win, self.duration, stim_onset, self.wait_no_keys)
 
-        logger.log_event(
-            {"event_type": self.name, "expected_duration": self.duration},
-            onset=stim_onset,
-        )
+        self._log_event(logger=logger, stim_onset=stim_onset)
 
         return None
 
@@ -308,6 +323,7 @@ class ActionStimulus(BaseStimulus):
         name: str = "response",
         timeout_action: int = None,
         name_timeout="response-time-out",
+        rl_label: str = None,
     ):
         """
         Setting up the action object.
@@ -324,7 +340,7 @@ class ActionStimulus(BaseStimulus):
             Behavior of the object if the response window times out, making it possible that no response is also a distinc action, by default None
         """
 
-        super().__init__(name=name, duration=duration)
+        super().__init__(name=name, duration=duration, rl_label=rl_label)
 
         self.key_list = list(key_dict.keys())
         self.key_dict = key_dict
@@ -404,6 +420,7 @@ class ActionStimulus(BaseStimulus):
                         "response_button": response[0],
                         "response_time": RT,
                         "action": action,
+                        "rl_label": self.rl_label,
                     },
                     onset=response_window_onset,
                 )
@@ -426,6 +443,7 @@ class ActionStimulus(BaseStimulus):
                     "response_time": RT,
                     "response_button": logger.na,
                     "action": self.timeout_action,
+                    "rl_label": self.rl_label,
                 },
                 onset=response_window_onset,
             )
@@ -489,6 +507,7 @@ class ActionStimulus(BaseStimulus):
                     "response_time": rt,
                     "response_button": response_button,
                     "action": response_key,
+                    "rl_label": self.rl_label,
                 },
                 onset=response_window_onset,
             )
@@ -505,6 +524,7 @@ class ActionStimulus(BaseStimulus):
                     "response_button": response_button,
                     "response_time": rt,
                     "action": response_key,
+                    "rl_label": self.rl_label,
                 },
                 onset=response_window_onset,
             )
@@ -534,6 +554,7 @@ class FeedBackStimulus(BaseStimulus):
         simple: bool = False,
         bar_total: float = None,
         bar_labels: Dict = {"left": "0 kr", "right": "75 kr"},
+        rl_label: str = None,
     ):
         """
         FeedBack class, provides feedback to the participant, by creating
@@ -559,7 +580,7 @@ class FeedBackStimulus(BaseStimulus):
             keys: win, lose, zero with a string to an image or a numpy array.
         """
 
-        super().__init__(name=name, duration=duration)
+        super().__init__(name=name, duration=duration, rl_label=rl_label)
 
         self.text = text
         self.position = position
@@ -742,13 +763,10 @@ class FeedBackStimulus(BaseStimulus):
 
         win.flip()
 
-        logger.log_event(
-            {
-                "event_type": self.name,
-                "expected_duration": self.duration,
-                "total_reward": total_reward,
-            },
-            onset=stim_onset,
+        self._log_event(
+            logger=logger,
+            stim_onset=stim_onset,
+            extra_info={"total_reward": total_reward},
             reward=reward,
         )
 
@@ -790,12 +808,9 @@ class FeedBackStimulus(BaseStimulus):
 
         logger.wait(win=None, time=self.duration, start=stim_onset)
 
-        logger.log_event(
-            {
-                "event_type": self.name,
-                "expected_duration": self.duration,
-                "total_reward": total_reward,
-            },
-            onset=stim_onset,
+        self._log_event(
+            logger=logger,
+            stim_onset=stim_onset,
+            extra_info={"total_reward": total_reward},
             reward=reward,
         )

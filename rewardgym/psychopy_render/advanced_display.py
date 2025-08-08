@@ -34,6 +34,7 @@ class ActionStimulusTooEarly(ActionStimulus):
             "height": 28,
             "color": "white",
         },
+        rl_label: str = None,
     ):
         """
         Setting up the action object.
@@ -56,6 +57,7 @@ class ActionStimulusTooEarly(ActionStimulus):
             key_dict=key_dict,
             timeout_action=timeout_action,
             name_timeout=name_timeout,
+            rl_label=rl_label,
         )
 
         self.name_tooearly = name_tooearly
@@ -149,8 +151,9 @@ class ConditionBasedDisplay(BaseStimulus):
             4: make_card_stimulus(generate_stimulus_properties(4)),
             5: make_card_stimulus(generate_stimulus_properties(5)),
         },
+        rl_label: str = None,
     ):
-        super().__init__(name=name, duration=duration)
+        super().__init__(name=name, duration=duration, rl_label=rl_label)
 
         self.image_position = image_position
         self.image_map = image_map
@@ -230,10 +233,7 @@ class ConditionBasedDisplay(BaseStimulus):
 
         logger.wait(win, self.duration, stim_onset)
 
-        logger.log_event(
-            {"event_type": self.name, "expected_duration": self.duration},
-            onset=stim_onset,
-        )
+        self._log_event(logger=logger, stim_onset=stim_onset)
 
         return None
 
@@ -257,6 +257,7 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
         ],
         flip_probability=0.5,
         seed=111,
+        rl_label: str = None,
     ):
         super().__init__(
             name=name,
@@ -264,6 +265,7 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
             key_dict=key_dict,
             timeout_action=timeout_action,
             name_timeout=name_timeout,
+            rl_label=rl_label,
         )
 
         self.images = images
@@ -415,9 +417,8 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
 
         logger.wait(win, duration, stim_onset)
 
-        logger.log_event(
-            {"event_type": name, "expected_duration": duration, "misc": f"flip-{flip}"},
-            onset=stim_onset,
+        self._log_event(
+            logger=logger, stim_onset=stim_onset, extra_info={"misc": f"flip-{flip}"}
         )
 
 
@@ -437,8 +438,9 @@ class TextWithBorder(BaseStimulus):
         font_height=150,
         position=(0, 0),
         name=None,
+        rl_label: str = None,
     ):
-        super().__init__(name=name, duration=duration)
+        super().__init__(name=name, duration=duration, rl_label=rl_label)
 
         self.height = height
         self.width = width
@@ -491,10 +493,7 @@ class TextWithBorder(BaseStimulus):
 
         logger.wait(win, self.duration, stim_onset)
 
-        logger.log_event(
-            {"event_type": self.name, "expected_duration": self.duration},
-            onset=stim_onset,
-        )
+        self._log_event(logger=logger, stim_onset=stim_onset)
 
 
 class StimuliWithResponse(ActionStimulus):
@@ -515,6 +514,7 @@ class StimuliWithResponse(ActionStimulus):
         flip_probability=0.5,
         flip_dir: str = "horiz",
         seed=111,
+        rl_label: str = None,
     ):
         super().__init__(
             name=name,
@@ -522,6 +522,7 @@ class StimuliWithResponse(ActionStimulus):
             key_dict=key_dict,
             timeout_action=timeout_action,
             name_timeout=name_timeout,
+            rl_label=rl_label,
         )
 
         self.images = images
@@ -574,10 +575,7 @@ class StimuliWithResponse(ActionStimulus):
 
         logger.wait(win=None, time=self.target_duration, start=stim_onset)
 
-        logger.log_event(
-            {"event_type": self.target_name, "expected_duration": self.target_duration},
-            onset=stim_onset,
-        )
+        self._log_event(logger=logger, stim_onset=stim_onset)
 
         response = self._simulate_response(
             logger,
@@ -609,11 +607,6 @@ class StimuliWithResponse(ActionStimulus):
 
         logger.wait(win, self.target_duration, stim_onset, wait_no_keys=True)
 
-        logger.log_event(
-            {
-                "event_type": self.target_name,
-                "expected_duration": self.target_duration,
-                "misc": f"flip-{flip}",
-            },
-            onset=stim_onset,
+        self._log_event(
+            logger=logger, stim_onset=stim_onset, extra_info={"misc": f"flip-{flip}"}
         )
