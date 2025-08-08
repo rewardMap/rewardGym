@@ -10,6 +10,7 @@ if __name__ == "__main__":
     setup(
         name="rewardgym",
         setup_requires=SETUP_REQUIRES,
+        include_package_data=True,
         version=versioneer.get_version(),
         cmdclass=versioneer.get_cmdclass(),
     )

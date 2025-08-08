@@ -1,0 +1,2 @@
+include rewardgym/assets/*
+include rewardgym/tasks/**/core/assets/*
