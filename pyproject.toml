@@ -74,7 +74,10 @@ rewardgym_play = "rewardgym.tasks.play_task:play_cli"
 [tool.pytest.ini_options]
 doctest_optionflags = "NORMALIZE_WHITESPACE"
 xfail_strict = true
-addopts = "-rx"
+addopts = [
+    "--import-mode=importlib",
+    "-rx"
+]
 
 [tool.isort]
 profile = "black"
