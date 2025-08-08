@@ -1,3 +1,15 @@
+# 0.3.0 (Fri Aug 08 2025)
+
+#### 🚀 Enhancement
+
+- Moving tasks to submodules [#37](https://github.com/rewardMap/rewardGym/pull/37) ([@SRSteinkamp](https://github.com/SRSteinkamp))
+
+#### Authors: 1
+
+- Simon Steinkamp ([@SRSteinkamp](https://github.com/SRSteinkamp))
+
+---
+
 # 0.2.0 (Mon Jun 16 2025)
 
 #### 💥 Breaking Change during development
