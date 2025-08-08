@@ -108,7 +108,7 @@ quiet-level = 3
 "notebooks/*" = ["E402"]
 
 [tool.ruff]
-exclude = ["rewardgym/tasks/[^/]+/.*"]
+exclude = ["rewardgym/tasks/*/*"]
 
 [tool.versioneer]
 VCS = "git"
