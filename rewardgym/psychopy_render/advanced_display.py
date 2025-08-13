@@ -600,7 +600,15 @@ class StimuliWithResponse(ActionStimulus):
 
         logger.wait(win=None, time=self.target_duration, start=stim_onset)
 
-        self._log_event(logger=logger, stim_onset=stim_onset)
+        self._log_event(
+            logger=logger,
+            stim_onset=stim_onset,
+            extra_info={
+                "event_type": self.target_name,
+                "duration": self.target_duration,
+                "rl_label": self.target_rl_label,
+            },
+        )
 
         response = self._simulate_response(
             logger,

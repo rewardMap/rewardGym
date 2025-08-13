@@ -31,7 +31,7 @@ plugin_registry = {
         "post-action": [DelayUpdateHcp()],
     },
     "risk-sensitive": {"post-trial": [AddRemainder()]},
-    "two-step": {"pre-trial": [MiscUpdateTwoStep()], "post-trial": [AddRemainder]},
+    "two-step": {"pre-trial": [MiscUpdateTwoStep()], "post-trial": [AddRemainder()]},
     "posner": {"post-trial": [AddRemainder()]},
     "gonogo": {"post-trial": [AddRemainder()]},
 }
