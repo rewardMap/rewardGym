@@ -27,7 +27,7 @@ class BaseEnv(Env):
         reward_locations: Dict,
         render_mode: str = None,
         info_dict: Dict = None,
-        seed: Union[int, np.random.Generator] = 1000,
+        random_state: Union[int, np.random.Generator] = 1000,
         name: str = None,
         n_actions: int = None,
         reduced_actions: int = None,
@@ -45,8 +45,8 @@ class BaseEnv(Env):
             If using rendering or not, by default None
         info_dict : dict, optional
             Additional information, that should be associated with a node, by default defaultdict(int)
-        seed : Union[int, np.random.Generator], optional
-            The random seed associated with the environment, creates a generator, by default 1000
+        random_state : Union[int, np.random.Generator], optional
+            The random_state associated with the environment, creates a generator, by default 1000
         """
 
         # It should be possible to use wrapper for one-hot, so no box and other handling necessary (might need an
@@ -70,7 +70,7 @@ class BaseEnv(Env):
 
         self.observation_space = Discrete(self.n_states)
 
-        self.rng = check_random_state(seed)
+        self.random_state = check_random_state(random_state)
         self.reward_locations = reward_locations
 
         if info_dict is None:
@@ -165,7 +165,7 @@ class BaseEnv(Env):
         if condition is not None:
             self.condition = condition
         elif self.reduced_actions < len(self.full_graph[self.agent_location]):
-            locs = self.rng.choice(
+            locs = self.random_state.choice(
                 list(self.full_graph[self.agent_location].keys()), size=self.n_actions
             )
             self.condition = {
@@ -222,11 +222,11 @@ class BaseEnv(Env):
         elif isinstance(current_graph[action], tuple):
             stochasticiy = current_graph[action][1]
 
-            if self.rng.random() <= stochasticiy:
+            if self.random_state.random() <= stochasticiy:
                 next_position = current_graph[action][0][0]
             else:
                 possible_locs = current_graph[action][0][1:]
-                next_position = self.rng.choice(possible_locs)
+                next_position = self.random_state.choice(possible_locs)
         else:
             next_position = current_graph[action]
 

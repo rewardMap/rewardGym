@@ -20,7 +20,7 @@ class RenderEnv(BaseEnv):
         reward_locations: dict,
         render_mode: str = None,
         info_dict: dict = defaultdict(int),
-        seed: Union[int, np.random.Generator] = 1000,
+        random_state: Union[int, np.random.Generator] = 1000,
         name: str = None,
     ):
         """
@@ -41,7 +41,12 @@ class RenderEnv(BaseEnv):
         """
 
         super().__init__(
-            environment_graph, reward_locations, render_mode, info_dict, seed, name
+            environment_graph=environment_graph,
+            reward_locations=reward_locations,
+            render_mode=render_mode,
+            info_dict=info_dict,
+            random_state=random_state,
+            name=name,
         )
 
         self.setup = False
