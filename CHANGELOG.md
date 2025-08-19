@@ -1,3 +1,15 @@
+# 0.4.2 (Tue Aug 19 2025)
+
+#### 🐛 Bug Fix
+
+- Random state [#41](https://github.com/rewardMap/rewardGym/pull/41) ([@SRSteinkamp](https://github.com/SRSteinkamp))
+
+#### Authors: 1
+
+- Simon Steinkamp ([@SRSteinkamp](https://github.com/SRSteinkamp))
+
+---
+
 # 0.4.1 (Wed Aug 13 2025)
 
 #### 🐛 Bug Fix
