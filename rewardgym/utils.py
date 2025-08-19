@@ -216,27 +216,32 @@ def get_condition_meaning(
     return trial_type
 
 
-def check_seed(seed: Union[np.random.Generator, int] = 1234) -> np.random.Generator:
+def check_random_state(
+    random_state: Union[np.random.Generator, int] = 1234,
+) -> np.random.Generator:
     """
-    Checks if a provided seed is a np.random.Generator object or an integer.
-    If it is an integer, creates a Generator object using the integer as a seed
+    Checks if a provided random_state is a np.random.Generator object or an integer.
+    If it is an integer, creates a Generator object using the integer as a random_state
     , else returns the provided
     Generator.
+    Following: https://github.com/scikit-learn/scikit-learn/blob/c5497b7f7/sklearn/utils/validation.py#L1488
 
     Parameters
     ----------
-    seed : Union[np.random.Generator, int], optional
-        A np.random.Generator or an integer, used to seed the Generator, by default 1234
+    random_state : Union[np.random.Generator, int], optional
+        A np.random.Generator or an integer, used to random_state the Generator, by default 1234
 
     Returns
     -------
     np.random.Generator
         A np.random.Generator object.
     """
-    if isinstance(seed, np.random.Generator):
-        return seed
+    if isinstance(random_state, np.random.Generator):
+        return random_state
+    elif random_state is None:
+        return np.random.default_rng()
     else:
-        return np.random.default_rng(seed)
+        return np.random.default_rng(random_state)
 
 
 def get_starting_nodes(graph: dict) -> List:

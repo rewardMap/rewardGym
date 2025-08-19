@@ -11,7 +11,7 @@ from typing import Tuple
 
 import numpy as np
 
-from ..utils import check_seed
+from ..utils import check_random_state
 
 
 class BaseEnv(Env):
@@ -70,7 +70,7 @@ class BaseEnv(Env):
 
         self.observation_space = Discrete(self.n_states)
 
-        self.rng = check_seed(seed)
+        self.rng = check_random_state(seed)
         self.reward_locations = reward_locations
 
         if info_dict is None:

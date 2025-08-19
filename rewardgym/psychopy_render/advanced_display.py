@@ -11,7 +11,7 @@ except ModuleNotFoundError:
 import numpy as np
 
 from ..stimuli import generate_stimulus_properties, make_card_stimulus
-from ..utils import check_seed
+from ..utils import check_random_state
 from .logger import ExperimentLogger, SimulationLogger
 
 
@@ -279,7 +279,7 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
         self.rl_label_phase1 = rl_label_phase1
         self.rl_label_phase2 = rl_label_phase2
         self.flip_probability = flip_probability
-        self.seed = check_seed(seed)
+        self.seed = check_random_state(seed)
 
     def _setup(self, win, **kwargs):
         self.image_class = []
@@ -556,7 +556,7 @@ class StimuliWithResponse(ActionStimulus):
         self.flip_probability = flip_probability
         self.flip_dir = flip_dir
         self.target_rl_label = target_rl_label
-        self.rng = check_seed(seed)
+        self.rng = check_random_state(seed)
 
     def _setup(self, win, **kwargs):
         self.imageStims = []

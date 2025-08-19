@@ -2,7 +2,7 @@ from typing import List, Union
 
 import numpy as np
 
-from .utils import check_seed
+from .utils import check_random_state
 
 
 class BaseReward:
@@ -16,7 +16,7 @@ class BaseReward:
         self.reward = reward
         self.p = p
 
-        self.rng = check_seed(seed)
+        self.rng = check_random_state(seed)
 
     def _reward_function(self, **kwargs):
         reward = self.rng.choice(self.reward, p=self.p)
@@ -38,7 +38,7 @@ class DriftingReward(BaseReward):
         if not isinstance(reward, (list, tuple, np.ndarray)):
             reward = [reward]
 
-        self.rng = check_seed(seed)
+        self.rng = check_random_state(seed)
 
         if p is None:
             p = self.rng.uniform(*borders)
@@ -66,7 +66,7 @@ class DriftingReward(BaseReward):
 class PseudoRandomReward(BaseReward):
     def __init__(self, reward_list: Union[List], seed=1234):
         self.reward_list = reward_list
-        self.rng = check_seed(seed)
+        self.rng = check_random_state(seed)
         self._generate_sequence()
 
     def _reward_function(self, **kwargs):

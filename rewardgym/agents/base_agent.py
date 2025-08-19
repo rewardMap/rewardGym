@@ -3,7 +3,7 @@ from typing import List, Tuple, Union
 
 import numpy as np
 
-from ..utils import check_seed
+from ..utils import check_random_state
 
 
 class ValenceQAgent:
@@ -54,7 +54,7 @@ class ValenceQAgent:
         self.temperature = temperature
         self.discount_factor = discount_factor
 
-        self.rng = check_seed(seed)
+        self.rng = check_random_state(seed)
 
         self.training_error = []
 
@@ -216,7 +216,7 @@ class RandomAgent(QAgent):
 
         self.action_space = action_space
         self.state_space = state_space
-        self.rng = check_seed(seed)
+        self.rng = check_random_state(seed)
 
     def update(self, *args, **kwargs):
         return None
