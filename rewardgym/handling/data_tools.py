@@ -1,3 +1,4 @@
+import warnings
 from typing import Dict, Union
 
 import numpy as np
@@ -10,9 +11,12 @@ def prepare_data(
     data: Union[Dict, pd.DataFrame],
     remap_dictionary={"left": 0, "right": 1},
     drop_trials=True,
+    seperator="\t",
 ):
     if isinstance(data, dict):
         data = pd.DataFrame.from_dict(data)
+    elif isinstance(data, str):
+        data = pd.read_csv(data, sep=seperator)
 
     data = data.replace({"n/a": np.nan, "None": None}).infer_objects(copy=False)
     if remap_dictionary is not None:
@@ -40,7 +44,13 @@ def prepare_data(
             "rl_label",
         ],
     ):
-        data[col] = data[col].astype(data_typ)
+        try:
+            data[col] = data[col].astype(data_typ)
+        except KeyError:
+            warnings.warn(
+                f"Column '{col}' missing in DataFrame. Could not cast to {data_typ}.",
+                UserWarning,
+            )
 
     if drop_trials:
         trials_to_drop = data.query("event_type == 'reminder'").trial.values
