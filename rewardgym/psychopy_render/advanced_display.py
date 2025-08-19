@@ -11,7 +11,7 @@ except ModuleNotFoundError:
 import numpy as np
 
 from ..stimuli import generate_stimulus_properties, make_card_stimulus
-from ..utils import check_seed
+from ..utils import check_random_state
 from .logger import ExperimentLogger, SimulationLogger
 
 
@@ -256,7 +256,7 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
             make_card_stimulus(generate_stimulus_properties(23)),
         ],
         flip_probability=0.5,
-        seed=111,
+        random_state=111,
         rl_label: str = None,
         rl_label_phase1: str = None,
         rl_label_phase2: str = None,
@@ -279,7 +279,7 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
         self.rl_label_phase1 = rl_label_phase1
         self.rl_label_phase2 = rl_label_phase2
         self.flip_probability = flip_probability
-        self.seed = check_seed(seed)
+        self.random_state = check_random_state(random_state)
 
     def _setup(self, win, **kwargs):
         self.image_class = []
@@ -294,7 +294,7 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
                 )
 
     def display(self, win, logger, info, **kwargs):
-        if self.seed.random() < self.flip_probability:
+        if self.random_state.random() < self.flip_probability:
             flip = True
             flip_key_dict = {key: 1 - value for key, value in self.key_dict.items()}
 
@@ -537,7 +537,7 @@ class StimuliWithResponse(ActionStimulus):
         ],
         flip_probability=0.5,
         flip_dir: str = "horiz",
-        seed=111,
+        random_state=111,
         rl_label: str = None,
     ):
         super().__init__(
@@ -556,7 +556,7 @@ class StimuliWithResponse(ActionStimulus):
         self.flip_probability = flip_probability
         self.flip_dir = flip_dir
         self.target_rl_label = target_rl_label
-        self.rng = check_seed(seed)
+        self.rng = check_random_state(random_state)
 
     def _setup(self, win, **kwargs):
         self.imageStims = []

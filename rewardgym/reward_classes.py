@@ -2,11 +2,11 @@ from typing import List, Union
 
 import numpy as np
 
-from .utils import check_seed
+from .utils import check_random_state
 
 
 class BaseReward:
-    def __init__(self, reward, p=1, seed=1234):
+    def __init__(self, reward, p=1, random_state=1234):
         if not isinstance(reward, (list, tuple, np.ndarray)):
             reward = [reward]
 
@@ -16,10 +16,10 @@ class BaseReward:
         self.reward = reward
         self.p = p
 
-        self.rng = check_seed(seed)
+        self.random_state = check_random_state(random_state)
 
     def _reward_function(self, **kwargs):
-        reward = self.rng.choice(self.reward, p=self.p)
+        reward = self.random_state.choice(self.reward, p=self.p)
         return reward
 
     def __call__(self, **kwargs):
@@ -33,15 +33,15 @@ class DriftingReward(BaseReward):
         p: float = None,
         borders: list = [0.25, 0.75],
         gauss_sd: float = 0.025,
-        seed: int = 1234,
+        random_state: int = 1234,
     ):
         if not isinstance(reward, (list, tuple, np.ndarray)):
             reward = [reward]
 
-        self.rng = check_seed(seed)
+        self.random_state = check_random_state(random_state)
 
         if p is None:
-            p = self.rng.uniform(*borders)
+            p = self.random_state.uniform(*borders)
 
         self.p = p
         self.reward = reward
@@ -49,9 +49,9 @@ class DriftingReward(BaseReward):
         self.borders = borders
 
     def _reward_function(self, **kwargs):
-        reward = self.rng.choice(self.reward, p=[self.p, 1 - self.p])
+        reward = self.random_state.choice(self.reward, p=[self.p, 1 - self.p])
 
-        next_val = self.p + self.rng.normal(0, self.gauss_sd)
+        next_val = self.p + self.random_state.normal(0, self.gauss_sd)
 
         if next_val > self.borders[1]:
             next_val = 2 * self.borders[1] - next_val
@@ -64,9 +64,9 @@ class DriftingReward(BaseReward):
 
 
 class PseudoRandomReward(BaseReward):
-    def __init__(self, reward_list: Union[List], seed=1234):
+    def __init__(self, reward_list: Union[List], random_state=1234):
         self.reward_list = reward_list
-        self.rng = check_seed(seed)
+        self.random_state = check_random_state(random_state)
         self._generate_sequence()
 
     def _reward_function(self, **kwargs):
@@ -78,6 +78,6 @@ class PseudoRandomReward(BaseReward):
         return reward
 
     def _generate_sequence(self):
-        self.rewards = self.rng.choice(
+        self.rewards = self.random_state.choice(
             self.reward_list, size=len(self.reward_list), replace=False
         ).tolist()

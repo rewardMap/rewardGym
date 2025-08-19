@@ -5,7 +5,7 @@ from rewardgym import ENVIRONMENTS, get_env
 from rewardgym.utils import (
     add_to_df,
     check_elements_in_list,
-    check_seed,
+    check_random_state,
     get_condition_meaning,
     get_condition_state,
     get_starting_nodes,
@@ -98,9 +98,9 @@ def test_unpack_conditions_tuple():
     assert unpack_conditions((l3, l1), 1) == (0, 1)
 
 
-def test_check_seed_with_int():
+def test_check_random_state_with_int():
     seed = 5678
-    rng = check_seed(seed)
+    rng = check_random_state(seed)
     assert isinstance(rng, np.random.Generator)
     try:
         assert rng.bit_generator.seed_seq.entropy == seed
@@ -108,14 +108,14 @@ def test_check_seed_with_int():
         assert rng.bit_generator._seed_seq.entropy == seed
 
 
-def test_check_seed_with_generator():
+def test_check_random_state_with_generator():
     generator = np.random.default_rng(9876)
-    rng = check_seed(generator)
+    rng = check_random_state(generator)
     assert rng == generator
 
 
-def test_check_seed_with_default():
-    rng = check_seed()
+def test_check_random_state_with_default():
+    rng = check_random_state()
     assert isinstance(rng, np.random.Generator)
     try:
         assert rng.bit_generator.seed_seq.entropy == 1234
@@ -123,9 +123,14 @@ def test_check_seed_with_default():
         assert rng.bit_generator._seed_seq.entropy == 1234
 
 
-def test_check_seed_with_invalid_input():
+def test_check_random_state_with_none():
+    rng = check_random_state(None)
+    assert isinstance(rng, np.random.Generator)
+
+
+def test_check_random_state_with_invalid_input():
     with pytest.raises(TypeError):
-        check_seed("invalid_seed")
+        check_random_state("invalid_seed")
 
 
 def test_get_starting_nodes():

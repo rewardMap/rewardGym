@@ -3,7 +3,7 @@ from typing import Tuple, Union
 
 import numpy as np
 
-from ..utils import check_seed
+from ..utils import check_random_state
 from .base_agent import ValenceQAgent, ValenceQAgent_eligibility
 
 
@@ -111,7 +111,7 @@ class ValenceHybridAgent(ValenceQAgent):
         self.action_space = action_space
         self.temperature = temperature
         self.hybrid = hybrid
-        self.rng = check_seed(seed)
+        self.rng = check_random_state(seed)
 
         self.training_error = []
 
