@@ -21,8 +21,8 @@ from rewardgym.reward_classes import BaseReward
 # As in the pygame example, we create the graph, rewards and their locations:
 env_graph = {0: [1, 2], 1: [], 2: []}
 
-reward1 = BaseReward(reward=[0, 1], p=[0.2, 0.8], seed=2222)
-reward2 = BaseReward(reward=[0, 1], p=[0.5, 0.5], seed=3333)
+reward1 = BaseReward(reward=[0, 1], p=[0.2, 0.8], random_state=2222)
+reward2 = BaseReward(reward=[0, 1], p=[0.5, 0.5], random_state=3333)
 
 # This creates the reward dictionary necessary for the environment.
 reward_locs = {1: reward1, 2: reward2}
