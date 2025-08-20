@@ -16,13 +16,13 @@ def get_env(
         "gonogo",
     ],
     render_backend: Literal["pygame", "psychopy", "psychopy-simulate"] = None,
-    seed: Union[int, np.random.Generator] = 1000,
+    random_state: Union[int, np.random.Generator] = 1000,
     **kwargs,
 ):
     environment_graph, reward_structure, info_dict = get_task(
         task_name,
         render_backend=render_backend,
-        seed=seed,
+        random_state=random_state,
     )
 
     if "meta" in info_dict.keys():
@@ -35,7 +35,7 @@ def get_env(
             reward_locations=reward_structure,
             render_mode=render_backend,
             info_dict=info_dict,
-            seed=seed,
+            random_state=random_state,
             name=task_name,
             reduced_actions=reduced_actions,
         )
@@ -44,7 +44,7 @@ def get_env(
             environment_graph=environment_graph,
             reward_locations=reward_structure,
             info_dict=info_dict,
-            seed=seed,
+            random_state=random_state,
             name=task_name,
         )
     elif render_backend == "psychopy" or render_backend == "psychopy-simulate":
@@ -53,7 +53,7 @@ def get_env(
             reward_locations=reward_structure,
             render_mode=render_backend,
             info_dict=info_dict,
-            seed=seed,
+            random_state=random_state,
             name=task_name,
             reduced_actions=reduced_actions,
         )

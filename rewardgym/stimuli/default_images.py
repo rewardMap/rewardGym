@@ -4,7 +4,7 @@ import matplotlib.font_manager
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
-from ..utils import check_seed
+from ..utils import check_random_state
 from .create_images import draw_centered_shape, draw_shape, make_stimulus
 
 bg_color = (240, 240, 240)
@@ -35,7 +35,7 @@ def generate_stimulus_properties(
     patterns=patterns,
     bg_color=bg_color,
 ):
-    random_state = check_seed(random_state)
+    random_state = check_random_state(random_state)
 
     gen_colors = colors[:]
     stim_shape = shapes[
