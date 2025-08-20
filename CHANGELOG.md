@@ -1,3 +1,15 @@
+# 0.4.4 (Wed Aug 20 2025)
+
+#### 🐛 Bug Fix
+
+- Adding tests for data handling and some basic functionality [#40](https://github.com/rewardMap/rewardGym/pull/40) ([@SRSteinkamp](https://github.com/SRSteinkamp))
+
+#### Authors: 1
+
+- Simon Steinkamp ([@SRSteinkamp](https://github.com/SRSteinkamp))
+
+---
+
 # 0.4.3 (Wed Aug 20 2025)
 
 #### 🐛 Bug Fix
