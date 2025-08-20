@@ -42,13 +42,13 @@ def pspy_run_task(
     logger,
     win=None,
     settings=None,
-    seed=111,
+    random_state=111,
     agent=None,
     n_episodes=None,
     plugins: Dict = plugin_registry,
 ):
     if settings is None:
-        settings = get_configs(env.name)(seed)
+        settings = get_configs(env.name)(random_state)
 
     if win is None:
         win = Window()

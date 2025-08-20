@@ -25,6 +25,9 @@ class BaseReward:
     def __call__(self, **kwargs):
         return self._reward_function(**kwargs)
 
+    def reset(self):
+        pass
+
 
 class DriftingReward(BaseReward):
     def __init__(
@@ -44,6 +47,7 @@ class DriftingReward(BaseReward):
             p = self.random_state.uniform(*borders)
 
         self.p = p
+        self.initial_p = p
         self.reward = reward
         self.gauss_sd = gauss_sd
         self.borders = borders
@@ -61,6 +65,9 @@ class DriftingReward(BaseReward):
         self.p = next_val
 
         return reward
+
+    def reset(self):
+        self.p = self.initial_p
 
 
 class PseudoRandomReward(BaseReward):
@@ -81,3 +88,6 @@ class PseudoRandomReward(BaseReward):
         self.rewards = self.random_state.choice(
             self.reward_list, size=len(self.reward_list), replace=False
         ).tolist()
+
+    def reset(self):
+        self.rewards = self._generate_sequence()

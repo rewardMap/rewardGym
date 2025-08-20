@@ -44,10 +44,10 @@ class ValenceQAgent:
             Seed or random number generator for reproducibility, by default 1000.
         """
 
-        self.q_values = np.zeros((state_space, action_space)) + 1 / action_space
-
         self.n_states = state_space
         self.n_actions = action_space
+        self.q_values = np.zeros((self.n_states, self.n_actions)) + 1 / self.n_actions
+
         self.lr_neg = learning_rate_neg
         self.lr_pos = learning_rate_pos
 
@@ -163,6 +163,12 @@ class ValenceQAgent:
 
         return self.q_values
 
+    def reset(self):
+        self.q_values = (
+            np.zeros((self.state_space, self.action_space)) + 1 / self.action_space
+        )
+        self.training_error = []
+
 
 class QAgent(ValenceQAgent):
     def __init__(
@@ -237,6 +243,9 @@ class RandomAgent(QAgent):
 
         return prob
 
+    def reset(self):
+        pass
+
 
 class ValenceQAgent_eligibility(ValenceQAgent):
     def __init__(
@@ -287,7 +296,7 @@ class ValenceQAgent_eligibility(ValenceQAgent):
             seed=seed,
         )
 
-        self.eligibility_traces = np.zeros((state_space, action_space))
+        self.eligibility_traces = np.zeros((self.state_space, self.action_space))
         self.eligibility_decay = eligibility_decay
         self.reset_traces = reset_traces
 
@@ -327,6 +336,10 @@ class ValenceQAgent_eligibility(ValenceQAgent):
         self.training_error.append(temporal_difference)
 
         return self.q_values
+
+    def reset(self):
+        super().reset()
+        self.eligibility_traces = np.zeros((self.state_space, self.action_space))
 
 
 class QAgent_eligibility(ValenceQAgent_eligibility):
