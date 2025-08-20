@@ -65,3 +65,85 @@ def prepare_data(
         dropped_trials = None
 
     return data, dropped_trials
+
+
+def process_trial_for_rl(trial_id: int, trial_df: pd.DataFrame) -> list:
+    """
+    Process a single trial into (obs0, action, reward, obs1, reaction_time, trial).
+    Returns a list of tuples.
+    """
+    tuples = []
+    trial_df = trial_df.reset_index(drop=True)
+
+    def make_empty_dict(
+        trial_id,
+        dictionary_keys=["obs0", "action", "reward", "obs1", "reaction_time", "trial"],
+    ):
+        template_dict = {key: None for key in dictionary_keys}
+        template_dict["trial"] = trial_id
+
+        return template_dict
+
+    tmp_dict = make_empty_dict(trial_id)
+
+    tmp_obs0 = None
+
+    for i in range(len(trial_df)):
+        row = trial_df.loc[i]
+
+        if row["rl_label"] == "obs":
+            if tmp_dict["obs0"] is None:
+                tmp_dict["obs0"] = row["current_location"]
+            else:
+                if tmp_dict["obs1"] is None:
+                    tmp_dict["obs1"] = row["current_location"]
+                    tmp_obs0 = row["current_location"]
+                else:
+                    warnings.warn(
+                        "More than two obs encountered in trial %s" % trial_id
+                    )
+
+        elif row["rl_label"] == "action":
+            if tmp_dict["action"] is None:
+                tmp_dict["action"] = row["action"]
+                tmp_dict["reaction_time"] = row["response_time"]
+
+        elif row["rl_label"] == "reward":
+            if tmp_dict["reward"] is None:
+                tmp_dict["reward"] = row["reward"]
+
+        # Check if a complete tuple is ready
+        if all(value is not None for value in tmp_dict.values()):
+            tuples.append(tuple(tmp_dict.values()))
+            tmp_dict = make_empty_dict(trial_id)
+            tmp_dict["trial"] = trial_id
+
+            if tmp_obs0 is not None:
+                tmp_dict["obs0"] = tmp_obs0
+                tmp_obs0 = None
+
+    # Handle dangling partial tuple with obs0, action, reward
+    if all(tmp_dict[key] is not None for key in ["obs0", "action", "reward"]):
+        tuples.append(tuple(tmp_dict.values()))
+
+    return tuples
+
+
+def prepare_data_for_rl(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Convert raw event dataframe into structured obs→action→reward→obs1 sequences.
+    """
+    # Step 1: Sort and reset
+    df = df.sort_values(["trial", "onset"]).reset_index(drop=True).copy()
+
+    # Step 2: Process trials
+    all_tuples = []
+    for trial_id, trial_df in df.groupby("trial"):
+        all_tuples.extend(process_trial_for_rl(trial_id, trial_df))
+
+    # Step 3: Build dataframe
+    rl_dataframe = pd.DataFrame(
+        all_tuples,
+        columns=["obs0", "action", "reward", "obs1", "reaction_time", "trial"],
+    )
+    return rl_dataframe

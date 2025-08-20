@@ -3,8 +3,10 @@ import warnings
 import pandas as pd
 import pytest
 
-from rewardgym.handling.data_tools import (
-    prepare_data,  # replace with actual module path
+from rewardgym.handling.data_tools import (  # replace with actual module path
+    prepare_data,
+    prepare_data_for_rl,
+    process_trial_for_rl,
 )
 
 
@@ -126,3 +128,165 @@ def test_empty_dataframe():
     df_out, dropped = prepare_data(df)
     assert df_out.empty
     assert dropped == 0
+
+
+@pytest.fixture
+def sample_df():
+    """A small raw dataframe with one complete trial (obs→action→reward→obs1)."""
+    return pd.DataFrame(
+        [
+            {
+                "trial": 1,
+                "onset": 0.1,
+                "rl_label": "obs",
+                "current_location": "A",
+                "action": None,
+                "reward": None,
+                "response_time": None,
+            },
+            {
+                "trial": 1,
+                "onset": 0.2,
+                "rl_label": "action",
+                "current_location": None,
+                "action": "left",
+                "reward": None,
+                "response_time": 0.5,
+            },
+            {
+                "trial": 1,
+                "onset": 0.3,
+                "rl_label": "reward",
+                "current_location": None,
+                "action": None,
+                "reward": 1,
+                "response_time": None,
+            },
+            {
+                "trial": 1,
+                "onset": 0.4,
+                "rl_label": "obs",
+                "current_location": "B",
+                "action": None,
+                "reward": None,
+                "response_time": None,
+            },
+        ]
+    )
+
+
+def test_process_trial_for_rl_complete(sample_df):
+    """Ensure process_trial_for_rl produces the expected tuple from one full trial."""
+    tuples = process_trial_for_rl(1, sample_df)
+    assert len(tuples) == 1
+    obs0, action, reward, obs1, rt, trial = tuples[0]
+    assert obs0 == "A"
+    assert action == "left"
+    assert reward == 1
+    assert obs1 == "B"
+    assert rt == 0.5
+    assert trial == 1
+
+
+def test_process_trial_for_rl_multiple_obs_warns(sample_df):
+    """If more than 2 obs appear before the tuple closes, a warning should be raised."""
+    df = pd.DataFrame(
+        [
+            {
+                "trial": 1,
+                "onset": 0.1,
+                "rl_label": "obs",
+                "current_location": "A",
+                "action": None,
+                "reward": None,
+                "response_time": None,
+            },
+            {
+                "trial": 1,
+                "onset": 0.2,
+                "rl_label": "obs",
+                "current_location": "B",
+                "action": None,
+                "reward": None,
+                "response_time": None,
+            },
+            {
+                "trial": 1,
+                "onset": 0.3,
+                "rl_label": "obs",
+                "current_location": "C",
+                "action": None,
+                "reward": None,
+                "response_time": None,
+            },
+            {
+                "trial": 1,
+                "onset": 0.4,
+                "rl_label": "action",
+                "current_location": None,
+                "action": "left",
+                "reward": None,
+                "response_time": 0.5,
+            },
+            {
+                "trial": 1,
+                "onset": 0.5,
+                "rl_label": "reward",
+                "current_location": None,
+                "action": None,
+                "reward": 1,
+                "response_time": None,
+            },
+        ]
+    )
+
+    with warnings.catch_warnings(record=True) as w:
+        warnings.simplefilter("always")
+        process_trial_for_rl(1, df)
+        assert any("More than two obs" in str(warning.message) for warning in w)
+
+
+def test_process_trial_for_rl_partial_tuple(sample_df):
+    """A trial missing obs1 should still return tuple if obs0, action, reward exist."""
+    df = sample_df.drop(sample_df.index[-1])  # drop obs1
+    tuples = process_trial_for_rl(1, df)
+    assert len(tuples) == 1
+    obs0, action, reward, obs1, rt, trial = tuples[0]
+    assert obs0 == "A"
+    assert action == "left"
+    assert reward == 1
+    assert obs1 is None  # missing obs1
+
+
+def test_prepare_data_for_rl(sample_df):
+    """Integration test for prepare_data_for_rl."""
+    df = sample_df.copy()
+    result_df = prepare_data_for_rl(df)
+    assert isinstance(result_df, pd.DataFrame)
+    assert list(result_df.columns) == [
+        "obs0",
+        "action",
+        "reward",
+        "obs1",
+        "reaction_time",
+        "trial",
+    ]
+    assert result_df.shape[0] == 1
+    row = result_df.iloc[0]
+    assert row.obs0 == "A"
+    assert row.action == "left"
+    assert row.reward == 1
+    assert row.obs1 == "B"
+    assert row.reaction_time == 0.5
+    assert row.trial == 1
+
+
+def test_prepare_data_for_rl_multiple_trials(sample_df):
+    """Ensure multiple trials are processed independently."""
+    df2 = sample_df.copy()
+    df2["trial"] = 2  # duplicate with different trial id
+    df = pd.concat([sample_df, df2], ignore_index=True)
+
+    result_df = prepare_data_for_rl(df)
+    assert result_df["trial"].nunique() == 2
+    assert result_df.shape[0] == 2
