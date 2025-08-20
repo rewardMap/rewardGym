@@ -65,7 +65,11 @@ class ValenceHybridAgent(ValenceQAgent):
         use_fixed : bool, optional
             Whether to use fixed transition probabilities (based on a given graph), by default False.
         """
-        self.t_values = np.zeros((state_space, action_space, state_space))
+
+        self.n_states = state_space
+        self.n_actions = action_space
+
+        self.t_values = np.zeros((self.n_states, self.n_actions, self.n_states))
 
         if graph is not None:
             for k in graph.keys():
@@ -106,9 +110,8 @@ class ValenceHybridAgent(ValenceQAgent):
             reset_traces=reset_traces,
         )
 
-        self.q_values = np.zeros((state_space, action_space))
+        self.q_values = np.zeros((self.n_states, self.n_actions))
         self.lr = learning_rate_mb
-        self.action_space = action_space
         self.temperature = temperature
         self.hybrid = hybrid
         self.rng = check_random_state(seed)
@@ -214,6 +217,11 @@ class ValenceHybridAgent(ValenceQAgent):
         self.training_error.append(state_prediction_error)
 
         return self.q_values
+
+    def reset(self):
+        self.q_agent.reset()
+        self.t_values = np.zeros((self.n_states, self.n_actions, self.n_states))
+        self.q_values = np.zeros((self.n_states, self.n_actions))
 
 
 class HybridAgent(ValenceHybridAgent):
