@@ -4,7 +4,11 @@ from typing import Dict, Union
 import numpy as np
 import pandas as pd
 
-pd.set_option("future.no_silent_downcasting", True)
+try:
+    pd.set_option("future.no_silent_downcasting", True)
+except pd._config.config.OptionError:
+    # Option removed in pandas >= 2.2
+    pass
 
 
 def prepare_data(
