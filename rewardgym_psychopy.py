@@ -2,10 +2,10 @@ import json
 
 from psychopy import core, event, visual
 
-from assets import show_instructions
-from rewardgym import get_configs, get_env
-from rewardgym.psychopy_render import ExperimentLogger, get_psychopy_info
+from rewardgym import get_configs, get_env, get_psychopy_info
+from rewardgym.psychopy_render import ExperimentLogger
 from rewardgym.runner import pspy_run_task, pspy_set_up_experiment
+from rewardgym.runner.psychopy_instructions import show_instructions
 from rewardgym.tasks import FULLPOINTS
 
 if __name__ == "__main__":

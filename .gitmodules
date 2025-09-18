@@ -16,3 +16,6 @@
 [submodule "rewardgym/tasks/twostep"]
 	path = rewardgym/tasks/twostep
 	url = https://github.com/rewardMap/twostep.git
+[submodule "rewardgym/tasks/robotfactory"]
+	path = rewardgym/tasks/robotfactory
+	url = https://github.com/rewardMap/robotfactory.git
