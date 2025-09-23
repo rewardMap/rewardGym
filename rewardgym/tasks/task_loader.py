@@ -3,6 +3,7 @@ import importlib.util
 import os
 import sys
 from pathlib import Path
+from typing import Dict, Union
 
 
 def _discover_plugins(base_dir):
@@ -48,8 +49,14 @@ def _discover_plugins(base_dir):
     return task_registry
 
 
-def _discover_external_plugins(task_folder):
-    """Load a task from an external folder, preserving relative imports."""
+def _discover_external_plugins(task_folder: Union[str, Path]) -> Dict:
+    """
+    Discover and register tasks from external directories.
+    Args:
+        task_folder: Path to a task folder containing plugin.py.
+    Returns:
+        Dictionary of registered tasks {task_name: task_handles}.
+    """
     task_registry = {}
     task_folder = Path(task_folder).resolve()
     plugin_path = task_folder / "plugin.py"
@@ -59,42 +66,33 @@ def _discover_external_plugins(task_folder):
         return task_registry
 
     try:
-        # Step 1: Add the task folder's parent to sys.path
-        # This allows relative imports (e.g., from .core) to resolve.
-        parent_dir = str(task_folder.parent)
-        if parent_dir not in sys.path:
-            sys.path.insert(0, parent_dir)
+        sys.path.insert(0, str(task_folder))  # Add task folder itself
 
-        # Step 2: Create a module spec with a fake package name
-        # This tricks Python into treating the folder as a package.
-        module_name = f"external_task_{task_folder.name}"
-        spec = importlib.util.spec_from_file_location(
-            name=module_name,
-            location=plugin_path,
-        )
+        module_name = f"external_{task_folder.name}_plugin"
+        spec = importlib.util.spec_from_file_location(module_name, plugin_path)
+
         plugin_module = importlib.util.module_from_spec(spec)
 
-        # Step 3: Set __package__ to enable relative imports
-        # This is critical for `from .core import ...` to work.
-        plugin_module.__package__ = f"{task_folder.name}"
+        plugin_module.__package__ = task_folder.name
 
-        # Step 4: Execute the module
         spec.loader.exec_module(plugin_module)
 
         if not hasattr(plugin_module, "register_task"):
-            raise AttributeError("No register_task() function defined in plugin.py")
+            raise AttributeError(f"No register_task() function in {plugin_path}")
 
-        # Step 5: Register the task
-        registry = plugin_module.register_task()
-        task_registry.update(registry)
-        print(f"Registered external task: {list(registry.keys())[0]}")
+        for task_name, handles in plugin_module.register_task().items():
+            task_registry[task_name] = handles
+            print(f"Registered external task: {task_name}")
 
     except Exception as e:
         print(f"[WARN] Could not register external task '{task_folder}': {e}")
+        import traceback
+
+        traceback.print_exc()  # Print full traceback for debugging
     finally:
-        # Step 6: Clean up sys.path to avoid pollution
-        if parent_dir in sys.path:
-            sys.path.remove(parent_dir)
+        # Step 7: Clean up sys.path
+        if str(task_folder) in sys.path:
+            sys.path.remove(str(task_folder))
 
     return task_registry
 
