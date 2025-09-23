@@ -155,16 +155,16 @@ def pspy_run_task(
                 )
                 obs = next_obs
 
-            apply_plugins(
-                plugins=plugins,
-                entry_point="post-trial",
-                env=env,
-                logger=logger,
-                settings=settings,
-                episode=episode,
-                actions=actions,
-                win=win,
-            )
+        apply_plugins(
+            plugins=plugins,
+            entry_point="post-trial",
+            env=env,
+            logger=logger,
+            settings=settings,
+            episode=episode,
+            actions=actions,
+            win=win,
+        )
 
         logger.log_event(
             {"event_type": "trial-end", "total_reward": env.cumulative_reward},
