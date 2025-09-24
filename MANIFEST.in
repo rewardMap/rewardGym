@@ -1,3 +1,3 @@
 include rewardgym/assets/*
-recursive-include rewardgym/tasks/*/core/assets/*
+recursive-include rewardgym/tasks/*/core/assets/ *.yaml *.svg *.png *.txt
 include rewardgym/tasks/*/*.yaml
