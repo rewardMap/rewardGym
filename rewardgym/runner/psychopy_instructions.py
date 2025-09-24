@@ -4,7 +4,7 @@ try:
     from psychopy.event import waitKeys
     from psychopy.visual import TextBox2
 except ImportError:
-    from ...psychopy_render.psychopy_stubs import TextBox2, waitKeys
+    from ..psychopy_render.psychopy_stubs import TextBox2, waitKeys
 
 from .. import ASSETS_PATH
 from ..tasks.task_loader import get_instructions_psychopy
