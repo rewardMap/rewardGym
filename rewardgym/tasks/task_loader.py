@@ -29,11 +29,22 @@ def _discover_plugins(base_dir):
         if not plugin_path.exists():
             continue
 
+        module_name = f"rewardgym.tasks.{task_folder}.plugin"
+
         try:
-            spec = importlib.util.spec_from_file_location(
-                name=f"rewardgym.tasks.{task_folder}.plugin", location=plugin_path
-            )
+            spec = importlib.util.spec_from_file_location(module_name, plugin_path)
             plugin_module = importlib.util.module_from_spec(spec)
+
+            # ✅ Register in sys.modules before executing
+            sys.modules[module_name] = plugin_module
+
+            # Ensure parent package exists in sys.modules
+            parent_pkg = f"rewardgym.tasks.{task_folder}"
+            if parent_pkg not in sys.modules:
+                import types
+
+                sys.modules[parent_pkg] = types.ModuleType(parent_pkg)
+
             spec.loader.exec_module(plugin_module)
 
             if not hasattr(plugin_module, "register_task"):
