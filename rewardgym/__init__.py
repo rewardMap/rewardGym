@@ -1,3 +1,5 @@
+# ruff: noqa: E402
+
 import pathlib
 
 from . import _version
@@ -8,9 +10,21 @@ TASKS_DIR = pathlib.Path(__file__).resolve().parent
 
 _task_registry = TaskRegistry(task_loader._discover_plugins(TASKS_DIR / "tasks"))
 
+
 ASSETS_PATH = pathlib.Path(__file__).parent.resolve() / "assets"
 
 ENVIRONMENTS = list(_task_registry.keys())
+
+from . import (
+    agents,
+    environments,
+    handling,
+    psychopy_render,
+    pygame_render,
+    runner,
+    stimuli,
+    tasks,
+)
 
 __all__ = [
     "get_configs",
@@ -19,6 +33,14 @@ __all__ = [
     "ENVIRONMENTS",
     "get_psychopy_info",
     "check_random_state",
+    "agents",
+    "environments",
+    "handling",
+    "psychopy_render",
+    "pygame_render",
+    "runner",
+    "stimuli",
+    "tasks",
 ]
 
 __version__ = _version.get_versions()["version"]
