@@ -15,16 +15,12 @@ ASSETS_PATH = pathlib.Path(__file__).parent.resolve() / "assets"
 
 ENVIRONMENTS = list(_task_registry.keys())
 
-from . import (
-    agents,
-    environments,
-    handling,
-    psychopy_render,
-    pygame_render,
-    runner,
-    stimuli,
-    tasks,
-)
+from . import agents, environments, handling, psychopy_render, runner, stimuli, tasks
+
+try:
+    from . import pygame_render
+except ImportError:
+    print("no pygame")
 
 __all__ = [
     "get_configs",
