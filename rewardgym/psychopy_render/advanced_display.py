@@ -573,13 +573,13 @@ class StimuliWithResponse(ActionStimulus):
     def display(self, win, logger, info, **kwargs):
         logger.key_strokes(win)
 
-        response_window_onset = logger.get_time()
-
         self._draw_stimulus(
             win,
             logger,
         )
         win.flip()
+
+        response_window_onset = logger.get_time()
 
         response = self._response_handling(
             win, logger, response_window_onset, key_dict=self.key_dict, info=info
