@@ -650,3 +650,185 @@ class StimuliWithResponse(ActionStimulus):
                 "rl_label": self.target_rl_label,
             },
         )
+
+
+class LingeringAction(ActionStimulus):
+    def __init__(
+        self,
+        duration: float,
+        key_dict: Dict = {"left": 0, "right": 1},
+        name: str = "response",
+        name_phase1: str = None,
+        name_phase2: str = None,
+        duration_phase1: float = 0.0,
+        duration_phase2: float = 0.0,
+        timeout_action: int = None,
+        name_timeout="response-time-out",
+        positions_phase1=((0, 0), (0, 0)),
+        positions_phase2=((0, 0), (0, 0)),
+        images_phase1=[
+            make_card_stimulus(generate_stimulus_properties(12)),
+            make_card_stimulus(generate_stimulus_properties(23)),
+        ],
+        images_phase2=[
+            make_card_stimulus(generate_stimulus_properties(12)),
+            make_card_stimulus(generate_stimulus_properties(23)),
+        ],
+        random_state=111,
+        rl_label: str = None,
+        rl_label_phase1: str = None,
+        rl_label_phase2: str = None,
+        autodraw: bool = False,
+    ):
+        super().__init__(
+            name=name,
+            duration=duration,
+            key_dict=key_dict,
+            timeout_action=timeout_action,
+            name_timeout=name_timeout,
+            rl_label=rl_label,
+        )
+
+        self.images_phase1 = images_phase1
+        self.images_phase2 = images_phase2
+        self.positions_phase1 = positions_phase1
+        self.positions_phase2 = positions_phase2
+        self.name_phase1 = name_phase1
+        self.name_phase2 = name_phase2
+        self.duration_phase1 = duration_phase1
+        self.duration_phase2 = duration_phase2
+        self.rl_label_phase1 = rl_label_phase1
+        self.rl_label_phase2 = rl_label_phase2
+        self.random_state = check_random_state(random_state)
+        self.autodraw = autodraw
+
+    def _setup(self, win, **kwargs):
+        self.image_class_phase1 = []
+        for img, pos in zip(self.images_phase1, self.positions_phase1):
+            if isinstance(img, str):
+                self.image_class_phase1.append(ImageStim(win=win, image=img, pos=pos))
+            else:
+                self.image_class_phase1.append(
+                    ImageStim(
+                        win, image=img, size=(img.shape[1], img.shape[0]), pos=pos
+                    )
+                )
+
+        self.image_class_phase2 = []
+        for img, pos in zip(self.images_phase2, self.positions_phase2):
+            if isinstance(img, str):
+                self.image_class_phase2.append(ImageStim(win=win, image=img, pos=pos))
+            else:
+                self.image_class_phase2.append(
+                    ImageStim(
+                        win, image=img, size=(img.shape[1], img.shape[0]), pos=pos
+                    )
+                )
+
+    def display(self, win, logger, info, **kwargs):
+        self._draw_stimulus(
+            win,
+            logger,
+            phase=1,
+            name=self.name_phase1,
+            duration=self.duration_phase1,
+            rl_label=self.rl_label_phase1,
+        )
+
+        logger.key_strokes(win)
+
+        response_window_onset = logger.get_time()
+
+        response = self._response_handling(
+            win, logger, response_window_onset, info=info
+        )
+
+        self._draw_stimulus(
+            win,
+            logger,
+            phase=2,
+            name=self.name_phase2,
+            duration=self.duration_phase2,
+            rl_label=self.rl_label_phase2,
+        )
+
+        return response
+
+    def simulate(
+        self,
+        win: Window,
+        logger=SimulationLogger,
+        key: str = None,
+        rt: float = None,
+        info: Dict = None,
+        **kwargs,
+    ):
+        stim_onset = logger.get_time()
+
+        logger.wait(win=None, time=self.duration_phase1, start=stim_onset)
+
+        logger.log_event(
+            {
+                "event_type": self.name_phase1,
+                "expected_duration": self.duration_phase1,
+                "rl_label": self.rl_label_phase1,
+            },
+            onset=stim_onset,
+        )
+
+        response_window_onset = logger.get_time()
+        response_key, remaining = self._simulate_response(
+            logger, key, rt, response_window_onset=response_window_onset, info=info
+        )
+
+        stim_onset = logger.get_time()
+
+        logger.wait(win=None, time=self.duration_phase2, start=stim_onset)
+
+        logger.log_event(
+            {
+                "event_type": self.name_phase2,
+                "expected_duration": self.duration_phase2,
+                "rl_label": self.rl_label_phase2,
+            },
+            onset=stim_onset,
+        )
+
+        return response_key, remaining
+
+    def _draw_stimulus(self, win, logger, name, duration, phase=1, rl_label=None):
+        stim_onset = logger.get_time()
+
+        if phase == 1:
+            # So that images are drawn on top
+            for ii in self.image_class_phase1:
+                ii.autoDraw = True
+
+            win.flip()
+
+            for ii in self.image_class_phase1:
+                ii.autoDraw = self.autodraw
+
+        elif phase == 2:
+            for ii in self.image_class_phase2:
+                ii.autoDraw = True
+
+            win.flip()
+
+            for ii in self.image_class_phase2:
+                ii.autoDraw = self.autodraw
+
+        logger.wait(win, duration, stim_onset)
+
+        self._log_event(logger=logger, stim_onset=stim_onset)
+
+        self._log_event(
+            logger=logger,
+            stim_onset=stim_onset,
+            extra_info={
+                "event_type": name,
+                "duration": duration,
+                "rl_label": rl_label,
+            },
+        )
+        return None
