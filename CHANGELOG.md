@@ -1,3 +1,15 @@
+# 0.5.0 (Mon Dec 08 2025)
+
+#### 💥 Breaking Change during development
+
+- Gearing up [#46](https://github.com/rewardMap/rewardGym/pull/46) ([@SRSteinkamp](https://github.com/SRSteinkamp))
+
+#### Authors: 1
+
+- Simon Steinkamp ([@SRSteinkamp](https://github.com/SRSteinkamp))
+
+---
+
 # 0.4.4 (Wed Aug 20 2025)
 
 #### 🐛 Bug Fix
