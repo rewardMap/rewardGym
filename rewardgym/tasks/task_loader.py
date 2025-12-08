@@ -2,8 +2,44 @@ import importlib
 import importlib.util
 import os
 import sys
+import types
 from pathlib import Path
 from typing import Dict, Union
+
+
+def load_task_plugin(folder_path: Path, namespace_root: str = "rewardgym_tasks"):
+    """
+    Load <folder_path>/plugin.py as a submodule of a shim package
+    'namespace_root.<task_name>' whose __path__ points at folder_path.
+    Returns the loaded plugin module.
+    """
+    task_name = folder_path.name
+    pkg_name = f"{namespace_root}.{task_name}"
+
+    # 1) Ensure a shim package exists in sys.modules
+    pkg = sys.modules.get(pkg_name)
+    if pkg is None:
+        pkg = types.ModuleType(pkg_name)
+        pkg.__package__ = pkg_name
+        pkg.__path__ = [str(folder_path)]  # key for submodule resolution
+
+        # Mark the shim as a "package" to the import machinery
+        pkg_spec = importlib.util.spec_from_file_location(
+            pkg_name,
+            # None for non-file-backed shim; declare it's a package:
+            submodule_search_locations=[str(folder_path)],
+        )
+        pkg.__spec__ = pkg_spec
+        sys.modules[pkg_name] = pkg
+
+    # 2) Load plugin as a proper submodule
+    plugin_path = folder_path / "plugin.py"
+    mod_name = f"{pkg_name}.plugin"
+    spec = importlib.util.spec_from_file_location(mod_name, str(plugin_path))
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[mod_name] = module  # register before exec
+    spec.loader.exec_module(module)
+    return module
 
 
 def _discover_plugins(base_dir):
@@ -30,11 +66,9 @@ def _discover_plugins(base_dir):
             continue
 
         try:
-            spec = importlib.util.spec_from_file_location(
-                name=f"rewardgym.tasks.{task_folder}.plugin", location=plugin_path
+            plugin_module = load_task_plugin(
+                folder_path, namespace_root="rewardgym_tasks"
             )
-            plugin_module = importlib.util.module_from_spec(spec)
-            spec.loader.exec_module(plugin_module)
 
             if not hasattr(plugin_module, "register_task"):
                 raise AttributeError("No register_task() function defined")
@@ -66,16 +100,8 @@ def _discover_external_plugins(task_folder: Union[str, Path]) -> Dict:
         return task_registry
 
     try:
-        sys.path.insert(0, str(task_folder))  # Add task folder itself
-
-        module_name = f"external_{task_folder.name}_plugin"
-        spec = importlib.util.spec_from_file_location(module_name, plugin_path)
-
-        plugin_module = importlib.util.module_from_spec(spec)
-
+        plugin_module = load_task_plugin(task_folder, namespace_root="rewardgym_tasks")
         plugin_module.__package__ = task_folder.name
-
-        spec.loader.exec_module(plugin_module)
 
         if not hasattr(plugin_module, "register_task"):
             raise AttributeError(f"No register_task() function in {plugin_path}")
@@ -89,10 +115,6 @@ def _discover_external_plugins(task_folder: Union[str, Path]) -> Dict:
         import traceback
 
         traceback.print_exc()  # Print full traceback for debugging
-    finally:
-        # Step 7: Clean up sys.path
-        if str(task_folder) in sys.path:
-            sys.path.remove(str(task_folder))
 
     return task_registry
 
