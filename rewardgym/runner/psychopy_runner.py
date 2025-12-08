@@ -34,6 +34,7 @@ plugin_registry = {
     "two-step": {"pre-trial": [MiscUpdateTwoStep()], "post-trial": [AddRemainder()]},
     "posner": {"post-trial": [AddRemainder()]},
     "gonogo": {"post-trial": [AddRemainder()]},
+    "robotfactory": {"post-trial": [AddRemainder()]},
 }
 
 
@@ -53,7 +54,10 @@ def pspy_run_task(
     if win is None:
         win = Window()
 
-    plugins = plugins[env.name]
+    try:
+        plugins = plugins[env.name]
+    except KeyError:
+        plugins = {}
 
     if n_episodes is None:
         n_episodes = settings["ntrials"]
@@ -151,16 +155,16 @@ def pspy_run_task(
                 )
                 obs = next_obs
 
-            apply_plugins(
-                plugins=plugins,
-                entry_point="post-trial",
-                env=env,
-                logger=logger,
-                settings=settings,
-                episode=episode,
-                actions=actions,
-                win=win,
-            )
+        apply_plugins(
+            plugins=plugins,
+            entry_point="post-trial",
+            env=env,
+            logger=logger,
+            settings=settings,
+            episode=episode,
+            actions=actions,
+            win=win,
+        )
 
         logger.log_event(
             {"event_type": "trial-end", "total_reward": env.cumulative_reward},

@@ -147,6 +147,10 @@ gonogo
     Go / No-Go task, different stimuli indicate go to win, go to punish etc. Response button is: space.
 
 
+Git submodules are added like this:
+
+git submodule add https://github.com/rewardMap/robotfactory.git rewardgym/tasks
+
 References
 --------------------------------------------------------------------------------
 .. [cit1] Towers, M., Terry, J. K., Kwiatkowski, A., Balis, J. U., Cola, G. de, Deleu, T., Goulão, M., Kallinteris, A., KG, A., Krimmel, M., Perez-Vicente, R., Pierré, A., Schulhoff, S., Tai, J. J., Shen, A. T. J., & Younis, O. G. (2023). Gymnasium. Zenodo. https://doi.org/10.5281/zenodo.8127026

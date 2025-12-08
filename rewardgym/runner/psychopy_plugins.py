@@ -57,7 +57,7 @@ def simple_rt_simulation(agent, env, obs, info):
     probs = agent.get_probs(obs, info["avail-actions"])
     probs = probs[key]
 
-    if env.name == "gonogo":
+    if env.name in ["gonogo", "robotfactory"]:
         rt_extra = key * 2.0
     else:
         rt_extra = 0

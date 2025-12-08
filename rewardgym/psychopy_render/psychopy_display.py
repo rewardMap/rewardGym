@@ -24,6 +24,7 @@ class BaseStimulus:
         name: str = None,
         wait_no_keys=False,
         rl_label=None,
+        noflip=False,
     ):
         """
         Stimulus presentation base class. The parameters do not really do anything.
@@ -41,6 +42,7 @@ class BaseStimulus:
         self.wait_no_keys = wait_no_keys
         self.is_setup = False
         self.rl_label = rl_label
+        self.noflip = noflip
 
     def setup(self, win: Window, **kwargs):
         """
@@ -70,7 +72,8 @@ class BaseStimulus:
 
         stim_onset = logger.get_time()
 
-        win.flip()
+        if not self.noflip:
+            win.flip()
 
         logger.wait(win, self.duration, stim_onset, self.wait_no_keys)
 

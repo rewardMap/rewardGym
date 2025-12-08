@@ -1,6 +1,7 @@
 from .advanced_display import (
     ActionStimulusTooEarly,
     ConditionBasedDisplay,
+    LingeringAction,
     StimuliWithResponse,
     TextWithBorder,
     TwoStimuliWithResponseAndSelection,
@@ -27,4 +28,5 @@ __all__ = [
     "ActionStimulus",
     "TextStimulus",
     "ImageStimulus",
+    "LingeringAction",
 ]
