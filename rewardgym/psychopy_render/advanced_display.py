@@ -820,8 +820,6 @@ class LingeringAction(ActionStimulus):
 
         logger.wait(win, duration, stim_onset)
 
-        self._log_event(logger=logger, stim_onset=stim_onset)
-
         self._log_event(
             logger=logger,
             stim_onset=stim_onset,
