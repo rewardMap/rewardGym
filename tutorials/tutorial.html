@@ -1,0 +1,454 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>rewardGym Tutorial &mdash; rewardGym 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="rewardGym + PsychoPy" href="psychopy.html" />
+    <link rel="prev" title="Welcome to rewardGym’s documentation!" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            rewardGym
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Walkthrough</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">rewardGym Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#The-environment">The environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Putting-the-environment-into-action">Putting the environment into action</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Providing-Rendering">Providing Rendering</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="psychopy.html">rewardGym + PsychoPy</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Deep Dive</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../deepdive/graph_structure.html">Graph structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deepdive/psychopy_stimuli.html">PsychoPy Stimuli</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deepdive/controlling_experiments.html">Controlling the experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deepdive/what_is_run_task.html">What is run task?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deepdive/writing_agents.html">Writing your own agents.</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tasks</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tasks/hcp.html">Human Connectome Project Gambling Task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tasks/mid.html">Monetary Incentive Delay Task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tasks/gonogo.html">Go / No-Go</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tasks/two_step.html">Two-Step task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tasks/risk_sensitive.html">Risk-Sensitive Decision Making Task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tasks/posner.html">Spatial-Cueing / Posner Task</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">(limited) API reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/environments.html">rewardgym.environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/psychopy_stimuli.html">rewardgym.psychopy_render</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">rewardGym</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">rewardGym Tutorial</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tutorials/tutorial.nblink.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="rewardGym-Tutorial">
+<h1>rewardGym Tutorial<a class="headerlink" href="#rewardGym-Tutorial" title="Link to this heading"></a></h1>
+<p>This tutorial is supposed to be both a tutorial about the usage of the package, and a walkthrough of the functionality.</p>
+<p>In this tutorial, we will implement a classic multi-arm (two) bandit task, and provide simple rendering in pygame, so that humans can play the game as well.</p>
+<section id="The-environment">
+<h2>The environment<a class="headerlink" href="#The-environment" title="Link to this heading"></a></h2>
+<p>rewardGym uses a sub-class of the gymnasium gym.Env.</p>
+<p>The basic environment, requires a graph as input, and a dictionary, that relates identifies the reward nodes (i.e. the endpoints of the graph).</p>
+<p>In this implementation the graph has three nodes.</p>
+<p>The first node is the starting position, where the agent has to decide which of the two lotteries it wants to select.</p>
+<p>The second and third node are both endpoints of the graph, which are associated with a reward.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># noqa: E402</span>
+<span class="c1"># We first import the BaseEnv</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rewardgym.environments</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseEnv</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rewardgym.reward_classes</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseReward</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Registered task: mid
+Registered task: robotfactory
+Registered task: risk-sensitive
+Registered task: gonogo
+Registered task: posner
+Registered task: hcp
+Registered task: two-step
+</pre></div></div>
+</div>
+<p>The graph is created as a dictionary, where each node is a key and the possible positions in the graph the agent could move to. End nodes (empty lists) are automatically reward locations.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">env_graph</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="mi">1</span><span class="p">:</span> <span class="p">[],</span> <span class="mi">2</span><span class="p">:</span> <span class="p">[]}</span>
+<span class="c1"># Side note, this is the same structure as used in the HCP task.</span>
+</pre></div>
+</div>
+</div>
+<p>We further need to define a reward the we will use. In this package the reward is defined by a callable class. The basic class used here, allows for probabilistic or static rewards.</p>
+<p>In the case of the two-armed bandit task here, we will use two simple probabilistic reward outcomes.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># The reward is chosen using numpy.random.choice, so we define the range of rewards</span>
+<span class="c1"># and the associated probability.</span>
+<span class="n">reward1</span> <span class="o">=</span> <span class="n">BaseReward</span><span class="p">(</span><span class="n">reward</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">p</span><span class="o">=</span><span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">],</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">2222</span><span class="p">)</span>
+<span class="n">reward2</span> <span class="o">=</span> <span class="n">BaseReward</span><span class="p">(</span><span class="n">reward</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">p</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">3333</span><span class="p">)</span>
+
+<span class="c1"># This creates the reward dictionary necessary for the environment.</span>
+<span class="n">reward_locs</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="n">reward1</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="n">reward2</span><span class="p">}</span>
+
+<span class="c1"># The reward class is then callable using:</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Reward 1: &quot;</span><span class="p">,</span> <span class="n">reward1</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Reward 1:  1
+</pre></div></div>
+</div>
+<p>With these two components we can create an environment:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">env</span> <span class="o">=</span> <span class="n">BaseEnv</span><span class="p">(</span><span class="n">environment_graph</span><span class="o">=</span><span class="n">env_graph</span><span class="p">,</span> <span class="n">reward_locations</span><span class="o">=</span><span class="n">reward_locs</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>There is some plotting functionality, which allows the plotting of the structure.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">rewardgym.environments.visualizations</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_env_graph</span>
+
+<span class="n">plot_env_graph</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorials_tutorial_10_0.png" src="../_images/tutorials_tutorial_10_0.png" />
+</div>
+</div>
+<p>We see here, that the environment has three states and two possible actions.</p>
+</section>
+<section id="Putting-the-environment-into-action">
+<h2>Putting the environment into action<a class="headerlink" href="#Putting-the-environment-into-action" title="Link to this heading"></a></h2>
+<p>The API follows the gym/gymnasium structure. An example loop over the environment might look like this:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="n">n_episodes</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">rewards_and_actions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="n">n_episodes</span><span class="p">))</span>  <span class="c1"># book keeping of actions and rewards</span>
+
+<span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_episodes</span><span class="p">):</span>
+    <span class="c1"># currently we need to define the agent location at each reset.</span>
+    <span class="n">obs</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">agent_location</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">while</span> <span class="ow">not</span> <span class="n">done</span><span class="p">:</span>
+        <span class="c1"># Sample from the action space, the action space is automatically created</span>
+        <span class="c1"># it has the size of the largest number of possible moves.</span>
+        <span class="n">action</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
+
+        <span class="n">next_obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+
+        <span class="c1"># Don&#39;t forget to terminate, whence the episode / trial is over</span>
+        <span class="n">done</span> <span class="o">=</span> <span class="n">terminated</span> <span class="ow">or</span> <span class="n">truncated</span>
+    <span class="n">rewards_and_actions</span><span class="p">[:,</span> <span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">reward</span><span class="p">,</span> <span class="n">action</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<p>As a sanity check, we can calculate the total reward of the agent after each action.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">total_rew1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">rewards_and_actions</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">rewards_and_actions</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">total_rew2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">rewards_and_actions</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">rewards_and_actions</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">])</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="p">[</span><span class="n">total_rew1</span><span class="p">,</span> <span class="n">total_rew2</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
+    <span class="n">xticks</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+    <span class="n">xticklabels</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Action 0&quot;</span><span class="p">,</span> <span class="s2">&quot;Action 1&quot;</span><span class="p">],</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Outcome after each action&quot;</span><span class="p">,</span>
+    <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;total reward&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[[&lt;matplotlib.axis.XTick at 0x7f2e68de9f60&gt;,
+  &lt;matplotlib.axis.XTick at 0x7f2e68d7c8b0&gt;],
+ [Text(0, 0, &#39;Action 0&#39;), Text(1, 0, &#39;Action 1&#39;)],
+ Text(0.5, 1.0, &#39;Outcome after each action&#39;),
+ Text(0, 0.5, &#39;total reward&#39;)]
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorials_tutorial_15_1.png" src="../_images/tutorials_tutorial_15_1.png" />
+</div>
+</div>
+</section>
+<section id="Providing-Rendering">
+<h2>Providing Rendering<a class="headerlink" href="#Providing-Rendering" title="Link to this heading"></a></h2>
+<p>If you now want a human to play the game you will need to provide some information to allow rendering with <code class="docutils literal notranslate"><span class="pre">pygame</span></code>.</p>
+<p>One logic that is used here, is that the environments themselves are Markovian, that is each state has all the information necessary to generate an action.</p>
+<p>The issue, however, is that most tasks are not necessarily Markovian, as there are fixation periods and other step in between states, actions, and outcomes.</p>
+<p>Here, we go a middle ground. It is possible to define intermediate steps for the rendering process, but the returned observations of the environment all require an action.</p>
+<p>I hope this becomes at bit clearer in the next steps.</p>
+<p>We will use only letters for rendering, to make it more simple, and so that there are no further requirements.</p>
+<p>We create each step separately, before merging them into the main display dictionary.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pygame</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">rewardgym.pygame_render.stimuli</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseAction</span><span class="p">,</span> <span class="n">BaseDisplay</span><span class="p">,</span> <span class="n">BaseText</span>
+
+<span class="c1"># State / Step1:</span>
+<span class="c1"># We first want to blank the screen, this can be done with the BaseDisplay class</span>
+<span class="c1"># The class can also be used to show images, but if it&#39;s not defined,</span>
+<span class="c1"># it will only flip the screen. The time is in ms.</span>
+
+<span class="n">flip_screen</span> <span class="o">=</span> <span class="n">BaseDisplay</span><span class="p">(</span><span class="n">image</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;blank&quot;</span><span class="p">)</span>
+
+<span class="c1"># Unfortunately, we need to know the screen size in the beginning, if we want</span>
+<span class="c1"># to position text in the center.</span>
+<span class="n">window_size</span> <span class="o">=</span> <span class="mi">500</span>  <span class="c1"># Let&#39;s use 500 by 500 px.</span>
+<span class="n">center_position</span> <span class="o">=</span> <span class="p">(</span><span class="n">window_size</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="n">window_size</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span>
+<span class="c1"># We then define a text, that presents a cross in the center.</span>
+<span class="n">fixation_cross</span> <span class="o">=</span> <span class="n">BaseText</span><span class="p">(</span><span class="s2">&quot;+&quot;</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">textposition</span><span class="o">=</span><span class="n">center_position</span><span class="p">)</span>
+<span class="c1"># Next we want to present the selection, we use a very short duration,</span>
+<span class="c1"># as we present an action afterwards.</span>
+<span class="n">selection</span> <span class="o">=</span> <span class="n">BaseText</span><span class="p">(</span><span class="s2">&quot;A or B&quot;</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">textposition</span><span class="o">=</span><span class="n">center_position</span><span class="p">)</span>
+<span class="c1"># Base action has an infinite length, it waits until an action is ushered.</span>
+<span class="n">action</span> <span class="o">=</span> <span class="n">BaseAction</span><span class="p">(</span><span class="n">action_map</span><span class="o">=</span><span class="p">{</span><span class="n">pygame</span><span class="o">.</span><span class="n">K_LEFT</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="n">pygame</span><span class="o">.</span><span class="n">K_RIGHT</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+
+<span class="c1"># To store the first step and use it in the environment later we create a</span>
+<span class="c1"># dictionary. The nexted dict, with &quot;human&quot; as key, indicates that it should be</span>
+<span class="c1"># used for rendering.</span>
+
+<span class="n">info_dict</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;human&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">flip_screen</span><span class="p">,</span> <span class="n">fixation_cross</span><span class="p">,</span> <span class="n">selection</span><span class="p">,</span> <span class="n">action</span><span class="p">]}}</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">rewardgym.pygame_render.task_stims</span><span class="w"> </span><span class="kn">import</span> <span class="n">FormatTextReward</span>
+
+<span class="c1"># Step 2 and step three are basically the same, so we can define them once</span>
+<span class="c1"># and reuse the code.</span>
+<span class="c1"># In this simple implementation, after a selection, the participant will see</span>
+<span class="c1"># their reward immediately.</span>
+
+<span class="n">reward_disp</span> <span class="o">=</span> <span class="n">FormatTextReward</span><span class="p">(</span>
+    <span class="s2">&quot;You gain: </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">textposition</span><span class="o">=</span><span class="n">center_position</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s2">&quot;reward&quot;</span>
+<span class="p">)</span>
+
+<span class="n">earnings_text</span> <span class="o">=</span> <span class="n">FormatTextReward</span><span class="p">(</span>
+    <span class="s2">&quot;You have gained: </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="n">duration</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+    <span class="n">textposition</span><span class="o">=</span><span class="n">center_position</span><span class="p">,</span>
+    <span class="n">target</span><span class="o">=</span><span class="s2">&quot;total_reward&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="c1"># The format texts, use inputs during the loop to update the value according</span>
+<span class="c1"># to some input.</span>
+<span class="c1"># NOTE: These functions are currently a bit messy and will be cleaned up</span>
+<span class="c1"># in future versions of the package.</span>
+<span class="c1"># NOTE: Because the pygame implementation, uses similar displays through out,</span>
+<span class="c1"># there is a helper function ``rewardgym.pygame_render.task_stims.feedback_block``,</span>
+<span class="c1"># that creates the two feedbacks using some default values.</span>
+
+<span class="n">info_dict</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;human&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">flip_screen</span><span class="p">,</span> <span class="n">reward_disp</span><span class="p">,</span> <span class="n">earnings_text</span><span class="p">]</span>  <span class="c1"># Just for good measure</span>
+<span class="p">}</span>
+
+<span class="n">info_dict</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;human&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">flip_screen</span><span class="p">,</span> <span class="n">reward_disp</span><span class="p">,</span> <span class="n">earnings_text</span><span class="p">]</span>  <span class="c1"># Just for good measure</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<p>We can now move this all into a <code class="docutils literal notranslate"><span class="pre">RenderEnv</span></code> which allows rendering of the environment.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">rewardgym.environments</span><span class="w"> </span><span class="kn">import</span> <span class="n">RenderEnv</span>
+
+<span class="n">env</span> <span class="o">=</span> <span class="n">RenderEnv</span><span class="p">(</span>
+    <span class="n">environment_graph</span><span class="o">=</span><span class="n">env_graph</span><span class="p">,</span>
+    <span class="n">reward_locations</span><span class="o">=</span><span class="n">reward_locs</span><span class="p">,</span>
+    <span class="n">render_mode</span><span class="o">=</span><span class="s2">&quot;pygame&quot;</span><span class="p">,</span>
+    <span class="n">info_dict</span><span class="o">=</span><span class="n">info_dict</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">env</span><span class="o">.</span><span class="n">setup_render</span><span class="p">(</span><span class="n">window_size</span><span class="o">=</span><span class="n">window_size</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+ALSA lib confmisc.c:855:(parse_card) cannot find card &#39;0&#39;
+ALSA lib conf.c:5204:(_snd_config_evaluate) function snd_func_card_inum returned error: No such file or directory
+ALSA lib confmisc.c:422:(snd_func_concat) error evaluating strings
+ALSA lib conf.c:5204:(_snd_config_evaluate) function snd_func_concat returned error: No such file or directory
+ALSA lib confmisc.c:1342:(snd_func_refer) error evaluating name
+ALSA lib conf.c:5204:(_snd_config_evaluate) function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:5727:(snd_config_expand) Evaluate error: No such file or directory
+ALSA lib pcm.c:2721:(snd_pcm_open_noupdate) Unknown PCM default
+</pre></div></div>
+</div>
+<p>And again we can use a simple loop to go through the environment. This time human actions will be stored and applied to the decisions, and a new window is opened for rendering.</p>
+<p><strong>NOTE</strong> This might not work well in some environments.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_episodes</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Change to a higher number, disabled here for rendering.</span>
+
+<span class="k">for</span> <span class="n">episode</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_episodes</span><span class="p">):</span>
+    <span class="n">obs</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">agent_location</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="c1"># play one episode</span>
+    <span class="k">while</span> <span class="ow">not</span> <span class="n">done</span><span class="p">:</span>
+        <span class="n">action</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">human_action</span>
+        <span class="n">next_obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+
+        <span class="n">done</span> <span class="o">=</span> <span class="n">terminated</span> <span class="ow">or</span> <span class="n">truncated</span>
+        <span class="n">obs</span> <span class="o">=</span> <span class="n">next_obs</span>
+
+<span class="n">env</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="Welcome to rewardGym’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="psychopy.html" class="btn btn-neutral float-right" title="rewardGym + PsychoPy" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Simon R. Steinkamp.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

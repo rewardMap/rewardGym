@@ -1,0 +1,172 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Two-Step task &mdash; rewardGym 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Risk-Sensitive Decision Making Task" href="risk_sensitive.html" />
+    <link rel="prev" title="Go / No-Go" href="gonogo.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            rewardGym
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Walkthrough</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/tutorial.html">rewardGym Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/psychopy.html">rewardGym + PsychoPy</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Deep Dive</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../deepdive/graph_structure.html">Graph structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deepdive/psychopy_stimuli.html">PsychoPy Stimuli</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deepdive/controlling_experiments.html">Controlling the experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deepdive/what_is_run_task.html">What is run task?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deepdive/writing_agents.html">Writing your own agents.</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tasks</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="hcp.html">Human Connectome Project Gambling Task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mid.html">Monetary Incentive Delay Task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gonogo.html">Go / No-Go</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Two-Step task</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#task-description">Task description</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="risk_sensitive.html">Risk-Sensitive Decision Making Task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="posner.html">Spatial-Cueing / Posner Task</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">(limited) API reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/environments.html">rewardgym.environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/psychopy_stimuli.html">rewardgym.psychopy_render</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">rewardGym</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Two-Step task</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tasks/two_step.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="two-step-task">
+<h1>Two-Step task<a class="headerlink" href="#two-step-task" title="Link to this heading"></a></h1>
+<p>This is an implementation of the well known two-step task <span id="id1">[<a class="reference internal" href="#id5" title="Nathaniel D. Daw, Samuel J. Gershman, Ben Seymour, Peter Dayan, and Raymond J. Dolan. Model-Based Influences on Humans' Choices and Striatal Prediction Errors. Neuron, 69(6):1204–1215, March 2011. doi:10.1016/j.neuron.2011.02.027.">Daw <em>et al.</em>, 2011</a>]</span>.</p>
+<p>The task has often been used to investigate the relationship between model-based and model free reinforcement learning
+processes in humans.</p>
+<p>In the experiment, we use the starting points of probabilities described in <span id="id2">[<a class="reference internal" href="#id6" title="Kate Nussenbaum, Maximilian Scheuplein, Camille V. Phaneuf, Michael D. Evans, and Catherine A. Hartley. Moving Developmental Research Online: Comparing In-Lab and Web-Based Studies of Model-Based Reinforcement Learning. Collabra: Psychology, 6(1):17213, November 2020. doi:10.1525/collabra.17213.">Nussenbaum <em>et al.</em>, 2020</a>]</span>,
+but with a separate drift.
+For their implementation of the task, see their GitHub <a class="reference external" href="https://github.com/hartleylabnyu/online_two_step_replication">repo</a></p>
+<p>For this project the graph structure is the following:</p>
+<p>Or in graph form:</p>
+<p>(<a class="reference download internal" download="" href="../_downloads/bc25e1f011c8915c97a880a1ffb785d2/two_step-1.py"><code class="xref download docutils literal notranslate"><span class="pre">Source</span> <span class="pre">code</span></code></a>, <a class="reference download internal" download="" href="../_downloads/e65f67d087f361d1475c79dd9900fc97/two_step-1.png"><code class="xref download docutils literal notranslate"><span class="pre">png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/6db18d36e7915c80cf977a15057375ff/two_step-1.hires.png"><code class="xref download docutils literal notranslate"><span class="pre">hires.png</span></code></a>, <a class="reference download internal" download="" href="../_downloads/9e684a09500e7ff50caa4db8c9509d59/two_step-1.pdf"><code class="xref download docutils literal notranslate"><span class="pre">pdf</span></code></a>)</p>
+<figure class="align-default">
+<img alt="../_images/two_step-1.png" class="plot-directive" src="../_images/two_step-1.png" />
+</figure>
+<section id="task-description">
+<h2>Task description<a class="headerlink" href="#task-description" title="Link to this heading"></a></h2>
+<p>In this task, participants are asked to make two subsequent decisions.</p>
+<p>In the first decision the participant selects between one of two environments,
+by pressing either <em>left</em> or <em>right</em>.</p>
+<p>After the selection the participant enters the second environment, where they
+make again a <em>left</em> or <em>right</em> choice between a gamble. The gamble has a
+set reward probability at the beginning, but drifts slowly over time.</p>
+<p>Because the task has no set conditions, there is only a single starting position
+and no further conditions that can be controlled from the outside.</p>
+<div class="docutils container" id="id3">
+<div role="list" class="citation-list">
+<div class="citation" id="id5" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">DGS+11</a><span class="fn-bracket">]</span></span>
+<p>Nathaniel D. Daw, Samuel J. Gershman, Ben Seymour, Peter Dayan, and Raymond J. Dolan. Model-Based Influences on Humans' Choices and Striatal Prediction Errors. <em>Neuron</em>, 69(6):1204–1215, March 2011. <a class="reference external" href="https://doi.org/10.1016/j.neuron.2011.02.027">doi:10.1016/j.neuron.2011.02.027</a>.</p>
+</div>
+<div class="citation" id="id6" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">NSP+20</a><span class="fn-bracket">]</span></span>
+<p>Kate Nussenbaum, Maximilian Scheuplein, Camille V. Phaneuf, Michael D. Evans, and Catherine A. Hartley. Moving Developmental Research Online: Comparing In-Lab and Web-Based Studies of Model-Based Reinforcement Learning. <em>Collabra: Psychology</em>, 6(1):17213, November 2020. <a class="reference external" href="https://doi.org/10.1525/collabra.17213">doi:10.1525/collabra.17213</a>.</p>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="gonogo.html" class="btn btn-neutral float-left" title="Go / No-Go" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="risk_sensitive.html" class="btn btn-neutral float-right" title="Risk-Sensitive Decision Making Task" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Simon R. Steinkamp.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

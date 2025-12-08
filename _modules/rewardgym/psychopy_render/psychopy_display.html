@@ -1,0 +1,1002 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>rewardgym.psychopy_render.psychopy_display &mdash; rewardGym 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            rewardGym
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Walkthrough</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/tutorial.html">rewardGym Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/psychopy.html">rewardGym + PsychoPy</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Deep Dive</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../deepdive/graph_structure.html">Graph structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../deepdive/psychopy_stimuli.html">PsychoPy Stimuli</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../deepdive/controlling_experiments.html">Controlling the experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../deepdive/what_is_run_task.html">What is run task?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../deepdive/writing_agents.html">Writing your own agents.</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tasks</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tasks/hcp.html">Human Connectome Project Gambling Task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tasks/mid.html">Monetary Incentive Delay Task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tasks/gonogo.html">Go / No-Go</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tasks/two_step.html">Two-Step task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tasks/risk_sensitive.html">Risk-Sensitive Decision Making Task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tasks/posner.html">Spatial-Cueing / Posner Task</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">(limited) API reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/environments.html">rewardgym.environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/psychopy_stimuli.html">rewardgym.psychopy_render</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">rewardGym</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">rewardgym.psychopy_render.psychopy_display</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for rewardgym.psychopy_render.psychopy_display</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">psychopy.visual</span><span class="w"> </span><span class="kn">import</span> <span class="n">ImageStim</span><span class="p">,</span> <span class="n">TextStim</span><span class="p">,</span> <span class="n">Window</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">psychopy.visual.rect</span><span class="w"> </span><span class="kn">import</span> <span class="n">Rect</span>
+<span class="k">except</span> <span class="ne">ModuleNotFoundError</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.psychopy_stubs</span><span class="w"> </span><span class="kn">import</span> <span class="n">Window</span><span class="p">,</span> <span class="n">TextStim</span><span class="p">,</span> <span class="n">ImageStim</span><span class="p">,</span> <span class="n">Rect</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..stimuli</span><span class="w"> </span><span class="kn">import</span> <span class="n">lose_cross</span><span class="p">,</span> <span class="n">win_cross</span><span class="p">,</span> <span class="n">zero_cross</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.logger</span><span class="w"> </span><span class="kn">import</span> <span class="n">ExperimentLogger</span><span class="p">,</span> <span class="n">SimulationLogger</span>
+
+
+<div class="viewcode-block" id="BaseStimulus">
+<a class="viewcode-back" href="../../../api/psychopy_stimuli.html#rewardgym.psychopy_render.psychopy_display.BaseStimulus">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">BaseStimulus</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base class for stimulus presentation. If called on its own it will flip the</span>
+<span class="sd">    window.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="BaseStimulus.__init__">
+<a class="viewcode-back" href="../../../api/psychopy_stimuli.html#rewardgym.psychopy_render.psychopy_display.BaseStimulus.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">duration</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">wait_no_keys</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">rl_label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">noflip</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Stimulus presentation base class. The parameters do not really do anything.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        duration : float, optional</span>
+<span class="sd">            duration of the stimulus presentation, by default None</span>
+<span class="sd">        name : str, optional</span>
+<span class="sd">            name of the object, will be used for logging, by default None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">duration</span> <span class="o">=</span> <span class="n">duration</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">entity</span> <span class="o">=</span> <span class="s2">&quot;base&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait_no_keys</span> <span class="o">=</span> <span class="n">wait_no_keys</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_setup</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rl_label</span> <span class="o">=</span> <span class="n">rl_label</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">noflip</span> <span class="o">=</span> <span class="n">noflip</span></div>
+
+
+<div class="viewcode-block" id="BaseStimulus.setup">
+<a class="viewcode-back" href="../../../api/psychopy_stimuli.html#rewardgym.psychopy_render.psychopy_display.BaseStimulus.setup">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">win</span><span class="p">:</span> <span class="n">Window</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Call this to setup the stimulus. This means associating the stimulus</span>
+<span class="sd">        with a window (so there is something to flip).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        win : Window</span>
+<span class="sd">            The psychopy window object that is used for displaying stimuli.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_setup</span><span class="p">(</span><span class="n">win</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_setup</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="BaseStimulus.display">
+<a class="viewcode-back" href="../../../api/psychopy_stimuli.html#rewardgym.psychopy_render.psychopy_display.BaseStimulus.display">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">display</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">win</span><span class="p">:</span> <span class="n">Window</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">ExperimentLogger</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calls the stimulus object. In this case initiate a window flip.</span>
+<span class="sd">        Should only return something, if there has been an action required.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+<span class="sd">            Should return None</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">stim_onset</span> <span class="o">=</span> <span class="n">logger</span><span class="o">.</span><span class="n">get_time</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">noflip</span><span class="p">:</span>
+            <span class="n">win</span><span class="o">.</span><span class="n">flip</span><span class="p">()</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">win</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">duration</span><span class="p">,</span> <span class="n">stim_onset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wait_no_keys</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">log_event</span><span class="p">(</span>
+            <span class="p">{</span><span class="s2">&quot;event_type&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;expected_duration&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">duration</span><span class="p">},</span>
+            <span class="n">onset</span><span class="o">=</span><span class="n">stim_onset</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="BaseStimulus.simulate">
+<a class="viewcode-back" href="../../../api/psychopy_stimuli.html#rewardgym.psychopy_render.psychopy_display.BaseStimulus.simulate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">ExperimentLogger</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function to pretend that a stimulus has been shown. Logging and creating</span>
+<span class="sd">        timing.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+<span class="sd">            Does not return anything, but logs the stimulus.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">stim_onset</span> <span class="o">=</span> <span class="n">logger</span><span class="o">.</span><span class="n">get_time</span><span class="p">()</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">win</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">duration</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="n">stim_onset</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log_event</span><span class="p">(</span><span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span> <span class="n">stim_onset</span><span class="o">=</span><span class="n">stim_onset</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_log_event</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">ExperimentLogger</span><span class="p">,</span> <span class="n">stim_onset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">extra_info</span><span class="o">=</span><span class="p">{},</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">):</span>
+        <span class="n">base_dict</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;event_type&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="s2">&quot;expected_duration&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">duration</span><span class="p">,</span>
+            <span class="s2">&quot;rl_label&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">rl_label</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="n">base_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">extra_info</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">log_event</span><span class="p">(</span><span class="n">base_dict</span><span class="p">,</span> <span class="n">onset</span><span class="o">=</span><span class="n">stim_onset</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">win</span><span class="p">:</span> <span class="n">Window</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+
+
+<div class="viewcode-block" id="TextStimulus">
+<a class="viewcode-back" href="../../../api/psychopy_stimuli.html#rewardgym.psychopy_render.psychopy_display.TextStimulus">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TextStimulus</span><span class="p">(</span><span class="n">BaseStimulus</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A stimulus class for text display in psychopy.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="TextStimulus.__init__">
+<a class="viewcode-back" href="../../../api/psychopy_stimuli.html#rewardgym.psychopy_render.psychopy_display.TextStimulus.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">duration</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">position</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">text_color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;white&quot;</span><span class="p">,</span>
+        <span class="n">rl_label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Stimulus class for text displays.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        duration : float</span>
+<span class="sd">            Duration of the stimulus presentation.</span>
+<span class="sd">        text : str</span>
+<span class="sd">            The text that should be displayed on the screen.</span>
+<span class="sd">        position : Tuple[int, int], optional</span>
+<span class="sd">            Where to display the text (by default in px), by default None</span>
+<span class="sd">        name : str, optional</span>
+<span class="sd">            name of the object, will be used for logging, by default None</span>
+<span class="sd">        text_color : str, optional</span>
+<span class="sd">            Color of the text string, by default &quot;white&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="n">duration</span><span class="p">,</span> <span class="n">rl_label</span><span class="o">=</span><span class="n">rl_label</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">text</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">position</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">text_color</span> <span class="o">=</span> <span class="n">text_color</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">win</span><span class="p">:</span> <span class="n">Window</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Performs the setup for the stimulus object. Initiating a PsychoPy.TextStim,</span>
+<span class="sd">        object, using the parameters given parameters.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        win : Window</span>
+<span class="sd">            The psychopy window object that is used for displaying stimuli.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">textStim</span> <span class="o">=</span> <span class="n">TextStim</span><span class="p">(</span>
+            <span class="n">win</span><span class="o">=</span><span class="n">win</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">text_color</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="TextStimulus.display">
+<a class="viewcode-back" href="../../../api/psychopy_stimuli.html#rewardgym.psychopy_render.psychopy_display.TextStimulus.display">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">display</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">win</span><span class="p">:</span> <span class="n">Window</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">ExperimentLogger</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calls the stimulus object. In this case drawing the text stim, flipping the window,</span>
+<span class="sd">        waiting and logging.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        win : Window</span>
+<span class="sd">            The psychopy window object that is used for displaying stimuli.</span>
+<span class="sd">        logger : ExperimentLogger</span>
+<span class="sd">            The logger associated with the experiment.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+<span class="sd">        Should return None</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">stim_onset</span> <span class="o">=</span> <span class="n">logger</span><span class="o">.</span><span class="n">get_time</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">textStim</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+        <span class="n">win</span><span class="o">.</span><span class="n">flip</span><span class="p">()</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">win</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">duration</span><span class="p">,</span> <span class="n">stim_onset</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log_event</span><span class="p">(</span><span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span> <span class="n">stim_onset</span><span class="o">=</span><span class="n">stim_onset</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">None</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ImageStimulus">
+<a class="viewcode-back" href="../../../api/psychopy_stimuli.html#rewardgym.psychopy_render.psychopy_display.ImageStimulus">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ImageStimulus</span><span class="p">(</span><span class="n">BaseStimulus</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A stimulus class to display (multiple) images in psychopy.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ImageStimulus.__init__">
+<a class="viewcode-back" href="../../../api/psychopy_stimuli.html#rewardgym.psychopy_render.psychopy_display.ImageStimulus.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">duration</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">image_paths</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span>
+        <span class="n">positions</span><span class="p">:</span> <span class="n">List</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">width</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">height</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">autodraw</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">wait_no_keys</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">rl_label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Stimulus class for image displays.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        duration : float</span>
+<span class="sd">            Duration of the stimulus presentation.</span>
+<span class="sd">        image_paths : List</span>
+<span class="sd">            A list of paths to images that should be displayed on screen.</span>
+<span class="sd">        positions : List, optional</span>
+<span class="sd">            A list of positions (where the images should be displayed), by default None</span>
+<span class="sd">        name : str, optional</span>
+<span class="sd">            name of the object, will be used for logging, by default None</span>
+<span class="sd">        wait_no_keys : str, optional</span>
+<span class="sd">            If the logger&#39;s wait function should get key presses - only set to True if presses that are too early should be used, by default False</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="n">duration</span><span class="p">,</span> <span class="n">wait_no_keys</span><span class="o">=</span><span class="n">wait_no_keys</span><span class="p">,</span> <span class="n">rl_label</span><span class="o">=</span><span class="n">rl_label</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">image_paths</span> <span class="o">=</span> <span class="n">image_paths</span>
+
+        <span class="k">if</span> <span class="n">positions</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">positions</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">image_paths</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">positions</span> <span class="o">=</span> <span class="n">positions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">height</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">autodraw</span> <span class="o">=</span> <span class="n">autodraw</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">win</span><span class="p">:</span> <span class="n">Window</span><span class="p">,</span> <span class="n">image_paths</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Performs the setup for the stimulus object. Initiating PsychoPy.ImageStim objects,</span>
+<span class="sd">        given the provides paths and positions.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        win : Window</span>
+<span class="sd">            The psychopy window object that is used for displaying stimuli.</span>
+
+<span class="sd">        image_paths : _type_, optional</span>
+<span class="sd">            Image paths can be overwritten during setup, for example to allow for randomization, by default None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">image_paths</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">image_paths</span> <span class="o">=</span> <span class="n">image_paths</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">imageStims</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">ip</span><span class="p">,</span> <span class="n">pos</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image_paths</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">positions</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ip</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">imageStims</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ImageStim</span><span class="p">(</span><span class="n">win</span><span class="p">,</span> <span class="n">image</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="n">pos</span><span class="p">))</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">width</span> <span class="o">=</span> <span class="n">ip</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span>
+                <span class="n">height</span> <span class="o">=</span> <span class="n">ip</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">imageStims</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">ImageStim</span><span class="p">(</span><span class="n">win</span><span class="p">,</span> <span class="n">image</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">),</span> <span class="n">pos</span><span class="o">=</span><span class="n">pos</span><span class="p">)</span>
+                <span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">ip</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">imageStims</span><span class="p">:</span>
+            <span class="n">ip</span><span class="o">.</span><span class="n">autoDraw</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">autodraw</span>
+
+<div class="viewcode-block" id="ImageStimulus.display">
+<a class="viewcode-back" href="../../../api/psychopy_stimuli.html#rewardgym.psychopy_render.psychopy_display.ImageStimulus.display">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">display</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">win</span><span class="p">:</span> <span class="n">Window</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">ExperimentLogger</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calls the stimulus object. In this case drawing the images stims, flipping the window,</span>
+<span class="sd">        waiting and logging.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        win : Window</span>
+<span class="sd">            The psychopy window object that is used for displaying stimuli.</span>
+<span class="sd">        logger : ExperimentLogger</span>
+<span class="sd">            The logger associated with the experiment.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+<span class="sd">        Should return None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">stim_onset</span> <span class="o">=</span> <span class="n">logger</span><span class="o">.</span><span class="n">get_time</span><span class="p">()</span>
+
+        <span class="c1"># So that images are drawn on top</span>
+        <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">imageStims</span><span class="p">:</span>
+            <span class="n">ii</span><span class="o">.</span><span class="n">autoDraw</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="n">win</span><span class="o">.</span><span class="n">flip</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">imageStims</span><span class="p">:</span>
+            <span class="n">ii</span><span class="o">.</span><span class="n">autoDraw</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">autodraw</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">win</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">duration</span><span class="p">,</span> <span class="n">stim_onset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wait_no_keys</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log_event</span><span class="p">(</span><span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span> <span class="n">stim_onset</span><span class="o">=</span><span class="n">stim_onset</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">None</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ActionStimulus">
+<a class="viewcode-back" href="../../../api/psychopy_stimuli.html#rewardgym.psychopy_render.psychopy_display.ActionStimulus">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ActionStimulus</span><span class="p">(</span><span class="n">BaseStimulus</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Stimulus class, for when actions are required by the participants.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ActionStimulus.__init__">
+<a class="viewcode-back" href="../../../api/psychopy_stimuli.html#rewardgym.psychopy_render.psychopy_display.ActionStimulus.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">duration</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">key_dict</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;left&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;right&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;response&quot;</span><span class="p">,</span>
+        <span class="n">timeout_action</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">name_timeout</span><span class="o">=</span><span class="s2">&quot;response-time-out&quot;</span><span class="p">,</span>
+        <span class="n">rl_label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Setting up the action object.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        duration : float</span>
+<span class="sd">            Duration of the response window.</span>
+<span class="sd">        key_dict : dict, optional</span>
+<span class="sd">            Dictionary to map keyboard responses to actions recognized by the environment, by default {&quot;left&quot;: 0, &quot;right&quot;: 1}</span>
+<span class="sd">        name : str, optional</span>
+<span class="sd">            name of the object, will be used for logging, by default None</span>
+<span class="sd">        timeout_action : int, optional</span>
+<span class="sd">            Behavior of the object if the response window times out, making it possible that no response is also a distinc action, by default None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="n">duration</span><span class="p">,</span> <span class="n">rl_label</span><span class="o">=</span><span class="n">rl_label</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">key_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">key_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">key_dict</span> <span class="o">=</span> <span class="n">key_dict</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timeout_action</span> <span class="o">=</span> <span class="n">timeout_action</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name_timeout</span> <span class="o">=</span> <span class="n">name_timeout</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">entity</span> <span class="o">=</span> <span class="s2">&quot;action&quot;</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">win</span><span class="p">:</span> <span class="n">Window</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Does not need a special setup, including the function, to make easy looping possible.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        win : Window, optional</span>
+<span class="sd">            The psychopy window object that is used for displaying stimuli, by default None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+<div class="viewcode-block" id="ActionStimulus.display">
+<a class="viewcode-back" href="../../../api/psychopy_stimuli.html#rewardgym.psychopy_render.psychopy_display.ActionStimulus.display">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">display</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">win</span><span class="p">:</span> <span class="n">Window</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">ExperimentLogger</span><span class="p">,</span> <span class="n">info</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calls the stimulus object. In this case waiting for a specific response,</span>
+<span class="sd">        returning it and logging the process. Flipping the window in the end.</span>
+
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        win : Window</span>
+<span class="sd">            The psychopy window object that is used for displaying stimuli.</span>
+<span class="sd">        logger : ExperimentLogger</span>
+<span class="sd">            The logger associated with the experiment.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Union[int, str]</span>
+<span class="sd">            The response issued by the participant, interpretable by the environment.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">key_strokes</span><span class="p">(</span><span class="n">win</span><span class="p">)</span>
+
+        <span class="n">response_window_onset</span> <span class="o">=</span> <span class="n">logger</span><span class="o">.</span><span class="n">get_time</span><span class="p">()</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_response_handling</span><span class="p">(</span>
+            <span class="n">win</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">response_window_onset</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="n">info</span>
+        <span class="p">)</span>
+
+        <span class="n">win</span><span class="o">.</span><span class="n">flip</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">response</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_response_handling</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">win</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">response_window_onset</span><span class="p">,</span> <span class="n">key_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">):</span>
+        <span class="n">response_window</span> <span class="o">=</span> <span class="n">response_window_onset</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">duration</span>
+        <span class="n">response_present</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">remaining</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">key_dict</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">key_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">key_dict</span>
+
+        <span class="c1"># Main loop, keeping time and waiting for response.</span>
+        <span class="k">while</span> <span class="n">response_window</span> <span class="o">&gt;</span> <span class="n">logger</span><span class="o">.</span><span class="n">get_time</span><span class="p">()</span> <span class="ow">and</span> <span class="n">response_present</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">logger</span><span class="o">.</span><span class="n">key_strokes</span><span class="p">(</span><span class="n">win</span><span class="p">,</span> <span class="n">keyList</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">key_list</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">response</span><span class="p">:</span>
+                <span class="n">RT</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">response_window_onset</span>
+                <span class="n">response_present</span> <span class="o">=</span> <span class="kc">True</span>
+
+                <span class="k">if</span> <span class="n">info</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s2">&quot;behav_remap&quot;</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                    <span class="n">action</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s2">&quot;behav_remap&quot;</span><span class="p">][</span><span class="n">key_dict</span><span class="p">[</span><span class="n">response</span><span class="p">[</span><span class="mi">0</span><span class="p">]]]</span>
+
+                <span class="n">response_key</span> <span class="o">=</span> <span class="n">key_dict</span><span class="p">[</span><span class="n">response</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+
+                <span class="n">logger</span><span class="o">.</span><span class="n">log_event</span><span class="p">(</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;event_type&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                        <span class="s2">&quot;response_button&quot;</span><span class="p">:</span> <span class="n">response</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                        <span class="s2">&quot;response_time&quot;</span><span class="p">:</span> <span class="n">RT</span><span class="p">,</span>
+                        <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="n">action</span><span class="p">,</span>
+                        <span class="s2">&quot;rl_label&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">rl_label</span><span class="p">,</span>
+                    <span class="p">},</span>
+                    <span class="n">onset</span><span class="o">=</span><span class="n">response_window_onset</span><span class="p">,</span>
+                <span class="p">)</span>
+
+                <span class="n">remaining</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">duration</span> <span class="o">-</span> <span class="n">RT</span>
+
+        <span class="c1"># What todo if response window timed out and now response has been given.</span>
+        <span class="k">if</span> <span class="n">response_present</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="n">RT</span> <span class="o">=</span> <span class="kc">None</span>
+
+            <span class="n">response_key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">timeout_action</span>
+
+            <span class="k">if</span> <span class="n">response_key</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">response_key</span> <span class="o">=</span> <span class="n">logger</span><span class="o">.</span><span class="n">na</span>
+
+            <span class="n">logger</span><span class="o">.</span><span class="n">log_event</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;event_type&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_timeout</span><span class="p">,</span>
+                    <span class="s2">&quot;response_late&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                    <span class="s2">&quot;response_time&quot;</span><span class="p">:</span> <span class="n">RT</span><span class="p">,</span>
+                    <span class="s2">&quot;response_button&quot;</span><span class="p">:</span> <span class="n">logger</span><span class="o">.</span><span class="n">na</span><span class="p">,</span>
+                    <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">timeout_action</span><span class="p">,</span>
+                    <span class="s2">&quot;rl_label&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">rl_label</span><span class="p">,</span>
+                <span class="p">},</span>
+                <span class="n">onset</span><span class="o">=</span><span class="n">response_window_onset</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">response_key</span> <span class="o">==</span> <span class="n">logger</span><span class="o">.</span><span class="n">na</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="k">return</span> <span class="n">response_key</span><span class="p">,</span> <span class="n">remaining</span>
+
+<div class="viewcode-block" id="ActionStimulus.simulate">
+<a class="viewcode-back" href="../../../api/psychopy_stimuli.html#rewardgym.psychopy_render.psychopy_display.ActionStimulus.simulate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">simulate</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">win</span><span class="p">:</span> <span class="n">Window</span><span class="p">,</span>
+        <span class="n">logger</span><span class="o">=</span><span class="n">SimulationLogger</span><span class="p">,</span>
+        <span class="n">key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">rt</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">info</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="n">response_window_onset</span> <span class="o">=</span> <span class="n">logger</span><span class="o">.</span><span class="n">get_time</span><span class="p">()</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simulate_response</span><span class="p">(</span>
+            <span class="n">logger</span><span class="p">,</span>
+            <span class="n">key</span><span class="p">,</span>
+            <span class="n">rt</span><span class="p">,</span>
+            <span class="n">response_window_onset</span><span class="o">=</span><span class="n">response_window_onset</span><span class="p">,</span>
+            <span class="n">info</span><span class="o">=</span><span class="n">info</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">response</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_simulate_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">rt</span><span class="p">,</span> <span class="n">response_window_onset</span><span class="p">,</span> <span class="n">info</span><span class="p">):</span>
+        <span class="n">response_key</span><span class="p">,</span> <span class="n">rt</span> <span class="o">=</span> <span class="n">logger</span><span class="o">.</span><span class="n">key_strokes</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">rt</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">info</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s2">&quot;behav_remap&quot;</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">response_button</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">n</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;behav_remap&quot;</span><span class="p">])</span> <span class="k">if</span> <span class="n">b</span> <span class="o">==</span> <span class="n">response_key</span>
+            <span class="p">]</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">response_button</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">response_button</span> <span class="o">=</span> <span class="n">response_button</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">response_button</span> <span class="o">=</span> <span class="n">response_key</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">response_button</span> <span class="o">=</span> <span class="n">response_key</span>
+
+        <span class="k">if</span> <span class="n">rt</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="s2">&quot;Simulating environment: Consider setting expose_last_stim=True during env setup.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">global_clock</span><span class="o">.</span><span class="n">time</span> <span class="o">+=</span> <span class="nb">min</span><span class="p">([</span><span class="n">rt</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">duration</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="n">rt</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">duration</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">response_key</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">response_key</span> <span class="o">=</span> <span class="n">logger</span><span class="o">.</span><span class="n">na</span>
+                <span class="n">response_button</span> <span class="o">=</span> <span class="n">logger</span><span class="o">.</span><span class="n">na</span>
+
+            <span class="n">logger</span><span class="o">.</span><span class="n">log_event</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;event_type&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_timeout</span><span class="p">,</span>
+                    <span class="s2">&quot;response_late&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                    <span class="s2">&quot;response_time&quot;</span><span class="p">:</span> <span class="n">rt</span><span class="p">,</span>
+                    <span class="s2">&quot;response_button&quot;</span><span class="p">:</span> <span class="n">response_button</span><span class="p">,</span>
+                    <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="n">response_key</span><span class="p">,</span>
+                    <span class="s2">&quot;rl_label&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">rl_label</span><span class="p">,</span>
+                <span class="p">},</span>
+                <span class="n">onset</span><span class="o">=</span><span class="n">response_window_onset</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">response_key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">timeout_action</span>
+            <span class="n">remaining</span> <span class="o">=</span> <span class="kc">None</span>
+
+            <span class="k">if</span> <span class="n">response_key</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">log_event</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;event_type&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                    <span class="s2">&quot;response_button&quot;</span><span class="p">:</span> <span class="n">response_button</span><span class="p">,</span>
+                    <span class="s2">&quot;response_time&quot;</span><span class="p">:</span> <span class="n">rt</span><span class="p">,</span>
+                    <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="n">response_key</span><span class="p">,</span>
+                    <span class="s2">&quot;rl_label&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">rl_label</span><span class="p">,</span>
+                <span class="p">},</span>
+                <span class="n">onset</span><span class="o">=</span><span class="n">response_window_onset</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">remaining</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">duration</span> <span class="o">-</span> <span class="n">rt</span>
+
+        <span class="k">return</span> <span class="n">response_key</span><span class="p">,</span> <span class="n">remaining</span></div>
+
+
+
+<div class="viewcode-block" id="FeedBackStimulus">
+<a class="viewcode-back" href="../../../api/psychopy_stimuli.html#rewardgym.psychopy_render.psychopy_display.FeedBackStimulus">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">FeedBackStimulus</span><span class="p">(</span><span class="n">BaseStimulus</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class that possibly will be superseded or become obsolete at some point.</span>
+
+<span class="sd">    Purpose of the class is to provide feedback to the participant, about the</span>
+<span class="sd">    number of points they have received in a given trial or across the experiment.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="FeedBackStimulus.__init__">
+<a class="viewcode-back" href="../../../api/psychopy_stimuli.html#rewardgym.psychopy_render.psychopy_display.FeedBackStimulus.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">duration</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">position</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">125</span><span class="p">),</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">target</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;reward&quot;</span><span class="p">,</span> <span class="s2">&quot;total_reward&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;reward&quot;</span><span class="p">,</span>
+        <span class="n">text_color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;white&quot;</span><span class="p">,</span>
+        <span class="n">font_height</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
+        <span class="n">feedback_stim</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">simple</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">bar_total</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">bar_labels</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;left&quot;</span><span class="p">:</span> <span class="s2">&quot;0 kr&quot;</span><span class="p">,</span> <span class="s2">&quot;right&quot;</span><span class="p">:</span> <span class="s2">&quot;75 kr&quot;</span><span class="p">},</span>
+        <span class="n">rl_label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        FeedBack class, provides feedback to the participant, by creating</span>
+<span class="sd">        updatable TextStims.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        duration : float</span>
+<span class="sd">            Duration of the feedback.</span>
+<span class="sd">        text : str</span>
+<span class="sd">            The text that should be displayed on the screen. Should be a format string!</span>
+<span class="sd">        position : Tuple[int, int], optional</span>
+<span class="sd">            Where to display the text (by default in px), by default None</span>
+<span class="sd">        name : str, optional</span>
+<span class="sd">            name of the object, will be used for logging, by default None</span>
+<span class="sd">        target : Literal[&amp;quot;reward&amp;quot;, &amp;quot;total_reward&amp;quot;], optional</span>
+<span class="sd">            If the trial&#39;s reward or the total reward should be shown, by default &quot;reward&quot;</span>
+<span class="sd">        text_color : str, optional</span>
+<span class="sd">            Color of the text, by default &quot;white&quot;</span>
+<span class="sd">        feedback_stim : Dict, optional</span>
+<span class="sd">            If the feedback_stim should be displayed, if True changes fixation cross,</span>
+<span class="sd">            if None does not show an image as feedback. For other images populate the</span>
+<span class="sd">            keys: win, lose, zero with a string to an image or a numpy array.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="n">duration</span><span class="p">,</span> <span class="n">rl_label</span><span class="o">=</span><span class="n">rl_label</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">text</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">position</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">text_color</span> <span class="o">=</span> <span class="n">text_color</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">target</span> <span class="o">=</span> <span class="n">target</span>
+
+        <span class="k">if</span> <span class="n">feedback_stim</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">feedback_stim</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;win&quot;</span><span class="p">:</span> <span class="n">win_cross</span><span class="p">(),</span>
+                <span class="s2">&quot;lose&quot;</span><span class="p">:</span> <span class="n">lose_cross</span><span class="p">(),</span>
+                <span class="s2">&quot;zero&quot;</span><span class="p">:</span> <span class="n">zero_cross</span><span class="p">(),</span>
+            <span class="p">}</span>
+        <span class="k">elif</span> <span class="n">feedback_stim</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">feedback_stim</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">feedback_stim</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">feedback_stim</span> <span class="o">=</span> <span class="n">feedback_stim</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">font_height</span> <span class="o">=</span> <span class="n">font_height</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">simple</span> <span class="o">=</span> <span class="n">simple</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bar_total</span> <span class="o">=</span> <span class="n">bar_total</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bar_labels</span> <span class="o">=</span> <span class="n">bar_labels</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bar_length</span> <span class="o">=</span> <span class="mi">400</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bar_height</span> <span class="o">=</span> <span class="mi">50</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">win</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_setup</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reward_text</span> <span class="o">=</span> <span class="n">TextStim</span><span class="p">(</span>
+            <span class="n">win</span><span class="o">=</span><span class="n">win</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">text</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="p">,</span>
+            <span class="n">color</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">text_color</span><span class="p">,</span>
+            <span class="n">height</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">font_height</span><span class="p">,</span>
+            <span class="n">pos</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
+            <span class="n">font</span><span class="o">=</span><span class="s2">&quot;arial&quot;</span><span class="p">,</span>
+            <span class="n">alignText</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span>
+            <span class="n">anchorHoriz</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span>
+            <span class="n">units</span><span class="o">=</span><span class="s2">&quot;pix&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bar_total</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">total_reward_ind</span> <span class="o">=</span> <span class="n">TextStim</span><span class="p">(</span>
+                <span class="n">win</span><span class="o">=</span><span class="n">win</span><span class="p">,</span>
+                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;2&quot;</span><span class="p">,</span>
+                <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Total: 0.0&quot;</span><span class="p">,</span>
+                <span class="n">font</span><span class="o">=</span><span class="s2">&quot;arial&quot;</span><span class="p">,</span>
+                <span class="n">color</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">text_color</span><span class="p">,</span>
+                <span class="n">height</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+                <span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">350</span><span class="p">),</span>
+                <span class="n">alignText</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span>
+                <span class="n">anchorHoriz</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span>
+                <span class="n">units</span><span class="o">=</span><span class="s2">&quot;pix&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">total_reward_ind</span><span class="o">.</span><span class="n">autoDraw</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">point_bar</span> <span class="o">=</span> <span class="n">Rect</span><span class="p">(</span>
+                <span class="n">win</span><span class="o">=</span><span class="n">win</span><span class="p">,</span>
+                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;total_bar&quot;</span><span class="p">,</span>
+                <span class="n">width</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bar_length</span><span class="p">,</span>
+                <span class="n">height</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bar_height</span><span class="p">,</span>
+                <span class="n">lineColor</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+                <span class="n">fillColor</span><span class="o">=</span><span class="p">[</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">],</span>
+                <span class="n">lineWidth</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                <span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">350</span><span class="p">),</span>
+                <span class="n">units</span><span class="o">=</span><span class="s2">&quot;pix&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">total_reward_ind</span> <span class="o">=</span> <span class="n">Rect</span><span class="p">(</span>
+                <span class="n">win</span><span class="o">=</span><span class="n">win</span><span class="p">,</span>
+                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;total_indicator&quot;</span><span class="p">,</span>
+                <span class="n">width</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                <span class="n">height</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bar_height</span> <span class="o">+</span> <span class="mi">10</span><span class="p">,</span>
+                <span class="n">lineColor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">fillColor</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+                <span class="n">lineWidth</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                <span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">bar_length</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">350</span><span class="p">),</span>
+            <span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">text_left</span> <span class="o">=</span> <span class="n">TextStim</span><span class="p">(</span>
+                <span class="n">win</span><span class="o">=</span><span class="n">win</span><span class="p">,</span>
+                <span class="n">name</span><span class="o">=</span><span class="s2">&quot;label_left&quot;</span><span class="p">,</span>
+                <span class="n">text</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bar_labels</span><span class="p">[</span><span class="s2">&quot;left&quot;</span><span class="p">],</span>
+                <span class="n">color</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+                <span class="n">height</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>
+                <span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">bar_length</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">350</span><span class="p">),</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">text_right</span> <span class="o">=</span> <span class="n">TextStim</span><span class="p">(</span>
+                <span class="n">win</span><span class="o">=</span><span class="n">win</span><span class="p">,</span>
+                <span class="n">name</span><span class="o">=</span><span class="s2">&quot;label_right&quot;</span><span class="p">,</span>
+                <span class="n">text</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bar_labels</span><span class="p">[</span><span class="s2">&quot;right&quot;</span><span class="p">],</span>
+                <span class="n">color</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+                <span class="n">height</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>
+                <span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bar_length</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">350</span><span class="p">),</span>
+            <span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">text_right</span><span class="o">.</span><span class="n">setAutoDraw</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">text_left</span><span class="o">.</span><span class="n">setAutoDraw</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">point_bar</span><span class="o">.</span><span class="n">autoDraw</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">total_reward_ind</span><span class="o">.</span><span class="n">autoDraw</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">feedback_image</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">kk</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">feedback_stim</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">feedback_stim</span><span class="p">[</span><span class="n">kk</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">feedback_image</span><span class="p">[</span><span class="n">kk</span><span class="p">]</span> <span class="o">=</span> <span class="n">ImageStim</span><span class="p">(</span>
+                    <span class="n">win</span><span class="o">=</span><span class="n">win</span><span class="p">,</span> <span class="n">image</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">feedback_stim</span><span class="p">[</span><span class="n">kk</span><span class="p">]</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">feedback_image</span><span class="p">[</span><span class="n">kk</span><span class="p">]</span> <span class="o">=</span> <span class="n">ImageStim</span><span class="p">(</span>
+                    <span class="n">win</span><span class="p">,</span>
+                    <span class="n">image</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">feedback_stim</span><span class="p">[</span><span class="n">kk</span><span class="p">],</span>
+                    <span class="n">size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">feedback_stim</span><span class="p">[</span><span class="n">kk</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">],</span>
+                <span class="p">)</span>
+
+<div class="viewcode-block" id="FeedBackStimulus.display">
+<a class="viewcode-back" href="../../../api/psychopy_stimuli.html#rewardgym.psychopy_render.psychopy_display.FeedBackStimulus.display">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">display</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">win</span><span class="p">:</span> <span class="n">Window</span><span class="p">,</span>
+        <span class="n">logger</span><span class="p">:</span> <span class="n">ExperimentLogger</span><span class="p">,</span>
+        <span class="n">reward</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">total_reward</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calls the stimulus object, to display the reward. Uses reward or total_reward</span>
+<span class="sd">        depending on the target that has been defined.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        win : Window</span>
+<span class="sd">            The psychopy window object that is used for displaying stimuli.</span>
+<span class="sd">        logger : ExperimentLogger</span>
+<span class="sd">            The logger associated with the experiment.</span>
+<span class="sd">        reward : float</span>
+<span class="sd">            Reward of the given trial, provided by the environment.</span>
+<span class="sd">        total_reward : float</span>
+<span class="sd">            Total reward, provided by the environment.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+<span class="sd">            Should return None</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Fills in the format string. Adds the + sign for positive rewards.</span>
+        <span class="c1"># if self.target == &quot;reward&quot;:</span>
+        <span class="k">if</span> <span class="n">reward</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">feedback_img</span> <span class="o">=</span> <span class="s2">&quot;win&quot;</span>
+        <span class="k">elif</span> <span class="n">reward</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">feedback_img</span> <span class="o">=</span> <span class="s2">&quot;lose&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">feedback_img</span> <span class="o">=</span> <span class="s2">&quot;zero&quot;</span>
+
+        <span class="n">reward_outcome</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;+</span><span class="si">{</span><span class="n">reward</span><span class="si">:</span><span class="s2">5.1f</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">reward</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">reward</span><span class="si">:</span><span class="s2">5.1f</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">reward_text</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">reward_outcome</span><span class="p">))</span>
+
+        <span class="n">stim_onset</span> <span class="o">=</span> <span class="n">logger</span><span class="o">.</span><span class="n">get_time</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">feedback_img</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">feedback_image</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">feedback_image</span><span class="p">[</span><span class="n">feedback_img</span><span class="p">]</span><span class="o">.</span><span class="n">setAutoDraw</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">reward_text</span><span class="o">.</span><span class="n">setAutoDraw</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">simple</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bar_total</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_draw_total_reward</span><span class="p">(</span><span class="n">total_reward</span><span class="o">=</span><span class="n">total_reward</span><span class="p">,</span> <span class="n">win</span><span class="o">=</span><span class="n">win</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_update_reward_bar</span><span class="p">(</span><span class="n">total_reward</span><span class="o">=</span><span class="n">total_reward</span><span class="p">)</span>
+
+        <span class="n">win</span><span class="o">.</span><span class="n">flip</span><span class="p">()</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">win</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">duration</span><span class="p">,</span> <span class="n">stim_onset</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">feedback_img</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">feedback_image</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">feedback_image</span><span class="p">[</span><span class="n">feedback_img</span><span class="p">]</span><span class="o">.</span><span class="n">setAutoDraw</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">reward_text</span><span class="o">.</span><span class="n">setAutoDraw</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">simple</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">total_reward_ind</span><span class="o">.</span><span class="n">setAutoDraw</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">win</span><span class="o">.</span><span class="n">flip</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log_event</span><span class="p">(</span>
+            <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span>
+            <span class="n">stim_onset</span><span class="o">=</span><span class="n">stim_onset</span><span class="p">,</span>
+            <span class="n">extra_info</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;total_reward&quot;</span><span class="p">:</span> <span class="n">total_reward</span><span class="p">},</span>
+            <span class="n">reward</span><span class="o">=</span><span class="n">reward</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_draw_total_reward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">total_reward</span><span class="p">,</span> <span class="n">win</span><span class="p">):</span>
+        <span class="n">total_reward_outcome</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;+</span><span class="si">{</span><span class="n">total_reward</span><span class="si">:</span><span class="s2">5.1f</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">total_reward</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">total_reward</span><span class="si">:</span><span class="s2">5.1f</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+        <span class="n">reward_stage2</span> <span class="o">=</span> <span class="s2">&quot;Total: &quot;</span> <span class="o">+</span> <span class="n">total_reward_outcome</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_reward_ind</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">reward_stage2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_reward_ind</span><span class="o">.</span><span class="n">setAutoDraw</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_reward_ind</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_update_reward_bar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">total_reward</span><span class="p">):</span>
+        <span class="n">move_bar</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">total_reward</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">bar_total</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">bar_length</span><span class="p">)</span>
+        <span class="n">move_bar</span> <span class="o">=</span> <span class="nb">min</span><span class="p">([</span><span class="nb">max</span><span class="p">([</span><span class="n">move_bar</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="bp">self</span><span class="o">.</span><span class="n">bar_length</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_reward_ind</span><span class="o">.</span><span class="n">setPos</span><span class="p">((</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">bar_length</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">move_bar</span><span class="p">,</span> <span class="mi">350</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_reward_ind</span><span class="o">.</span><span class="n">setAutoDraw</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_reward_ind</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+
+<div class="viewcode-block" id="FeedBackStimulus.simulate">
+<a class="viewcode-back" href="../../../api/psychopy_stimuli.html#rewardgym.psychopy_render.psychopy_display.FeedBackStimulus.simulate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">simulate</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">logger</span><span class="o">=</span><span class="n">ExperimentLogger</span><span class="p">,</span>
+        <span class="n">reward</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">total_reward</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function to pretend that a stimulus has been shown. Logging and creating</span>
+<span class="sd">        timing.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+<span class="sd">            Does not return anything, but logs the stimulus.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">stim_onset</span> <span class="o">=</span> <span class="n">logger</span><span class="o">.</span><span class="n">get_time</span><span class="p">()</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">win</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">duration</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="n">stim_onset</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log_event</span><span class="p">(</span>
+            <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span>
+            <span class="n">stim_onset</span><span class="o">=</span><span class="n">stim_onset</span><span class="p">,</span>
+            <span class="n">extra_info</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;total_reward&quot;</span><span class="p">:</span> <span class="n">total_reward</span><span class="p">},</span>
+            <span class="n">reward</span><span class="o">=</span><span class="n">reward</span><span class="p">,</span>
+        <span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Simon R. Steinkamp.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

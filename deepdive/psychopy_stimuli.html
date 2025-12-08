@@ -1,0 +1,182 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PsychoPy Stimuli &mdash; rewardGym 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Controlling the experiment" href="controlling_experiments.html" />
+    <link rel="prev" title="Graph structure" href="graph_structure.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            rewardGym
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Walkthrough</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/tutorial.html">rewardGym Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/psychopy.html">rewardGym + PsychoPy</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Deep Dive</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="graph_structure.html">Graph structure</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">PsychoPy Stimuli</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#the-stimulus-class">The Stimulus Class</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#setup">Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#display">Display</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#simulate">Simulate</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="controlling_experiments.html">Controlling the experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="what_is_run_task.html">What is run task?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="writing_agents.html">Writing your own agents.</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tasks</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tasks/hcp.html">Human Connectome Project Gambling Task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tasks/mid.html">Monetary Incentive Delay Task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tasks/gonogo.html">Go / No-Go</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tasks/two_step.html">Two-Step task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tasks/risk_sensitive.html">Risk-Sensitive Decision Making Task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tasks/posner.html">Spatial-Cueing / Posner Task</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">(limited) API reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/environments.html">rewardgym.environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/psychopy_stimuli.html">rewardgym.psychopy_render</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">rewardGym</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">PsychoPy Stimuli</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/deepdive/psychopy_stimuli.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="psychopy-stimuli">
+<h1>PsychoPy Stimuli<a class="headerlink" href="#psychopy-stimuli" title="Link to this heading"></a></h1>
+<p>Stimuli based on PsychoPy play a special role in rewardGym, as they allow for both
+stimulation, fine control over timing, logging and simulation of experiments.</p>
+<p>See some examples <a class="reference internal" href="../api/psychopy_stimuli.html"><span class="doc">rewardgym.psychopy_render</span></a>,
+which can be accessed via the <code class="xref py py-mod docutils literal notranslate"><span class="pre">rewardgym.psychopy_render.stimuli</span></code> module.</p>
+<p>These stimuli are added to the environment as a list, so that at each state a number
+of stimuli are displayed after another. Typically ending in an <code class="xref py py-class docutils literal notranslate"><span class="pre">rewardgym.psychopy_render.stimuli.ActionStimulus</span></code>.</p>
+<section id="the-stimulus-class">
+<h2>The Stimulus Class<a class="headerlink" href="#the-stimulus-class" title="Link to this heading"></a></h2>
+<p>The stimulus class has three main methods: <code class="docutils literal notranslate"><span class="pre">setup</span></code>, <code class="docutils literal notranslate"><span class="pre">display</span></code>, and <code class="docutils literal notranslate"><span class="pre">simulate</span></code>.</p>
+<section id="setup">
+<h3>Setup<a class="headerlink" href="#setup" title="Link to this heading"></a></h3>
+<p>The role of the <code class="docutils literal notranslate"><span class="pre">setup</span></code> method is to instantiate the different PsychoPy objects,
+that are used for displaying stimuli on the screen. In principle, this
+method should only take the current <code class="docutils literal notranslate"><span class="pre">window</span></code> object as an argument.</p>
+<p>All properties of the PsychoPy objects to be displayed (filenames, images, text, etc.)
+should be added to the class during <code class="docutils literal notranslate"><span class="pre">__init__</span></code>.</p>
+</section>
+<section id="display">
+<h3>Display<a class="headerlink" href="#display" title="Link to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">display</span></code> method is used by the <code class="xref py py-class docutils literal notranslate"><span class="pre">rewardgym.environments.psychopy_env</span></code>,
+to render the stimuli onto the display.</p>
+<p>The display method inside the environment has access to:</p>
+<ul class="simple">
+<li><p>the current window object</p></li>
+<li><p>the current logger object</p></li>
+<li><p>the current condition</p></li>
+<li><p>the total reward</p></li>
+<li><p>the current reward</p></li>
+<li><p>the current location of the agent</p></li>
+<li><p>and the action issued previously</p></li>
+</ul>
+</section>
+<section id="simulate">
+<h3>Simulate<a class="headerlink" href="#simulate" title="Link to this heading"></a></h3>
+<p>Finally, there’s the <code class="docutils literal notranslate"><span class="pre">simulate</span></code> method, which mirrors the <code class="docutils literal notranslate"><span class="pre">display</span></code> method.
+This is used to simulate full log files. In many cases you can use <code class="docutils literal notranslate"><span class="pre">simulate</span></code>
+method inherited from the <code class="xref py py-class docutils literal notranslate"><span class="pre">rewardgym.psychopy_render.stimuli.BaseStimulus</span></code>,
+class.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="graph_structure.html" class="btn btn-neutral float-left" title="Graph structure" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="controlling_experiments.html" class="btn btn-neutral float-right" title="Controlling the experiment" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Simon R. Steinkamp.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,287 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>rewardGym + PsychoPy &mdash; rewardGym 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Graph structure" href="../deepdive/graph_structure.html" />
+    <link rel="prev" title="rewardGym Tutorial" href="tutorial.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            rewardGym
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Walkthrough</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">rewardGym Tutorial</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">rewardGym + PsychoPy</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#adding-stimulus-representations">Adding stimulus representations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#full-example">Full example</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Deep Dive</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../deepdive/graph_structure.html">Graph structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deepdive/psychopy_stimuli.html">PsychoPy Stimuli</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deepdive/controlling_experiments.html">Controlling the experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deepdive/what_is_run_task.html">What is run task?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deepdive/writing_agents.html">Writing your own agents.</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tasks</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tasks/hcp.html">Human Connectome Project Gambling Task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tasks/mid.html">Monetary Incentive Delay Task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tasks/gonogo.html">Go / No-Go</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tasks/two_step.html">Two-Step task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tasks/risk_sensitive.html">Risk-Sensitive Decision Making Task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tasks/posner.html">Spatial-Cueing / Posner Task</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">(limited) API reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/environments.html">rewardgym.environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/psychopy_stimuli.html">rewardgym.psychopy_render</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">rewardGym</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">rewardGym + PsychoPy</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tutorials/psychopy.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="rewardgym-psychopy">
+<h1>rewardGym + PsychoPy<a class="headerlink" href="#rewardgym-psychopy" title="Link to this heading"></a></h1>
+<p>The toolbox is build in such a way, that it can also be used from a standalone
+installation of PsychoPy (tested only at v2023.2.3 and higher).</p>
+<p>Showing stimuli with PsychoPy is recommended for data collection for multiple
+reasons.</p>
+<ol class="arabic simple">
+<li><p>The installation of PsychoPy is often times easier than setting up a new Python environment, especially on different stimulus computers.</p></li>
+<li><p>PsychoPy has been shown to provide a reasonable and accurate report of stimulus and response timings.</p></li>
+<li><p>PsychoPy is probably better known in the cognitive and psychology communities.</p></li>
+</ol>
+<section id="adding-stimulus-representations">
+<h2>Adding stimulus representations<a class="headerlink" href="#adding-stimulus-representations" title="Link to this heading"></a></h2>
+<p>The main purpose of providing support for PsychoPy is that rewardGym should also be used for data collection.</p>
+<p>Before writing your own loop and functions, I recommend checking out the <code class="docutils literal notranslate"><span class="pre">rewardgym_psychopy.py</span></code> file in the root directory.</p>
+<p>Adding stimuli works in principle in the same way as in the pygame rendering example by creating an <code class="docutils literal notranslate"><span class="pre">info_dict</span></code>, which has
+entries for every node in the graph. However, this time using “psychopy” as the key. Same as before, we are also using a
+list to collate different stimulus representations.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">info_dict</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;pychopy&quot;</span><span class="p">:</span> <span class="p">[]}}</span>
+</pre></div>
+</div>
+<p>rewardGym has some of pre-specified stimulus classes (see the API documentation for more details).</p>
+<p>We are going to use four classes for our example from before:</p>
+<ol class="arabic simple">
+<li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">BaseStimulus()</span></code></p></li>
+<li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">TextStimulus()</span></code></p></li>
+<li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ActionStimulus()</span></code></p></li>
+<li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">FeedBackStimulus()</span></code></p></li>
+</ol>
+<p>The <code class="xref py py-meth docutils literal notranslate"><span class="pre">BaseStimulus()</span></code> is simply a flip / update of the window, which could
+for example be used to clear the screen again.  <code class="xref py py-meth docutils literal notranslate"><span class="pre">TextStimulus()</span></code> and
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">FeedBackStimulus()</span></code> are text stimuli, where the latter is specially designed
+to be used for reward feedback. <code class="xref py py-meth docutils literal notranslate"><span class="pre">ActionStimulus()</span></code>, finally indicates that the
+program should wait for a user action.</p>
+</section>
+<section id="full-example">
+<h2>Full example<a class="headerlink" href="#full-example" title="Link to this heading"></a></h2>
+<p>You can find the full worked example under <code class="docutils literal notranslate"><span class="pre">notebooks/psychopy_example.py</span></code>.</p>
+<p>To run it in PsychoPy copy the file to the root directory (it won’t work otherwise!).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">  1</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">  2</span><span class="sd">Example code for using psychopy + rewardGym.</span>
+<span class="linenos">  3</span><span class="sd">As a set up create a copy of this code and move it into the root directory of</span>
+<span class="linenos">  4</span><span class="sd">the rewardGym folder.</span>
+<span class="linenos">  5</span><span class="sd">Then open the file in PsychoPy coder. Note, that it requires a recent</span>
+<span class="linenos">  6</span><span class="sd">PsychoPy version (tested on at least v2023.2.3).</span>
+<span class="linenos">  7</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">  8</span>
+<span class="linenos">  9</span><span class="kn">from</span><span class="w"> </span><span class="nn">psychopy</span><span class="w"> </span><span class="kn">import</span> <span class="n">core</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">visual</span>
+<span class="linenos"> 10</span>
+<span class="linenos"> 11</span><span class="kn">from</span><span class="w"> </span><span class="nn">rewardgym.environments</span><span class="w"> </span><span class="kn">import</span> <span class="n">PsychopyEnv</span>
+<span class="linenos"> 12</span><span class="kn">from</span><span class="w"> </span><span class="nn">rewardgym.psychopy_render.logger</span><span class="w"> </span><span class="kn">import</span> <span class="n">MinimalLogger</span>
+<span class="linenos"> 13</span><span class="kn">from</span><span class="w"> </span><span class="nn">rewardgym.psychopy_render.psychopy_display</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span class="linenos"> 14</span>    <span class="n">ActionStimulus</span><span class="p">,</span>
+<span class="linenos"> 15</span>    <span class="n">BaseStimulus</span><span class="p">,</span>
+<span class="linenos"> 16</span>    <span class="n">FeedBackStimulus</span><span class="p">,</span>
+<span class="linenos"> 17</span>    <span class="n">TextStimulus</span><span class="p">,</span>
+<span class="linenos"> 18</span><span class="p">)</span>
+<span class="linenos"> 19</span><span class="kn">from</span><span class="w"> </span><span class="nn">rewardgym.reward_classes</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseReward</span>
+<span class="linenos"> 20</span>
+<span class="linenos"> 21</span><span class="c1"># As in the pygame example, we create the graph, rewards and their locations:</span>
+<span class="linenos"> 22</span><span class="n">env_graph</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="mi">1</span><span class="p">:</span> <span class="p">[],</span> <span class="mi">2</span><span class="p">:</span> <span class="p">[]}</span>
+<span class="linenos"> 23</span>
+<span class="linenos"> 24</span><span class="n">reward1</span> <span class="o">=</span> <span class="n">BaseReward</span><span class="p">(</span><span class="n">reward</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">p</span><span class="o">=</span><span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">],</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">2222</span><span class="p">)</span>
+<span class="linenos"> 25</span><span class="n">reward2</span> <span class="o">=</span> <span class="n">BaseReward</span><span class="p">(</span><span class="n">reward</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">p</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">3333</span><span class="p">)</span>
+<span class="linenos"> 26</span>
+<span class="linenos"> 27</span><span class="c1"># This creates the reward dictionary necessary for the environment.</span>
+<span class="linenos"> 28</span><span class="n">reward_locs</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="n">reward1</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="n">reward2</span><span class="p">}</span>
+<span class="linenos"> 29</span>
+<span class="linenos"> 30</span><span class="c1"># We then create the environment. Note that we use a PsychopyEnv.</span>
+<span class="linenos"> 31</span><span class="n">env</span> <span class="o">=</span> <span class="n">PsychopyEnv</span><span class="p">(</span><span class="n">environment_graph</span><span class="o">=</span><span class="n">env_graph</span><span class="p">,</span> <span class="n">reward_locations</span><span class="o">=</span><span class="n">reward_locs</span><span class="p">)</span>
+<span class="linenos"> 32</span>
+<span class="linenos"> 33</span><span class="c1"># We then creat the stimuli we want to display. Here we use a very minimal example</span>
+<span class="linenos"> 34</span><span class="c1"># as in the pygame example:</span>
+<span class="linenos"> 35</span>
+<span class="linenos"> 36</span><span class="c1"># This is just a flip of the screen (clear everything that is on there)</span>
+<span class="linenos"> 37</span><span class="n">flip_screen</span> <span class="o">=</span> <span class="n">BaseStimulus</span><span class="p">(</span><span class="n">duration</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="linenos"> 38</span><span class="c1"># Then we put a fixatoin cross on the screen for 0.2 s (note the different time units for pygame (ms) and psychopy (s))</span>
+<span class="linenos"> 39</span><span class="n">fixation</span> <span class="o">=</span> <span class="n">TextStimulus</span><span class="p">(</span><span class="n">duration</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;+&quot;</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;text1&quot;</span><span class="p">)</span>
+<span class="linenos"> 40</span><span class="c1"># Another TextStimulus to show the choic</span>
+<span class="linenos"> 41</span><span class="n">selection</span> <span class="o">=</span> <span class="n">TextStimulus</span><span class="p">(</span><span class="n">duration</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;A or B&quot;</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;text2&quot;</span><span class="p">)</span>
+<span class="linenos"> 42</span><span class="c1"># Finally, we require an action, which is done using the ActionStimulus.</span>
+<span class="linenos"> 43</span><span class="n">action</span> <span class="o">=</span> <span class="n">ActionStimulus</span><span class="p">(</span><span class="n">duration</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">key_dict</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;left&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;right&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+<span class="linenos"> 44</span>
+<span class="linenos"> 45</span><span class="c1"># In the end we create some reward feedback.</span>
+<span class="linenos"> 46</span><span class="n">reward</span> <span class="o">=</span> <span class="n">FeedBackStimulus</span><span class="p">(</span>
+<span class="linenos"> 47</span>    <span class="n">duration</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;You gain: </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">target</span><span class="o">=</span><span class="s2">&quot;reward&quot;</span>
+<span class="linenos"> 48</span><span class="p">)</span>
+<span class="linenos"> 49</span><span class="n">earnings</span> <span class="o">=</span> <span class="n">FeedBackStimulus</span><span class="p">(</span>
+<span class="linenos"> 50</span>    <span class="n">duration</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;You have gained: </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">target</span><span class="o">=</span><span class="s2">&quot;total_reward&quot;</span>
+<span class="linenos"> 51</span><span class="p">)</span>
+<span class="linenos"> 52</span>
+<span class="linenos"> 53</span><span class="c1"># We then augment the nodes in the info dict with the stimuli.</span>
+<span class="linenos"> 54</span><span class="n">info_dict</span> <span class="o">=</span> <span class="p">{</span>
+<span class="linenos"> 55</span>    <span class="mi">0</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;psychopy&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">flip_screen</span><span class="p">,</span> <span class="n">fixation</span><span class="p">,</span> <span class="n">selection</span><span class="p">,</span> <span class="n">action</span><span class="p">]},</span>
+<span class="linenos"> 56</span>    <span class="mi">1</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;psychopy&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">flip_screen</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">earnings</span><span class="p">]},</span>
+<span class="linenos"> 57</span>    <span class="mi">2</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;psychopy&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">flip_screen</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">earnings</span><span class="p">]},</span>
+<span class="linenos"> 58</span><span class="p">}</span>
+<span class="linenos"> 59</span>
+<span class="linenos"> 60</span><span class="n">env</span><span class="o">.</span><span class="n">info_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">info_dict</span><span class="p">)</span>
+<span class="linenos"> 61</span>
+<span class="linenos"> 62</span>
+<span class="linenos"> 63</span><span class="c1"># For psychopy we need to create a window to render the stimuli onto.</span>
+<span class="linenos"> 64</span><span class="n">win</span> <span class="o">=</span> <span class="n">visual</span><span class="o">.</span><span class="n">Window</span><span class="p">(</span>
+<span class="linenos"> 65</span>    <span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="mi">1680</span><span class="p">,</span> <span class="mi">1050</span><span class="p">],</span>
+<span class="linenos"> 66</span>    <span class="n">fullscr</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="linenos"> 67</span>    <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">],</span>
+<span class="linenos"> 68</span>    <span class="n">units</span><span class="o">=</span><span class="s2">&quot;pix&quot;</span><span class="p">,</span>
+<span class="linenos"> 69</span><span class="p">)</span>
+<span class="linenos"> 70</span>
+<span class="linenos"> 71</span><span class="c1"># As the stimuli require a logger object, we create on here. Note that this</span>
+<span class="linenos"> 72</span><span class="c1"># is the MinimalLogger class, that does not write anything to file, and is</span>
+<span class="linenos"> 73</span><span class="c1"># just used for compatibility with the stimulus classes (see the main psychopy</span>
+<span class="linenos"> 74</span><span class="c1"># code in the root dir for advanced logging).</span>
+<span class="linenos"> 75</span><span class="n">Logger</span> <span class="o">=</span> <span class="n">MinimalLogger</span><span class="p">(</span><span class="n">global_clock</span><span class="o">=</span><span class="n">core</span><span class="o">.</span><span class="n">Clock</span><span class="p">())</span>
+<span class="linenos"> 76</span><span class="n">Logger</span><span class="o">.</span><span class="n">create</span><span class="p">()</span>
+<span class="linenos"> 77</span>
+<span class="linenos"> 78</span><span class="c1"># Finally, the stimuli need to be setup (associating and creating the psychopy</span>
+<span class="linenos"> 79</span><span class="c1"># objects that need a window object). The pyschopy environment has a method for that:</span>
+<span class="linenos"> 80</span><span class="n">env</span><span class="o">.</span><span class="n">setup_render</span><span class="p">(</span><span class="n">window</span><span class="o">=</span><span class="n">win</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">Logger</span><span class="p">)</span>
+<span class="linenos"> 81</span>
+<span class="linenos"> 82</span><span class="c1"># We also show some instructions here:</span>
+<span class="linenos"> 83</span><span class="n">instruction</span> <span class="o">=</span> <span class="n">visual</span><span class="o">.</span><span class="n">TextStim</span><span class="p">(</span>
+<span class="linenos"> 84</span>    <span class="n">win</span><span class="o">=</span><span class="n">win</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Hi</span><span class="se">\n</span><span class="s2">Wellcome to the example&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="linenos"> 85</span><span class="p">)</span>
+<span class="linenos"> 86</span>
+<span class="linenos"> 87</span><span class="n">instruction</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+<span class="linenos"> 88</span><span class="n">win</span><span class="o">.</span><span class="n">flip</span><span class="p">()</span>
+<span class="linenos"> 89</span><span class="n">event</span><span class="o">.</span><span class="n">waitKeys</span><span class="p">()</span>
+<span class="linenos"> 90</span><span class="n">win</span><span class="o">.</span><span class="n">flip</span><span class="p">()</span>
+<span class="linenos"> 91</span>
+<span class="linenos"> 92</span><span class="c1"># The main loop to display the experiment.</span>
+<span class="linenos"> 93</span><span class="n">n_episodes</span> <span class="o">=</span> <span class="mi">5</span>  <span class="c1"># Change to a higher number, disabled here for rendering.</span>
+<span class="linenos"> 94</span>
+<span class="linenos"> 95</span><span class="k">for</span> <span class="n">episode</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_episodes</span><span class="p">):</span>
+<span class="linenos"> 96</span>    <span class="n">obs</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">agent_location</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="linenos"> 97</span>    <span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="linenos"> 98</span>
+<span class="linenos"> 99</span>    <span class="k">while</span> <span class="ow">not</span> <span class="n">done</span><span class="p">:</span>
+<span class="linenos">100</span>        <span class="c1"># The environment stores the action (and the previous action)</span>
+<span class="linenos">101</span>        <span class="n">next_obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">action</span><span class="p">)</span>
+<span class="linenos">102</span>
+<span class="linenos">103</span>        <span class="n">done</span> <span class="o">=</span> <span class="n">terminated</span> <span class="ow">or</span> <span class="n">truncated</span>
+<span class="linenos">104</span>        <span class="n">obs</span> <span class="o">=</span> <span class="n">next_obs</span>
+<span class="linenos">105</span>
+<span class="linenos">106</span><span class="c1"># And finally closing everything.</span>
+<span class="linenos">107</span><span class="n">env</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="linenos">108</span><span class="n">win</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="linenos">109</span><span class="n">core</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="tutorial.html" class="btn btn-neutral float-left" title="rewardGym Tutorial" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../deepdive/graph_structure.html" class="btn btn-neutral float-right" title="Graph structure" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Simon R. Steinkamp.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

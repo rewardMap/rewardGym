@@ -1,0 +1,224 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Graph structure &mdash; rewardGym 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="PsychoPy Stimuli" href="psychopy_stimuli.html" />
+    <link rel="prev" title="rewardGym + PsychoPy" href="../tutorials/psychopy.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            rewardGym
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Walkthrough</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/tutorial.html">rewardGym Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/psychopy.html">rewardGym + PsychoPy</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Deep Dive</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Graph structure</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#the-basic-graph">The basic graph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#adding-probabilistic-transitions">Adding probabilistic transitions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-the-complete-graph-structure">Using the complete graph structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#utilizing-skip-connections">Utilizing skip connections</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="psychopy_stimuli.html">PsychoPy Stimuli</a></li>
+<li class="toctree-l1"><a class="reference internal" href="controlling_experiments.html">Controlling the experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="what_is_run_task.html">What is run task?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="writing_agents.html">Writing your own agents.</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tasks</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tasks/hcp.html">Human Connectome Project Gambling Task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tasks/mid.html">Monetary Incentive Delay Task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tasks/gonogo.html">Go / No-Go</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tasks/two_step.html">Two-Step task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tasks/risk_sensitive.html">Risk-Sensitive Decision Making Task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tasks/posner.html">Spatial-Cueing / Posner Task</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">(limited) API reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/environments.html">rewardgym.environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/psychopy_stimuli.html">rewardgym.psychopy_render</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">rewardGym</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Graph structure</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/deepdive/graph_structure.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="graph-structure">
+<h1>Graph structure<a class="headerlink" href="#graph-structure" title="Link to this heading"></a></h1>
+<p>At its core rewardGym uses a graph structure to represent environments and tasks.
+There are multiple possible representations at different complexities.</p>
+<p>The core representation is the same across experiments:</p>
+<ul class="simple">
+<li><p>Nodes represent states of the environment.</p></li>
+<li><p>Edges represent different actions.</p></li>
+<li><p>There is usually one or more starting nodes, which represent the condition.</p></li>
+<li><p>There is usually an end node, which is associated with a reward.</p></li>
+</ul>
+<section id="the-basic-graph">
+<h2>The basic graph<a class="headerlink" href="#the-basic-graph" title="Link to this heading"></a></h2>
+<p>A basic graph could be the following:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span> <span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="mi">1</span> <span class="p">:</span> <span class="p">[],</span> <span class="mi">2</span> <span class="p">:</span> <span class="p">[]}</span>
+</pre></div>
+</div>
+<p>Here we have the starting node <code class="docutils literal notranslate"><span class="pre">0</span></code> which presupposes two actions. Each of these
+actions lead to a terminal state (indicated by the empty lists).</p>
+<p>An important consideration for this graph structure is, that the actions are simply numbered.
+I.e. action <code class="docutils literal notranslate"><span class="pre">0</span></code> would lead to node <code class="docutils literal notranslate"><span class="pre">1</span></code> and action <code class="docutils literal notranslate"><span class="pre">1</span></code> would lead to node <code class="docutils literal notranslate"><span class="pre">2</span></code>.</p>
+<p>This representation is already powerful enough to create experiments, such as the <a class="reference internal" href="../tasks/hcp.html"><span class="doc">Human Connectome Project Gambling Task</span></a> task
+or a two-arm bandit task <a class="reference internal" href="../tutorials/tutorial.html"><span class="doc">rewardGym Tutorial</span></a>.</p>
+</section>
+<section id="adding-probabilistic-transitions">
+<h2>Adding probabilistic transitions<a class="headerlink" href="#adding-probabilistic-transitions" title="Link to this heading"></a></h2>
+<p>If we want to add some randomness to the action selection, we can introduce and
+indicator for probabilistic choosing, using a tuple:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="mf">0.7</span><span class="p">),</span> <span class="mi">1</span> <span class="p">:</span> <span class="p">[],</span> <span class="mi">2</span> <span class="p">:[]}</span>
+</pre></div>
+</div>
+<p>In this case the tuple for state <code class="docutils literal notranslate"><span class="pre">0:</span> <span class="pre">([1,</span> <span class="pre">2],</span> <span class="pre">0.7)</span></code> indicates that action <code class="docutils literal notranslate"><span class="pre">0</span></code>
+selects state <code class="docutils literal notranslate"><span class="pre">1</span></code> in 70% of the cases and any other state (here that is only <code class="docutils literal notranslate"><span class="pre">2</span></code>)
+in 30 % of the cases. Similarly, action <code class="docutils literal notranslate"><span class="pre">1</span></code> selects state <code class="docutils literal notranslate"><span class="pre">2</span></code> in 70 % of the cases
+and any other state with 30 % probability.</p>
+<p>One could use this functionality to uniformly draw form a series of possible outcome states.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="mf">0.2</span><span class="p">),</span> <span class="mi">1</span><span class="p">:</span> <span class="p">[],</span> <span class="mi">2</span><span class="p">:</span> <span class="p">[],</span> <span class="mi">3</span><span class="p">:</span> <span class="p">[],</span> <span class="mi">4</span><span class="p">:</span> <span class="p">[],</span> <span class="mi">5</span><span class="p">:</span> <span class="p">[]}</span>
+</pre></div>
+</div>
+<p>In this example, any of the 5 possible actions (0 - 4) will lead to a random new state.
+An action (e.g. <code class="docutils literal notranslate"><span class="pre">0</span></code>) leads to the selected outcome (<code class="docutils literal notranslate"><span class="pre">1</span></code>) in only 20 % of the case, in the remaining 80 % of cases
+a random state of the remaining list (<code class="docutils literal notranslate"><span class="pre">[2,</span> <span class="pre">3,</span> <span class="pre">4,</span> <span class="pre">5]</span></code>) will be drawn with uniform probability.</p>
+</section>
+<section id="using-the-complete-graph-structure">
+<h2>Using the complete graph structure<a class="headerlink" href="#using-the-complete-graph-structure" title="Link to this heading"></a></h2>
+<p>RewardGym uses a more detailed graph structure under the hood, which allows for
+greater controllability (e.g. in experiments).</p>
+<p>Instead of associating a node only with a list of possible outcomes or a tuple of outcomes
+and probabilities, a node is can be associated with a dictionary.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="p">:</span> <span class="mi">2</span><span class="p">},</span> <span class="mi">1</span> <span class="p">:</span> <span class="p">{},</span> <span class="mi">2</span> <span class="p">:</span> <span class="p">{}}</span>
+</pre></div>
+</div>
+<p>Here we are reiterating the first example, but how it would look like in the internal
+representation.
+The first node is associated with a dictionary, that explicitly states which action leads to which
+terminal state.</p>
+<p>For even more complex examples, this would be the full graph representation of the
+two-step task.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="mf">0.7</span><span class="p">),</span> <span class="mi">1</span><span class="p">:</span> <span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="mf">0.7</span><span class="p">)},</span>
+        <span class="mi">1</span><span class="p">:</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="mi">4</span><span class="p">},</span>
+        <span class="mi">2</span><span class="p">:</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="mi">6</span><span class="p">},</span>
+        <span class="mi">3</span><span class="p">:</span> <span class="p">{},</span>
+        <span class="mi">4</span><span class="p">:</span> <span class="p">{},</span>
+        <span class="mi">5</span><span class="p">:</span> <span class="p">{},</span>
+        <span class="mi">6</span><span class="p">:</span> <span class="p">{}}</span>
+</pre></div>
+</div>
+<p>As you can see each of the probabilistic nodes explicitly states, which action
+leads with 70 % probability to which state (see the order of the possible endpoints).</p>
+<p>In practice, you will not often use the full structure or only use it for very
+specific nodes. If necessary, you can call the static method of the <code class="docutils literal notranslate"><span class="pre">BaseEnv</span></code>
+class <code class="docutils literal notranslate"><span class="pre">_unpack_graph</span></code> to create the full graph structure for you graph.</p>
+</section>
+<section id="utilizing-skip-connections">
+<h2>Utilizing skip connections<a class="headerlink" href="#utilizing-skip-connections" title="Link to this heading"></a></h2>
+<p>You can also decide to skip certain connections, for example to use a primary node
+only for selecting the tasks current condition.</p>
+<p>This is done by using the <code class="docutils literal notranslate"><span class="pre">skip</span></code> argument.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="mf">0.5</span><span class="p">),</span> <span class="s1">&#39;skip&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span> <span class="mi">1</span> <span class="p">:</span> <span class="p">{},</span> <span class="mi">2</span> <span class="p">:</span> <span class="p">{}}</span>
+</pre></div>
+</div>
+<p>Adding <code class="docutils literal notranslate"><span class="pre">skip</span></code> to the graph tells the environment class to automatically jump to
+the next state, pretending to have pressed the indicated key (here <code class="docutils literal notranslate"><span class="pre">0</span></code>).
+Essentially, this example would let you start in states <code class="docutils literal notranslate"><span class="pre">1</span></code> or <code class="docutils literal notranslate"><span class="pre">2</span></code>, with even
+probability.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../tutorials/psychopy.html" class="btn btn-neutral float-left" title="rewardGym + PsychoPy" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="psychopy_stimuli.html" class="btn btn-neutral float-right" title="PsychoPy Stimuli" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Simon R. Steinkamp.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

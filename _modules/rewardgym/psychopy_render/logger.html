@@ -1,0 +1,673 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>rewardgym.psychopy_render.logger &mdash; rewardGym 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            rewardGym
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Walkthrough</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/tutorial.html">rewardGym Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/psychopy.html">rewardGym + PsychoPy</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Deep Dive</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../deepdive/graph_structure.html">Graph structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../deepdive/psychopy_stimuli.html">PsychoPy Stimuli</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../deepdive/controlling_experiments.html">Controlling the experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../deepdive/what_is_run_task.html">What is run task?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../deepdive/writing_agents.html">Writing your own agents.</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tasks</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tasks/hcp.html">Human Connectome Project Gambling Task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tasks/mid.html">Monetary Incentive Delay Task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tasks/gonogo.html">Go / No-Go</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tasks/two_step.html">Two-Step task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tasks/risk_sensitive.html">Risk-Sensitive Decision Making Task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tasks/posner.html">Spatial-Cueing / Posner Task</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">(limited) API reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/environments.html">rewardgym.environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/psychopy_stimuli.html">rewardgym.psychopy_render</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">rewardGym</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">rewardgym.psychopy_render.logger</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for rewardgym.psychopy_render.logger</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Logger classes used by the experiment.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">psychopy</span><span class="w"> </span><span class="kn">import</span> <span class="n">core</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">psychopy.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">Clock</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">psychopy.event</span><span class="w"> </span><span class="kn">import</span> <span class="n">getKeys</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">psychopy.visual</span><span class="w"> </span><span class="kn">import</span> <span class="n">Window</span>
+<span class="k">except</span> <span class="ne">ModuleNotFoundError</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">psychopy_stubs</span> <span class="k">as</span> <span class="n">core</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.psychopy_stubs</span><span class="w"> </span><span class="kn">import</span> <span class="n">Clock</span><span class="p">,</span> <span class="n">Window</span><span class="p">,</span> <span class="n">getKeys</span>
+
+
+<div class="viewcode-block" id="ExperimentLogger">
+<a class="viewcode-back" href="../../../api/psychopy_stimuli.html#rewardgym.psychopy_render.logger.ExperimentLogger">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ExperimentLogger</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Logger class to log what is going on during the experiment.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ExperimentLogger.__init__">
+<a class="viewcode-back" href="../../../api/psychopy_stimuli.html#rewardgym.psychopy_render.logger.ExperimentLogger.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">global_clock</span><span class="p">:</span> <span class="n">Clock</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">participant_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;n/a&quot;</span><span class="p">,</span>
+        <span class="n">task</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;hcp&quot;</span><span class="p">,</span>
+        <span class="n">run</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">seq_tr</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.752</span><span class="p">,</span>
+        <span class="n">sep</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="n">na</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;n/a&quot;</span><span class="p">,</span>
+        <span class="n">kill_switch</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;q&quot;</span><span class="p">,</span>
+        <span class="n">mr_trigger</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;5&quot;</span><span class="p">,</span>
+        <span class="n">mr_clock</span><span class="p">:</span> <span class="n">Clock</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Logger class to help with logging during a potential fMRI experiment,</span>
+<span class="sd">        which is implemented in PsychoPy.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        file_name : str</span>
+<span class="sd">            Name of the output file.</span>
+<span class="sd">        global_clock : core.Clock</span>
+<span class="sd">            Clock that is used by the experiment.</span>
+<span class="sd">        participant_id : str</span>
+<span class="sd">            The participant id (logged as its own persistent column)</span>
+<span class="sd">        task : str, optional</span>
+<span class="sd">            The task, also logged as persistent column, by default &quot;hcp&quot;</span>
+<span class="sd">        run : int, optional</span>
+<span class="sd">            The run, also logged as persistent column, by default 1</span>
+<span class="sd">        seq_tr : float, optional</span>
+<span class="sd">            If it is an fMRI experiment, this is echo time. Used to calculate the expected collection between acquisitions, by default 0.752</span>
+<span class="sd">        sep : str, optional</span>
+<span class="sd">            What kind of separator to use in output file, by default &quot;\t&quot;</span>
+<span class="sd">        na : str, optional</span>
+<span class="sd">            How NaN values are written to file, by default &quot;n/a&quot;</span>
+<span class="sd">        kill_switch : str, optional</span>
+<span class="sd">            Button to press to exit the experiment, by default &quot;q&quot;</span>
+<span class="sd">        mr_trigger : str, optional</span>
+<span class="sd">            Trigger of the MRI (assuming that it is transformed to a key press), by default &quot;5&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">file_name</span> <span class="o">=</span> <span class="n">file_name</span>
+
+        <span class="k">if</span> <span class="n">global_clock</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">global_clock</span> <span class="o">=</span> <span class="n">Clock</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">mr_clock</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">mr_clock</span> <span class="o">=</span> <span class="n">global_clock</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">global_clock</span> <span class="o">=</span> <span class="n">global_clock</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mr_clock</span> <span class="o">=</span> <span class="n">mr_clock</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">sep</span> <span class="o">=</span> <span class="n">sep</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">na</span> <span class="o">=</span> <span class="n">na</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">participant_id</span> <span class="o">=</span> <span class="n">participant_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">task</span> <span class="o">=</span> <span class="n">task</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">run</span> <span class="o">=</span> <span class="n">run</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">seq_tr</span> <span class="o">=</span> <span class="n">seq_tr</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reward</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kill_switch</span> <span class="o">=</span> <span class="n">kill_switch</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mr_trigger</span> <span class="o">=</span> <span class="n">mr_trigger</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">trial_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">na</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_position</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">na</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">na</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">misc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">na</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">avail_actions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">na</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">na</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rllabel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">na</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">trial</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tr</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">tmp_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">categories</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;onset&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;duration&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;trial_type&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;event_type&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;response_time&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;response_button&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;response_late&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;action&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;reward&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;trial&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;current_location&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;trial_time&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;total_reward&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;avail_actions&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;misc&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;TR&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;expected_duration&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;start_position&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;task&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;run&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;participant_id&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;rl_label&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+
+        <span class="c1"># Create a dictionary of nans to be used later.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nan_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">ii</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">na</span> <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">}</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_default_logging</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reward</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Populates dictionary with default values.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        reward : float, optional</span>
+<span class="sd">            The reward received in the trial, by default None</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Dict</span>
+<span class="sd">            dictionary populated with default values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">reward</span> <span class="o">=</span> <span class="n">reward</span>
+        <span class="n">tmp_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nan_dict</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">tmp_dict</span><span class="p">[</span><span class="s2">&quot;onset&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_clock</span><span class="o">.</span><span class="n">getTime</span><span class="p">()</span>
+        <span class="n">tmp_dict</span><span class="p">[</span><span class="s2">&quot;reward&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reward</span>
+        <span class="n">tmp_dict</span><span class="p">[</span><span class="s2">&quot;trial&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trial</span>
+        <span class="n">tmp_dict</span><span class="p">[</span><span class="s2">&quot;trial_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_clock</span><span class="o">.</span><span class="n">getTime</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">trial_start</span>
+        <span class="n">tmp_dict</span><span class="p">[</span><span class="s2">&quot;participant_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">participant_id</span>
+        <span class="n">tmp_dict</span><span class="p">[</span><span class="s2">&quot;trial_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trial_type</span>
+        <span class="n">tmp_dict</span><span class="p">[</span><span class="s2">&quot;start_position&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_position</span>
+        <span class="n">tmp_dict</span><span class="p">[</span><span class="s2">&quot;current_location&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_location</span>
+        <span class="n">tmp_dict</span><span class="p">[</span><span class="s2">&quot;TR&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tr</span>
+        <span class="n">tmp_dict</span><span class="p">[</span><span class="s2">&quot;run&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run</span>
+        <span class="n">tmp_dict</span><span class="p">[</span><span class="s2">&quot;avail_actions&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">avail_actions</span>
+        <span class="n">tmp_dict</span><span class="p">[</span><span class="s2">&quot;misc&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">misc</span>
+        <span class="n">tmp_dict</span><span class="p">[</span><span class="s2">&quot;action&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">action</span>
+        <span class="n">tmp_dict</span><span class="p">[</span><span class="s2">&quot;rl_label&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rllabel</span>
+
+        <span class="k">return</span> <span class="n">tmp_dict</span>
+
+<div class="viewcode-block" id="ExperimentLogger.log_event">
+<a class="viewcode-back" href="../../../api/psychopy_stimuli.html#rewardgym.psychopy_render.logger.ExperimentLogger.log_event">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">log_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">reward</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">onset</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Logs the current event.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        info_dict : Dict</span>
+<span class="sd">            the dictionary that contains the current information of the trial.</span>
+<span class="sd">        reward : float, optional</span>
+<span class="sd">            reward received in the trial, by default None</span>
+<span class="sd">        onset : float, optional</span>
+<span class="sd">            The real onset of the event, duration is</span>
+<span class="sd">                calculated between onset and current time, by default None</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            Returns an error if onset is after the current time.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">tmp_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_logging</span><span class="p">(</span><span class="n">reward</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">onset</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">onset</span> <span class="o">&lt;=</span> <span class="n">tmp_dict</span><span class="p">[</span><span class="s2">&quot;onset&quot;</span><span class="p">]:</span>
+                <span class="n">tmp_dict</span><span class="p">[</span><span class="s2">&quot;duration&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp_dict</span><span class="p">[</span><span class="s2">&quot;onset&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">onset</span>
+                <span class="n">tmp_dict</span><span class="p">[</span><span class="s2">&quot;onset&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">onset</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;User defined onset needs to be before&quot;</span> <span class="o">+</span> <span class="s2">&quot; automatic onest!&quot;</span>
+                <span class="p">)</span>
+
+        <span class="c1"># TODO check, that onset is not in info_dict!</span>
+        <span class="k">if</span> <span class="n">info_dict</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">info_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">info_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">tmp_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">info_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+        <span class="n">tmp_values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_log_list</span><span class="p">(</span><span class="n">tmp_dict</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_write_to_file</span><span class="p">(</span><span class="n">tmp_values</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_log_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tmp_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a list of strs from dictionary. Only keeps entries that are</span>
+<span class="sd">        prespecified.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        tmp_dict : Dict</span>
+<span class="sd">            Dictionary to be transformed.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        List[str]</span>
+<span class="sd">            List of strings.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">logList</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">tmp_dict</span><span class="p">[</span><span class="n">kk</span><span class="p">])</span> <span class="k">for</span> <span class="n">kk</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">logList</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_write_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tmp_values</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts all values in value_list to string and writes them</span>
+<span class="sd">        to the log file.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        tmp_values : List[float]</span>
+<span class="sd">            List of strings to write to file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">tmp_values</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sep</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmp_values</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ExperimentLogger.create">
+<a class="viewcode-back" href="../../../api/psychopy_stimuli.html#rewardgym.psychopy_render.logger.ExperimentLogger.create">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;w&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates new file with the given columns. Or opens to append.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        mode : str, optional</span>
+<span class="sd">            mode (str, optional): Writing mode, by default &quot;w&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">log_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_name</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>
+        <span class="c1"># set trial start to not break stuff</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_trial_time</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;w&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_write_to_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ExperimentLogger.close">
+<a class="viewcode-back" href="../../../api/psychopy_stimuli.html#rewardgym.psychopy_render.logger.ExperimentLogger.close">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Closes the file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="ExperimentLogger.set_trial_time">
+<a class="viewcode-back" href="../../../api/psychopy_stimuli.html#rewardgym.psychopy_render.logger.ExperimentLogger.set_trial_time">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_trial_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the trial&#39;s start using the global clock.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trial_start</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_clock</span><span class="o">.</span><span class="n">getTime</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="ExperimentLogger.get_time">
+<a class="viewcode-back" href="../../../api/psychopy_stimuli.html#rewardgym.psychopy_render.logger.ExperimentLogger.get_time">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_time</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the current time from the global clock.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            time passed sine last reset</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_clock</span><span class="o">.</span><span class="n">getTime</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="ExperimentLogger.key_strokes">
+<a class="viewcode-back" href="../../../api/psychopy_stimuli.html#rewardgym.psychopy_render.logger.ExperimentLogger.key_strokes">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">key_strokes</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">win</span><span class="p">:</span> <span class="n">Window</span><span class="p">,</span> <span class="n">keyList</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check for key strokes in the keyboard buffer. Checking for MR-triggers,</span>
+<span class="sd">        close commands (kill_switch), or other allowed responses.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        win : Window</span>
+<span class="sd">            Psychopy window object, used to display the task.</span>
+<span class="sd">        keyList : List[str], optional</span>
+<span class="sd">            List of allowed keys., by default []</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Union[Tuple[str, float], None]</span>
+<span class="sd">            _description_</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">presses</span> <span class="o">=</span> <span class="n">getKeys</span><span class="p">(</span><span class="n">timeStamped</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">global_clock</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">presses</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">resp</span> <span class="ow">in</span> <span class="n">presses</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">resp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">kill_switch</span><span class="p">:</span>
+                    <span class="c1"># Closes the window, closes the file and quits psychopy.</span>
+                    <span class="n">win</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                    <span class="n">core</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+
+                <span class="k">elif</span> <span class="n">resp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">mr_trigger</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">tr</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">expected_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mr_clock</span><span class="o">.</span><span class="n">getTime</span><span class="p">()</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tr</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq_tr</span><span class="p">)</span>
+                    <span class="c1"># ugly fix!</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">log_event</span><span class="p">(</span>
+                        <span class="p">{</span>
+                            <span class="s2">&quot;event_type&quot;</span><span class="p">:</span> <span class="s2">&quot;TR&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;response_button&quot;</span><span class="p">:</span> <span class="n">resp</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                            <span class="s2">&quot;response_time&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">mr_clock</span><span class="o">.</span><span class="n">getTime</span><span class="p">(),</span>
+                            <span class="s2">&quot;expected_duration&quot;</span><span class="p">:</span> <span class="n">expected_time</span><span class="p">,</span>
+                        <span class="p">},</span>
+                        <span class="n">reward</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">reward</span><span class="p">,</span>
+                    <span class="p">)</span>
+
+                <span class="k">elif</span> <span class="n">resp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">keyList</span><span class="p">:</span>
+                    <span class="c1"># Potentially dangerous - if press is in list, return!</span>
+                    <span class="n">response</span> <span class="o">=</span> <span class="p">(</span><span class="n">resp</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">resp</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">log_event</span><span class="p">(</span>
+                        <span class="p">{</span>
+                            <span class="s2">&quot;event_type&quot;</span><span class="p">:</span> <span class="s2">&quot;button-press&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;response_button&quot;</span><span class="p">:</span> <span class="n">resp</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                            <span class="s2">&quot;response_time&quot;</span><span class="p">:</span> <span class="n">resp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">trial_start</span><span class="p">,</span>
+                        <span class="p">},</span>
+                        <span class="n">reward</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">reward</span><span class="p">,</span>
+                    <span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">response</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">response</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_trial_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">[</span>
+                <span class="s2">&quot;trial&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;start_position&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;trial_type&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;current_location&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;avail_actions&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;misc&quot;</span><span class="p">,</span>
+            <span class="p">]:</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cannot / doest not have attribute: </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ExperimentLogger.wait">
+<a class="viewcode-back" href="../../../api/psychopy_stimuli.html#rewardgym.psychopy_render.logger.ExperimentLogger.wait">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">wait</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">win</span><span class="p">,</span> <span class="n">time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">start</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">wait_no_keys</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Wait for a given time.</span>
+
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        time : float</span>
+<span class="sd">            Time to wait, in seconds.</span>
+<span class="sd">        start : float, optional</span>
+<span class="sd">            Specify a different time, than the current one of the Logger, by default None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">start</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_time</span><span class="p">()</span>
+
+        <span class="n">t_wait</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="n">time</span>  <span class="c1"># - self.frameDuration</span>
+
+        <span class="c1"># Trying to avoid unnecessary checks</span>
+        <span class="k">while</span> <span class="n">t_wait</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_time</span><span class="p">():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">wait_no_keys</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">key_strokes</span><span class="p">(</span><span class="n">win</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="MinimalLogger">
+<a class="viewcode-back" href="../../../api/psychopy_stimuli.html#rewardgym.psychopy_render.logger.MinimalLogger">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MinimalLogger</span><span class="p">(</span><span class="n">ExperimentLogger</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Emulates the experiment logger, to keep stimuli classes working, does not write to file (uses stubs)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="MinimalLogger.__init__">
+<a class="viewcode-back" href="../../../api/psychopy_stimuli.html#rewardgym.psychopy_render.logger.MinimalLogger.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">global_clock</span><span class="p">:</span> <span class="n">Clock</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">seq_tr</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.752</span><span class="p">,</span>
+        <span class="n">na</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;n/a&quot;</span><span class="p">,</span>
+        <span class="n">kill_switch</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;q&quot;</span><span class="p">,</span>
+        <span class="n">mr_trigger</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;5&quot;</span><span class="p">,</span>
+        <span class="n">mr_clock</span><span class="p">:</span> <span class="n">Clock</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Logger class to help with logging during a potential fMRI experiment,</span>
+<span class="sd">        which is implemented in PsychoPy.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        global_clock : Clock</span>
+<span class="sd">            Clock that is used by the experiment.</span>
+<span class="sd">        seq_tr : float, optional</span>
+<span class="sd">            If it is an fMRI experiment, this is echo time. Used to calculate the expected collection between acquisitions, by default 0.752</span>
+<span class="sd">        na : str, optional</span>
+<span class="sd">            How NaN values are written to file, by default &quot;n/a&quot;</span>
+<span class="sd">        kill_switch : str, optional</span>
+<span class="sd">            Button to press to exit the experiment, by default &quot;q&quot;</span>
+<span class="sd">        mr_trigger : str, optional</span>
+<span class="sd">            Trigger of the MRI (assuming that it is transformed to a key press), by default &quot;5&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">global_clock</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">global_clock</span> <span class="o">=</span> <span class="n">Clock</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">mr_clock</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">mr_clock</span> <span class="o">=</span> <span class="n">global_clock</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">global_clock</span> <span class="o">=</span> <span class="n">global_clock</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mr_clock</span> <span class="o">=</span> <span class="n">mr_clock</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">na</span> <span class="o">=</span> <span class="n">na</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">seq_tr</span> <span class="o">=</span> <span class="n">seq_tr</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reward</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kill_switch</span> <span class="o">=</span> <span class="n">kill_switch</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mr_trigger</span> <span class="o">=</span> <span class="n">mr_trigger</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">trial_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">na</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_position</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">na</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">na</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">trial</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tr</span> <span class="o">=</span> <span class="mi">0</span></div>
+
+
+<div class="viewcode-block" id="MinimalLogger.log_event">
+<a class="viewcode-back" href="../../../api/psychopy_stimuli.html#rewardgym.psychopy_render.logger.MinimalLogger.log_event">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">log_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Log event stub.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">pass</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_write_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tmp_values</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Write stub</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+<div class="viewcode-block" id="MinimalLogger.create">
+<a class="viewcode-back" href="../../../api/psychopy_stimuli.html#rewardgym.psychopy_render.logger.MinimalLogger.create">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create stub.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_trial_time</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="MinimalLogger.close">
+<a class="viewcode-back" href="../../../api/psychopy_stimuli.html#rewardgym.psychopy_render.logger.MinimalLogger.close">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Close stub.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="SimulationLogger">
+<a class="viewcode-back" href="../../../api/psychopy_stimuli.html#rewardgym.psychopy_render.logger.SimulationLogger">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SimulationLogger</span><span class="p">(</span><span class="n">ExperimentLogger</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_write_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tmp_values</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]):</span>
+        <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tmp_values</span><span class="p">[</span><span class="n">n</span><span class="p">])</span>
+
+<div class="viewcode-block" id="SimulationLogger.create">
+<a class="viewcode-back" href="../../../api/psychopy_stimuli.html#rewardgym.psychopy_render.logger.SimulationLogger.create">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">df</span> <span class="o">=</span> <span class="p">{</span><span class="n">ii</span><span class="p">:</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="SimulationLogger.key_strokes">
+<a class="viewcode-back" href="../../../api/psychopy_stimuli.html#rewardgym.psychopy_render.logger.SimulationLogger.key_strokes">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">key_strokes</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">key</span><span class="p">,</span>
+        <span class="n">rt</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="kc">None</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">rt</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SimulationLogger.close">
+<a class="viewcode-back" href="../../../api/psychopy_stimuli.html#rewardgym.psychopy_render.logger.SimulationLogger.close">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span></div>
+
+
+<div class="viewcode-block" id="SimulationLogger.wait">
+<a class="viewcode-back" href="../../../api/psychopy_stimuli.html#rewardgym.psychopy_render.logger.SimulationLogger.wait">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">wait</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">win</span><span class="p">,</span> <span class="n">time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">start</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Wait for a given time.</span>
+
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        time : float</span>
+<span class="sd">            Time to wait, in seconds.</span>
+<span class="sd">        start : float, optional</span>
+<span class="sd">            Specify a different time, than the current one of the Logger, by default None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">start</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_time</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">global_clock</span><span class="o">.</span><span class="n">time</span> <span class="o">+=</span> <span class="n">time</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Simon R. Steinkamp.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
