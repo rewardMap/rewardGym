@@ -26,7 +26,7 @@ class ActionStimulusTooEarly(ActionStimulus):
         key_dict: Dict = {"left": 0, "right": 1},
         name: str = "response",
         timeout_action: int = None,
-        name_timeout="response-time-out",
+        name_timeout="response-timeout",
         name_tooearly="response-too-early",
         text_tooearly={
             "text": "Don't press too early!",
