@@ -70,17 +70,18 @@ class BaseStimulus:
 
         """
 
-        stim_onset = logger.get_time()
+        if self.duration is not None:
+            stim_onset = logger.get_time()
 
-        if not self.noflip:
-            win.flip()
+            if not self.noflip:
+                win.flip()
 
-        logger.wait(win, self.duration, stim_onset, self.wait_no_keys)
+            logger.wait(win, self.duration, stim_onset, self.wait_no_keys)
 
-        logger.log_event(
-            {"event_type": self.name, "expected_duration": self.duration},
-            onset=stim_onset,
-        )
+        else:
+            stim_onset = None
+
+        self._log_event(logger=logger, stim_onset=stim_onset)
 
         return None
 
@@ -95,9 +96,12 @@ class BaseStimulus:
             Does not return anything, but logs the stimulus.
         """
 
-        stim_onset = logger.get_time()
+        if self.duration is not None:
+            stim_onset = logger.get_time()
 
-        logger.wait(win=None, time=self.duration, start=stim_onset)
+            logger.wait(win=None, time=self.duration, start=stim_onset)
+        else:
+            stim_onset = None
 
         self._log_event(logger=logger, stim_onset=stim_onset)
 
