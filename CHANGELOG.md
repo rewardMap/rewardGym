@@ -1,3 +1,15 @@
+# 0.6.0 (Thu Jan 29 2026)
+
+#### 🚀 Enhancement
+
+- Task assembly [#47](https://github.com/rewardMap/rewardGym/pull/47) ([@SRSteinkamp](https://github.com/SRSteinkamp))
+
+#### Authors: 1
+
+- Simon Steinkamp ([@SRSteinkamp](https://github.com/SRSteinkamp))
+
+---
+
 # 0.5.0 (Mon Dec 08 2025)
 
 #### 💥 Breaking Change during development
