@@ -6,7 +6,9 @@
 Welcome to rewardGym's documentation!
 =====================================
 
-.. include:: ../README.rst
+.. relativeinclude:: ../README.rst
+
+docs/
 
 .. toctree::
    :maxdepth: 2
@@ -26,16 +28,11 @@ Welcome to rewardGym's documentation!
    deepdive/writing_agents.rst
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: Tasks
+   :glob:
 
-   tasks/hcp.rst
-   tasks/mid.rst
-   tasks/gonogo.rst
-   tasks/two_step.rst
-   tasks/risk_sensitive.rst
-   tasks/posner.rst
-
+   tasks/*
 
 .. toctree::
    :maxdepth: 3
