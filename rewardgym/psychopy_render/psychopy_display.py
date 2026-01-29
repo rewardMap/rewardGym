@@ -70,17 +70,18 @@ class BaseStimulus:
 
         """
 
-        stim_onset = logger.get_time()
+        if self.duration is not None:
+            stim_onset = logger.get_time()
 
-        if not self.noflip:
-            win.flip()
+            if not self.noflip:
+                win.flip()
 
-        logger.wait(win, self.duration, stim_onset, self.wait_no_keys)
+            logger.wait(win, self.duration, stim_onset, self.wait_no_keys)
 
-        logger.log_event(
-            {"event_type": self.name, "expected_duration": self.duration},
-            onset=stim_onset,
-        )
+        else:
+            stim_onset = None
+
+        self._log_event(logger=logger, stim_onset=stim_onset)
 
         return None
 
@@ -95,9 +96,12 @@ class BaseStimulus:
             Does not return anything, but logs the stimulus.
         """
 
-        stim_onset = logger.get_time()
+        if self.duration is not None:
+            stim_onset = logger.get_time()
 
-        logger.wait(win=None, time=self.duration, start=stim_onset)
+            logger.wait(win=None, time=self.duration, start=stim_onset)
+        else:
+            stim_onset = None
 
         self._log_event(logger=logger, stim_onset=stim_onset)
 
@@ -327,6 +331,7 @@ class ActionStimulus(BaseStimulus):
         timeout_action: int = None,
         name_timeout="response-time-out",
         rl_label: str = None,
+        noflip: bool = False,
     ):
         """
         Setting up the action object.
@@ -343,7 +348,7 @@ class ActionStimulus(BaseStimulus):
             Behavior of the object if the response window times out, making it possible that no response is also a distinc action, by default None
         """
 
-        super().__init__(name=name, duration=duration, rl_label=rl_label)
+        super().__init__(name=name, duration=duration, rl_label=rl_label, noflip=noflip)
 
         self.key_list = list(key_dict.keys())
         self.key_dict = key_dict
@@ -390,7 +395,8 @@ class ActionStimulus(BaseStimulus):
             win, logger, response_window_onset, info=info
         )
 
-        win.flip()
+        if not self.noflip:
+            win.flip()
 
         return response
 
@@ -741,7 +747,6 @@ class FeedBackStimulus(BaseStimulus):
 
         self.reward_text.setText(self.text.format(reward_outcome))
 
-        stim_onset = logger.get_time()
         if feedback_img in self.feedback_image.keys():
             self.feedback_image[feedback_img].setAutoDraw(True)
 
@@ -753,6 +758,7 @@ class FeedBackStimulus(BaseStimulus):
             else:
                 self._update_reward_bar(total_reward=total_reward)
 
+        stim_onset = logger.get_time()
         win.flip()
         logger.wait(win, self.duration, stim_onset)
 

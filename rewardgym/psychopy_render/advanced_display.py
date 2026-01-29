@@ -26,7 +26,7 @@ class ActionStimulusTooEarly(ActionStimulus):
         key_dict: Dict = {"left": 0, "right": 1},
         name: str = "response",
         timeout_action: int = None,
-        name_timeout="response-time-out",
+        name_timeout="response-timeout",
         name_tooearly="response-too-early",
         text_tooearly={
             "text": "Don't press too early!",
@@ -439,7 +439,7 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
             extra_info={
                 "misc": f"flip-{flip}",
                 "event_type": name,
-                "duration": duration,
+                "expected_duration": duration,
                 "rl_label": rl_label,
             },
         )
@@ -501,14 +501,13 @@ class TextWithBorder(BaseStimulus):
 
         logger.key_strokes(win)
 
-        stim_onset = logger.get_time()
-
         card = np.random.choice(self.condition_text[reward])
         display_text = self.text.format(card)
         self.textStim.setText(display_text)
 
         self.rectStim.autoDraw = True
         self.textStim.autoDraw = True
+        stim_onset = logger.get_time()
         win.flip()
 
         self.rectStim.autoDraw = False
@@ -646,7 +645,7 @@ class StimuliWithResponse(ActionStimulus):
             extra_info={
                 "misc": f"flip-{flip}",
                 "event_type": self.target_name,
-                "duration": self.target_duration,
+                "expected_duration": self.target_duration,
                 "rl_label": self.target_rl_label,
             },
         )
@@ -825,8 +824,8 @@ class LingeringAction(ActionStimulus):
             stim_onset=stim_onset,
             extra_info={
                 "event_type": name,
-                "duration": duration,
                 "rl_label": rl_label,
+                "expected_duration": duration,
             },
         )
         return None

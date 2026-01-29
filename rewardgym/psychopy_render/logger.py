@@ -361,6 +361,9 @@ class ExperimentLogger:
         start : float, optional
             Specify a different time, than the current one of the Logger, by default None
         """
+        if time is None:
+            return
+
         if start is None:
             start = self.get_time()
 
@@ -484,6 +487,9 @@ class SimulationLogger(ExperimentLogger):
         start : float, optional
             Specify a different time, than the current one of the Logger, by default None
         """
+        if time is None:
+            return
+
         if start is None:
             start = self.get_time()
 
