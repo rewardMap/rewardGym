@@ -1,3 +1,15 @@
+# 0.6.1 (Thu Jan 29 2026)
+
+#### ⚠️ Pushed to `main`
+
+- Updated robotfactory ([@SRSteinkamp](https://github.com/SRSteinkamp))
+
+#### Authors: 1
+
+- Simon Steinkamp ([@SRSteinkamp](https://github.com/SRSteinkamp))
+
+---
+
 # 0.6.0 (Thu Jan 29 2026)
 
 #### 🚀 Enhancement
