@@ -331,6 +331,7 @@ class ActionStimulus(BaseStimulus):
         timeout_action: int = None,
         name_timeout="response-time-out",
         rl_label: str = None,
+        noflip: bool = False,
     ):
         """
         Setting up the action object.
@@ -347,7 +348,7 @@ class ActionStimulus(BaseStimulus):
             Behavior of the object if the response window times out, making it possible that no response is also a distinc action, by default None
         """
 
-        super().__init__(name=name, duration=duration, rl_label=rl_label)
+        super().__init__(name=name, duration=duration, rl_label=rl_label, noflip=noflip)
 
         self.key_list = list(key_dict.keys())
         self.key_dict = key_dict
@@ -394,7 +395,8 @@ class ActionStimulus(BaseStimulus):
             win, logger, response_window_onset, info=info
         )
 
-        win.flip()
+        if not self.noflip:
+            win.flip()
 
         return response
 
@@ -745,7 +747,6 @@ class FeedBackStimulus(BaseStimulus):
 
         self.reward_text.setText(self.text.format(reward_outcome))
 
-        stim_onset = logger.get_time()
         if feedback_img in self.feedback_image.keys():
             self.feedback_image[feedback_img].setAutoDraw(True)
 
@@ -757,6 +758,7 @@ class FeedBackStimulus(BaseStimulus):
             else:
                 self._update_reward_bar(total_reward=total_reward)
 
+        stim_onset = logger.get_time()
         win.flip()
         logger.wait(win, self.duration, stim_onset)
 
