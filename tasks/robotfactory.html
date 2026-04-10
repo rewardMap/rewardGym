@@ -1,0 +1,169 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>robotfactory &mdash; rewardGym 0+untagged.1.gd7efa32 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=37e107bb"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="twostep" href="twostep.html" />
+    <link rel="prev" title="risksensitive" href="risksensitive.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            rewardGym
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Walkthrough</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/tutorial.html">rewardGym Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/psychopy.html">rewardGym + PsychoPy</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Deep Dive</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../deepdive/graph_structure.html">Graph structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deepdive/psychopy_stimuli.html">PsychoPy Stimuli</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deepdive/controlling_experiments.html">Controlling the experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deepdive/what_is_run_task.html">What is run task?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deepdive/writing_agents.html">Writing your own agents.</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tasks</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="gonogo.html">gonogo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hcp_gambling.html">hcp_gambling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mid.html">mid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="posner.html">posner</a></li>
+<li class="toctree-l1"><a class="reference internal" href="risksensitive.html">risksensitive</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">robotfactory</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#robotfactory">Robotfactory</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#task-description">Task description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="twostep.html">twostep</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">(limited) API reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/environments.html">rewardgym.environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/psychopy_stimuli.html">rewardgym.psychopy_render</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">rewardGym</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">robotfactory</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tasks/robotfactory.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="robotfactory">
+<h1>robotfactory<a class="headerlink" href="#robotfactory" title="Link to this heading"></a></h1>
+<section id="robotfactory">
+<h2>Robotfactory<a class="headerlink" href="#robotfactory" title="Link to this heading"></a></h2>
+<section id="task-description">
+<h3>Task description<a class="headerlink" href="#task-description" title="Link to this heading"></a></h3>
+<p>After the pilot study, we decided to change the experiment and the instructions more towards the study by Zorowitz 2023 <a href="#id1"><span class="problematic" id="id1">[^zorowitz2023]</span></a>. The main changes here, were that there now 8 instead of 4 robots, that participants had to associated with go or no-go responses. However, in this experiment, the reward context was clearly indicated, here we replaced the response cue by a “scanner light”, a transparent blue (winning) or red (losing) cone that was put above the robot. Furthermore, the robots did not differ in color anymore, but had letters on their chest plate. These letters were taken from the Brussels Artificial Character Set 2 <a href="#id2"><span class="problematic" id="id2">[^vidal2017]</span></a>. To use these stimuli, you will need to download the stimuli or use the <code class="docutils literal notranslate"><span class="pre">core/assets/download_bacs.py</span></code> script.</p>
+<p>Following the story in the instructions, participants were tasked to repair a robot (press key with index finger) or leave it alone (do nothing), when the scanner light turns on. The color of the scanner light indicates if it is a “dangerous” robot (they play to not lose -1 or -5 points) or a “safe” robot (they play to win 1 or 5 points). They were further told that the different robots had different need to be repaired. However, that this outcome would be probabilistic.</p>
+<p>As in the go, no/go task above, participants started with a 0.3 s cueing phase (only fixation), after which the robot appeared for $[0.5 s, 0.75 s,1.0 s, 1.25 s]$, which was repeated 16 times to generate blocks of 64 trials. These blocks were then permuted randomly. Then the scanner turned on for 1 s, cueing the participants response. After a 1 s delay (only fixation cross and scanner out line), reward feedback was given for 1 s. Each trial was followed by a inter trial interval which was randomly drawn from the set $[0.5 s, 0.75 s, 1.0 s, 1.25 s]$, which was repeated 16 times to generate blocks of 64 trials, uniformly sampled, without replacement. As in other experiments, we added the time left in the response window to the ITI to ensure a reliable trial length.</p>
+<p>Stimulus order was created pseudorandomly and in blocks of 64. Where each block of 64 trials contained each of the four conditions (“go-win”, “go-punish”, “nogo-win”, “nogo-punish”) 8 times, with each stimulus appearing 8 times. In the first block it was made sure, that participants see each of the eight stimuli at least once within the first 8 trials.</p>
+<p>Probabilistic rewards were generated pseudorandomly, by permuting lists of length 10 (e.g. [-1, -1, -1, -1, -1, -1, -1, -1, -5, -5]), removing the reward from the list and selecting the next one. After selecting a stimulus 10 times, a new randomly permuted list was generated.</p>
+<p>After each set of 64 trials, there was a 45 second break.</p>
+</section>
+<section id="references">
+<h3>References<a class="headerlink" href="#references" title="Link to this heading"></a></h3>
+</section>
+</section>
+<hr class="footnotes docutils" />
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="vidal2017" role="doc-footnote">
+<p>Vidal, C., Content, A., &amp; Chetail, F. (2017). BACS: The Brussels Artificial Character Sets for studies in cognitive psychology and neuroscience. Behavior Research Methods, 49(6), 2093–2112. <a class="reference external" href="https://doi.org/10.3758/s13428-016-0844-8">https://doi.org/10.3758/s13428-016-0844-8</a></p>
+</aside>
+<aside class="footnote brackets" id="zorowitz2023" role="doc-footnote">
+<p>Zorowitz, S., Karni, G., Paredes, N., Daw, N., &amp; Niv, Y. (2023). Improving the reliability of the Pavlovian go/no-go task for computational psychiatry research. OSF. <a class="reference external" href="https://doi.org/10.31234/osf.io/eb697">https://doi.org/10.31234/osf.io/eb697</a></p>
+</aside>
+</aside>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="risksensitive.html" class="btn btn-neutral float-left" title="risksensitive" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="twostep.html" class="btn btn-neutral float-right" title="twostep" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Simon R. Steinkamp.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,5 @@
+posner
+===================
+
+.. relativeinclude:: ../../rewardgym/tasks/posner/README.md
+  :parser: myst_parser.sphinx_

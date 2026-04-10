@@ -1,0 +1,171 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gonogo &mdash; rewardGym 0+untagged.1.gd7efa32 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=37e107bb"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="hcp_gambling" href="hcp_gambling.html" />
+    <link rel="prev" title="Writing your own agents." href="../deepdive/writing_agents.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            rewardGym
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Walkthrough</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/tutorial.html">rewardGym Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/psychopy.html">rewardGym + PsychoPy</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Deep Dive</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../deepdive/graph_structure.html">Graph structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deepdive/psychopy_stimuli.html">PsychoPy Stimuli</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deepdive/controlling_experiments.html">Controlling the experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deepdive/what_is_run_task.html">What is run task?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deepdive/writing_agents.html">Writing your own agents.</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tasks</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">gonogo</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#go-no-go-task">Go/no-go Task</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#task-description">Task description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="hcp_gambling.html">hcp_gambling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mid.html">mid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="posner.html">posner</a></li>
+<li class="toctree-l1"><a class="reference internal" href="risksensitive.html">risksensitive</a></li>
+<li class="toctree-l1"><a class="reference internal" href="robotfactory.html">robotfactory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="twostep.html">twostep</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">(limited) API reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/environments.html">rewardgym.environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/psychopy_stimuli.html">rewardgym.psychopy_render</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">rewardGym</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">gonogo</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tasks/gonogo.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="gonogo">
+<h1>gonogo<a class="headerlink" href="#gonogo" title="Link to this heading"></a></h1>
+<section id="go-no-go-task">
+<h2>Go/no-go Task<a class="headerlink" href="#go-no-go-task" title="Link to this heading"></a></h2>
+<section id="task-description">
+<h3>Task description<a class="headerlink" href="#task-description" title="Link to this heading"></a></h3>
+<p><img alt="" src="../_images/gonogo.svg" /></p>
+<p>This is a version of the Go/No-go task, as described in Guitart-Masip et al. 2012 <a href="#id1"><span class="problematic" id="id1">[^guitart2012]</span></a>. This task essentially is a 2 x 2 design, with reward context and action as factors. Over the course of the experiment participants have to learn whether a “go” or a “no-go” response leads to the better outcome (80 %) of the time. Additionally, there is a reward context, where different stimuli either indicate, whether participants responses lead to winning 1 point or nothing, or to losing 1 point or nothing.</p>
+<p>Each trial begins with a fixation period of 0.3 s, after which the stimulus is displayed for 1 s. After a variable inter stimulus interval (fixation), which was randomly drawn from the set $[0.25 s, 0.5 s, 1.125 s, 1.75 s, 2.0 s]$, generated as blocks of 60 trials, uniformly sampled, without replacement, the target stimulus appeared. Participants could then decide to press a button with the left index finger (“go”) or to not usher a response (“no-go”). The response window was set to 1 s.
+After a delay of 1 s the reward feedback was displayed for 1 s. Each trial was followed by a inter trial interval which was randomly drawn from the set $[0.5 s, 0.75 s, 1.0 s, 1.25 s]$, generated as blocks of 60 trials, uniformly sampled, without replacement. As in other experiments, we added the time left in the response window to the ITI to ensure a reliable trial length.</p>
+<p>The pilot study used in early versions procedurally generated abstract cards as stimuli and a brightening of th fixation cross (white borders appearing around the diamond) as a target stimulus. Later versions replaced the card stimuli with robots, which were modeled after Raab et al. 2020<a href="#id2"><span class="problematic" id="id2">[^raab2020]</span></a>, where the colors of the robots were randomly drawn. A final version, replaced the target fixation cross, with a circle that appeared in the middle of the screen, to more closely model the story, that was also described in Raab et al.</p>
+<p>Stimulus order was created pseudorandomly and in blocks of 60. Where each block of 60 contained each of the four conditions (“go-win”, “go-punish”, “nogo-win”, “nogo-punish”) 15 times. In the first block is was made sure, that participants see each of the four stimuli at least once within the first 8 trials.</p>
+<p>Probabilistic rewards were generated pseudorandomly, by permuting lists of length 10 (e.g. [-1, -1, -1, -1, -1, -1, -1, -1, 0, 0]), removing the reward from the list and selecting the next one. After selecting a stimulus 10 times, a new randomly permuted list was generated.</p>
+<p>After each set of 60 trials, there was a 45 second break.</p>
+</section>
+<section id="references">
+<h3>References<a class="headerlink" href="#references" title="Link to this heading"></a></h3>
+</section>
+</section>
+<hr class="footnotes docutils" />
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="guitart2012" role="doc-footnote">
+<p>Guitart-Masip, M., Huys, Q. J. M., Fuentemilla, L., Dayan, P., Duzel, E., &amp; Dolan, R. J. (2012). Go and no-go learning in reward and punishment: Interactions between affect and effect. NeuroImage, 62(1), 154–166. <a class="reference external" href="https://doi.org/10.1016/j.neuroimage.2012.04.024">https://doi.org/10.1016/j.neuroimage.2012.04.024</a></p>
+</aside>
+<aside class="footnote brackets" id="raab2020" role="doc-footnote">
+<p>Raab, H. A., &amp; Hartley, C. A. (2020). Adolescents exhibit reduced Pavlovian biases on instrumental learning. Scientific Reports, 10(1), Article 1. <a class="reference external" href="https://doi.org/10.1038/s41598-020-72628-w">https://doi.org/10.1038/s41598-020-72628-w</a></p>
+</aside>
+</aside>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../deepdive/writing_agents.html" class="btn btn-neutral float-left" title="Writing your own agents." accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="hcp_gambling.html" class="btn btn-neutral float-right" title="hcp_gambling" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Simon R. Steinkamp.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

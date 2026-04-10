@@ -1,0 +1,5 @@
+hcp_gambling
+===================
+
+.. relativeinclude:: ../../rewardgym/tasks/hcp_gambling/README.md
+  :parser: myst_parser.sphinx_

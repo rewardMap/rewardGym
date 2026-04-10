@@ -1,0 +1,186 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>risksensitive &mdash; rewardGym 0+untagged.1.gd7efa32 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=37e107bb"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="robotfactory" href="robotfactory.html" />
+    <link rel="prev" title="posner" href="posner.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            rewardGym
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Walkthrough</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/tutorial.html">rewardGym Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/psychopy.html">rewardGym + PsychoPy</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Deep Dive</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../deepdive/graph_structure.html">Graph structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deepdive/psychopy_stimuli.html">PsychoPy Stimuli</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deepdive/controlling_experiments.html">Controlling the experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deepdive/what_is_run_task.html">What is run task?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deepdive/writing_agents.html">Writing your own agents.</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tasks</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="gonogo.html">gonogo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hcp_gambling.html">hcp_gambling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mid.html">mid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="posner.html">posner</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">risksensitive</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#risk-sensitive-decision-making-task">Risk-sensitive decision making task</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#task-description">Task description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="robotfactory.html">robotfactory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="twostep.html">twostep</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">(limited) API reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/environments.html">rewardgym.environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/psychopy_stimuli.html">rewardgym.psychopy_render</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">rewardGym</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">risksensitive</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tasks/risksensitive.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="risksensitive">
+<h1>risksensitive<a class="headerlink" href="#risksensitive" title="Link to this heading"></a></h1>
+<section id="risk-sensitive-decision-making-task">
+<h2>Risk-sensitive decision making task<a class="headerlink" href="#risk-sensitive-decision-making-task" title="Link to this heading"></a></h2>
+<section id="task-description">
+<h3>Task description<a class="headerlink" href="#task-description" title="Link to this heading"></a></h3>
+<p><img alt="" src="../_images/risksensitive.svg" /></p>
+<p>This task is an implementation of the risk sensitive decision making task introduced by Niv et al.<a href="#id1"><span class="problematic" id="id1">[^niv2012]</span></a>,
+using a version similar to the task used in Rosenbaum et al.<a href="#id2"><span class="problematic" id="id2">[^rosenbaum2022]</span></a>.
+In this task, participants select card stimuli on a computer screen, which yield them different levels of reward.
+There are two types of trials in this experiment:
+Classical conditioning trials, where participants are forced to select a single card that is on the screen. And instrumental conditioning
+trials, where participants can select between two different cards.
+In total there are 5 different cards, that are procedurally generated using different colors, patterns, and shapes.
+Each card is associated with a different value: Card # 1 has a certain outcome of 0, # 2 a certain outcome of 20 # 3 a certain outcome of 40,
+card # 4 has an outcome of 40 or 0 with 50 % probability, and card # 5 has an outcome of 80 or 0 with 50 % probability.</p>
+<p>There were 183 trials in the experiment, and the order in this experiment was pseudorandomly generated, so that each block of 61 trials contains the following:</p>
+<ul class="simple">
+<li><p>14 trials with an equal expected value (e.g., 20 certain versus 40 with 50 % probability), left / right counterbalanced and each pair appears 7 times.</p></li>
+<li><p>8 trials with an unequal expected value 20 certain vs. 80 with 50 % probability.</p></li>
+<li><p>25 forced trials, where only 1 stimulus can be selected, left / right counterbalanced. Each stimulus 5 times per block</p></li>
+<li><p>14 test trials, where one outcome is clearly better (e.g., 20 certain versus 0 certain or 0 certain vs 20 with 50 % probability)</p></li>
+</ul>
+<p>Blocks were created by randomly permuting the trials in each block and accepting the order only if at least one forced trial of each stimulus appeared in the first 10 trials of a block, forced trials of the same stimulus did not follow each other, risky trials did not follow each other and test trials did not follow each other.</p>
+<p>A trial in the experiment had the following order first a fixation cross was shown on the screen for 0.1 s, followed by the appearance of either two stimulus (instrumental conditioning trial) on the left and right side of the fixation cross or a single stimulus on either the left or right side. The appearance initiated response window after 0.05 s and participants had 2 s to select the stimulus. After a response using either the index finger (left stimulus) or the middle finger (right stimulus) the non-selected stimulus was greyed out for 1.5 s, afterwards the stimuli disappeared both and only the fixation cross remained on the screen (0.5 s). After this short delay, the outcome was indicated by the top part of the fixation cross turning green (win) or the middel part turning yellow (0 outcome). The outcome amount was displayed above the fixation cross as a number (e.g. 0 or +20), this was displayed for 1 s. During the inter-trial interval only a fixation cross is displayed. The intertrial interval was sampled for each trial from the set $[0.5 s, 0.75 s, 1.0 s, 1.25 s, 1.5 s]$. Additionally, the time not used in the response window, was added to the time between trials, to create trials of equal length.</p>
+<p>Throughout the experiment a gauge was shown on top of the screen, that indicated how many points the participant had gained towards the max payout of 75 DKK. Each outcome, thus moved the bar further towards the right side as a proportion of $\frac{points} / {totalpoints}$. The bar was updated at reward reward outcome as well.</p>
+<p>If participants did not press a button in the 2 s response window, the message ‘Please respond faster!’ was displayed for 1 s on the screen.</p>
+<p>Ater 61 and 122 trials, there are 40 s breaks, to allow participants to rest their eyes in the scanner.</p>
+<p>Probabilistic rewards were generated pseudorandomly, by permuting lists of length 10 (e.g. [40, 40, 40, 40, 40, 0, 0, 0, 0, 0]), removing the reward from the list and selecting the next one. After selecting a stimulus 10 times, a new randomly permuted list was generated.</p>
+</section>
+<section id="references">
+<h3>References<a class="headerlink" href="#references" title="Link to this heading"></a></h3>
+</section>
+</section>
+<hr class="footnotes docutils" />
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="niv2012" role="doc-footnote">
+<p>Niv, Y., Edlund, J. A., Dayan, P., &amp; O’Doherty, J. P. (2012). Neural Prediction Errors Reveal a Risk-Sensitive Reinforcement-Learning Process in the Human Brain. Journal of Neuroscience, 32(2), 551–562. <a class="reference external" href="https://doi.org/10.1523/JNEUROSCI.5498-10.2012">https://doi.org/10.1523/JNEUROSCI.5498-10.2012</a></p>
+</aside>
+<aside class="footnote brackets" id="rosenbaum2022" role="doc-footnote">
+<p>Rosenbaum, G. M., Grassie, H. L., &amp; Hartley, C. A. (2022). Valence biases in reinforcement learning shift across adolescence and modulate subsequent memory. eLife, 11, e64620. <a class="reference external" href="https://doi.org/10.7554/eLife.64620">https://doi.org/10.7554/eLife.64620</a></p>
+</aside>
+</aside>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="posner.html" class="btn btn-neutral float-left" title="posner" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="robotfactory.html" class="btn btn-neutral float-right" title="robotfactory" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Simon R. Steinkamp.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
