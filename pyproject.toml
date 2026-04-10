@@ -47,7 +47,7 @@ doc = [
     "sphinxcontrib-bibtex",
     "jupytext",
     "nbsphinx_link",
-    "sphinxcontrib-relativeinclude",
+    "sphinxcontrib-relativeinclude"
 ]
 style = [
     "ruff",
