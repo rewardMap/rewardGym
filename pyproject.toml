@@ -51,7 +51,6 @@ doc = [
 ]
 style = [
     "ruff",
-    "isort",
     "pydocstyle",
     "codespell"
 ]
@@ -81,21 +80,12 @@ addopts = [
     "--import-mode=importlib",
     "-rx"
 ]
+collect_ignore = ["rewardgym/_version.py"]
 
-[tool.isort]
-profile = "black"
-skip_gitignore = true
-extend_skip = [
-    ".autorc",
-    ".coverage*",
-    ".readthedocs.yml",
-    ".zenodo.json",
-    "codecov.yml",
-    "setup.py",
-    "versioneer.py",
+[tool.coverage.run]
+omit = [
     "rewardgym/_version.py"
 ]
-skip_glob = ["docs/*"]
 
 [tool.pydocstyle]
 convention = "numpy"
