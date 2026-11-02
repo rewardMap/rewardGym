@@ -104,7 +104,18 @@ quiet-level = 3
 "notebooks/*" = ["E402"]
 
 [tool.ruff]
-exclude = ["rewardgym/tasks/*/*"]
+exclude = [
+    ".autorc",
+    ".coverage*",
+    ".readthedocs.yml",
+    ".zenodo.json",
+    "codecov.yml",
+    "setup.py",
+    "versioneer.py",
+    "rewardgym/_version.py",
+    "rewardgym/tasks/*/*"
+]
+target-version = "py310"
 
 [tool.versioneer]
 VCS = "git"
