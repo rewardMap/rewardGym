@@ -7,7 +7,7 @@ import sys
 import types
 import warnings
 from pathlib import Path
-import importlib
+
 
 def load_task_plugin(folder_path: Path, namespace_root: str = "rewardgym_tasks"):
     """
