@@ -45,7 +45,7 @@ def play_task(
     rewards = []
 
     for episode in range(n_episodes):
-        obs, info = env.reset(0, condition=None)
+        obs, _ = env.reset(0, condition=None)
         done = False
         observations.append(obs)
         # play one episode

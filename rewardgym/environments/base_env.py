@@ -17,8 +17,6 @@ class BaseEnv(Env):
     The basic environment class for the rewardGym module.
     """
 
-    metadata = {"render_modes": ["pygame", "psychopy", "psychopy-simulate"]}
-
     def __init__(
         self,
         environment_graph: dict,
@@ -49,6 +47,8 @@ class BaseEnv(Env):
 
         # It should be possible to use wrapper for one-hot, so no box and other handling necessary (might need an
         # implementation though).
+
+        self.metadata = {"render_modes": ["pygame", "psychopy", "psychopy-simulate"]}
 
         if n_actions is None:
             self.n_actions = max(

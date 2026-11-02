@@ -34,7 +34,7 @@ def load_environment_graph(raw_data: dict):
             environment_graph[state] = processed
 
         else:
-            raise ValueError(f"Unsupported value format for key {state}: {value}")
+            raise TypeError(f"Unsupported value format for key {state}: {value}")
 
     return environment_graph
 

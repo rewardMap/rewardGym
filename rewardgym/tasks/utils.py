@@ -83,13 +83,11 @@ def check_conditions_not_following(
         Returns True if no elements from not_following appear within the window length after any element in condition_list, False otherwise.
     """
     for n, _ in enumerate(condition_list):
-        if condition_list[n] in not_following:
+        if condition_list[n] in not_following and any(
+            k in not_following for k in condition_list[n + 1 : n + 1 + window_length]
+        ):
             # Loop over conditions following the window. N + 1 as to make the window_lengths more intuitive.
-            if any(
-                k in not_following
-                for k in condition_list[n + 1 : n + 1 + window_length]
-            ):
-                return False
+            return False
 
     return True
 
@@ -118,13 +116,12 @@ def check_conditions_not_following_substring(
     """
     for n in range(len(condition_list)):
         # Check if the current element contains any substring from not_following
-        if any(substring in condition_list[n] for substring in not_following):
+        if any(substring in condition_list[n] for substring in not_following) and any(
+            any(substring in condition_list[k] for substring in not_following)
+            for k in range(n + 1, min(n + 1 + window_length, len(condition_list)))
+        ):
             # Check the elements within the window for the presence of not_following substrings
-            if any(
-                any(substring in condition_list[k] for substring in not_following)
-                for k in range(n + 1, min(n + 1 + window_length, len(condition_list)))
-            ):
-                return False
+            return False
     return True
 
 

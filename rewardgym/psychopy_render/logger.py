@@ -192,9 +192,9 @@ class ExperimentLogger:
 
         # TODO check, that onset is not in info_dict!
         if info_dict is not None:
-            for key in info_dict:
-                if info_dict[key] is not None:
-                    tmp_dict[key] = info_dict[key]
+            for key, value in info_dict.items():
+                if value is not None:
+                    tmp_dict[key] = value
 
         tmp_values = self._create_log_list(tmp_dict)
 
