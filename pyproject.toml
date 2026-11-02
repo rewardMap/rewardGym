@@ -113,7 +113,8 @@ exclude = [
     "setup.py",
     "versioneer.py",
     "rewardgym/_version.py",
-    "rewardgym/tasks/*/*"
+    "rewardgym/tasks/*/*",
+    "docs/"
 ]
 target-version = "py310"
 
