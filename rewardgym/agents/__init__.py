@@ -8,11 +8,11 @@ from .base_agent import (
 from .modelbased_agents import HybridAgent, ValenceHybridAgent
 
 __all__ = [
+    "HybridAgent",
     "QAgent",
     "QAgent_eligibility",
-    "ValenceQAgent",
-    "ValenceQAgent_eligibility",
     "RandomAgent",
     "ValenceHybridAgent",
-    "HybridAgent",
+    "ValenceQAgent",
+    "ValenceQAgent_eligibility",
 ]

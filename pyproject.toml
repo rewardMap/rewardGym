@@ -102,6 +102,7 @@ quiet-level = 3
 [tool.ruff.lint.per-file-ignores]
 "rewardgym/tests/*" = ["E712"]
 "notebooks/*" = ["E402"]
+"rewardgym/__init__.py" = ["E402"]
 
 [tool.ruff]
 exclude = [

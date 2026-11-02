@@ -8,13 +8,13 @@ from .task_stims import (
 )
 
 __all__ = [
-    "play_task",
     "BaseAction",
     "BaseDisplay",
     "BaseText",
-    "TimedAction",
     "FormatText",
     "FormatTextReward",
     "FormatTextRiskSensitive",
+    "TimedAction",
     "feedback_block",
+    "play_task",
 ]

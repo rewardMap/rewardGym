@@ -11,10 +11,10 @@ FULLPOINTS = {
 }
 
 __all__ = [
+    "FULLPOINTS",
+    "TaskRegistry",
     "get_configs",
     "get_env",
-    "get_task",
-    "FULLPOINTS",
     "get_psychopy_info",
-    "TaskRegistry",
+    "get_task",
 ]
