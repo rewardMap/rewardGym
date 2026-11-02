@@ -11,8 +11,9 @@ except ModuleNotFoundError:
 import warnings
 
 from ..stimuli import lose_cross, win_cross, zero_cross
+from ..timing import simulation_wait, wait
 from .logger import ExperimentLogger, SimulationLogger
-from ..timing import wait, simulation_wait
+
 
 class BaseStimulus:
     """
@@ -814,7 +815,9 @@ class FeedBackStimulus(BaseStimulus):
         """
         stim_onset = logger.get_time()
 
-        simulation_wait(logger.global_clock, win=None, time=self.duration, start=stim_onset)
+        simulation_wait(
+            logger.global_clock, win=None, time=self.duration, start=stim_onset
+        )
 
         self._log_event(
             logger=logger,
