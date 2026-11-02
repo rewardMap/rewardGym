@@ -1,3 +1,17 @@
+# 0.6.2 (Mon Nov 02 2026)
+
+#### Bug Fix / Patch
+
+- Last Release before depreciation of 3.8 [#50](https://github.com/rewardMap/rewardGym/pull/50) ([@SRSteinkamp](https://github.com/SRSteinkamp))
+- Maintenance and fixes [#49](https://github.com/rewardMap/rewardGym/pull/49) ([@SRSteinkamp](https://github.com/SRSteinkamp))
+- Update pyproject.toml [#48](https://github.com/rewardMap/rewardGym/pull/48) ([@SRSteinkamp](https://github.com/SRSteinkamp))
+
+#### Authors: 1
+
+- SRSteinkamp ([@SRSteinkamp](https://github.com/SRSteinkamp))
+
+---
+
 # 0.6.1 (Thu Jan 29 2026)
 
 #### ⚠️ Pushed to `main`
