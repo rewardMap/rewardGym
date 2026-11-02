@@ -6,7 +6,7 @@ from .advanced_display import (
     TextWithBorder,
     TwoStimuliWithResponseAndSelection,
 )
-from .logger import ExperimentLogger, SimulationLogger
+from ..logging import ExperimentLogger, SimulationLogger
 from .psychopy_display import (
     ActionStimulus,
     BaseStimulus,
