@@ -1,3 +1,15 @@
+# 0.7.0 (Mon Nov 02 2026)
+
+#### Breaking Change during development
+
+- Removing support for Python 3.8 [#51](https://github.com/rewardMap/rewardGym/pull/51) ([@SRSteinkamp](https://github.com/SRSteinkamp))
+
+#### Authors: 1
+
+- SRSteinkamp ([@SRSteinkamp](https://github.com/SRSteinkamp))
+
+---
+
 # 0.6.2 (Mon Nov 02 2026)
 
 #### Bug Fix / Patch
