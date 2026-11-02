@@ -38,8 +38,6 @@ class FormatText(BaseText):
         pygame.display.update()
         pygame.time.delay(self.duration)
 
-        return None
-
 
 class FormatTextReward(FormatText):
     def __init__(
@@ -87,8 +85,6 @@ class FormatTextReward(FormatText):
         pygame.display.update()
         pygame.time.delay(self.duration)
 
-        return None
-
 
 class FormatTextRiskSensitive(BaseText):
     def __init__(
@@ -129,8 +125,6 @@ class FormatTextRiskSensitive(BaseText):
         pygame.event.pump()
         pygame.display.update()
         pygame.time.delay(self.duration)
-
-        return None
 
 
 def feedback_block(center, duration_reward=1000, duration_total=500):

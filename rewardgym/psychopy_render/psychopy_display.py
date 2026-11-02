@@ -4,7 +4,7 @@ try:
     from psychopy.visual import ImageStim, TextStim, Window
     from psychopy.visual.rect import Rect
 except ModuleNotFoundError:
-    from .psychopy_stubs import Window, TextStim, ImageStim, Rect
+    from .psychopy_stubs import ImageStim, Rect, TextStim, Window
 
 import warnings
 
@@ -82,8 +82,6 @@ class BaseStimulus:
             stim_onset = None
 
         self._log_event(logger=logger, stim_onset=stim_onset)
-
-        return None
 
     def simulate(self, logger: ExperimentLogger, **kwargs) -> None:
         """
@@ -200,8 +198,6 @@ class TextStimulus(BaseStimulus):
 
         self._log_event(logger=logger, stim_onset=stim_onset)
 
-        return None
-
 
 class ImageStimulus(BaseStimulus):
     """
@@ -315,8 +311,6 @@ class ImageStimulus(BaseStimulus):
 
         self._log_event(logger=logger, stim_onset=stim_onset)
 
-        return None
-
 
 class ActionStimulus(BaseStimulus):
     """
@@ -365,7 +359,6 @@ class ActionStimulus(BaseStimulus):
         win : Window, optional
             The psychopy window object that is used for displaying stimuli, by default None
         """
-        pass
 
     def display(
         self, win: Window, logger: ExperimentLogger, info: Dict, **kwargs
@@ -778,8 +771,6 @@ class FeedBackStimulus(BaseStimulus):
             extra_info={"total_reward": total_reward},
             reward=reward,
         )
-
-        return None
 
     def _draw_total_reward(self, total_reward, win):
         total_reward_outcome = (

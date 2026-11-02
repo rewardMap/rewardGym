@@ -131,7 +131,7 @@ class PsychopyEnv(BaseEnv):
             current_location=self.agent_location, avail_actions=info["avail-actions"]
         )
 
-        if self.render_mode == "psychopy" and "psychopy" in info.keys():
+        if self.render_mode == "psychopy" and "psychopy" in info:
             if not self.is_setup:
                 raise RuntimeError(
                     "You have to setup the environment first, using env.setup_render()"
@@ -151,7 +151,7 @@ class PsychopyEnv(BaseEnv):
 
                 self._check_output(out, info, remap=True)
 
-        elif self.render_mode == "psychopy-simulate" and "psychopy" in info.keys():
+        elif self.render_mode == "psychopy-simulate" and "psychopy" in info:
             if not self.sim_setup:
                 raise RuntimeError(
                     "You have to setup the environment first, using env.setup_simulation()"
@@ -174,7 +174,7 @@ class PsychopyEnv(BaseEnv):
             if not self.expose_last_stim:
                 self.simulate_action(info, self.previous_action, self.reaction_time)
 
-        elif "psychopy" not in info.keys():
+        elif "psychopy" not in info:
             pass
         else:
             raise NotImplementedError(

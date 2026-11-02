@@ -6,7 +6,7 @@ try:
     from psychopy.visual import ImageStim, TextStim, Window
     from psychopy.visual.rect import Rect
 except ModuleNotFoundError:
-    from .psychopy_stubs import Window, TextStim, ImageStim, Rect
+    from .psychopy_stubs import ImageStim, Rect, TextStim, Window
 
 import numpy as np
 
@@ -234,8 +234,6 @@ class ConditionBasedDisplay(BaseStimulus):
         logger.wait(win, self.duration, stim_onset)
 
         self._log_event(logger=logger, stim_onset=stim_onset)
-
-        return None
 
 
 class TwoStimuliWithResponseAndSelection(ActionStimulus):
@@ -828,4 +826,3 @@ class LingeringAction(ActionStimulus):
                 "expected_duration": duration,
             },
         )
-        return None

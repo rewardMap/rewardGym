@@ -79,7 +79,6 @@ class MiscUpdateMid(PsyPyPlugin):
         logger.update_trial_info(
             misc=misc,
         )
-        return None
 
 
 class MiscUpdateTwoStep(PsyPyPlugin):
@@ -88,7 +87,6 @@ class MiscUpdateTwoStep(PsyPyPlugin):
         logger.update_trial_info(
             misc=misc,
         )
-        return None
 
 
 class TimeUpdateMid(PsyPyPlugin):
@@ -97,15 +95,11 @@ class TimeUpdateMid(PsyPyPlugin):
             settings["reward"][episode] - env.info_dict[1]["psychopy"][-1].duration
         )
 
-        return None
-
 
 class DelayUpdateHcp(PsyPyPlugin):
     def modify(self, *, settings, env, episode, **kwargs):
         settings["delay"][episode] = env.remainder
         update_psychopy_trials(settings, env, episode)
-
-        return None
 
 
 class StairCaseMid(PsyPyPlugin):

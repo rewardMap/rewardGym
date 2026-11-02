@@ -85,7 +85,7 @@ class RenderEnv(BaseEnv):
         self.human_action = None
         self.human_reward_modifier = 1
 
-        if self.render_mode == "pygame" and "pygame" in info.keys():
+        if self.render_mode == "pygame" and "pygame" in info:
             if not self.setup:
                 raise RuntimeError(
                     "You have to setup the environment first, using env.setup()"
@@ -104,7 +104,7 @@ class RenderEnv(BaseEnv):
                 if disp.display_type == "action":
                     self.human_action = out
 
-        elif "pygame" not in info.keys():
+        elif "pygame" not in info:
             pass
         else:
             raise NotImplementedError("Render should only be called in pygame mode")

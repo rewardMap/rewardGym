@@ -190,7 +190,7 @@ class ExperimentLogger:
 
         # TODO check, that onset is not in info_dict!
         if info_dict is not None:
-            for key in info_dict.keys():
+            for key in info_dict:
                 if info_dict[key] is not None:
                     tmp_dict[key] = info_dict[key]
 
@@ -435,13 +435,10 @@ class MinimalLogger(ExperimentLogger):
         Log event stub.
         """
 
-        pass
-
     def _write_to_file(self, tmp_values: List[float]):
         """
         Write stub
         """
-        pass
 
     def create(self, *args, **kwargs):
         """
@@ -454,7 +451,6 @@ class MinimalLogger(ExperimentLogger):
         """
         Close stub.
         """
-        pass
 
 
 class SimulationLogger(ExperimentLogger):

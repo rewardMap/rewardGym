@@ -40,8 +40,6 @@ class BaseDisplay:
         pygame.display.update()
         pygame.time.delay(self.duration)
 
-        return None
-
 
 class BaseAction:
     def __init__(
@@ -114,8 +112,6 @@ class BaseText:
         pygame.event.pump()
         pygame.display.update()
         pygame.time.delay(self.duration)
-
-        return None
 
 
 class TimedAction:

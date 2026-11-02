@@ -11,7 +11,7 @@ def run_single_episode(
     condition: int,
     update_agent: bool = True,
     step_reward: bool = False,
-) -> Union[List, List, float]:
+) -> Union[List, float]:
     """
     Runs a single episode of a task.
 
@@ -140,7 +140,7 @@ def check_elements_in_list(check_list: List, check_set: List) -> bool:
     return all([ii in check_set for ii in check_list])
 
 
-def unpack_conditions(conditions: tuple = None, episode: int = None) -> Union[int, int]:
+def unpack_conditions(conditions: tuple = None, episode: int = None) -> int:
     """
     Unpacks a condition / starting position set.
 
@@ -207,10 +207,10 @@ def get_condition_meaning(
     """
 
     trial_type = ""
-    if "condition" in info_dict.keys():
+    if "condition" in info_dict:
         trial_type += info_dict["condition"][condition]
 
-    if "position" in info_dict.keys():
+    if "position" in info_dict:
         trial_type += info_dict["position"][starting_position]
 
     return trial_type
