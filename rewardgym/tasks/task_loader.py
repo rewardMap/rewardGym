@@ -7,7 +7,7 @@ import sys
 import types
 import warnings
 from pathlib import Path
-
+import importlib
 
 def load_task_plugin(folder_path: Path, namespace_root: str = "rewardgym_tasks"):
     """
@@ -18,29 +18,46 @@ def load_task_plugin(folder_path: Path, namespace_root: str = "rewardgym_tasks")
     task_name = folder_path.name
     pkg_name = f"{namespace_root}.{task_name}"
 
+    if namespace_root not in sys.modules:
+        root = types.ModuleType(namespace_root)
+        root.__package__ = namespace_root
+        root.__path__ = []
+        root.__spec__ = importlib.machinery.ModuleSpec(
+            namespace_root, loader=None, is_package=True
+        )
+        sys.modules[namespace_root] = root
+
     # 1) Ensure a shim package exists in sys.modules
-    pkg = sys.modules.get(pkg_name)
-    if pkg is None:
+    if pkg_name not in sys.modules:
         pkg = types.ModuleType(pkg_name)
         pkg.__package__ = pkg_name
-        pkg.__path__ = [str(folder_path)]  # key for submodule resolution
-
-        # Mark the shim as a "package" to the import machinery
-        pkg_spec = importlib.util.spec_from_file_location(
-            pkg_name,
-            # None for non-file-backed shim; declare it's a package:
-            submodule_search_locations=[str(folder_path)],
+        pkg.__path__ = [str(folder_path)]
+        pkg.__spec__ = importlib.machinery.ModuleSpec(
+            pkg_name, loader=None, is_package=True
         )
-        pkg.__spec__ = pkg_spec
+        pkg.__spec__.submodule_search_locations = [str(folder_path)]
         sys.modules[pkg_name] = pkg
 
-    # 2) Load plugin as a proper submodule
     plugin_path = folder_path / "plugin.py"
     mod_name = f"{pkg_name}.plugin"
-    spec = importlib.util.spec_from_file_location(mod_name, str(plugin_path))
+
+    spec = importlib.util.spec_from_file_location(
+        mod_name,
+        plugin_path,
+    )
+
+    if spec is None or spec.loader is None:
+        raise ImportError(f"Could not load plugin from {plugin_path}")
+
     module = importlib.util.module_from_spec(spec)
-    sys.modules[mod_name] = module  # register before exec
-    spec.loader.exec_module(module)
+    sys.modules[mod_name] = module
+
+    try:
+        spec.loader.exec_module(module)
+    except Exception:
+        sys.modules.pop(mod_name, None)
+        raise
+
     return module
 
 
