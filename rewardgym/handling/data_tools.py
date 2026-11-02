@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 import warnings
-from typing import Dict, Union
 
 import numpy as np
 import pandas as pd
@@ -12,11 +13,13 @@ except pd._config.config.OptionError:
 
 
 def prepare_data(
-    data: Union[Dict, pd.DataFrame],
-    remap_dictionary={"left": 0, "right": 1},
+    data: dict | pd.DataFrame,
+    remap_dictionary=None,
     drop_trials=True,
     seperator="\t",
 ):
+    if remap_dictionary is None:
+        remap_dictionary = {"left": 0, "right": 1}
     if isinstance(data, dict):
         data = pd.DataFrame.from_dict(data)
     elif isinstance(data, str):
@@ -77,8 +80,17 @@ def process_trial_for_rl(trial_id: int, trial_df: pd.DataFrame) -> list:
 
     def make_empty_dict(
         trial_id,
-        dictionary_keys=["obs0", "action", "reward", "obs1", "reaction_time", "trial"],
+        dictionary_keys=None,
     ):
+        if dictionary_keys is None:
+            dictionary_keys = [
+                "obs0",
+                "action",
+                "reward",
+                "obs1",
+                "reaction_time",
+                "trial",
+            ]
         template_dict = {key: None for key in dictionary_keys}
         template_dict["trial"] = trial_id
 
@@ -99,18 +111,15 @@ def process_trial_for_rl(trial_id: int, trial_df: pd.DataFrame) -> list:
                     tmp_dict["obs1"] = row["current_location"]
                     tmp_obs0 = row["current_location"]
                 else:
-                    warnings.warn(
-                        "More than two obs encountered in trial %s" % trial_id
-                    )
+                    warnings.warn(f"More than two obs encountered in trial {trial_id}")
 
         elif row["rl_label"] == "action":
             if tmp_dict["action"] is None:
                 tmp_dict["action"] = row["action"]
                 tmp_dict["reaction_time"] = row["response_time"]
 
-        elif row["rl_label"] == "reward":
-            if tmp_dict["reward"] is None:
-                tmp_dict["reward"] = row["reward"]
+        elif row["rl_label"] == "reward" and tmp_dict["reward"] is None:
+            tmp_dict["reward"] = row["reward"]
 
         # Check if a complete tuple is ready
         if all(value is not None for value in tmp_dict.values()):

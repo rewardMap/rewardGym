@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 import sys
-from typing import Tuple, Type
 
 import pygame
 
@@ -9,8 +10,8 @@ class BaseDisplay:
         self,
         image: str,
         duration: int,
-        name: str = None,
-        background: Tuple[int] = (127, 127, 127),
+        name: str | None = None,
+        background: tuple[int] = (127, 127, 127),
     ) -> None:
         self.image_path = image
         self.duration = duration
@@ -21,9 +22,9 @@ class BaseDisplay:
 
     def display(
         self,
-        window: Type[pygame.surface.Surface],
-        clock: Type[pygame.time.Clock] = None,
-        condition: int = None,
+        window: type[pygame.surface.Surface],
+        clock: type[pygame.time.Clock] | None = None,
+        condition: int | None = None,
         **kwargs,
     ) -> None:
         window.fill(self.background)
@@ -42,9 +43,9 @@ class BaseDisplay:
 
 
 class BaseAction:
-    def __init__(
-        self, action_map: dict = {pygame.K_LEFT: 0, pygame.K_RIGHT: 1}, name: str = None
-    ):
+    def __init__(self, action_map: dict | None = None, name: str | None = None):
+        if action_map is None:
+            action_map = {pygame.K_LEFT: 0, pygame.K_RIGHT: 1}
         self.action_map = action_map
         self.allowed_keys = action_map.keys()
         self.display_type = "action"
@@ -52,9 +53,9 @@ class BaseAction:
 
     def display(
         self,
-        window: Type[pygame.surface.Surface],
-        clock: Type[pygame.time.Clock] = None,
-        condition: int = None,
+        window: type[pygame.surface.Surface],
+        clock: type[pygame.time.Clock] | None = None,
+        condition: int | None = None,
         **kwargs,
     ) -> int:
         pygame.event.clear()
@@ -80,10 +81,10 @@ class BaseText:
         self,
         text: str,
         duration: int,
-        name: str = None,
-        fontcolor: Tuple[int, int, int] = (0, 0, 0),
+        name: str | None = None,
+        fontcolor: tuple[int, int, int] = (0, 0, 0),
         fontsize: int = 36,
-        textposition: Tuple[int, int] = (0, 0),
+        textposition: tuple[int, int] = (0, 0),
     ):
         self.font = None
         self.text = text
@@ -97,9 +98,9 @@ class BaseText:
 
     def display(
         self,
-        window: Type[pygame.surface.Surface],
-        clock: Type[pygame.time.Clock] = None,
-        condition: int = None,
+        window: type[pygame.surface.Surface],
+        clock: type[pygame.time.Clock] | None = None,
+        condition: int | None = None,
         **kwargs,
     ) -> None:
         if self.font is None:
@@ -118,10 +119,12 @@ class TimedAction:
     def __init__(
         self,
         duration: int,
-        action_map: dict = {pygame.K_SPACE: 0},
+        action_map: dict | None = None,
         timeout_action: int = 1,
-        name: str = None,
+        name: str | None = None,
     ):
+        if action_map is None:
+            action_map = {pygame.K_SPACE: 0}
         self.action_map = action_map
         self.allowed_keys = action_map.keys()
         self.display_type = "action"
@@ -131,8 +134,8 @@ class TimedAction:
 
     def display(
         self,
-        window: Type[pygame.surface.Surface],
-        clock: Type[pygame.time.Clock] = None,
+        window: type[pygame.surface.Surface],
+        clock: type[pygame.time.Clock] | None = None,
         **kwargs,
     ) -> int:
         pygame.event.clear()

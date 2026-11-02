@@ -51,7 +51,7 @@ def play_task(
         # play one episode
         while not done:
             action = env.human_action
-            next_obs, reward, terminated, truncated, info = env.step(action)
+            next_obs, reward, terminated, truncated, _info = env.step(action)
             actions.append(action)
             rewards.append(reward)
 

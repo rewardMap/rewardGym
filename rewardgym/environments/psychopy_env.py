@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 from collections import defaultdict
-from typing import Union
 
 import numpy as np
 
@@ -8,7 +9,6 @@ try:
 except ModuleNotFoundError:
     from ..psychopy_render.psychopy_stubs import Window
 
-from typing import Dict, Tuple
 
 from .. import psychopy_render as psrender
 from ..psychopy_render.logger import MinimalLogger
@@ -21,9 +21,9 @@ class PsychopyEnv(BaseEnv):
         environment_graph: dict,
         reward_locations: dict,
         render_mode: str = "psychopy",
-        info_dict: dict = defaultdict(int),
-        random_state: Union[int, np.random.Generator] = 1000,
-        name: str = None,
+        info_dict: dict | None = None,
+        random_state: int | np.random.Generator = 1000,
+        name: str | None = None,
         n_actions=None,
         reduced_actions=None,
     ):
@@ -50,6 +50,8 @@ class PsychopyEnv(BaseEnv):
             The pygame clock for time keeping, by default None
         """
 
+        if info_dict is None:
+            info_dict = defaultdict(int)
         super().__init__(
             environment_graph=environment_graph,
             reward_locations=reward_locations,
@@ -87,8 +89,8 @@ class PsychopyEnv(BaseEnv):
         else:
             self.logger = logger
 
-        for node in self.graph.keys():
-            if "psychopy" in self.info_dict[node].keys():
+        for node in self.graph:
+            if "psychopy" in self.info_dict[node]:
                 [
                     stim.setup(self.window)
                     for stim in self.info_dict[node]["psychopy"]
@@ -225,8 +227,8 @@ class PsychopyEnv(BaseEnv):
     def reset(
         self,
         agent_location: int = 0,
-        condition: int = None,
-    ) -> Tuple[Union[int, np.array], Dict]:
+        condition: int | None = None,
+    ) -> tuple[int | np.array, dict]:
         self.action = None
         self.remap_action = None
         self.remainder = 0

@@ -1,9 +1,12 @@
+from __future__ import annotations
+
+
 def make_bids_name(
     subid: str,
-    session: str = None,
-    task: str = None,
-    run: str = None,
-    acquisition: str = None,
+    session: str | None = None,
+    task: str | None = None,
+    run: str | None = None,
+    acquisition: str | None = None,
     extension: str = "beh.tsv",
 ):
     # Some basic rewardmap specific sanitization:

@@ -10,7 +10,9 @@ from .. import ASSETS_PATH
 from ..tasks.task_loader import get_instructions_psychopy
 
 
-def show_instructions(task, win, key_map={"left": 0, "right": 1}):
+def show_instructions(task, win, key_map=None):
+    if key_map is None:
+        key_map = {"left": 0, "right": 1}
     instructions_path = ASSETS_PATH / "instructions_en.json"
     print(instructions_path)
     instructions = json.loads(instructions_path.read_text())

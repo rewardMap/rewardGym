@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import importlib
 import importlib.util
 import os
@@ -5,7 +7,6 @@ import sys
 import types
 import warnings
 from pathlib import Path
-from typing import Dict, Union
 
 
 def load_task_plugin(folder_path: Path, namespace_root: str = "rewardgym_tasks"):
@@ -77,7 +78,7 @@ def _discover_plugins(base_dir):
             registry = plugin_module.register_task()
             task_registry.update(registry)
 
-            print(f"Registered task: {list(registry.keys())[0]}")
+            print(f"Registered task: {next(iter(registry.keys()))}")
         except Exception as e:
             warnings.warn(
                 f"Could not register task '{task_folder}': {e}",
@@ -88,7 +89,7 @@ def _discover_plugins(base_dir):
     return task_registry
 
 
-def _discover_external_plugins(task_folder: Union[str, Path]) -> Dict:
+def _discover_external_plugins(task_folder: str | Path) -> dict:
     """
     Discover and register tasks from external directories.
     Args:

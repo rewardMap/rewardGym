@@ -20,7 +20,7 @@ def draw_response_reminder(win, text_update, logger, reminder_duration=1.0):
 
 
 def break_point(win, text_update, logger, settings, episode, countdown_cutoff=30):
-    if not ("breakpoints" in settings.keys() and "break_duration" in settings.keys()):
+    if not ("breakpoints" in settings and "break_duration" in settings):
         pass
 
     elif (

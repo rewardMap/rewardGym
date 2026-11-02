@@ -31,7 +31,7 @@ def test_step():
     reward_locations = {1: lambda: 1, 2: lambda: 2}
     env = BaseEnv(environment_graph, reward_locations)
     env.reset(agent_location=0)
-    obs, reward, terminated, truncated, info = env.step(action=0)
+    obs, reward, terminated, truncated, _info = env.step(action=0)
     assert obs == 1
     assert reward == 1
     assert terminated is True

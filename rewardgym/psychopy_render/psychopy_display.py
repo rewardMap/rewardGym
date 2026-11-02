@@ -1,4 +1,6 @@
-from typing import Dict, List, Literal, Tuple, Union
+from __future__ import annotations
+
+from typing import Literal
 
 try:
     from psychopy.visual import ImageStim, TextStim, Window
@@ -20,8 +22,8 @@ class BaseStimulus:
 
     def __init__(
         self,
-        duration: float = None,
-        name: str = None,
+        duration: float | None = None,
+        name: str | None = None,
         wait_no_keys=False,
         rl_label=None,
         noflip=False,
@@ -104,8 +106,10 @@ class BaseStimulus:
         self._log_event(logger=logger, stim_onset=stim_onset)
 
     def _log_event(
-        self, logger: ExperimentLogger, stim_onset=None, extra_info={}, **kwargs
+        self, logger: ExperimentLogger, stim_onset=None, extra_info=None, **kwargs
     ):
+        if extra_info is None:
+            extra_info = {}
         base_dict = {
             "event_type": self.name,
             "expected_duration": self.duration,
@@ -129,10 +133,10 @@ class TextStimulus(BaseStimulus):
         self,
         duration: float,
         text: str,
-        position: Tuple[int, int] = None,
-        name: str = None,
+        position: tuple[int, int] | None = None,
+        name: str | None = None,
         text_color: str = "white",
-        rl_label: str = None,
+        rl_label: str | None = None,
     ):
         """
         Stimulus class for text displays.
@@ -207,14 +211,14 @@ class ImageStimulus(BaseStimulus):
     def __init__(
         self,
         duration: float,
-        image_paths: List,
-        positions: List = None,
-        name: str = None,
-        width: float = None,
-        height: float = None,
+        image_paths: list,
+        positions: list | None = None,
+        name: str | None = None,
+        width: float | None = None,
+        height: float | None = None,
         autodraw: bool = False,
         wait_no_keys: bool = False,
-        rl_label: str = None,
+        rl_label: str | None = None,
     ):
         """
         Stimulus class for image displays.
@@ -320,11 +324,11 @@ class ActionStimulus(BaseStimulus):
     def __init__(
         self,
         duration: float,
-        key_dict: Dict = {"left": 0, "right": 1},
+        key_dict: dict | None = None,
         name: str = "response",
-        timeout_action: int = None,
+        timeout_action: int | None = None,
         name_timeout="response-time-out",
-        rl_label: str = None,
+        rl_label: str | None = None,
         noflip: bool = False,
     ):
         """
@@ -342,6 +346,8 @@ class ActionStimulus(BaseStimulus):
             Behavior of the object if the response window times out, making it possible that no response is also a distinc action, by default None
         """
 
+        if key_dict is None:
+            key_dict = {"left": 0, "right": 1}
         super().__init__(name=name, duration=duration, rl_label=rl_label, noflip=noflip)
 
         self.key_list = list(key_dict.keys())
@@ -361,8 +367,8 @@ class ActionStimulus(BaseStimulus):
         """
 
     def display(
-        self, win: Window, logger: ExperimentLogger, info: Dict, **kwargs
-    ) -> Union[int, str]:
+        self, win: Window, logger: ExperimentLogger, info: dict, **kwargs
+    ) -> int | str:
         """
         Calls the stimulus object. In this case waiting for a specific response,
         returning it and logging the process. Flipping the window in the end.
@@ -411,7 +417,7 @@ class ActionStimulus(BaseStimulus):
                 RT = response[1] - response_window_onset
                 response_present = True
 
-                if info is not None and "behav_remap" in info.keys():
+                if info is not None and "behav_remap" in info:
                     action = info["behav_remap"][key_dict[response[0]]]
 
                 response_key = key_dict[response[0]]
@@ -459,9 +465,9 @@ class ActionStimulus(BaseStimulus):
         self,
         win: Window,
         logger=SimulationLogger,
-        key: str = None,
-        rt: float = None,
-        info: Dict = None,
+        key: str | None = None,
+        rt: float | None = None,
+        info: dict | None = None,
         **kwargs,
     ):
         response_window_onset = logger.get_time()
@@ -478,7 +484,7 @@ class ActionStimulus(BaseStimulus):
     def _simulate_response(self, logger, key, rt, response_window_onset, info):
         response_key, rt = logger.key_strokes(key, rt)
 
-        if info is not None and "behav_remap" in info.keys():
+        if info is not None and "behav_remap" in info:
             response_button = [
                 n for n, b in enumerate(info["behav_remap"]) if b == response_key
             ]
@@ -547,16 +553,16 @@ class FeedBackStimulus(BaseStimulus):
         self,
         duration: float,
         text: str,
-        position: Tuple[int, int] = (0, 125),
-        name: str = None,
+        position: tuple[int, int] = (0, 125),
+        name: str | None = None,
         target: Literal["reward", "total_reward"] = "reward",
         text_color: str = "white",
         font_height: float = 50,
-        feedback_stim: Dict = True,
+        feedback_stim: dict = True,
         simple: bool = False,
-        bar_total: float = None,
-        bar_labels: Dict = {"left": "0 kr", "right": "75 kr"},
-        rl_label: str = None,
+        bar_total: float | None = None,
+        bar_labels: dict | None = None,
+        rl_label: str | None = None,
     ):
         """
         FeedBack class, provides feedback to the participant, by creating
@@ -582,6 +588,8 @@ class FeedBackStimulus(BaseStimulus):
             keys: win, lose, zero with a string to an image or a numpy array.
         """
 
+        if bar_labels is None:
+            bar_labels = {"left": "0 kr", "right": "75 kr"}
         super().__init__(name=name, duration=duration, rl_label=rl_label)
 
         self.text = text
@@ -685,7 +693,7 @@ class FeedBackStimulus(BaseStimulus):
 
         self.feedback_image = {}
 
-        for kk in self.feedback_stim.keys():
+        for kk in self.feedback_stim:
             if isinstance(self.feedback_stim[kk], str):
                 self.feedback_image[kk] = ImageStim(
                     win=win, image=self.feedback_stim[kk]
@@ -740,7 +748,7 @@ class FeedBackStimulus(BaseStimulus):
 
         self.reward_text.setText(self.text.format(reward_outcome))
 
-        if feedback_img in self.feedback_image.keys():
+        if feedback_img in self.feedback_image:
             self.feedback_image[feedback_img].setAutoDraw(True)
 
         self.reward_text.setAutoDraw(True)
@@ -755,7 +763,7 @@ class FeedBackStimulus(BaseStimulus):
         win.flip()
         logger.wait(win, self.duration, stim_onset)
 
-        if feedback_img in self.feedback_image.keys():
+        if feedback_img in self.feedback_image:
             self.feedback_image[feedback_img].setAutoDraw(False)
 
         self.reward_text.setAutoDraw(False)
@@ -791,8 +799,8 @@ class FeedBackStimulus(BaseStimulus):
     def simulate(
         self,
         logger=ExperimentLogger,
-        reward: float = None,
-        total_reward: float = None,
+        reward: float | None = None,
+        total_reward: float | None = None,
         **kwargs,
     ) -> None:
         """

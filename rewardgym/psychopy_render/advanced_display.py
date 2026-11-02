@@ -1,4 +1,4 @@
-from typing import Dict, Union
+from __future__ import annotations
 
 from .psychopy_display import ActionStimulus, BaseStimulus
 
@@ -23,18 +23,13 @@ class ActionStimulusTooEarly(ActionStimulus):
     def __init__(
         self,
         duration: float,
-        key_dict: Dict = {"left": 0, "right": 1},
+        key_dict: dict | None = None,
         name: str = "response",
-        timeout_action: int = None,
+        timeout_action: int | None = None,
         name_timeout="response-timeout",
         name_tooearly="response-too-early",
-        text_tooearly={
-            "text": "Don't press too early!",
-            "pos": (0, -150),
-            "height": 28,
-            "color": "white",
-        },
-        rl_label: str = None,
+        text_tooearly=None,
+        rl_label: str | None = None,
     ):
         """
         Setting up the action object.
@@ -51,6 +46,15 @@ class ActionStimulusTooEarly(ActionStimulus):
             Behavior of the object if the response window times out, making it possible that no response is also a distinc action, by default None
         """
 
+        if text_tooearly is None:
+            text_tooearly = {
+                "text": "Don't press too early!",
+                "pos": (0, -150),
+                "height": 28,
+                "color": "white",
+            }
+        if key_dict is None:
+            key_dict = {"left": 0, "right": 1}
         super().__init__(
             name=name,
             duration=duration,
@@ -76,8 +80,8 @@ class ActionStimulusTooEarly(ActionStimulus):
         self.text_stim = TextStim(win=win, **self.text_tooearly)
 
     def display(
-        self, win: Window, logger: ExperimentLogger, info: Dict, **kwargs
-    ) -> Union[int, str]:
+        self, win: Window, logger: ExperimentLogger, info: dict, **kwargs
+    ) -> int | str:
         """
         Calls the stimulus object. In this case waiting for a specific response,
         returning it and logging the process. Flipping the window in the end.
@@ -144,15 +148,17 @@ class ConditionBasedDisplay(BaseStimulus):
         image_position=(0, 0),
         image_shift=350,
         with_action=False,
-        image_map={
-            1: make_card_stimulus(generate_stimulus_properties(1)),
-            2: make_card_stimulus(generate_stimulus_properties(2)),
-            3: make_card_stimulus(generate_stimulus_properties(3)),
-            4: make_card_stimulus(generate_stimulus_properties(4)),
-            5: make_card_stimulus(generate_stimulus_properties(5)),
-        },
-        rl_label: str = None,
+        image_map=None,
+        rl_label: str | None = None,
     ):
+        if image_map is None:
+            image_map = {
+                1: make_card_stimulus(generate_stimulus_properties(1)),
+                2: make_card_stimulus(generate_stimulus_properties(2)),
+                3: make_card_stimulus(generate_stimulus_properties(3)),
+                4: make_card_stimulus(generate_stimulus_properties(4)),
+                5: make_card_stimulus(generate_stimulus_properties(5)),
+            }
         super().__init__(name=name, duration=duration, rl_label=rl_label)
 
         self.image_position = image_position
@@ -163,7 +169,7 @@ class ConditionBasedDisplay(BaseStimulus):
     def _setup(self, win, **kwargs):
         self.image_dict = {}
 
-        for kk in self.image_map.keys():
+        for kk in self.image_map:
             if isinstance(self.image_map[kk], str):
                 self.image_dict[kk] = ImageStim(win=win, image=self.image_map[kk])
             else:
@@ -174,7 +180,7 @@ class ConditionBasedDisplay(BaseStimulus):
                 )
 
     def display(self, win, logger, condition, action=None, **kwargs):
-        state1 = condition[0][list(condition[0].keys())[0]]
+        state1 = condition[0][next(iter(condition[0].keys()))]
         state2 = condition[0][list(condition[0].keys())[1]]
 
         logger.key_strokes(win)
@@ -195,7 +201,7 @@ class ConditionBasedDisplay(BaseStimulus):
             imgB = None
 
         if self.with_action:
-            if action == list(condition[0].keys())[0]:
+            if action == next(iter(condition[0].keys())):
                 feedback = Rect(
                     win=win,
                     width=imgA.size[0],
@@ -240,25 +246,29 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
     def __init__(
         self,
         duration: float,
-        key_dict: Dict = {"left": 0, "right": 1},
+        key_dict: dict | None = None,
         name: str = "response",
-        name_phase1: str = None,
-        name_phase2: str = None,
+        name_phase1: str | None = None,
+        name_phase2: str | None = None,
         duration_phase1: float = 0.0,
         duration_phase2: float = 0.0,
-        timeout_action: int = None,
+        timeout_action: int | None = None,
         name_timeout="response-time-out",
         positions=((0, 0), (0, 0)),
-        images=[
-            make_card_stimulus(generate_stimulus_properties(12)),
-            make_card_stimulus(generate_stimulus_properties(23)),
-        ],
+        images=None,
         flip_probability=0.5,
         random_state=111,
-        rl_label: str = None,
-        rl_label_phase1: str = None,
-        rl_label_phase2: str = None,
+        rl_label: str | None = None,
+        rl_label_phase1: str | None = None,
+        rl_label_phase2: str | None = None,
     ):
+        if images is None:
+            images = [
+                make_card_stimulus(generate_stimulus_properties(12)),
+                make_card_stimulus(generate_stimulus_properties(23)),
+            ]
+        if key_dict is None:
+            key_dict = {"left": 0, "right": 1}
         super().__init__(
             name=name,
             duration=duration,
@@ -335,9 +345,9 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
         self,
         win: Window,
         logger=SimulationLogger,
-        key: str = None,
-        rt: float = None,
-        info: Dict = None,
+        key: str | None = None,
+        rt: float | None = None,
+        info: dict | None = None,
         **kwargs,
     ):
         stim_onset = logger.get_time()
@@ -459,7 +469,7 @@ class TextWithBorder(BaseStimulus):
         font_height=150,
         position=(0, 0),
         name=None,
-        rl_label: str = None,
+        rl_label: str | None = None,
     ):
         super().__init__(name=name, duration=duration, rl_label=rl_label)
 
@@ -520,23 +530,27 @@ class StimuliWithResponse(ActionStimulus):
     def __init__(
         self,
         duration: float,
-        key_dict: Dict = {"left": 0, "right": 1},
+        key_dict: dict | None = None,
         name: str = "response",
-        target_name: str = None,
+        target_name: str | None = None,
         target_duration: float = 0.0,
-        target_rl_label: str = None,
-        timeout_action: int = None,
+        target_rl_label: str | None = None,
+        timeout_action: int | None = None,
         name_timeout="response-time-out",
         positions=((0, 0), (0, 0)),
-        images=[
-            make_card_stimulus(generate_stimulus_properties(12)),
-            make_card_stimulus(generate_stimulus_properties(23)),
-        ],
+        images=None,
         flip_probability=0.5,
         flip_dir: str = "horiz",
         random_state=111,
-        rl_label: str = None,
+        rl_label: str | None = None,
     ):
+        if images is None:
+            images = [
+                make_card_stimulus(generate_stimulus_properties(12)),
+                make_card_stimulus(generate_stimulus_properties(23)),
+            ]
+        if key_dict is None:
+            key_dict = {"left": 0, "right": 1}
         super().__init__(
             name=name,
             duration=duration,
@@ -588,9 +602,9 @@ class StimuliWithResponse(ActionStimulus):
         self,
         win: Window,
         logger=SimulationLogger,
-        key: str = None,
-        rt: float = None,
-        info: Dict = None,
+        key: str | None = None,
+        rt: float | None = None,
+        info: dict | None = None,
         **kwargs,
     ):
         stim_onset = logger.get_time()
@@ -653,30 +667,36 @@ class LingeringAction(ActionStimulus):
     def __init__(
         self,
         duration: float,
-        key_dict: Dict = {"left": 0, "right": 1},
+        key_dict: dict | None = None,
         name: str = "response",
-        name_phase1: str = None,
-        name_phase2: str = None,
+        name_phase1: str | None = None,
+        name_phase2: str | None = None,
         duration_phase1: float = 0.0,
         duration_phase2: float = 0.0,
-        timeout_action: int = None,
+        timeout_action: int | None = None,
         name_timeout="response-time-out",
         positions_phase1=((0, 0), (0, 0)),
         positions_phase2=((0, 0), (0, 0)),
-        images_phase1=[
-            make_card_stimulus(generate_stimulus_properties(12)),
-            make_card_stimulus(generate_stimulus_properties(23)),
-        ],
-        images_phase2=[
-            make_card_stimulus(generate_stimulus_properties(12)),
-            make_card_stimulus(generate_stimulus_properties(23)),
-        ],
+        images_phase1=None,
+        images_phase2=None,
         random_state=111,
-        rl_label: str = None,
-        rl_label_phase1: str = None,
-        rl_label_phase2: str = None,
+        rl_label: str | None = None,
+        rl_label_phase1: str | None = None,
+        rl_label_phase2: str | None = None,
         autodraw: bool = False,
     ):
+        if images_phase2 is None:
+            images_phase2 = [
+                make_card_stimulus(generate_stimulus_properties(12)),
+                make_card_stimulus(generate_stimulus_properties(23)),
+            ]
+        if images_phase1 is None:
+            images_phase1 = [
+                make_card_stimulus(generate_stimulus_properties(12)),
+                make_card_stimulus(generate_stimulus_properties(23)),
+            ]
+        if key_dict is None:
+            key_dict = {"left": 0, "right": 1}
         super().__init__(
             name=name,
             duration=duration,
@@ -755,9 +775,9 @@ class LingeringAction(ActionStimulus):
         self,
         win: Window,
         logger=SimulationLogger,
-        key: str = None,
-        rt: float = None,
-        info: Dict = None,
+        key: str | None = None,
+        rt: float | None = None,
+        info: dict | None = None,
         **kwargs,
     ):
         stim_onset = logger.get_time()
