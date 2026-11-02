@@ -117,6 +117,7 @@ exclude = [
     "rewardgym/tasks/*/*",
     "docs/"
 ]
+extend-exclude = ["rewardgym/_version.py"]
 target-version = "py38"
 
 [tool.versioneer]
