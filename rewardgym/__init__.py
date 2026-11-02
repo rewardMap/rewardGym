@@ -1,5 +1,3 @@
-# ruff: noqa: E402
-
 import pathlib
 
 from . import _version
@@ -23,17 +21,17 @@ except ImportError:
     print("no pygame")
 
 __all__ = [
+    "ENVIRONMENTS",
+    "agents",
+    "check_random_state",
+    "environments",
     "get_configs",
     "get_env",
-    "run_single_episode",
-    "ENVIRONMENTS",
     "get_psychopy_info",
-    "check_random_state",
-    "agents",
-    "environments",
     "handling",
     "psychopy_render",
     "pygame_render",
+    "run_single_episode",
     "runner",
     "stimuli",
     "tasks",
@@ -43,7 +41,6 @@ __version__ = _version.get_versions()["version"]
 
 
 def extend_task_registry(extra_dirs, overwrite=True):
-    global _task_registry
     for d in extra_dirs:
         extra = task_loader._discover_external_plugins(d)
         _task_registry.extend(extra, overwrite=overwrite)

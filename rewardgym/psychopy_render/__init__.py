@@ -16,17 +16,17 @@ from .psychopy_display import (
 )
 
 __all__ = [
-    "ExperimentLogger",
-    "SimulationLogger",
-    "ActionStimulusTooEarly",
-    "ConditionBasedDisplay",
-    "TwoStimuliWithResponseAndSelection",
-    "TextWithBorder",
-    "StimuliWithResponse",
-    "BaseStimulus",
-    "FeedBackStimulus",
     "ActionStimulus",
-    "TextStimulus",
+    "ActionStimulusTooEarly",
+    "BaseStimulus",
+    "ConditionBasedDisplay",
+    "ExperimentLogger",
+    "FeedBackStimulus",
     "ImageStimulus",
     "LingeringAction",
+    "SimulationLogger",
+    "StimuliWithResponse",
+    "TextStimulus",
+    "TextWithBorder",
+    "TwoStimuliWithResponseAndSelection",
 ]

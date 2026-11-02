@@ -1,4 +1,6 @@
-from typing import Any, List, Literal, Tuple, Union
+from __future__ import annotations
+
+from typing import Any, Literal
 
 import numpy as np
 
@@ -15,8 +17,8 @@ def get_env(
         "posner",
         "gonogo",
     ],
-    render_backend: Literal["pygame", "psychopy", "psychopy-simulate"] = None,
-    random_state: Union[int, np.random.Generator] = 1000,
+    render_backend: Literal["pygame", "psychopy", "psychopy-simulate"] | None = None,
+    random_state: int | np.random.Generator = 1000,
     **kwargs,
 ):
     environment_graph, reward_structure, info_dict = get_task(
@@ -25,9 +27,8 @@ def get_env(
         random_state=random_state,
     )
 
-    if "meta" in info_dict.keys():
-        if "reduced_actions" in info_dict["meta"].keys():
-            reduced_actions = info_dict["meta"]["reduced_actions"]
+    if "meta" in info_dict and "reduced_actions" in info_dict["meta"]:
+        reduced_actions = info_dict["meta"]["reduced_actions"]
 
     if render_backend is None:
         env = BaseEnv(
@@ -62,7 +63,7 @@ def get_env(
 
 
 def check_conditions_not_following(
-    condition_list: List[Any], not_following: List[Any], window_length: int = 1
+    condition_list: list[Any], not_following: list[Any], window_length: int = 1
 ) -> bool:
     """
     Checks if any elements in the condition_list are followed by elements from the not_following list within a specified window length.
@@ -82,19 +83,17 @@ def check_conditions_not_following(
         Returns True if no elements from not_following appear within the window length after any element in condition_list, False otherwise.
     """
     for n, _ in enumerate(condition_list):
-        if condition_list[n] in not_following:
+        if condition_list[n] in not_following and any(
+            k in not_following for k in condition_list[n + 1 : n + 1 + window_length]
+        ):
             # Loop over conditions following the window. N + 1 as to make the window_lengths more intuitive.
-            if any(
-                k in not_following
-                for k in condition_list[n + 1 : n + 1 + window_length]
-            ):
-                return False
+            return False
 
     return True
 
 
 def check_conditions_not_following_substring(
-    condition_list: List[str], not_following: List[str], window_length: int = 1
+    condition_list: list[str], not_following: list[str], window_length: int = 1
 ) -> bool:
     """
     Checks if any substrings in the condition_list are followed by elements containing substrings from
@@ -117,18 +116,17 @@ def check_conditions_not_following_substring(
     """
     for n in range(len(condition_list)):
         # Check if the current element contains any substring from not_following
-        if any(substring in condition_list[n] for substring in not_following):
+        if any(substring in condition_list[n] for substring in not_following) and any(
+            any(substring in condition_list[k] for substring in not_following)
+            for k in range(n + 1, min(n + 1 + window_length, len(condition_list)))
+        ):
             # Check the elements within the window for the presence of not_following substrings
-            if any(
-                any(substring in condition_list[k] for substring in not_following)
-                for k in range(n + 1, min(n + 1 + window_length, len(condition_list)))
-            ):
-                return False
+            return False
     return True
 
 
 def check_conditions_present(
-    condition_list: List[Any], conditions_required: List[Any]
+    condition_list: list[Any], conditions_required: list[Any]
 ) -> bool:
     """
     Checks if all elements in the conditions_required list are present in the condition_list.
@@ -152,7 +150,7 @@ def check_conditions_present(
 
 
 def check_condition_present_or(
-    condition_list: List[Any], condition_required: Tuple[List]
+    condition_list: list[Any], condition_required: tuple[list]
 ) -> bool:
     """
     Checks if any of the specified conditions are present in the condition list.
@@ -185,5 +183,5 @@ def check_condition_present_or(
     False
     """
     return any(
-        [check_conditions_present(condition_list, cr) for cr in condition_required]
+        check_conditions_present(condition_list, cr) for cr in condition_required
     )

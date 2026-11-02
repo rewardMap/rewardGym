@@ -1,11 +1,12 @@
+from __future__ import annotations
+
 import math
-from typing import List, Tuple, Union
 
 import numpy as np
 from PIL import Image, ImageDraw, ImageOps
 
 
-def return_mod_pattern(pattern: str, x: int, y: int, select_list: List) -> str:
+def return_mod_pattern(pattern: str, x: int, y: int, select_list: list) -> str:
     """
     Return an element from select_list based on the pattern.
 
@@ -40,10 +41,10 @@ def return_mod_pattern(pattern: str, x: int, y: int, select_list: List) -> str:
 def draw_shape(
     draw: ImageDraw.ImageDraw,
     shape: str,
-    bbox: List[int],
-    color: Tuple[int, int, int],
+    bbox: list[int],
+    color: tuple[int, int, int],
     padding: int = 5,
-    bg_color: Tuple[int, int, int] = (0, 0, 0, 0),
+    bg_color: tuple[int, int, int] = (0, 0, 0, 0),
 ) -> None:
     """
     Draw a specified shape within a bounding box with optional padding.
@@ -152,11 +153,11 @@ def create_pattern(
     width: int,
     height: int,
     num_tiles: int,
-    shapes: Union[str, List[str]],
-    sizes: Union[int, float, List[Union[int, float]]],
-    colors: List[Tuple[int, int, int]],
-    bg_color: Tuple[int, int, int, int] = (0, 0, 0, 0),
-    padding: Union[int, None] = None,
+    shapes: str | list[str],
+    sizes: float | list[int | float],
+    colors: list[tuple[int, int, int]],
+    bg_color: tuple[int, int, int, int] = (0, 0, 0, 0),
+    padding: int | None = None,
     color_pattern: str = "alternating",
     shape_pattern: str = "alternating",
 ) -> Image.Image:
@@ -215,7 +216,7 @@ def create_pattern(
 
     pos_pattern = ["alternating", "row", "col"]
 
-    if isinstance(sizes, int) or isinstance(sizes, float):
+    if isinstance(sizes, (int, float)):
         sizes = [sizes]
 
     if isinstance(shapes, str):
@@ -273,20 +274,20 @@ def make_stimulus(
     width: int,
     height: int,
     num_tiles: int,
-    shapes: Union[str, List[str]],
-    colors: List[Tuple[int, int, int]],
-    sizes: Union[int, float, List[Union[int, float]]],
+    shapes: str | list[str],
+    colors: list[tuple[int, int, int]],
+    sizes: float | list[int | float],
     color_pattern: str = "alternating",
     shape_pattern: str = "alternating",
-    padding: Union[int, None] = None,
-    border: Union[int, None] = None,
+    padding: int | None = None,
+    border: int | None = None,
     show_image: bool = False,
     equalize: bool = False,
     border_color: str = "white",
-    bg_color: Tuple[int, int, int, int] = (0, 0, 0, 0),
+    bg_color: tuple[int, int, int, int] = (0, 0, 0, 0),
     return_numpy: bool = False,
     normalize_color_space: bool = True,
-) -> Union[Image.Image, np.ndarray]:
+) -> Image.Image | np.ndarray:
     """
     Create a stimulus image with a pattern of shapes and optional border.
 

@@ -1,15 +1,17 @@
-from typing import Any, Dict, Union
+from __future__ import annotations
+
+from typing import Any
 
 import yaml
 
 
-def load_yaml(yaml_path: Union[str]) -> Dict[str, Any]:
+def load_yaml(yaml_path: str) -> dict[str, Any]:
     with open(yaml_path, "r") as f:
         raw = yaml.safe_load(f)
     return raw
 
 
-def load_environment_graph(raw_data: Dict):
+def load_environment_graph(raw_data: dict):
     environment_graph = {}
 
     for state_str, value in raw_data.items():
@@ -32,13 +34,13 @@ def load_environment_graph(raw_data: Dict):
             environment_graph[state] = processed
 
         else:
-            raise ValueError(f"Unsupported value format for key {state}: {value}")
+            raise TypeError(f"Unsupported value format for key {state}: {value}")
 
     return environment_graph
 
 
 def load_task_from_yaml(
-    yaml_path: Union[str],
+    yaml_path: str,
 ) -> Any:
     raw = load_yaml(yaml_path=yaml_path)
 

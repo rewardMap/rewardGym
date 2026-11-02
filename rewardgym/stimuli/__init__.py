@@ -17,17 +17,17 @@ from .robot_images import draw_robot
 from .spaceship_images import draw_spaceship
 
 __all__ = [
+    "STIMULUS_DEFAULTS",
     "draw_alien",
     "draw_robot",
     "draw_spaceship",
-    "win_cross",
     "fixation_cross",
+    "generate_stimulus_properties",
     "lose_cross",
-    "zero_cross",
+    "make_card_stimulus",
+    "mid_stimuli",
     "posner_cue",
     "posner_target",
-    "mid_stimuli",
-    "make_card_stimulus",
-    "generate_stimulus_properties",
-    "STIMULUS_DEFAULTS",
+    "win_cross",
+    "zero_cross",
 ]

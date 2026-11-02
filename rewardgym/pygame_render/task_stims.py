@@ -15,8 +15,10 @@ class FormatText(BaseText):
         fontcolor=(0, 0, 0),
         fontsize=36,
         textposition=(0, 0),
-        condition_text={1: 5, 0: [1, 2, 3, 4], 2: [6, 7, 8, 9]},
+        condition_text=None,
     ):
+        if condition_text is None:
+            condition_text = {1: 5, 0: [1, 2, 3, 4], 2: [6, 7, 8, 9]}
         super().__init__(text, duration, name, fontcolor, fontsize, textposition)
 
         self.condition_text = condition_text
@@ -37,8 +39,6 @@ class FormatText(BaseText):
         pygame.event.pump()
         pygame.display.update()
         pygame.time.delay(self.duration)
-
-        return None
 
 
 class FormatTextReward(FormatText):
@@ -87,8 +87,6 @@ class FormatTextReward(FormatText):
         pygame.display.update()
         pygame.time.delay(self.duration)
 
-        return None
-
 
 class FormatTextRiskSensitive(BaseText):
     def __init__(
@@ -99,9 +97,13 @@ class FormatTextRiskSensitive(BaseText):
         fontcolor=(0, 0, 0),
         fontsize=36,
         textposition=(0, 0),
-        condition_text={1: 5, 0: [1, 2, 3, 4], 2: [6, 7, 8, 9]},
-        letter_map={0: "A", 1: "B", 2: "C", 3: "D", 4: "E"},
+        condition_text=None,
+        letter_map=None,
     ):
+        if letter_map is None:
+            letter_map = {0: "A", 1: "B", 2: "C", 3: "D", 4: "E"}
+        if condition_text is None:
+            condition_text = {1: 5, 0: [1, 2, 3, 4], 2: [6, 7, 8, 9]}
         super().__init__(text, duration, name, fontcolor, fontsize, textposition)
 
         self.condition_text = condition_text
@@ -129,8 +131,6 @@ class FormatTextRiskSensitive(BaseText):
         pygame.event.pump()
         pygame.display.update()
         pygame.time.delay(self.duration)
-
-        return None
 
 
 def feedback_block(center, duration_reward=1000, duration_total=500):

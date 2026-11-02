@@ -106,7 +106,7 @@ def test_missing_columns_warns():
         }
     )
     with warnings.catch_warnings(record=True) as w:
-        df_out, _ = prepare_data(df)
+        _df_out, _ = prepare_data(df)
         assert any("missing" in str(warn.message).lower() for warn in w)
 
 
@@ -251,7 +251,7 @@ def test_process_trial_for_rl_partial_tuple(sample_df):
     df = sample_df.drop(sample_df.index[-1])  # drop obs1
     tuples = process_trial_for_rl(1, df)
     assert len(tuples) == 1
-    obs0, action, reward, obs1, rt, trial = tuples[0]
+    obs0, action, reward, obs1, _rt, _trial = tuples[0]
     assert obs0 == "A"
     assert action == "left"
     assert reward == 1

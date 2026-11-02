@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 import warnings
-from typing import Tuple, Union
 
 import numpy as np
 
@@ -27,7 +28,7 @@ class ValenceHybridAgent(ValenceQAgent):
         hybrid: float = 1.0,
         action_space: int = 2,
         state_space: int = 2,
-        seed: Union[int, np.random.Generator] = 1000,
+        seed: int | np.random.Generator = 1000,
         graph=None,
         use_fixed=False,
     ):
@@ -72,7 +73,7 @@ class ValenceHybridAgent(ValenceQAgent):
         self.t_values = np.zeros((self.n_states, self.n_actions, self.n_states))
 
         if graph is not None:
-            for k in graph.keys():
+            for k in graph:
                 actions = list(graph[k].keys())
 
                 for a in actions:
@@ -160,11 +161,11 @@ class ValenceHybridAgent(ValenceQAgent):
 
     def update(
         self,
-        obs: Tuple[int, int, bool],
+        obs: tuple[int, int, bool],
         action: int,
         reward: float,
         terminated: bool,
-        next_obs: Tuple[int, int, bool],
+        next_obs: tuple[int, int, bool],
         **kwargs,
     ):
         """
@@ -243,7 +244,7 @@ class HybridAgent(ValenceHybridAgent):
         hybrid: float = 1.0,
         action_space: int = 2,
         state_space: int = 2,
-        seed: Union[int, np.random.Generator] = 1000,
+        seed: int | np.random.Generator = 1000,
         graph=None,
         use_fixed=False,
     ):

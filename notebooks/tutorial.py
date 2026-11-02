@@ -38,7 +38,6 @@
 # with a reward.
 
 # %%
-# noqa: E402
 # We first import the BaseEnv
 from rewardgym.environments import BaseEnv
 from rewardgym.reward_classes import BaseReward

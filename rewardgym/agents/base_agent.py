@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 import warnings
-from typing import List, Tuple, Union
 
 import numpy as np
 
@@ -21,7 +22,7 @@ class ValenceQAgent:
         discount_factor: float = 0.99,
         action_space: int = 2,
         state_space: int = 2,
-        seed: Union[int, np.random.Generator] = 1000,
+        seed: int | np.random.Generator = 1000,
     ):
         """
         Initializes the ValenceQAgent with parameters for learning, exploration, and environment size.
@@ -58,7 +59,9 @@ class ValenceQAgent:
 
         self.training_error = []
 
-    def get_action(self, obs: Tuple[int, int, bool], avail_actions: List = None) -> int:
+    def get_action(
+        self, obs: tuple[int, int, bool], avail_actions: list | None = None
+    ) -> int:
         """
         Selects an action based on the current state observation using a softmax policy.
 
@@ -81,7 +84,7 @@ class ValenceQAgent:
 
         return a
 
-    def get_probs(self, obs: Tuple[int, int, bool], avail_actions: List = None):
+    def get_probs(self, obs: tuple[int, int, bool], avail_actions: list | None = None):
         """
         Computes the softmax probability distribution over actions based on Q-values.
 
@@ -118,11 +121,11 @@ class ValenceQAgent:
 
     def update(
         self,
-        obs: Tuple[int, int, bool],
+        obs: tuple[int, int, bool],
         action: int,
         reward: float,
         terminated: bool,
-        next_obs: Tuple[int, int, bool],
+        next_obs: tuple[int, int, bool],
         **kwargs,
     ):
         """
@@ -178,7 +181,7 @@ class QAgent(ValenceQAgent):
         discount_factor: float = 0.99,
         action_space: int = 2,
         state_space: int = 2,
-        seed: Union[int, np.random.Generator] = 1000,
+        seed: int | np.random.Generator = 1000,
     ):
         """
         Initializes a QAgents with parameters for learning, exploration, and environment size.
@@ -213,10 +216,10 @@ class QAgent(ValenceQAgent):
 class RandomAgent(QAgent):
     def __init__(
         self,
-        bias: float = None,
+        bias: float | None = None,
         action_space: int = 2,
         state_space: int = 2,
-        seed: Union[int, np.random.Generator] = 1000,
+        seed: int | np.random.Generator = 1000,
     ) -> None:
         self.bias = bias
 
@@ -258,7 +261,7 @@ class ValenceQAgent_eligibility(ValenceQAgent):
         reset_traces: bool = True,
         action_space: int = 2,
         state_space: int = 2,
-        seed: Union[int, np.random.Generator] = 1000,
+        seed: int | np.random.Generator = 1000,
     ):
         """
         Initializes the ValenceQAgent with eligibility traces, and
@@ -302,11 +305,11 @@ class ValenceQAgent_eligibility(ValenceQAgent):
 
     def update(
         self,
-        obs: Tuple[int, int, bool],
+        obs: tuple[int, int, bool],
         action: int,
         reward: float,
         terminated: bool,
-        next_obs: Tuple[int, int, bool],
+        next_obs: tuple[int, int, bool],
         **kwargs,
     ):
         """Updates the Q-value of an action."""
@@ -352,7 +355,7 @@ class QAgent_eligibility(ValenceQAgent_eligibility):
         reset_traces: bool = True,
         action_space: int = 2,
         state_space: int = 2,
-        seed: Union[int, np.random.Generator] = 1000,
+        seed: int | np.random.Generator = 1000,
     ):
         """
         Initializes the QAgent with eligibility traces, and

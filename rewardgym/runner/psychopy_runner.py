@@ -1,9 +1,10 @@
+from __future__ import annotations
+
 try:
     from psychopy.visual import TextStim
 except ModuleNotFoundError:
     from ..psychopy_render.psychopy_stubs import TextStim, Window
 
-from typing import Dict
 
 import numpy as np
 
@@ -46,7 +47,7 @@ def pspy_run_task(
     random_state=111,
     agent=None,
     n_episodes=None,
-    plugins: Dict = plugin_registry,
+    plugins: dict = plugin_registry,
 ):
     if settings is None:
         settings = get_configs(env.name)(random_state)

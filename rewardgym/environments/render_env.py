@@ -1,6 +1,7 @@
+from __future__ import annotations
+
 import importlib.util
 from collections import defaultdict
-from typing import Union
 
 import numpy as np
 
@@ -18,10 +19,10 @@ class RenderEnv(BaseEnv):
         self,
         environment_graph: dict,
         reward_locations: dict,
-        render_mode: str = None,
-        info_dict: dict = defaultdict(int),
-        random_state: Union[int, np.random.Generator] = 1000,
-        name: str = None,
+        render_mode: str | None = None,
+        info_dict: dict | None = None,
+        random_state: int | np.random.Generator = 1000,
+        name: str | None = None,
     ):
         """
         Environment to render tasks to the screen using pygame.
@@ -40,6 +41,8 @@ class RenderEnv(BaseEnv):
             The random seed associated with the environment, creates a generator, by default 1000
         """
 
+        if info_dict is None:
+            info_dict = defaultdict(int)
         super().__init__(
             environment_graph=environment_graph,
             reward_locations=reward_locations,
@@ -85,7 +88,7 @@ class RenderEnv(BaseEnv):
         self.human_action = None
         self.human_reward_modifier = 1
 
-        if self.render_mode == "pygame" and "pygame" in info.keys():
+        if self.render_mode == "pygame" and "pygame" in info:
             if not self.setup:
                 raise RuntimeError(
                     "You have to setup the environment first, using env.setup()"
@@ -104,7 +107,7 @@ class RenderEnv(BaseEnv):
                 if disp.display_type == "action":
                     self.human_action = out
 
-        elif "pygame" not in info.keys():
+        elif "pygame" not in info:
             pass
         else:
             raise NotImplementedError("Render should only be called in pygame mode")

@@ -1,10 +1,12 @@
+from __future__ import annotations
+
 import importlib
 import importlib.util
 import os
 import sys
 import types
+import warnings
 from pathlib import Path
-from typing import Dict, Union
 
 
 def load_task_plugin(folder_path: Path, namespace_root: str = "rewardgym_tasks"):
@@ -76,14 +78,18 @@ def _discover_plugins(base_dir):
             registry = plugin_module.register_task()
             task_registry.update(registry)
 
-            print(f"Registered task: {list(registry.keys())[0]}")
+            print(f"Registered task: {next(iter(registry.keys()))}")
         except Exception as e:
-            print(f"[WARN] Could not register task '{task_folder}': {e}")
+            warnings.warn(
+                f"Could not register task '{task_folder}': {e}",
+                UserWarning,
+                stacklevel=2,
+            )
 
     return task_registry
 
 
-def _discover_external_plugins(task_folder: Union[str, Path]) -> Dict:
+def _discover_external_plugins(task_folder: str | Path) -> dict:
     """
     Discover and register tasks from external directories.
     Args:
@@ -96,7 +102,8 @@ def _discover_external_plugins(task_folder: Union[str, Path]) -> Dict:
     plugin_path = task_folder / "plugin.py"
 
     if not plugin_path.exists():
-        print(f"[WARN] No plugin.py found in {task_folder}")
+        warnings.warn(f"No plugin.py found in {task_folder}", UserWarning, stacklevel=2)
+
         return task_registry
 
     try:
@@ -111,7 +118,12 @@ def _discover_external_plugins(task_folder: Union[str, Path]) -> Dict:
             print(f"Registered external task: {task_name}")
 
     except Exception as e:
-        print(f"[WARN] Could not register external task '{task_folder}': {e}")
+        warnings.warn(
+            f"Could not register external task '{task_folder}': {e}",
+            UserWarning,
+            stacklevel=2,
+        )
+
         import traceback
 
         traceback.print_exc()  # Print full traceback for debugging
@@ -184,10 +196,18 @@ class TaskRegistry:
         for key, value in other_dict.items():
             if key in self._data:
                 if overwrite:
-                    print(f"[WARN] Task '{key}' already registered, overwriting.")
+                    warnings.warn(
+                        f"Task '{key}' already registered, overwriting.",
+                        UserWarning,
+                        stacklevel=2,
+                    )
                     self._data[key] = value
                 else:
-                    print(f"[WARN] Task '{key}' already registered, skipping.")
+                    warnings.warn(
+                        f"Task '{key}' already registered, skipping.",
+                        UserWarning,
+                        stacklevel=2,
+                    )
             else:
                 self._data[key] = value
 

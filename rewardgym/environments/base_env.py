@@ -1,13 +1,11 @@
-from typing import Dict, Union
+from __future__ import annotations
 
 try:
     from gymnasium import Env
     from gymnasium.spaces import Discrete
 except ModuleNotFoundError:
-    from .gymnasium_stubs import Env
-    from .gymnasium_stubs import Discrete
+    from .gymnasium_stubs import Discrete, Env
 
-from typing import Tuple
 
 import numpy as np
 
@@ -19,18 +17,16 @@ class BaseEnv(Env):
     The basic environment class for the rewardGym module.
     """
 
-    metadata = {"render_modes": ["pygame", "psychopy", "psychopy-simulate"]}
-
     def __init__(
         self,
-        environment_graph: Dict,
-        reward_locations: Dict,
-        render_mode: str = None,
-        info_dict: Dict = None,
-        random_state: Union[int, np.random.Generator] = 1000,
-        name: str = None,
-        n_actions: int = None,
-        reduced_actions: int = None,
+        environment_graph: dict,
+        reward_locations: dict,
+        render_mode: str | None = None,
+        info_dict: dict | None = None,
+        random_state: int | np.random.Generator = 1000,
+        name: str | None = None,
+        n_actions: int | None = None,
+        reduced_actions: int | None = None,
     ):
         """
         The core environment used for modeling and in part for displays.
@@ -51,6 +47,8 @@ class BaseEnv(Env):
 
         # It should be possible to use wrapper for one-hot, so no box and other handling necessary (might need an
         # implementation though).
+
+        self.metadata = {"render_modes": ["pygame", "psychopy", "psychopy-simulate"]}
 
         if n_actions is None:
             self.n_actions = max(
@@ -81,8 +79,8 @@ class BaseEnv(Env):
         self.graph = environment_graph
         self.full_graph, self.skip_nodes = self._unpack_graph(self.graph)
 
-        for ke in self.graph.keys():
-            if ke not in self.info_dict.keys():
+        for ke in self.graph:
+            if ke not in self.info_dict:
                 self.info_dict[ke] = {}
 
         self.agent_location = None
@@ -125,7 +123,7 @@ class BaseEnv(Env):
 
         if self.condition is None:
             avail_actions = list(self.full_graph[self.agent_location].keys())
-        elif self.agent_location in self.condition.keys():
+        elif self.agent_location in self.condition:
             avail_actions = list(self.condition[self.agent_location].keys())
         else:
             avail_actions = list(self.full_graph[self.agent_location].keys())
@@ -138,8 +136,8 @@ class BaseEnv(Env):
         return node_info_dict
 
     def reset(
-        self, agent_location: int = 0, condition: int = None
-    ) -> Tuple[Union[int, np.array], Dict]:
+        self, agent_location: int = 0, condition: int | None = None
+    ) -> tuple[int | np.array, dict]:
         """
         Resetting the environment, moving everything to start.
         Using conditions and agent_locations to specify task features.
@@ -189,8 +187,8 @@ class BaseEnv(Env):
         return observation, info
 
     def step(
-        self, action: int = None, step_reward: bool = False
-    ) -> Tuple[Union[int, np.array], int, bool, bool, dict]:
+        self, action: int | None = None, step_reward: bool = False
+    ) -> tuple[int | np.array, int, bool, bool, dict]:
         """
         Stepping through the graph - acquire a new observation in the graph.
 
@@ -211,13 +209,13 @@ class BaseEnv(Env):
             and the new observation's info.
         """
 
-        if self.condition is not None and self.agent_location in self.condition.keys():
+        if self.condition is not None and self.agent_location in self.condition:
             current_graph = self.condition[self.agent_location]
 
         else:
             current_graph = self.full_graph[self.agent_location]
 
-        if action not in current_graph.keys():
+        if action not in current_graph:
             next_position = self.agent_location
         elif isinstance(current_graph[action], tuple):
             stochasticiy = current_graph[action][1]
@@ -238,13 +236,13 @@ class BaseEnv(Env):
             terminated = False
 
         if terminated:
-            if self.condition is not None and "reward" in self.condition.keys():
+            if self.condition is not None and "reward" in self.condition:
                 self.reward = self.condition["reward"]
             else:
                 self.reward = self.reward_locations[self.agent_location]()
             # Stepping rewards, e.g. if the whole environment changes (as in two-step task)
             if step_reward:
-                for rw in self.reward_locations.keys():
+                for rw in self.reward_locations:
                     if self.agent_location != rw:
                         self.reward_locations[rw]()
         else:
@@ -260,7 +258,7 @@ class BaseEnv(Env):
 
         return observation, self.reward, terminated, False, info
 
-    def _render_frame(self, info: Dict):
+    def _render_frame(self, info: dict):
         """
         Rendering method, not implemented for BaseEnvironment.
 
@@ -276,7 +274,7 @@ class BaseEnv(Env):
         """
         raise NotImplementedError("Not implemented in basic environments")
 
-    def add_info(self, new_info: Dict) -> None:
+    def add_info(self, new_info: dict) -> None:
         self.info_dict.update(new_info)
 
     @staticmethod

@@ -1,4 +1,4 @@
-from typing import Tuple
+from __future__ import annotations
 
 import numpy as np
 
@@ -44,7 +44,7 @@ class EAMWrapper(RTWrapper):
         self.add_error_process = add_error_process
 
     def get_rt_action(
-        self, obs: Tuple[int, int, bool], avail_actions: list = None
+        self, obs: tuple[int, int, bool], avail_actions: list | None = None
     ) -> int:
         """
         Uses an evidence accumulation process to simulate reaction times and actions for a
@@ -101,8 +101,8 @@ class SimpleWrapper(RTWrapper):
         self.env_name = env_name
 
     def get_rt_action(
-        self, obs: Tuple[int, int, bool], avail_actions: list = None
-    ) -> Tuple[int, float]:
+        self, obs: tuple[int, int, bool], avail_actions: list | None = None
+    ) -> tuple[int, float]:
         """
         Get's the softmax probability and uses it to chose an action, also using the
         probability as a proxy for reaction times.

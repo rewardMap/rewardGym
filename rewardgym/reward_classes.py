@@ -1,4 +1,4 @@
-from typing import List, Union
+from __future__ import annotations
 
 import numpy as np
 
@@ -32,12 +32,16 @@ class BaseReward:
 class DriftingReward(BaseReward):
     def __init__(
         self,
-        reward: Union[list, int] = [1, 0],
-        p: float = None,
-        borders: list = [0.25, 0.75],
+        reward: list | int | None = None,
+        p: float | None = None,
+        borders: list | None = None,
         gauss_sd: float = 0.025,
         random_state: int = 1234,
     ):
+        if borders is None:
+            borders = [0.25, 0.75]
+        if reward is None:
+            reward = [1, 0]
         if not isinstance(reward, (list, tuple, np.ndarray)):
             reward = [reward]
 
@@ -71,7 +75,7 @@ class DriftingReward(BaseReward):
 
 
 class PseudoRandomReward(BaseReward):
-    def __init__(self, reward_list: Union[List], random_state=1234):
+    def __init__(self, reward_list: list, random_state=1234):
         self.reward_list = reward_list
         self.random_state = check_random_state(random_state)
         self._generate_sequence()

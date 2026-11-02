@@ -1,5 +1,7 @@
+from __future__ import annotations
+
 import itertools
-from typing import Dict, List, Union
+from typing import List
 
 import numpy as np
 
@@ -11,7 +13,7 @@ def run_single_episode(
     condition: int,
     update_agent: bool = True,
     step_reward: bool = False,
-) -> Union[List, List, float]:
+) -> list | float:
     """
     Runs a single episode of a task.
 
@@ -63,12 +65,12 @@ def run_single_episode(
 
 
 def add_to_df(
-    episode_step: List,
-    episode: int = None,
-    condition: int = None,
-    starting_position: int = None,
-    df: Dict = None,
-) -> Dict:
+    episode_step: list,
+    episode: int | None = None,
+    condition: int | None = None,
+    starting_position: int | None = None,
+    df: dict | None = None,
+) -> dict:
     """
     Helper function to collect outcomes of run_single_episode in a dictionary,
     which could subsequently be transformed to a pandas DataFrame.
@@ -121,7 +123,7 @@ def add_to_df(
     return df
 
 
-def check_elements_in_list(check_list: List, check_set: List) -> bool:
+def check_elements_in_list(check_list: list, check_set: list) -> bool:
     """
     Checks if all elements in the check_list are included in the check
 
@@ -137,10 +139,12 @@ def check_elements_in_list(check_list: List, check_set: List) -> bool:
     bool
         True if all elements in the check_list are included in the check_set
     """
-    return all([ii in check_set for ii in check_list])
+    return all(ii in check_set for ii in check_list)
 
 
-def unpack_conditions(conditions: tuple = None, episode: int = None) -> Union[int, int]:
+def unpack_conditions(
+    conditions: tuple | None = None, episode: int | None = None
+) -> int:
     """
     Unpacks a condition / starting position set.
 
@@ -163,7 +167,7 @@ def unpack_conditions(conditions: tuple = None, episode: int = None) -> Union[in
 
 
 def get_condition_state(
-    conditions: Union[None, List, tuple] = None, episode: int = None
+    conditions: None | list | tuple = None, episode: int | None = None
 ):
     if conditions is None:
         current_condition = conditions
@@ -179,7 +183,7 @@ def get_condition_state(
 
 
 def get_condition_meaning(
-    info_dict: Dict, starting_position: int, condition: int
+    info_dict: dict, starting_position: int, condition: int
 ) -> str:
     """
     Construct the meaning of a trial based on condition and starting position.
@@ -207,17 +211,17 @@ def get_condition_meaning(
     """
 
     trial_type = ""
-    if "condition" in info_dict.keys():
+    if "condition" in info_dict:
         trial_type += info_dict["condition"][condition]
 
-    if "position" in info_dict.keys():
+    if "position" in info_dict:
         trial_type += info_dict["position"][starting_position]
 
     return trial_type
 
 
 def check_random_state(
-    random_state: Union[np.random.Generator, int] = 1234,
+    random_state: np.random.Generator | int = 1234,
 ) -> np.random.Generator:
     """
     Checks if a provided random_state is a np.random.Generator object or an integer.
@@ -244,7 +248,7 @@ def check_random_state(
         return np.random.default_rng(random_state)
 
 
-def get_starting_nodes(graph: dict) -> List:
+def get_starting_nodes(graph: dict) -> list:
     """
     Returns the starting nodes of a graph.
 
@@ -268,7 +272,7 @@ def get_starting_nodes(graph: dict) -> List:
     return starting_nodes
 
 
-def get_stripped_graph(graph: Dict):
+def get_stripped_graph(graph: dict):
     """
     Processes a graph by stripping and flattening its edges.
 
@@ -311,7 +315,7 @@ def get_stripped_graph(graph: Dict):
         elif isinstance(edg, dict):
             edges = [
                 edg[k][0] if isinstance(edg[k], tuple) else edg[k]
-                for k in edg.keys()
+                for k in edg
                 if not isinstance(k, str)
             ]
 

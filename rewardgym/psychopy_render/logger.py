@@ -1,6 +1,6 @@
 """Logger classes used by the experiment."""
 
-from typing import Dict, List, Tuple, Union
+from __future__ import annotations
 
 try:
     from psychopy import core
@@ -123,7 +123,7 @@ class ExperimentLogger:
         # Create a dictionary of nans to be used later.
         self.nan_dict = {ii: self.na for ii in self.categories}
 
-    def _default_logging(self, reward: float = None) -> Dict:
+    def _default_logging(self, reward: float | None = None) -> dict:
         """
         Populates dictionary with default values.
 
@@ -157,7 +157,9 @@ class ExperimentLogger:
 
         return tmp_dict
 
-    def log_event(self, info_dict: Dict, reward: float = None, onset: float = None):
+    def log_event(
+        self, info_dict: dict, reward: float | None = None, onset: float | None = None
+    ):
         """
         Logs the current event.
 
@@ -190,15 +192,15 @@ class ExperimentLogger:
 
         # TODO check, that onset is not in info_dict!
         if info_dict is not None:
-            for key in info_dict.keys():
-                if info_dict[key] is not None:
-                    tmp_dict[key] = info_dict[key]
+            for key, value in info_dict.items():
+                if value is not None:
+                    tmp_dict[key] = value
 
         tmp_values = self._create_log_list(tmp_dict)
 
         self._write_to_file(tmp_values)
 
-    def _create_log_list(self, tmp_dict: Dict) -> List[str]:
+    def _create_log_list(self, tmp_dict: dict) -> list[str]:
         """
         Creates a list of strs from dictionary. Only keeps entries that are
         prespecified.
@@ -217,7 +219,7 @@ class ExperimentLogger:
         logList = [str(tmp_dict[kk]) for kk in self.categories]
         return logList
 
-    def _write_to_file(self, tmp_values: List[float]):
+    def _write_to_file(self, tmp_values: list[float]):
         """
         Converts all values in value_list to string and writes them
         to the log file.
@@ -272,8 +274,8 @@ class ExperimentLogger:
         return self.global_clock.getTime()
 
     def key_strokes(
-        self, win: Window, keyList: List[str] = []
-    ) -> Union[Tuple[str, float], None]:
+        self, win: Window, keyList: list[str] | None = None
+    ) -> tuple[str, float] | None:
         """
         Check for key strokes in the keyboard buffer. Checking for MR-triggers,
         close commands (kill_switch), or other allowed responses.
@@ -291,6 +293,8 @@ class ExperimentLogger:
             _description_
         """
 
+        if keyList is None:
+            keyList = []
         presses = getKeys(timeStamped=self.global_clock)
         response = None
 
@@ -349,7 +353,9 @@ class ExperimentLogger:
             else:
                 raise AttributeError(f"Cannot / doest not have attribute: {k}")
 
-    def wait(self, win, time: float, start: float = None, wait_no_keys: bool = False):
+    def wait(
+        self, win, time: float, start: float | None = None, wait_no_keys: bool = False
+    ):
         """
         Wait for a given time.
 
@@ -435,13 +441,10 @@ class MinimalLogger(ExperimentLogger):
         Log event stub.
         """
 
-        pass
-
-    def _write_to_file(self, tmp_values: List[float]):
+    def _write_to_file(self, tmp_values: list[float]):
         """
         Write stub
         """
-        pass
 
     def create(self, *args, **kwargs):
         """
@@ -454,11 +457,10 @@ class MinimalLogger(ExperimentLogger):
         """
         Close stub.
         """
-        pass
 
 
 class SimulationLogger(ExperimentLogger):
-    def _write_to_file(self, tmp_values: List[float]):
+    def _write_to_file(self, tmp_values: list[float]):
         for n, ii in enumerate(self.categories):
             self.df[ii].append(tmp_values[n])
 
@@ -469,13 +471,13 @@ class SimulationLogger(ExperimentLogger):
         self,
         key,
         rt,
-    ) -> Union[Tuple[str, float], None]:
+    ) -> tuple[str, float] | None:
         return (key, rt)
 
     def close(self):
         return self.df
 
-    def wait(self, win, time: float, start: float = None):
+    def wait(self, win, time: float, start: float | None = None):
         """
         Wait for a given time.
 

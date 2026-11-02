@@ -51,7 +51,6 @@ doc = [
 ]
 style = [
     "ruff",
-    "isort",
     "pydocstyle",
     "codespell"
 ]
@@ -81,21 +80,12 @@ addopts = [
     "--import-mode=importlib",
     "-rx"
 ]
+collect_ignore = ["rewardgym/_version.py"]
 
-[tool.isort]
-profile = "black"
-skip_gitignore = true
-extend_skip = [
-    ".autorc",
-    ".coverage*",
-    ".readthedocs.yml",
-    ".zenodo.json",
-    "codecov.yml",
-    "setup.py",
-    "versioneer.py",
+[tool.coverage.run]
+omit = [
     "rewardgym/_version.py"
 ]
-skip_glob = ["docs/*"]
 
 [tool.pydocstyle]
 convention = "numpy"
@@ -112,9 +102,25 @@ quiet-level = 3
 [tool.ruff.lint.per-file-ignores]
 "rewardgym/tests/*" = ["E712"]
 "notebooks/*" = ["E402"]
+"rewardgym/__init__.py" = ["E402"]
+"rewardgym/psychopy_render/logger.py" = ["SIM115"]
+"rewardgym/tasks/task_loader.py" = ["BLE001"]
 
 [tool.ruff]
-exclude = ["rewardgym/tasks/*/*"]
+exclude = [
+    ".autorc",
+    ".coverage*",
+    ".readthedocs.yml",
+    ".zenodo.json",
+    "codecov.yml",
+    "setup.py",
+    "versioneer.py",
+    "rewardgym/_version.py",
+    "rewardgym/tasks/*/*",
+    "docs/"
+]
+extend-exclude = ["rewardgym/_version.py"]
+target-version = "py38"
 
 [tool.versioneer]
 VCS = "git"

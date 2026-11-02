@@ -12,11 +12,6 @@ repos:
     -   id: check-added-large-files
     -   id: check-case-conflict
     -   id: check-merge-conflict
--   repo: https://github.com/pycqa/isort
-    rev: 5.13.2
-    args: [--treat-comment-as-code, "# %%", --float-to-top]
-    hooks:
-    -   id: isort
 -   repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.6.0
     hooks:
