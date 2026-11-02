@@ -12,7 +12,7 @@ import warnings
 
 from ..stimuli import lose_cross, win_cross, zero_cross
 from .logger import ExperimentLogger, SimulationLogger
-
+from ..timing import wait, simulation_wait
 
 class BaseStimulus:
     """
@@ -78,7 +78,7 @@ class BaseStimulus:
             if not self.noflip:
                 win.flip()
 
-            logger.wait(win, self.duration, stim_onset, self.wait_no_keys)
+            wait(logger, win, self.duration, stim_onset, self.wait_no_keys)
 
         else:
             stim_onset = None
@@ -99,7 +99,7 @@ class BaseStimulus:
         if self.duration is not None:
             stim_onset = logger.get_time()
 
-            logger.wait(win=None, time=self.duration, start=stim_onset)
+            simulation_wait(logger.global_clock, time=self.duration, start=stim_onset)
         else:
             stim_onset = None
 
@@ -198,7 +198,7 @@ class TextStimulus(BaseStimulus):
         self.textStim.draw()
         win.flip()
 
-        logger.wait(win, self.duration, stim_onset)
+        wait(logger, win, self.duration, stim_onset)
 
         self._log_event(logger=logger, stim_onset=stim_onset)
 
@@ -311,7 +311,7 @@ class ImageStimulus(BaseStimulus):
         for ii in self.imageStims:
             ii.autoDraw = self.autodraw
 
-        logger.wait(win, self.duration, stim_onset, self.wait_no_keys)
+        wait(logger, win, self.duration, stim_onset, self.wait_no_keys)
 
         self._log_event(logger=logger, stim_onset=stim_onset)
 
@@ -761,7 +761,7 @@ class FeedBackStimulus(BaseStimulus):
 
         stim_onset = logger.get_time()
         win.flip()
-        logger.wait(win, self.duration, stim_onset)
+        wait(logger, win, self.duration, stim_onset)
 
         if feedback_img in self.feedback_image:
             self.feedback_image[feedback_img].setAutoDraw(False)
@@ -814,7 +814,7 @@ class FeedBackStimulus(BaseStimulus):
         """
         stim_onset = logger.get_time()
 
-        logger.wait(win=None, time=self.duration, start=stim_onset)
+        simulation_wait(logger.global_clock, win=None, time=self.duration, start=stim_onset)
 
         self._log_event(
             logger=logger,

@@ -353,33 +353,6 @@ class ExperimentLogger:
             else:
                 raise AttributeError(f"Cannot / doest not have attribute: {k}")
 
-    def wait(
-        self, win, time: float, start: float | None = None, wait_no_keys: bool = False
-    ):
-        """
-        Wait for a given time.
-
-
-        Parameters
-        ----------
-        time : float
-            Time to wait, in seconds.
-        start : float, optional
-            Specify a different time, than the current one of the Logger, by default None
-        """
-        if time is None:
-            return
-
-        if start is None:
-            start = self.get_time()
-
-        t_wait = start + time  # - self.frameDuration
-
-        # Trying to avoid unnecessary checks
-        while t_wait > self.get_time():
-            if not wait_no_keys:
-                self.key_strokes(win)
-
 
 class MinimalLogger(ExperimentLogger):
     """
@@ -470,29 +443,9 @@ class SimulationLogger(ExperimentLogger):
     def key_strokes(
         self,
         key,
-        rt,
+        rt = None,
     ) -> tuple[str, float] | None:
         return (key, rt)
 
     def close(self):
         return self.df
-
-    def wait(self, win, time: float, start: float | None = None):
-        """
-        Wait for a given time.
-
-
-        Parameters
-        ----------
-        time : float
-            Time to wait, in seconds.
-        start : float, optional
-            Specify a different time, than the current one of the Logger, by default None
-        """
-        if time is None:
-            return
-
-        if start is None:
-            start = self.get_time()
-
-        self.global_clock.time += time
