@@ -117,7 +117,7 @@ exclude = [
     "rewardgym/tasks/*/*",
     "docs/"
 ]
-target-version = "py310"
+target-version = "py38"
 
 [tool.versioneer]
 VCS = "git"
