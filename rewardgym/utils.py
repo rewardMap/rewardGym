@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import itertools
-from typing import List
 
 import numpy as np
 
@@ -171,7 +170,7 @@ def get_condition_state(
 ):
     if conditions is None:
         current_condition = conditions
-    elif isinstance(conditions, List):
+    elif isinstance(conditions, list):
         current_condition = conditions[episode]
     elif isinstance(conditions, tuple):
         if len(conditions) == 2:
