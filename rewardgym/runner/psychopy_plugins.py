@@ -1,6 +1,6 @@
 import numpy as np
 
-from ..psychopy_render.logger import SimulationLogger
+from ..logging import SimulationLogger
 from ..timing import simulation_wait, wait
 from .psychopy_utils import update_psychopy_trials
 
@@ -11,9 +11,7 @@ def draw_response_reminder(win, text_update, logger, reminder_duration=1.0):
     reminder_onset = logger.get_time()
 
     if isinstance(logger, SimulationLogger):
-        simulation_wait(
-            logger.global_clock, time=reminder_duration, start=reminder_onset
-        )
+        simulation_wait(logger.clock, time=reminder_duration, start=reminder_onset)
     else:
         wait(logger, win=win, time=reminder_duration, start=reminder_onset)
 
@@ -39,9 +37,7 @@ def break_point(win, text_update, logger, settings, episode, countdown_cutoff=30
         break_onset = logger.get_time()
 
         if isinstance(logger, SimulationLogger):
-            simulation_wait(
-                logger.global_clock, settings["break_duration"], break_onset
-            )
+            simulation_wait(logger.clock, settings["break_duration"], break_onset)
         else:
             wait(logger, win, settings["break_duration"], break_onset)
 
@@ -145,7 +141,7 @@ class AddRemainder(PsyPyPlugin):
             rm_onset = logger.get_time()
 
             if isinstance(logger, SimulationLogger):
-                simulation_wait(logger.global_clock, env.remainder, rm_onset)
+                simulation_wait(logger.clock, env.remainder, rm_onset)
             else:
                 wait(logger, win, env.remainder, rm_onset)
 

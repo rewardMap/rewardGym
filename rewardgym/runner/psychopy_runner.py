@@ -168,8 +168,11 @@ def pspy_run_task(
         )
 
         logger.log_event(
-            {"event_type": "trial-end", "total_reward": env.cumulative_reward},
-            reward=env.reward,
+            {
+                "event_type": "trial-end",
+                "total_reward": env.cumulative_reward,
+                "reward": env.reward,
+            },
         )
 
         break_point(

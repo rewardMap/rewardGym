@@ -13,7 +13,7 @@ import numpy as np
 from ..stimuli import generate_stimulus_properties, make_card_stimulus
 from ..timing import simulation_wait, wait
 from ..utils import check_random_state
-from .logger import ExperimentLogger, SimulationLogger
+from ..logging import ExperimentLogger, SimulationLogger
 
 
 class ActionStimulusTooEarly(ActionStimulus):
@@ -353,9 +353,7 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
     ):
         stim_onset = logger.get_time()
 
-        simulation_wait(
-            logger.global_clock, time=self.duration_phase1, start=stim_onset
-        )
+        simulation_wait(logger.clock, time=self.duration_phase1, start=stim_onset)
 
         logger.log_event(
             {
@@ -373,9 +371,7 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
 
         stim_onset = logger.get_time()
 
-        simulation_wait(
-            logger.global_clock, time=self.duration_phase2, start=stim_onset
-        )
+        simulation_wait(logger.clock, time=self.duration_phase2, start=stim_onset)
 
         logger.log_event(
             {
@@ -614,9 +610,7 @@ class StimuliWithResponse(ActionStimulus):
     ):
         stim_onset = logger.get_time()
 
-        simulation_wait(
-            logger.global_clock, time=self.target_duration, start=stim_onset
-        )
+        simulation_wait(logger.clock, time=self.target_duration, start=stim_onset)
 
         self._log_event(
             logger=logger,
@@ -789,9 +783,7 @@ class LingeringAction(ActionStimulus):
     ):
         stim_onset = logger.get_time()
 
-        simulation_wait(
-            logger.global_clock, time=self.duration_phase1, start=stim_onset
-        )
+        simulation_wait(logger.clock, time=self.duration_phase1, start=stim_onset)
 
         logger.log_event(
             {
@@ -809,9 +801,7 @@ class LingeringAction(ActionStimulus):
 
         stim_onset = logger.get_time()
 
-        simulation_wait(
-            logger.global_clock, time=self.duration_phase2, start=stim_onset
-        )
+        simulation_wait(logger.clock, time=self.duration_phase2, start=stim_onset)
 
         logger.log_event(
             {

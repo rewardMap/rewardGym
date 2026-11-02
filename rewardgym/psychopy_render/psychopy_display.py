@@ -12,7 +12,7 @@ import warnings
 
 from ..stimuli import lose_cross, win_cross, zero_cross
 from ..timing import simulation_wait, wait
-from .logger import ExperimentLogger, SimulationLogger
+from ..logging import ExperimentLogger, SimulationLogger
 
 
 class BaseStimulus:
@@ -100,7 +100,7 @@ class BaseStimulus:
         if self.duration is not None:
             stim_onset = logger.get_time()
 
-            simulation_wait(logger.global_clock, time=self.duration, start=stim_onset)
+            simulation_wait(logger.clock, time=self.duration, start=stim_onset)
         else:
             stim_onset = None
 
@@ -815,9 +815,7 @@ class FeedBackStimulus(BaseStimulus):
         """
         stim_onset = logger.get_time()
 
-        simulation_wait(
-            logger.global_clock, win=None, time=self.duration, start=stim_onset
-        )
+        simulation_wait(logger.clock, win=None, time=self.duration, start=stim_onset)
 
         self._log_event(
             logger=logger,
