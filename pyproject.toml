@@ -18,11 +18,8 @@ classifiers = [
     "Development Status :: 3 - Alpha",
     "Intendend Audience :: Research/Science",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
 ]
-requires-python = ">= 3.8"
+requires-python = ">= 3.10"
 
 dependencies = [
     "gymnasium>=0.29.1",
@@ -120,7 +117,7 @@ exclude = [
     "docs/"
 ]
 extend-exclude = ["rewardgym/_version.py"]
-target-version = "py38"
+target-version = "py310"
 
 [tool.versioneer]
 VCS = "git"
