@@ -111,15 +111,17 @@ class BaseStimulus:
     ):
         if extra_info is None:
             extra_info = {}
+
         base_dict = {
             "event_type": self.name,
             "expected_duration": self.duration,
             "rl_label": self.rl_label,
+            **extra_info,
         }
 
         base_dict.update(extra_info)
 
-        logger.log_event(base_dict, onset=stim_onset, **kwargs)
+        logger.log_event(base_dict, onset=stim_onset)
 
     def _setup(self, win: Window, **kwargs):
         pass
@@ -502,7 +504,7 @@ class ActionStimulus(BaseStimulus):
                 "Simulating environment: Consider setting expose_last_stim=True during env setup."
             )
 
-        logger.global_clock.time += min([rt, self.duration])
+        logger.clock.time += min([rt, self.duration])
 
         if rt > self.duration:
             if response_key is None:
@@ -777,8 +779,7 @@ class FeedBackStimulus(BaseStimulus):
         self._log_event(
             logger=logger,
             stim_onset=stim_onset,
-            extra_info={"total_reward": total_reward},
-            reward=reward,
+            extra_info={"total_reward": total_reward, "reward": reward},
         )
 
     def _draw_total_reward(self, total_reward, win):
@@ -815,11 +816,10 @@ class FeedBackStimulus(BaseStimulus):
         """
         stim_onset = logger.get_time()
 
-        simulation_wait(logger.clock, win=None, time=self.duration, start=stim_onset)
+        simulation_wait(logger.clock, time=self.duration, start=stim_onset)
 
         self._log_event(
             logger=logger,
             stim_onset=stim_onset,
-            extra_info={"total_reward": total_reward},
-            reward=reward,
+            extra_info={"total_reward": total_reward, "reward": reward},
         )
