@@ -6,7 +6,7 @@ def wait(
     logger,
     time: float | None,
     start: float | None = None,
-    poll_keys: bool = False,
+    poll_keys: bool = True,
     input_handler: InputProtocol | None = None,
 ):
     """
