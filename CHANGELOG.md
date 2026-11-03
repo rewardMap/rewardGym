@@ -1,3 +1,15 @@
+# 0.9.0 (Tue Nov 03 2026)
+
+#### Breaking Change during development
+
+- Updating key logging [#53](https://github.com/rewardMap/rewardGym/pull/53) ([@SRSteinkamp](https://github.com/SRSteinkamp))
+
+#### Authors: 1
+
+- SRSteinkamp ([@SRSteinkamp](https://github.com/SRSteinkamp))
+
+---
+
 # 0.8.0 (Tue Nov 03 2026)
 
 #### Breaking Change during development
