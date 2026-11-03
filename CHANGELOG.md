@@ -1,3 +1,15 @@
+# 0.8.0 (Tue Nov 03 2026)
+
+#### Breaking Change during development
+
+- Migrating to psylog [#52](https://github.com/rewardMap/rewardGym/pull/52) ([@SRSteinkamp](https://github.com/SRSteinkamp))
+
+#### Authors: 1
+
+- SRSteinkamp ([@SRSteinkamp](https://github.com/SRSteinkamp))
+
+---
+
 # 0.7.0 (Mon Nov 02 2026)
 
 #### Breaking Change during development
