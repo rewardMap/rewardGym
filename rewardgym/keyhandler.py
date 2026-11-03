@@ -1,39 +1,9 @@
-from typing import Protocol, runtime_checkable
-
 try:
     from psychopy import core
 except ImportError:
     core = None
 
-
-@runtime_checkable
-class KeysProtocol(Protocol):
-    name: str
-    rt: float
-    tDown: float
-    duration: float
-
-
-@runtime_checkable
-class KeyboardProtocol(Protocol):
-    def getKeys(
-        self, keyList=None, waitRelease=True, clear=True
-    ) -> list[KeysProtocol]: ...
-
-
-@runtime_checkable
-class InputProtocol(Protocol):
-    """
-    Protocol for Keyboard handling
-    """
-
-    def get_keys(self) -> list[tuple[str, float]]: ...
-
-    def simulate_keys(self, key, rt) -> list[tuple[str, float]]: ...
-
-    def interpret_keys(
-        self, key_presses: list[tuple[str, float]], keylist: list[str], logger, **kwargs
-    ) -> tuple[str, float] | None: ...
+from .protocols import InputProtocol, KeyboardProtocol
 
 
 class BaseInputHandler(InputProtocol):
@@ -53,7 +23,7 @@ class BaseInputHandler(InputProtocol):
         return [(key, rt)]
 
     def interpret_keys(
-        self, key_presses, keylist: list[str], logger, **kwargs
+        self, key_presses, logger, keylist: None | list[str] = None, **kwargs
     ) -> tuple[str, float] | None:
         response = None
 
@@ -62,7 +32,7 @@ class BaseInputHandler(InputProtocol):
                 if resp[0] == self.kill_switch:
                     # Closes the window, closes the file and quits psychopy.
                     logger.close()
-                    self._close(**kwargs)
+                    self._close()
 
                 elif resp[0] == self.mr_trigger:
                     self.tr_pulses += 1
@@ -80,7 +50,7 @@ class BaseInputHandler(InputProtocol):
                         },
                     )
 
-                elif resp[0] in keylist:
+                elif (keylist is not None) and (resp[0] in keylist):
                     # Potentially dangerous - if press is in list, return!
                     response = (resp[0], resp[1])
 
@@ -97,7 +67,12 @@ class BaseInputHandler(InputProtocol):
         else:
             return response
 
-    def _close(self, **kwargs):
+    def key_strokes(self, logger, key_list: list[str] | None = None):
+        responses = self.get_keys()
+        response = self.interpret_keys(responses, logger=logger, key_list=key_list)
+        return response
+
+    def _close(self):
         pass
 
 
@@ -105,10 +80,11 @@ class PsychoPyInput(BaseInputHandler):
     def __init__(
         self,
         clock,
-        keyboard: KeysProtocol | None = None,
+        keyboard: KeyboardProtocol | None = None,
         kill_switch: str = "q",
         mr_trigger: str = "5",
         repetition_time: float = 2,
+        win=None,
     ) -> None:
         if keyboard is None:
             from psychopy.hardware.keyboard import Keyboard
@@ -122,13 +98,14 @@ class PsychoPyInput(BaseInputHandler):
         )
 
         self.interface = keyboard
+        self.win = win
 
     def get_keys(self) -> list[tuple[str, float]]:
         keys = [(i.name, i.rt) for i in self.interface.getKeys()]
         return keys
 
-    def _close(self, win=None, **kwargs):
-        if win is not None:
-            win.close()
+    def _close(self):
+        if self.win is not None:
+            self.win.close()
         if core is not None:
             core.quit()
