@@ -10,7 +10,7 @@ except ModuleNotFoundError:
 
 import warnings
 
-from ..logging import ExperimentLogger, SimulationLogger
+from ..protocols import InputProtocol, LoggerProtocol
 from ..stimuli import lose_cross, win_cross, zero_cross
 from ..timing import simulation_wait, wait
 
@@ -25,9 +25,10 @@ class BaseStimulus:
         self,
         duration: float | None = None,
         name: str | None = None,
-        wait_no_keys=False,
+        poll_keys=True,
         rl_label=None,
         noflip=False,
+        wait_no_keys=None,
     ):
         """
         Stimulus presentation base class. The parameters do not really do anything.
@@ -42,10 +43,16 @@ class BaseStimulus:
         self.duration = duration
         self.name = name
         self.entity = "base"
-        self.wait_no_keys = wait_no_keys
+        self.poll_keys = poll_keys
         self.is_setup = False
         self.rl_label = rl_label
         self.noflip = noflip
+
+        if wait_no_keys is not None:
+            warnings.warn(
+                "wait_no_keys will be removed in favor of poll_keys", DeprecationWarning
+            )
+            self.poll_keys = not wait_no_keys
 
     def setup(self, win: Window, **kwargs):
         """
@@ -61,7 +68,13 @@ class BaseStimulus:
         self._setup(win, **kwargs)
         self.is_setup = True
 
-    def display(self, win: Window, logger: ExperimentLogger, **kwargs) -> None:
+    def display(
+        self,
+        win: Window,
+        logger: LoggerProtocol,
+        input_handler: InputProtocol,
+        **kwargs,
+    ) -> None:
         """
         Calls the stimulus object. In this case initiate a window flip.
         Should only return something, if there has been an action required.
@@ -79,14 +92,20 @@ class BaseStimulus:
             if not self.noflip:
                 win.flip()
 
-            wait(logger, win, self.duration, stim_onset, self.wait_no_keys)
+            wait(
+                logger=logger,
+                input_handler=input_handler,
+                time=self.duration,
+                start=stim_onset,
+                poll_keys=self.poll_keys,
+            )
 
         else:
             stim_onset = None
 
         self._log_event(logger=logger, stim_onset=stim_onset)
 
-    def simulate(self, logger: ExperimentLogger, **kwargs) -> None:
+    def simulate(self, logger: LoggerProtocol, **kwargs) -> None:
         """
         Function to pretend that a stimulus has been shown. Logging and creating
         timing.
@@ -107,7 +126,7 @@ class BaseStimulus:
         self._log_event(logger=logger, stim_onset=stim_onset)
 
     def _log_event(
-        self, logger: ExperimentLogger, stim_onset=None, extra_info=None, **kwargs
+        self, logger: LoggerProtocol, stim_onset=None, extra_info=None, **kwargs
     ):
         if extra_info is None:
             extra_info = {}
@@ -116,7 +135,6 @@ class BaseStimulus:
             "event_type": self.name,
             "expected_duration": self.duration,
             "rl_label": self.rl_label,
-            **extra_info,
         }
 
         base_dict.update(extra_info)
@@ -179,7 +197,13 @@ class TextStimulus(BaseStimulus):
             win=win, name=self.name, text=self.text, color=self.text_color
         )
 
-    def display(self, win: Window, logger: ExperimentLogger, **kwargs) -> None:
+    def display(
+        self,
+        win: Window,
+        logger: LoggerProtocol,
+        input_handler: InputProtocol,
+        **kwargs,
+    ) -> None:
         """
         Calls the stimulus object. In this case drawing the text stim, flipping the window,
         waiting and logging.
@@ -188,7 +212,7 @@ class TextStimulus(BaseStimulus):
         ----------
         win : Window
             The psychopy window object that is used for displaying stimuli.
-        logger : ExperimentLogger
+        logger : LoggerProtocol
             The logger associated with the experiment.
 
         Returns
@@ -201,7 +225,13 @@ class TextStimulus(BaseStimulus):
         self.textStim.draw()
         win.flip()
 
-        wait(logger, win, self.duration, stim_onset)
+        wait(
+            logger=logger,
+            input_handler=input_handler,
+            time=self.duration,
+            start=stim_onset,
+            poll_keys=self.poll_keys,
+        )
 
         self._log_event(logger=logger, stim_onset=stim_onset)
 
@@ -220,8 +250,9 @@ class ImageStimulus(BaseStimulus):
         width: float | None = None,
         height: float | None = None,
         autodraw: bool = False,
-        wait_no_keys: bool = False,
+        poll_keys: bool = False,
         rl_label: str | None = None,
+        wait_no_keys: bool | None = None,
     ):
         """
         Stimulus class for image displays.
@@ -236,12 +267,16 @@ class ImageStimulus(BaseStimulus):
             A list of positions (where the images should be displayed), by default None
         name : str, optional
             name of the object, will be used for logging, by default None
-        wait_no_keys : str, optional
+        poll_keys : str, optional
             If the logger's wait function should get key presses - only set to True if presses that are too early should be used, by default False
         """
 
         super().__init__(
-            name=name, duration=duration, wait_no_keys=wait_no_keys, rl_label=rl_label
+            name=name,
+            duration=duration,
+            poll_keys=poll_keys,
+            rl_label=rl_label,
+            wait_no_keys=wait_no_keys,
         )
 
         self.image_paths = image_paths
@@ -286,7 +321,13 @@ class ImageStimulus(BaseStimulus):
         for ip in self.imageStims:
             ip.autoDraw = self.autodraw
 
-    def display(self, win: Window, logger: ExperimentLogger, **kwargs):
+    def display(
+        self,
+        win: Window,
+        logger: LoggerProtocol,
+        input_handler: InputProtocol,
+        **kwargs,
+    ):
         """
         Calls the stimulus object. In this case drawing the images stims, flipping the window,
         waiting and logging.
@@ -295,7 +336,7 @@ class ImageStimulus(BaseStimulus):
         ----------
         win : Window
             The psychopy window object that is used for displaying stimuli.
-        logger : ExperimentLogger
+        logger : LoggerProtocol
             The logger associated with the experiment.
 
         Returns
@@ -314,7 +355,13 @@ class ImageStimulus(BaseStimulus):
         for ii in self.imageStims:
             ii.autoDraw = self.autodraw
 
-        wait(logger, win, self.duration, stim_onset, self.wait_no_keys)
+        wait(
+            logger=logger,
+            input_handler=input_handler,
+            time=self.duration,
+            start=stim_onset,
+            poll_keys=self.poll_keys,
+        )
 
         self._log_event(logger=logger, stim_onset=stim_onset)
 
@@ -370,8 +417,13 @@ class ActionStimulus(BaseStimulus):
         """
 
     def display(
-        self, win: Window, logger: ExperimentLogger, info: dict, **kwargs
-    ) -> int | str:
+        self,
+        win: Window,
+        logger: LoggerProtocol,
+        input_handler: InputProtocol,
+        info: dict,
+        **kwargs,
+    ) -> tuple[int | None, float | None] | None:
         """
         Calls the stimulus object. In this case waiting for a specific response,
         returning it and logging the process. Flipping the window in the end.
@@ -381,7 +433,7 @@ class ActionStimulus(BaseStimulus):
         ----------
         win : Window
             The psychopy window object that is used for displaying stimuli.
-        logger : ExperimentLogger
+        logger : LoggerProtocol
             The logger associated with the experiment.
 
         Returns
@@ -389,12 +441,15 @@ class ActionStimulus(BaseStimulus):
         Union[int, str]
             The response issued by the participant, interpretable by the environment.
         """
-        logger.key_strokes(win)
+        input_handler.key_strokes(logger=logger)
 
         response_window_onset = logger.get_time()
 
         response = self._response_handling(
-            win, logger, response_window_onset, info=info
+            input_handler=input_handler,
+            logger=logger,
+            response_window_onset=response_window_onset,
+            info=info,
         )
 
         if not self.noflip:
@@ -403,18 +458,28 @@ class ActionStimulus(BaseStimulus):
         return response
 
     def _response_handling(
-        self, win, logger, response_window_onset, key_dict=None, info=None
-    ):
+        self,
+        input_handler: InputProtocol,
+        logger: LoggerProtocol,
+        response_window_onset: float,
+        key_dict=None,
+        info=None,
+    ) -> tuple[int | None, float | None] | None:
         response_window = response_window_onset + self.duration
         response_present = False
         remaining = None
+        response_key = None
 
         if key_dict is None:
             key_dict = self.key_dict
 
+        key_list = list(key_dict.keys())
         # Main loop, keeping time and waiting for response.
         while response_window > logger.get_time() and response_present is False:
-            response = logger.key_strokes(win, keyList=self.key_list)
+            responses = input_handler.get_keys()
+            response = input_handler.interpret_keys(
+                responses, logger=logger, key_list=key_list
+            )
 
             if response:
                 RT = response[1] - response_window_onset
@@ -422,6 +487,8 @@ class ActionStimulus(BaseStimulus):
 
                 if info is not None and "behav_remap" in info:
                     action = info["behav_remap"][key_dict[response[0]]]
+                else:
+                    action = None
 
                 response_key = key_dict[response[0]]
 
@@ -466,8 +533,7 @@ class ActionStimulus(BaseStimulus):
 
     def simulate(
         self,
-        win: Window,
-        logger=SimulationLogger,
+        logger: LoggerProtocol,
         key: str | None = None,
         rt: float | None = None,
         info: dict | None = None,
@@ -484,9 +550,14 @@ class ActionStimulus(BaseStimulus):
 
         return response
 
-    def _simulate_response(self, logger, key, rt, response_window_onset, info):
-        response_key, rt = logger.key_strokes(key, rt)
-
+    def _simulate_response(
+        self,
+        logger: LoggerProtocol,
+        response_key,
+        rt: float,
+        response_window_onset,
+        info,
+    ):
         if info is not None and "behav_remap" in info:
             response_button = [
                 n for n, b in enumerate(info["behav_remap"]) if b == response_key
@@ -500,8 +571,8 @@ class ActionStimulus(BaseStimulus):
             response_button = response_key
 
         if rt is None:
-            warnings.warn(
-                "Simulating environment: Consider setting expose_last_stim=True during env setup."
+            raise ValueError(
+                "Simulations should run with `expose_last_stim=True`. rt cannot be 'None'!"
             )
 
         logger.clock.time += min([rt, self.duration])
@@ -561,7 +632,7 @@ class FeedBackStimulus(BaseStimulus):
         target: Literal["reward", "total_reward"] = "reward",
         text_color: str = "white",
         font_height: float = 50,
-        feedback_stim: dict = True,
+        feedback_stim: dict | bool = True,
         simple: bool = False,
         bar_total: float | None = None,
         bar_labels: dict | None = None,
@@ -590,6 +661,9 @@ class FeedBackStimulus(BaseStimulus):
             if None does not show an image as feedback. For other images populate the
             keys: win, lose, zero with a string to an image or a numpy array.
         """
+
+        if name is None:
+            name = ""
 
         if bar_labels is None:
             bar_labels = {"left": "0 kr", "right": "75 kr"}
@@ -651,7 +725,7 @@ class FeedBackStimulus(BaseStimulus):
         else:
             self.point_bar = Rect(
                 win=win,
-                name=self.name + "total_bar",
+                name=self.name + "-total_bar",
                 width=self.bar_length,
                 height=self.bar_height,
                 lineColor="white",
@@ -663,7 +737,7 @@ class FeedBackStimulus(BaseStimulus):
 
             self.total_reward_ind = Rect(
                 win=win,
-                name=self.name + "total_indicator",
+                name=self.name + "-total_indicator",
                 width=10,
                 height=self.bar_height + 10,
                 lineColor=None,
@@ -711,7 +785,8 @@ class FeedBackStimulus(BaseStimulus):
     def display(
         self,
         win: Window,
-        logger: ExperimentLogger,
+        logger: LoggerProtocol,
+        input_handler: InputProtocol,
         reward: float,
         total_reward: float,
         **kwargs,
@@ -724,7 +799,7 @@ class FeedBackStimulus(BaseStimulus):
         ----------
         win : Window
             The psychopy window object that is used for displaying stimuli.
-        logger : ExperimentLogger
+        logger : LoggerProtocol
             The logger associated with the experiment.
         reward : float
             Reward of the given trial, provided by the environment.
@@ -764,7 +839,13 @@ class FeedBackStimulus(BaseStimulus):
 
         stim_onset = logger.get_time()
         win.flip()
-        wait(logger, win, self.duration, stim_onset)
+        wait(
+            logger=logger,
+            input_handler=input_handler,
+            time=self.duration,
+            start=stim_onset,
+            poll_keys=self.poll_keys,
+        )
 
         if feedback_img in self.feedback_image:
             self.feedback_image[feedback_img].setAutoDraw(False)
@@ -800,7 +881,7 @@ class FeedBackStimulus(BaseStimulus):
 
     def simulate(
         self,
-        logger=ExperimentLogger,
+        logger: LoggerProtocol,
         reward: float | None = None,
         total_reward: float | None = None,
         **kwargs,

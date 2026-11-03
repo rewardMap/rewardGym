@@ -10,7 +10,7 @@ except ModuleNotFoundError:
 
 import numpy as np
 
-from ..logging import ExperimentLogger, SimulationLogger
+from ..protocols import InputProtocol, LoggerProtocol
 from ..stimuli import generate_stimulus_properties, make_card_stimulus
 from ..timing import simulation_wait, wait
 from ..utils import check_random_state
@@ -81,7 +81,12 @@ class ActionStimulusTooEarly(ActionStimulus):
         self.text_stim = TextStim(win=win, **self.text_tooearly)
 
     def display(
-        self, win: Window, logger: ExperimentLogger, info: dict, **kwargs
+        self,
+        win: Window,
+        logger: LoggerProtocol,
+        input_handler: InputProtocol,
+        info: dict,
+        **kwargs,
     ) -> int | str:
         """
         Calls the stimulus object. In this case waiting for a specific response,
@@ -92,7 +97,7 @@ class ActionStimulusTooEarly(ActionStimulus):
         ----------
         win : Window
             The psychopy window object that is used for displaying stimuli.
-        logger : ExperimentLogger
+        logger : LoggerProtocol
             The logger associated with the experiment.
 
         Returns
@@ -103,7 +108,11 @@ class ActionStimulusTooEarly(ActionStimulus):
 
         response_window_onset = logger.get_time()
 
-        response = logger.key_strokes(win, keyList=self.key_list)
+        key_list = list(self.key_dict.keys())
+        responses = input_handler.get_keys()
+        response = input_handler.interpret_keys(
+            responses, logger=logger, key_list=key_list
+        )
 
         if response:
             RTE = response[1] - response_window_onset
@@ -120,10 +129,10 @@ class ActionStimulusTooEarly(ActionStimulus):
             RTE = False
 
         # clearing buffer
-        logger.key_strokes(win)
+        input_handler.key_strokes(logger=logger)
 
         response = self._response_handling(
-            win, logger, response_window_onset, info=info
+            input_handler, logger, response_window_onset, info=info
         )
 
         if response is not None:
@@ -180,11 +189,19 @@ class ConditionBasedDisplay(BaseStimulus):
                     size=(self.image_map[kk].shape[1], self.image_map[kk].shape[0]),
                 )
 
-    def display(self, win, logger, condition, action=None, **kwargs):
+    def display(
+        self,
+        win,
+        logger: LoggerProtocol,
+        input_handler: InputProtocol,
+        condition,
+        action=None,
+        **kwargs,
+    ):
         state1 = condition[0][next(iter(condition[0].keys()))]
         state2 = condition[0][list(condition[0].keys())[1]]
 
-        logger.key_strokes(win)
+        input_handler.key_strokes(logger=logger)
         stim_onset = logger.get_time()
 
         if state1 is not None:
@@ -238,7 +255,13 @@ class ConditionBasedDisplay(BaseStimulus):
 
         win.flip()
 
-        wait(logger, win, self.duration, stim_onset)
+        wait(
+            logger,
+            input_handler=input_handler,
+            time=self.duration,
+            start=stim_onset,
+            poll_keys=self.poll_keys,
+        )
 
         self._log_event(logger=logger, stim_onset=stim_onset)
 
@@ -302,7 +325,7 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
                     )
                 )
 
-    def display(self, win, logger, info, **kwargs):
+    def display(self, win, logger, input_handler, info, **kwargs):
         if self.random_state.random() < self.flip_probability:
             flip = True
             flip_key_dict = {key: 1 - value for key, value in self.key_dict.items()}
@@ -314,6 +337,7 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
         self._draw_stimulus(
             win,
             logger,
+            input_handler=input_handler,
             action=None,
             name=self.name_phase1,
             duration=self.duration_phase1,
@@ -321,18 +345,23 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
             rl_label=self.rl_label_phase1,
         )
 
-        logger.key_strokes(win)
+        input_handler.key_strokes(logger=logger)
 
         response_window_onset = logger.get_time()
 
         response = self._response_handling(
-            win, logger, response_window_onset, key_dict=flip_key_dict, info=info
+            input_handler,
+            logger,
+            response_window_onset,
+            key_dict=flip_key_dict,
+            info=info,
         )
 
         if response is not None:
             self._draw_stimulus(
                 win,
                 logger,
+                input_handler=input_handler,
                 action=response[0],
                 name=self.name_phase2,
                 duration=self.duration_phase2,
@@ -344,8 +373,7 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
 
     def simulate(
         self,
-        win: Window,
-        logger=SimulationLogger,
+        logger: LoggerProtocol,
         key: str | None = None,
         rt: float | None = None,
         info: dict | None = None,
@@ -365,9 +393,14 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
         )
 
         response_window_onset = logger.get_time()
-        response_key, remaining = self._simulate_response(
+        out = self._simulate_response(
             logger, key, rt, response_window_onset=response_window_onset, info=info
         )
+
+        if out is None:
+            raise ValueError("Simulated response shouldn't be None")
+        else:
+            response_key, remaining = out
 
         stim_onset = logger.get_time()
 
@@ -385,7 +418,15 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
         return response_key, remaining
 
     def _draw_stimulus(
-        self, win, logger, action, name, duration, flip=False, rl_label=None
+        self,
+        win,
+        logger,
+        input_handler,
+        action,
+        name,
+        duration,
+        flip=False,
+        rl_label=None,
     ):
         stim_onset = logger.get_time()
 
@@ -440,7 +481,13 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
 
         win.flip()
 
-        wait(logger, win, duration, stim_onset)
+        wait(
+            logger=logger,
+            input_handler=input_handler,
+            time=duration,
+            start=stim_onset,
+            poll_keys=self.poll_keys,
+        )
 
         self._log_event(
             logger=logger,
@@ -472,6 +519,9 @@ class TextWithBorder(BaseStimulus):
         name=None,
         rl_label: str | None = None,
     ):
+        if name is None:
+            name = ""
+
         super().__init__(name=name, duration=duration, rl_label=rl_label)
 
         self.height = height
@@ -504,11 +554,19 @@ class TextWithBorder(BaseStimulus):
             name=self.name + "_rect",
         )
 
-    def display(self, win, logger, reward, action, **kwargs):
+    def display(
+        self,
+        win,
+        logger: LoggerProtocol,
+        input_handler: InputProtocol,
+        reward,
+        action,
+        **kwargs,
+    ):
         if self.target == "action":
             reward = action
 
-        logger.key_strokes(win)
+        input_handler.key_strokes(logger=logger)
 
         card = np.random.choice(self.condition_text[reward])
         display_text = self.text.format(card)
@@ -522,7 +580,13 @@ class TextWithBorder(BaseStimulus):
         self.rectStim.autoDraw = False
         self.textStim.autoDraw = False
 
-        wait(logger, win, self.duration, stim_onset)
+        wait(
+            logger,
+            time=self.duration,
+            start=stim_onset,
+            input_handler=input_handler,
+            poll_keys=self.poll_keys,
+        )
 
         self._log_event(logger=logger, stim_onset=stim_onset)
 
@@ -582,27 +646,27 @@ class StimuliWithResponse(ActionStimulus):
                     )
                 )
 
-    def display(self, win, logger, info, **kwargs):
-        logger.key_strokes(win)
+    def display(self, win, logger, input_handler: InputProtocol, info, **kwargs):
+        input_handler.key_strokes(logger=logger)
 
-        self._draw_stimulus(
-            win,
-            logger,
-        )
+        self._draw_stimulus(win, logger, input_handler=input_handler)
         win.flip()
 
         response_window_onset = logger.get_time()
 
         response = self._response_handling(
-            win, logger, response_window_onset, key_dict=self.key_dict, info=info
+            input_handler,
+            logger,
+            response_window_onset,
+            key_dict=self.key_dict,
+            info=info,
         )
 
         return response
 
     def simulate(
         self,
-        win: Window,
-        logger=SimulationLogger,
+        logger: LoggerProtocol,
         key: str | None = None,
         rt: float | None = None,
         info: dict | None = None,
@@ -632,7 +696,7 @@ class StimuliWithResponse(ActionStimulus):
 
         return response
 
-    def _draw_stimulus(self, win, logger, flip=False):
+    def _draw_stimulus(self, win, logger, input_handler: InputProtocol, flip=False):
         stim_onset = logger.get_time()
 
         flip = self.rng.random() < self.flip_probability
@@ -650,7 +714,13 @@ class StimuliWithResponse(ActionStimulus):
         for ii in self.imageStims:
             ii.autoDraw = False
 
-        wait(logger, win, self.target_duration, stim_onset, wait_no_keys=True)
+        wait(
+            logger,
+            time=self.target_duration,
+            start=stim_onset,
+            poll_keys=True,
+            input_handler=input_handler,
+        )
 
         self._log_event(
             logger=logger,
@@ -743,27 +813,31 @@ class LingeringAction(ActionStimulus):
                     )
                 )
 
-    def display(self, win, logger, info, **kwargs):
+    def display(
+        self, win, logger: LoggerProtocol, input_handler: InputProtocol, info, **kwargs
+    ):
         self._draw_stimulus(
             win,
             logger,
+            input_handler=input_handler,
             phase=1,
             name=self.name_phase1,
             duration=self.duration_phase1,
             rl_label=self.rl_label_phase1,
         )
 
-        logger.key_strokes(win)
+        input_handler.key_strokes(logger)
 
         response_window_onset = logger.get_time()
 
         response = self._response_handling(
-            win, logger, response_window_onset, info=info
+            input_handler, logger, response_window_onset, info=info
         )
 
         self._draw_stimulus(
             win,
             logger,
+            input_handler=input_handler,
             phase=2,
             name=self.name_phase2,
             duration=self.duration_phase2,
@@ -774,8 +848,7 @@ class LingeringAction(ActionStimulus):
 
     def simulate(
         self,
-        win: Window,
-        logger=SimulationLogger,
+        logger: LoggerProtocol,
         key: str | None = None,
         rt: float | None = None,
         info: dict | None = None,
@@ -795,9 +868,15 @@ class LingeringAction(ActionStimulus):
         )
 
         response_window_onset = logger.get_time()
-        response_key, remaining = self._simulate_response(
+
+        out = self._simulate_response(
             logger, key, rt, response_window_onset=response_window_onset, info=info
         )
+
+        if out is None:
+            raise ValueError("Output shouldn't be None")
+        else:
+            response_key, remaining = out
 
         stim_onset = logger.get_time()
 
@@ -814,7 +893,9 @@ class LingeringAction(ActionStimulus):
 
         return response_key, remaining
 
-    def _draw_stimulus(self, win, logger, name, duration, phase=1, rl_label=None):
+    def _draw_stimulus(
+        self, win, logger, input_handler, name, duration, phase=1, rl_label=None
+    ):
         stim_onset = logger.get_time()
 
         if phase == 1:
@@ -836,7 +917,13 @@ class LingeringAction(ActionStimulus):
             for ii in self.image_class_phase2:
                 ii.autoDraw = self.autodraw
 
-        wait(logger, win, duration, stim_onset)
+        wait(
+            logger,
+            duration,
+            stim_onset,
+            input_handler=input_handler,
+            poll_keys=self.poll_keys,
+        )
 
         self._log_event(
             logger=logger,

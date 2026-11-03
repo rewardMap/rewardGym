@@ -11,7 +11,9 @@ except ModuleNotFoundError:
 
 
 from .. import psychopy_render as psrender
+from ..input_handling import BaseInputHandler, PsychoPyInput
 from ..logging import ExperimentLogger, SimulationLogger
+from ..protocols import InputProtocol, LoggerProtocol
 from .base_env import BaseEnv
 
 
@@ -66,13 +68,29 @@ class PsychopyEnv(BaseEnv):
         self.is_setup = False
         self.action = False
 
-    def setup(self, window=None, logger=None, expose_last_stim=False):
+    def setup(
+        self,
+        window=None,
+        logger: LoggerProtocol = None,
+        expose_last_stim=False,
+        input_handler: InputProtocol = None,
+    ):
         if self.render_mode == "psychopy-simulate":
-            self._setup_simulation(window, logger, expose_last_stim=expose_last_stim)
+            self._setup_simulation(
+                window,
+                logger,
+                expose_last_stim=expose_last_stim,
+                input_handler=input_handler,
+            )
         elif self.render_mode == "psychopy":
-            self._setup_render(window, logger)
+            self._setup_render(window, logger=logger, input_handler=input_handler)
 
-    def _setup_render(self, window=None, logger=None):
+    def _setup_render(
+        self,
+        window=None,
+        logger: LoggerProtocol = None,
+        input_handler: InputProtocol = None,
+    ):
         if window is None:
             self.window = Window(
                 size=[1680, 1050],
@@ -99,9 +117,20 @@ class PsychopyEnv(BaseEnv):
                     if not stim.is_setup
                 ]
 
+        if input_handler is None:
+            self.input_handler = PsychoPyInput(self.logger.clock, win=window)
+        else:
+            self.input_handler = input_handler
+
         self.is_setup = True
 
-    def _setup_simulation(self, window=None, logger=None, expose_last_stim=False):
+    def _setup_simulation(
+        self,
+        window=None,
+        logger: LoggerProtocol = None,
+        expose_last_stim=False,
+        input_handler: InputProtocol = None,
+    ):
         self.expose_last_stim = expose_last_stim
         self.reaction_time = None
 
@@ -116,6 +145,11 @@ class PsychopyEnv(BaseEnv):
             )
         else:
             self.logger = logger
+
+        if input_handler is None:
+            self.input_handler = BaseInputHandler()
+        else:
+            self.input_handler = input_handler
 
         self.sim_setup = True
 
@@ -152,6 +186,7 @@ class PsychopyEnv(BaseEnv):
                     reward=self.reward,
                     location=self.agent_location,
                     action=self.previous_action,
+                    input_handler=self.input_handler,
                     info=info,
                 )
 
@@ -174,6 +209,7 @@ class PsychopyEnv(BaseEnv):
                         location=self.agent_location,
                         key=self.previous_action,
                         rt=self.reaction_time,
+                        input_handler=self.input_handler,
                         info=info,
                     )
 

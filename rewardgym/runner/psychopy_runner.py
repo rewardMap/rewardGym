@@ -103,6 +103,7 @@ def pspy_run_task(
             episode=episode,
             actions=actions,
             win=win,
+            input_handler=env.input_handler,
         )
 
         update_psychopy_trials(settings, env, episode)
@@ -136,6 +137,7 @@ def pspy_run_task(
                 episode=episode,
                 actions=actions,
                 win=win,
+                input_handler=env.input_handler,
             )
 
             next_obs, reward, terminated, truncated, info = env.step(
@@ -165,6 +167,7 @@ def pspy_run_task(
             episode=episode,
             actions=actions,
             win=win,
+            input_handler=env.input_handler,
         )
 
         logger.log_event(
@@ -176,12 +179,13 @@ def pspy_run_task(
         )
 
         break_point(
-            win,
-            break_text,
-            logger,
-            settings,
-            episode,
+            win=win,
+            text_update=break_text,
+            logger=logger,
+            settings=settings,
+            episode=episode,
             countdown_cutoff=break_countdown_limit,
+            input_handler=env.input_handler,
         )
 
     return logger, env, agent
