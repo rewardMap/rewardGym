@@ -1,18 +1,18 @@
 from ..logging import ExperimentLogger, SimulationLogger
-from .advanced_display import (
+from .active_displays import (
+    ActionStimulus,
     ActionStimulusTooEarly,
-    ConditionBasedDisplay,
     LingeringAction,
     StimuliWithResponse,
-    TextWithBorder,
     TwoStimuliWithResponseAndSelection,
 )
-from .psychopy_display import (
-    ActionStimulus,
+from .passive_displays import (
     BaseStimulus,
+    ConditionBasedDisplay,
     FeedBackStimulus,
     ImageStimulus,
     TextStimulus,
+    TextWithBorder,
 )
 
 __all__ = [
