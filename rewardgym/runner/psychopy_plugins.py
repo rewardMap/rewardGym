@@ -13,7 +13,7 @@ def draw_response_reminder(win, text_update, logger, reminder_duration=1.0):
     if isinstance(logger, SimulationLogger):
         simulation_wait(logger.clock, time=reminder_duration, start=reminder_onset)
     else:
-        wait(logger, win=win, time=reminder_duration, start=reminder_onset)
+        wait(logger, time=reminder_duration, start=reminder_onset, poll_keys=False)
 
     text_update.setAutoDraw(False)
     win.flip()
@@ -26,7 +26,9 @@ def draw_response_reminder(win, text_update, logger, reminder_duration=1.0):
     return True
 
 
-def break_point(win, text_update, logger, settings, episode, countdown_cutoff=30):
+def break_point(
+    win, text_update, logger, input_handler, settings, episode, countdown_cutoff=30
+):
     if not ("breakpoints" in settings and "break_duration" in settings):
         pass
 
@@ -39,7 +41,13 @@ def break_point(win, text_update, logger, settings, episode, countdown_cutoff=30
         if isinstance(logger, SimulationLogger):
             simulation_wait(logger.clock, settings["break_duration"], break_onset)
         else:
-            wait(logger, win, settings["break_duration"], break_onset)
+            wait(
+                logger,
+                settings["break_duration"],
+                break_onset,
+                poll_keys=True,
+                input_handler=input_handler,
+            )
 
         logger.log_event(
             {"event_type": "break", "expected_duration": settings["break_duration"]},
@@ -136,14 +144,20 @@ class StairCaseMid(PsyPyPlugin):
 
 
 class AddRemainder(PsyPyPlugin):
-    def modify(self, *, env, settings, win, logger, **kwargs):
+    def modify(self, *, env, settings, logger, input_handler, **kwargs):
         if env.remainder > 0 and settings["add_remainder"]:
             rm_onset = logger.get_time()
 
             if isinstance(logger, SimulationLogger):
                 simulation_wait(logger.clock, env.remainder, rm_onset)
             else:
-                wait(logger, win, env.remainder, rm_onset)
+                wait(
+                    logger,
+                    env.remainder,
+                    rm_onset,
+                    input_handler=input_handler,
+                    poll_keys=True,
+                )
 
             logger.log_event(
                 {"event_type": "adjusting-time", "expected_duration": env.remainder},

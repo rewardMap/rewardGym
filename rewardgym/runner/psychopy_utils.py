@@ -35,6 +35,7 @@ def apply_plugins(
     episode,
     actions,
     win,
+    input_handler,
     **kwargs,
 ):
     plugin_list = check_plugin_entry(plugins=plugins, entry_point=entry_point)
@@ -47,6 +48,7 @@ def apply_plugins(
             settings=settings,
             episode=episode,
             actions=actions,
+            input_handler=input_handler,
         )
 
 
@@ -71,7 +73,7 @@ def pspy_set_up_experiment(outdir="data/"):
         "stimulus_set": 22,
         "mode": ["behavior", "fmri"],
         "fullscreen": False,
-        "instructions": True,
+        "instructions": False,
         "outdir": outdir,
     }
 
