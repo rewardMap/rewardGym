@@ -1,6 +1,6 @@
 from psylog import BaseLogger, CategoryConfig, DictLogOutput, LogMode
 
-from ..protocols import ClockProtocol, LoggerProtocol
+from .protocols import ClockProtocol, LoggerProtocol
 
 
 class ExperimentLogger(BaseLogger, LoggerProtocol):
