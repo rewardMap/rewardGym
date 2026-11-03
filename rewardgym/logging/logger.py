@@ -1,26 +1,18 @@
 from psylog import BaseLogger, DictLogOutput, LogMode
 
+from ..protocols import ClockProtocol, LoggerProtocol
 from .rewardmap_categories import get_rewardmap_defaults
 
-try:
-    from psychopy import core
-    from psychopy.core import Clock
-    from psychopy.event import getKeys
-    from psychopy.visual import Window
-except ModuleNotFoundError:
-    from ..psychopy_render import psychopy_stubs as core
-    from ..psychopy_render.psychopy_stubs import Clock, Window, getKeys
 
-
-class ExperimentLogger(BaseLogger):
+class ExperimentLogger(BaseLogger, LoggerProtocol):
     """
     Logger class to log what is going on during the experiment.
     """
 
     def __init__(
         self,
-        file_name: str,
-        clock: Clock = None,
+        file_name: str | None,
+        clock: ClockProtocol | None = None,
         participant_id: str = "n/a",
         task: str = "hcp",
         run: int = 1,
@@ -85,70 +77,6 @@ class ExperimentLogger(BaseLogger):
         self.trial_start = None
         self.tr = 0
 
-    def key_strokes(
-        self, win: Window, keyList: list[str] | None = None
-    ) -> tuple[str, float] | None:
-        """
-        Check for key strokes in the keyboard buffer. Checking for MR-triggers,
-        close commands (kill_switch), or other allowed responses.
-
-        Parameters
-        ----------
-        win : Window
-            Psychopy window object, used to display the task.
-        keyList : List[str], optional
-            List of allowed keys., by default []
-
-        Returns
-        -------
-        Union[Tuple[str, float], None]
-            _description_
-        """
-
-        if keyList is None:
-            keyList = []
-        presses = getKeys(timeStamped=self.clock)
-        response = None
-
-        if presses:
-            for resp in presses:
-                if resp[0] == self.kill_switch:
-                    # Closes the window, closes the file and quits psychopy.
-                    win.close()
-                    self.close()
-                    core.quit()
-
-                elif resp[0] == self.mr_trigger:
-                    self.tr += 1
-                    expected_time = self.clock.getTime() - (self.tr * self.seq_tr)
-                    # ugly fix!
-                    self.log_event(
-                        {
-                            "event_type": "TR",
-                            "response_button": resp[0],
-                            "response_time": self.clock.getTime(),
-                            "expected_duration": expected_time,
-                        },
-                    )
-
-                elif resp[0] in keyList:
-                    # Potentially dangerous - if press is in list, return!
-                    response = (resp[0], resp[1])
-
-                else:
-                    self.log_event(
-                        {
-                            "event_type": "button-press",
-                            "response_button": resp[0],
-                            "response_time": resp[1] - self._trial_start,
-                        },
-                    )
-
-            return response
-
-        else:
-            return response
-
     def update_trial_info(self, **kwargs):
         """Update trial-related state information."""
         self.set_trial_time()
@@ -161,14 +89,10 @@ class ExperimentLogger(BaseLogger):
                 self.categories_dict[k].set_state(v)
 
 
-class SimulationLogger(ExperimentLogger):
+class SimulationLogger(ExperimentLogger, LoggerProtocol):
     """Simulation version that stores data in memory instead of writing to file."""
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Override the output to use DictLogOutput
         self._output = DictLogOutput()  # From codebase.txt
-
-    def key_strokes(self, key, rt) -> tuple[str, float] | None:
-        """Override to work with simulation."""
-        return (key, rt)
