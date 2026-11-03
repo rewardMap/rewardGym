@@ -10,10 +10,10 @@ except ModuleNotFoundError:
 
 import numpy as np
 
+from ..logging import ExperimentLogger, SimulationLogger
 from ..stimuli import generate_stimulus_properties, make_card_stimulus
 from ..timing import simulation_wait, wait
 from ..utils import check_random_state
-from ..logging import ExperimentLogger, SimulationLogger
 
 
 class ActionStimulusTooEarly(ActionStimulus):

@@ -11,7 +11,7 @@ except ModuleNotFoundError:
 
 
 from .. import psychopy_render as psrender
-from ..logging import SimulationLogger, ExperimentLogger
+from ..logging import ExperimentLogger, SimulationLogger
 from .base_env import BaseEnv
 
 

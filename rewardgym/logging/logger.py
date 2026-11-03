@@ -1,4 +1,5 @@
-from psylog import BaseLogger, LogMode, DictLogOutput
+from psylog import BaseLogger, DictLogOutput, LogMode
+
 from .rewardmap_categories import get_rewardmap_defaults
 
 try:

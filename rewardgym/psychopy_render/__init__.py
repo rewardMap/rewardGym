@@ -1,3 +1,4 @@
+from ..logging import ExperimentLogger, SimulationLogger
 from .advanced_display import (
     ActionStimulusTooEarly,
     ConditionBasedDisplay,
@@ -6,7 +7,6 @@ from .advanced_display import (
     TextWithBorder,
     TwoStimuliWithResponseAndSelection,
 )
-from ..logging import ExperimentLogger, SimulationLogger
 from .psychopy_display import (
     ActionStimulus,
     BaseStimulus,

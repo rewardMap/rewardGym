@@ -10,9 +10,9 @@ except ModuleNotFoundError:
 
 import warnings
 
+from ..logging import ExperimentLogger, SimulationLogger
 from ..stimuli import lose_cross, win_cross, zero_cross
 from ..timing import simulation_wait, wait
-from ..logging import ExperimentLogger, SimulationLogger
 
 
 class BaseStimulus:
