@@ -11,7 +11,7 @@ except ModuleNotFoundError:
 
 
 from .. import psychopy_render as psrender
-from ..keyhandler import BaseInputHandler, PsychoPyInput
+from ..input_handling import BaseInputHandler, PsychoPyInput
 from ..logging import ExperimentLogger, SimulationLogger
 from ..protocols import InputProtocol, LoggerProtocol
 from .base_env import BaseEnv
