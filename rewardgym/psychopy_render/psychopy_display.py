@@ -9,6 +9,7 @@ except ModuleNotFoundError:
     from .psychopy_stubs import ImageStim, Rect, TextStim, Window
 
 import warnings
+
 from ..protocols import InputProtocol, LoggerProtocol
 from ..stimuli import lose_cross, win_cross, zero_cross
 from ..timing import simulation_wait, wait
