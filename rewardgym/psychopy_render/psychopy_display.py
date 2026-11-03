@@ -8,7 +8,7 @@ try:
 except ModuleNotFoundError:
     from .psychopy_stubs import ImageStim, Rect, TextStim, Window
 
-
+import warnings
 from ..protocols import InputProtocol, LoggerProtocol
 from ..stimuli import lose_cross, win_cross, zero_cross
 from ..timing import simulation_wait, wait
@@ -27,6 +27,7 @@ class BaseStimulus:
         poll_keys=True,
         rl_label=None,
         noflip=False,
+        wait_no_keys=None,
     ):
         """
         Stimulus presentation base class. The parameters do not really do anything.
@@ -45,6 +46,12 @@ class BaseStimulus:
         self.is_setup = False
         self.rl_label = rl_label
         self.noflip = noflip
+
+        if wait_no_keys is not None:
+            warnings.warn(
+                "wait_no_keys will be removed in favor of poll_keys", DeprecationWarning
+            )
+            self.poll_keys = not wait_no_keys
 
     def setup(self, win: Window, **kwargs):
         """
@@ -244,6 +251,7 @@ class ImageStimulus(BaseStimulus):
         autodraw: bool = False,
         poll_keys: bool = False,
         rl_label: str | None = None,
+        wait_no_keys: bool | None = None,
     ):
         """
         Stimulus class for image displays.
@@ -263,7 +271,11 @@ class ImageStimulus(BaseStimulus):
         """
 
         super().__init__(
-            name=name, duration=duration, poll_keys=poll_keys, rl_label=rl_label
+            name=name,
+            duration=duration,
+            poll_keys=poll_keys,
+            rl_label=rl_label,
+            wait_no_keys=wait_no_keys,
         )
 
         self.image_paths = image_paths
@@ -460,11 +472,12 @@ class ActionStimulus(BaseStimulus):
         if key_dict is None:
             key_dict = self.key_dict
 
+        key_list = list(key_dict.keys())
         # Main loop, keeping time and waiting for response.
         while response_window > logger.get_time() and response_present is False:
             responses = input_handler.get_keys()
             response = input_handler.interpret_keys(
-                responses, logger=logger, key_list=self.key_list
+                responses, logger=logger, key_list=key_list
             )
 
             if response:

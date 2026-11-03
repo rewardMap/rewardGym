@@ -23,10 +23,9 @@ class BaseInputHandler(InputProtocol):
         return [(key, rt)]
 
     def interpret_keys(
-        self, key_presses, logger, keylist: None | list[str] = None, **kwargs
+        self, key_presses, logger, key_list: None | list[str] = None, **kwargs
     ) -> tuple[str, float] | None:
         response = None
-
         if key_presses:
             for resp in key_presses:
                 if resp[0] == self.kill_switch:
@@ -50,7 +49,7 @@ class BaseInputHandler(InputProtocol):
                         },
                     )
 
-                elif (keylist is not None) and (resp[0] in keylist):
+                elif (key_list is not None) and (resp[0] in key_list):
                     # Potentially dangerous - if press is in list, return!
                     response = (resp[0], resp[1])
 

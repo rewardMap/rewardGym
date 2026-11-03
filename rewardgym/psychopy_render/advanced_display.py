@@ -108,9 +108,10 @@ class ActionStimulusTooEarly(ActionStimulus):
 
         response_window_onset = logger.get_time()
 
+        key_list = list(self.key_dict.keys())
         responses = input_handler.get_keys()
         response = input_handler.interpret_keys(
-            responses, logger=logger, keylist=self.key_list
+            responses, logger=logger, key_list=key_list
         )
 
         if response:

@@ -35,7 +35,7 @@ def wait(
     while t_wait > logger.get_time():
         if poll_keys and input_handler:
             keys = input_handler.get_keys()
-            input_handler.interpret_keys(keys, keylist=None, logger=logger)
+            input_handler.interpret_keys(keys, key_list=None, logger=logger)
 
 
 def simulation_wait(clock, time: float, start: float | None = None):

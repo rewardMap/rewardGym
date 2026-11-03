@@ -30,7 +30,7 @@ class InputProtocol(Protocol):
         self,
         key_presses: list[tuple[str, float]],
         logger,
-        keylist: None | list[str] = None,
+        key_list: None | list[str] = None,
         **kwargs,
     ) -> tuple[str, float] | None: ...
 
