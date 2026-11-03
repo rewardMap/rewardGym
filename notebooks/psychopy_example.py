@@ -3,13 +3,13 @@ Example code for using psychopy + rewardGym.
 As a set up create a copy of this code and move it into the root directory of
 the rewardGym folder.
 Then open the file in PsychoPy coder. Note, that it requires a recent
-PsychoPy version (tested on at least v2023.2.3).
+PsychoPy version (tested on at least v2026.1.3).
 """
 
 from psychopy import core, event, visual
 
 from rewardgym.environments import PsychopyEnv
-from rewardgym.psychopy_render.logger import MinimalLogger
+from rewardgym.logging import ExperimentLogger
 from rewardgym.psychopy_render.psychopy_display import (
     ActionStimulus,
     BaseStimulus,
@@ -44,10 +44,18 @@ action = ActionStimulus(duration=10, key_dict={"left": 0, "right": 1})
 
 # In the end we create some reward feedback.
 reward = FeedBackStimulus(
-    duration=1.0, text="You gain: {0}", position=(0, 0), target="reward"
+    duration=1.0,
+    text="You gain: {0}",
+    position=(0, 0),
+    target="reward",
+    name="feedback1",
 )
 earnings = FeedBackStimulus(
-    duration=0.5, text="You have gained: {0}", position=(0, 0), target="total_reward"
+    duration=0.5,
+    text="You have gained: {0}",
+    position=(0, 0),
+    target="total_reward",
+    name="feeback2",
 )
 
 # We then augment the nodes in the info dict with the stimuli.
@@ -68,16 +76,16 @@ win = visual.Window(
     units="pix",
 )
 
-# As the stimuli require a logger object, we create on here. Note that this
-# is the MinimalLogger class, that does not write anything to file, and is
-# just used for compatibility with the stimulus classes (see the main psychopy
+# As the stimuli require a logger object, we create one here. If we create an ExperimentLogger
+# with file_name=None, it is properly writing everything to a dictionary.
+# Here it is just used for compatibility with the stimulus classes (see the main psychopy
 # code in the root dir for advanced logging).
-Logger = MinimalLogger(global_clock=core.Clock())
+Logger = ExperimentLogger(file_name=None, clock=core.Clock())
 Logger.create()
 
 # Finally, the stimuli need to be setup (associating and creating the psychopy
 # objects that need a window object). The pyschopy environment has a method for that:
-env.setup_render(window=win, logger=Logger)
+env.setup(window=win, logger=Logger)
 
 # We also show some instructions here:
 instruction = visual.TextStim(
@@ -93,6 +101,7 @@ win.flip()
 n_episodes = 5  # Change to a higher number, disabled here for rendering.
 
 for episode in range(n_episodes):
+    Logger.set_trial_time()
     obs, info = env.reset(agent_location=0)
     done = False
 
