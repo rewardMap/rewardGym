@@ -11,7 +11,7 @@ except ModuleNotFoundError:
 
 
 from .. import psychopy_render as psrender
-from ..psychopy_render.logger import MinimalLogger
+from ..logging import ExperimentLogger, SimulationLogger
 from .base_env import BaseEnv
 
 
@@ -85,7 +85,9 @@ class PsychopyEnv(BaseEnv):
             self.window = window
 
         if logger is None:
-            self.logger = MinimalLogger(global_clock=psrender.psychopy_stubs.Clock())
+            self.logger = ExperimentLogger(
+                file_name=None, clock=psrender.psychopy_stubs.Clock()
+            )
         else:
             self.logger = logger
 
@@ -109,7 +111,9 @@ class PsychopyEnv(BaseEnv):
             self.window = window
 
         if logger is None:
-            self.logger = MinimalLogger(global_clock=psrender.psychopy_stubs.Clock())
+            self.logger = SimulationLogger(
+                file_name=None, clock=psrender.psychopy_stubs.Clock()
+            )
         else:
             self.logger = logger
 

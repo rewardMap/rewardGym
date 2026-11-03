@@ -1,5 +1,3 @@
-import pytest
-
 from rewardgym import get_env
 from rewardgym.psychopy_render import SimulationLogger
 from rewardgym.psychopy_render.psychopy_stubs import Clock, Window
@@ -53,17 +51,3 @@ def test_smoke_screen_simulate_posner():
 
 def test_smoke_screen_simulate_mid():
     simulate_task("mid")
-
-
-def test_logger_error():
-    Logger = SimulationLogger(
-        "",
-        None,
-        participant_id="1",
-        run=1,
-        task="test",
-    )
-    Logger.create()
-
-    with pytest.raises(AttributeError):
-        Logger.update_trial_info(bla="bla")

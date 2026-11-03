@@ -43,7 +43,7 @@ Alternatively, download / clone the repository and install from there::
 Usage
 -------------------------------------------------------------------------------
 
-The package should be importable as usually. See the `documentation <https://rewardmap.github.io/rewardGym/>`_ for further information.
+The package should be importable as usual. See the `documentation <https://rewardmap.github.io/rewardGym/>`_ for further information.
 
 
 Use PsychoPy for data collection
@@ -51,11 +51,12 @@ Use PsychoPy for data collection
 
 There might be cases, where you want to use this package purely for data collection.
 
-The current release, basic logging is supported.
+In releases 0.7.1 and up, ``rewardGym`` relies on `psylog <https://github.com/SRSteinkamp/psylog>`_ to abstract logging
+in both simulation mode and data collection mode.
 
-This is also possible using `PsychoPy <https://psychopy.org/>`_ Standalone [cit3]_ (only tested version v2023.2.3, early v2024 versions were incompatible due to the GUI structure).
+These releases are also not a thoroughly tested as previous versions (as they've been used for extensive data collection).
 
-Short tests, seem to indicate, that it is also compatible with PsychoPy 2026.1.3 and PsychoPy-Studio 2026.1.3
+But 0.7.1 is now properly compatible with Pyhon 3.10+. And work with PsychoPy 2026.1.3 and PsychoPy-Studio 2026.1.3
 
 For this clone or download the repository.
 

@@ -3,7 +3,7 @@ import json
 from psychopy import core, event, visual
 
 from rewardgym import get_configs, get_env, get_psychopy_info
-from rewardgym.psychopy_render import ExperimentLogger
+from rewardgym.logging import ExperimentLogger
 from rewardgym.runner import pspy_run_task, pspy_set_up_experiment
 from rewardgym.runner.psychopy_instructions import show_instructions
 from rewardgym.tasks import FULLPOINTS
@@ -38,7 +38,6 @@ if __name__ == "__main__":
         participant_id=exp_dict["participant_id"],
         run=exp_dict["run"],
         task=exp_dict["task"],
-        mr_clock=globalClock,
     )
     Logger.create()
 
@@ -90,7 +89,7 @@ if __name__ == "__main__":
         event.waitKeys()
         win.flip()
 
-    Logger.global_clock.reset()
+    Logger.clock.reset()
 
     env.setup(window=win, logger=Logger)
 

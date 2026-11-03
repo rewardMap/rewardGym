@@ -10,9 +10,10 @@ except ModuleNotFoundError:
 
 import numpy as np
 
+from ..logging import ExperimentLogger, SimulationLogger
 from ..stimuli import generate_stimulus_properties, make_card_stimulus
+from ..timing import simulation_wait, wait
 from ..utils import check_random_state
-from .logger import ExperimentLogger, SimulationLogger
 
 
 class ActionStimulusTooEarly(ActionStimulus):
@@ -237,7 +238,7 @@ class ConditionBasedDisplay(BaseStimulus):
 
         win.flip()
 
-        logger.wait(win, self.duration, stim_onset)
+        wait(logger, win, self.duration, stim_onset)
 
         self._log_event(logger=logger, stim_onset=stim_onset)
 
@@ -352,7 +353,7 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
     ):
         stim_onset = logger.get_time()
 
-        logger.wait(win=None, time=self.duration_phase1, start=stim_onset)
+        simulation_wait(logger.clock, time=self.duration_phase1, start=stim_onset)
 
         logger.log_event(
             {
@@ -370,7 +371,7 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
 
         stim_onset = logger.get_time()
 
-        logger.wait(win=None, time=self.duration_phase2, start=stim_onset)
+        simulation_wait(logger.clock, time=self.duration_phase2, start=stim_onset)
 
         logger.log_event(
             {
@@ -439,7 +440,7 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
 
         win.flip()
 
-        logger.wait(win, duration, stim_onset)
+        wait(logger, win, duration, stim_onset)
 
         self._log_event(
             logger=logger,
@@ -521,7 +522,7 @@ class TextWithBorder(BaseStimulus):
         self.rectStim.autoDraw = False
         self.textStim.autoDraw = False
 
-        logger.wait(win, self.duration, stim_onset)
+        wait(logger, win, self.duration, stim_onset)
 
         self._log_event(logger=logger, stim_onset=stim_onset)
 
@@ -609,7 +610,7 @@ class StimuliWithResponse(ActionStimulus):
     ):
         stim_onset = logger.get_time()
 
-        logger.wait(win=None, time=self.target_duration, start=stim_onset)
+        simulation_wait(logger.clock, time=self.target_duration, start=stim_onset)
 
         self._log_event(
             logger=logger,
@@ -649,7 +650,7 @@ class StimuliWithResponse(ActionStimulus):
         for ii in self.imageStims:
             ii.autoDraw = False
 
-        logger.wait(win, self.target_duration, stim_onset, wait_no_keys=True)
+        wait(logger, win, self.target_duration, stim_onset, wait_no_keys=True)
 
         self._log_event(
             logger=logger,
@@ -782,7 +783,7 @@ class LingeringAction(ActionStimulus):
     ):
         stim_onset = logger.get_time()
 
-        logger.wait(win=None, time=self.duration_phase1, start=stim_onset)
+        simulation_wait(logger.clock, time=self.duration_phase1, start=stim_onset)
 
         logger.log_event(
             {
@@ -800,7 +801,7 @@ class LingeringAction(ActionStimulus):
 
         stim_onset = logger.get_time()
 
-        logger.wait(win=None, time=self.duration_phase2, start=stim_onset)
+        simulation_wait(logger.clock, time=self.duration_phase2, start=stim_onset)
 
         logger.log_event(
             {
@@ -835,7 +836,7 @@ class LingeringAction(ActionStimulus):
             for ii in self.image_class_phase2:
                 ii.autoDraw = self.autodraw
 
-        logger.wait(win, duration, stim_onset)
+        wait(logger, win, duration, stim_onset)
 
         self._log_event(
             logger=logger,
