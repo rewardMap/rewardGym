@@ -8,7 +8,6 @@ try:
 except ModuleNotFoundError:
     from .psychopy_stubs import ImageStim, Rect, TextStim, Window
 
-import warnings
 
 from ..protocols import InputProtocol, LoggerProtocol
 from ..stimuli import lose_cross, win_cross, zero_cross
@@ -541,7 +540,7 @@ class ActionStimulus(BaseStimulus):
         self,
         logger: LoggerProtocol,
         response_key,
-        rt: float | None,
+        rt: float,
         response_window_onset,
         info,
     ):
@@ -558,8 +557,8 @@ class ActionStimulus(BaseStimulus):
             response_button = response_key
 
         if rt is None:
-            warnings.warn(
-                "Simulating environment: Consider setting expose_last_stim=True during env setup."
+            raise ValueError(
+                "Simulations should run with `expose_last_stim=True`. rt cannot be 'None'!"
             )
 
         logger.clock.time += min([rt, self.duration])

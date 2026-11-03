@@ -48,6 +48,7 @@ class ClockProtocol(Protocol):
 
 class LoggerProtocol(Protocol):
     clock: ClockProtocol
+    na: str
 
     def get_time(self) -> float: ...
 
