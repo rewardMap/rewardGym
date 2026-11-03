@@ -16,11 +16,8 @@ class ExperimentLogger(BaseLogger, LoggerProtocol):
         participant_id: str = "n/a",
         task: str = "hcp",
         run: int = 1,
-        seq_tr: float = 0.752,
         sep: str = "\t",
         na: str = "n/a",
-        kill_switch: str = "q",
-        mr_trigger: str = "5",
         categories=None,
     ):
         """
@@ -39,16 +36,10 @@ class ExperimentLogger(BaseLogger, LoggerProtocol):
             The task, also logged as persistent column, by default "hcp"
         run : int, optional
             The run, also logged as persistent column, by default 1
-        seq_tr : float, optional
-            If it is an fMRI experiment, this is echo time. Used to calculate the expected collection between acquisitions, by default 0.752
         sep : str, optional
             What kind of separator to use in output file, by default "\t"
         na : str, optional
             How NaN values are written to file, by default "n/a"
-        kill_switch : str, optional
-            Button to press to exit the experiment, by default "q"
-        mr_trigger : str, optional
-            Trigger of the MRI (assuming that it is transformed to a key press), by default "5"
         """
 
         if categories is None:
@@ -67,15 +58,6 @@ class ExperimentLogger(BaseLogger, LoggerProtocol):
             },
             clock=clock,
         )
-
-        # Experiment-specific parameters
-        self.seq_tr = seq_tr
-        self.kill_switch = kill_switch
-        self.mr_trigger = mr_trigger
-
-        # Initialize trial tracking
-        self.trial_start = None
-        self.tr = 0
 
     def update_trial_info(self, **kwargs):
         """Update trial-related state information."""
