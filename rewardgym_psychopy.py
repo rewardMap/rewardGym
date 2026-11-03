@@ -38,7 +38,6 @@ if __name__ == "__main__":
         participant_id=exp_dict["participant_id"],
         run=exp_dict["run"],
         task=exp_dict["task"],
-        mr_clock=globalClock,
     )
     Logger.create()
 
@@ -90,7 +89,7 @@ if __name__ == "__main__":
         event.waitKeys()
         win.flip()
 
-    Logger.global_clock.reset()
+    Logger.clock.reset()
 
     env.setup(window=win, logger=Logger)
 

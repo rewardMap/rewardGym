@@ -106,7 +106,7 @@ class ExperimentLogger(BaseLogger):
 
         if keyList is None:
             keyList = []
-        presses = getKeys(timeStamped=self.global_clock)
+        presses = getKeys(timeStamped=self.clock)
         response = None
 
         if presses:
@@ -139,7 +139,7 @@ class ExperimentLogger(BaseLogger):
                         {
                             "event_type": "button-press",
                             "response_button": resp[0],
-                            "response_time": resp[1] - self.trial_start,
+                            "response_time": resp[1] - self._trial_start,
                         },
                     )
 
@@ -150,6 +150,8 @@ class ExperimentLogger(BaseLogger):
 
     def update_trial_info(self, **kwargs):
         """Update trial-related state information."""
+        self.set_trial_time()
+
         for k, v in kwargs.items():
             if (
                 k in self.categories_dict
