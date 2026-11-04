@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Literal
+from typing import TYPE_CHECKING, Literal
 
 try:
     from psychopy.visual import ImageStim, TextStim, Window
@@ -11,6 +11,9 @@ except ModuleNotFoundError:
 import warnings
 
 import numpy as np
+
+if TYPE_CHECKING:
+    from ..environments import StepContext
 
 from ..protocols import InputProtocol, LoggerProtocol
 from ..stimuli import (
@@ -79,10 +82,7 @@ class BaseStimulus:
 
     def display(
         self,
-        win: Window,
-        logger: LoggerProtocol,
-        input_handler: InputProtocol,
-        **kwargs,
+        step_context: StepContext,
     ) -> None:
         """
         Calls the stimulus object. In this case initiate a window flip.
@@ -96,21 +96,21 @@ class BaseStimulus:
         """
 
         if self.duration is not None:
-            stim_onset = logger.get_time()
+            stim_onset = step_context.logger.get_time()
 
             if not self.noflip:
-                win.flip()
+                stim_onset = step_context.win.flip()  # Improve timing!
 
-            self._wait(logger, input_handler, onset=stim_onset)
+            self._wait(
+                step_context.logger, step_context.input_handler, onset=stim_onset
+            )
 
         else:
             stim_onset = None
 
-        self._log_event(logger=logger, stim_onset=stim_onset)
+        self._log_event(logger=step_context.logger, stim_onset=stim_onset)
 
-    def simulate(
-        self, win, logger: LoggerProtocol, input_handler: InputProtocol, **kwargs
-    ) -> None:
+    def simulate(self, step_context: StepContext, **kwargs) -> None:
         """
         Function to pretend that a stimulus has been shown. Logging and creating
         timing.
@@ -122,13 +122,15 @@ class BaseStimulus:
         """
 
         if self.duration is not None:
-            stim_onset = logger.get_time()
+            stim_onset = step_context.logger.get_time()
 
-            simulation_wait(logger.clock, time=self.duration, start=stim_onset)
+            simulation_wait(
+                step_context.logger.clock, time=self.duration, start=stim_onset
+            )
         else:
             stim_onset = None
 
-        self._log_event(logger=logger, stim_onset=stim_onset)
+        self._log_event(logger=step_context.logger, stim_onset=stim_onset)
 
     def _simulate(
         self, win, logger: LoggerProtocol, input_handler: InputProtocol, **kwargs
@@ -226,9 +228,7 @@ class TextStimulus(BaseStimulus):
 
     def display(
         self,
-        win: Window,
-        logger: LoggerProtocol,
-        input_handler: InputProtocol,
+        step_context: StepContext,
         **kwargs,
     ) -> None:
         """
@@ -248,19 +248,19 @@ class TextStimulus(BaseStimulus):
         Should return None
 
         """
-        stim_onset = logger.get_time()
+        stim_onset = step_context.logger.get_time()
         self.textStim.draw()
-        win.flip()
+        step_context.win.flip()
 
         wait(
-            logger=logger,
-            input_handler=input_handler,
+            logger=step_context.logger,
+            input_handler=step_context.input_handler,
             time=self.duration,
             start=stim_onset,
             poll_keys=self.poll_keys,
         )
 
-        self._log_event(logger=logger, stim_onset=stim_onset)
+        self._log_event(logger=step_context.logger, stim_onset=stim_onset)
 
 
 class ImageStimulus(BaseStimulus):
@@ -350,9 +350,7 @@ class ImageStimulus(BaseStimulus):
 
     def display(
         self,
-        win: Window,
-        logger: LoggerProtocol,
-        input_handler: InputProtocol,
+        step_context: StepContext,
         **kwargs,
     ):
         """
@@ -371,26 +369,26 @@ class ImageStimulus(BaseStimulus):
         None
         Should return None
         """
-        stim_onset = logger.get_time()
+        stim_onset = step_context.logger.get_time()
 
         # So that images are drawn on top
         for ii in self.imageStims:
             ii.autoDraw = True
 
-        win.flip()
+        step_context.win.flip()
 
         for ii in self.imageStims:
             ii.autoDraw = self.autodraw
 
         wait(
-            logger=logger,
-            input_handler=input_handler,
+            logger=step_context.logger,
+            input_handler=step_context.input_handler,
             time=self.duration,
             start=stim_onset,
             poll_keys=self.poll_keys,
         )
 
-        self._log_event(logger=logger, stim_onset=stim_onset)
+        self._log_event(logger=step_context.logger, stim_onset=stim_onset)
 
 
 class FeedBackStimulus(BaseStimulus):
@@ -562,11 +560,7 @@ class FeedBackStimulus(BaseStimulus):
 
     def display(
         self,
-        win: Window,
-        logger: LoggerProtocol,
-        input_handler: InputProtocol,
-        reward: float,
-        total_reward: float,
+        step_context: StepContext,
         **kwargs,
     ) -> None:
         """
@@ -593,6 +587,11 @@ class FeedBackStimulus(BaseStimulus):
 
         # Fills in the format string. Adds the + sign for positive rewards.
         # if self.target == "reward":
+        reward = step_context.reward
+        total_reward = step_context.total_reward
+        win = step_context.win
+        logger = step_context.logger
+
         if reward > 0:
             feedback_img = "win"
         elif reward < 0:
@@ -619,7 +618,7 @@ class FeedBackStimulus(BaseStimulus):
         win.flip()
         wait(
             logger=logger,
-            input_handler=input_handler,
+            input_handler=step_context.input_handler,
             time=self.duration,
             start=stim_onset,
             poll_keys=self.poll_keys,
@@ -659,9 +658,7 @@ class FeedBackStimulus(BaseStimulus):
 
     def simulate(
         self,
-        logger: LoggerProtocol,
-        reward: float | None = None,
-        total_reward: float | None = None,
+        step_context: StepContext,
         **kwargs,
     ) -> None:
         """
@@ -673,14 +670,17 @@ class FeedBackStimulus(BaseStimulus):
         None
             Does not return anything, but logs the stimulus.
         """
-        stim_onset = logger.get_time()
+        stim_onset = step_context.logger.get_time()
 
-        simulation_wait(logger.clock, time=self.duration, start=stim_onset)
+        simulation_wait(step_context.logger.clock, time=self.duration, start=stim_onset)
 
         self._log_event(
-            logger=logger,
+            logger=step_context.logger,
             stim_onset=stim_onset,
-            extra_info={"total_reward": total_reward, "reward": reward},
+            extra_info={
+                "total_reward": step_context.total_reward,
+                "reward": step_context.reward,
+            },
         )
 
 
@@ -725,13 +725,14 @@ class ConditionBasedDisplay(BaseStimulus):
 
     def display(
         self,
-        win,
-        logger: LoggerProtocol,
-        input_handler: InputProtocol,
-        condition,
-        action=None,
+        step_context: StepContext,
         **kwargs,
     ):
+        condition = step_context.condition
+        win = step_context.win
+        logger = step_context.logger
+        input_handler = step_context.input_handler
+
         state1 = condition[0][next(iter(condition[0].keys()))]
         state2 = condition[0][list(condition[0].keys())[1]]
 
@@ -753,7 +754,7 @@ class ConditionBasedDisplay(BaseStimulus):
             imgB = None
 
         if self.with_action:
-            if action == next(iter(condition[0].keys())):
+            if step_context.previous_action == next(iter(condition[0].keys())):
                 feedback = Rect(
                     win=win,
                     width=imgA.size[0],
@@ -855,13 +856,15 @@ class TextWithBorder(BaseStimulus):
 
     def display(
         self,
-        win,
-        logger: LoggerProtocol,
-        input_handler: InputProtocol,
-        reward,
-        action,
+        step_context: StepContext,
         **kwargs,
     ):
+        reward = step_context.reward
+        action = step_context.previous_action
+        input_handler = step_context.input_handler
+        logger = step_context.logger
+        win = step_context.win
+
         if self.target == "action":
             reward = action
 

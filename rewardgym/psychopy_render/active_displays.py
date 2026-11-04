@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from .passive_displays import BaseStimulus
 
 try:
@@ -12,6 +14,9 @@ from ..protocols import InputProtocol, LoggerProtocol
 from ..stimuli import generate_stimulus_properties, make_card_stimulus
 from ..timing import simulation_wait, wait
 from ..utils import check_random_state
+
+if TYPE_CHECKING:
+    from ..environments import StepContext
 
 
 class ActionStimulus(BaseStimulus):
@@ -66,10 +71,7 @@ class ActionStimulus(BaseStimulus):
 
     def display(
         self,
-        win: Window,
-        logger: LoggerProtocol,
-        input_handler: InputProtocol,
-        info: dict,
+        step_context: StepContext,
         **kwargs,
     ) -> tuple[int | None, float | None] | None:
         """
@@ -89,19 +91,19 @@ class ActionStimulus(BaseStimulus):
         Union[int, str]
             The response issued by the participant, interpretable by the environment.
         """
-        input_handler.key_strokes(logger=logger)
+        step_context.input_handler.key_strokes(logger=step_context.logger)
 
-        response_window_onset = logger.get_time()
+        response_window_onset = step_context.logger.get_time()
 
         response = self._response_handling(
-            input_handler=input_handler,
-            logger=logger,
+            input_handler=step_context.input_handler,
+            logger=step_context.logger,
             response_window_onset=response_window_onset,
-            info=info,
+            info=step_context.info,
         )
 
         if not self.noflip:
-            win.flip()
+            step_context.win.flip()
 
         return response
 
@@ -181,19 +183,17 @@ class ActionStimulus(BaseStimulus):
 
     def simulate(
         self,
-        logger: LoggerProtocol,
-        key: str | None = None,
-        rt: float | None = None,
-        info: dict | None = None,
+        step_context: StepContext,
         **kwargs,
     ):
+        logger = step_context.logger
         response_window_onset = logger.get_time()
         response = self._simulate_response(
             logger,
-            key,
-            rt,
+            step_context.key,
+            step_context.rt,
             response_window_onset=response_window_onset,
-            info=info,
+            info=step_context.info,
         )
 
         return response
@@ -329,10 +329,7 @@ class ActionStimulusTooEarly(ActionStimulus):
 
     def display(
         self,
-        win: Window,
-        logger: LoggerProtocol,
-        input_handler: InputProtocol,
-        info: dict,
+        step_context: StepContext,
         **kwargs,
     ) -> int | str:
         """
@@ -352,6 +349,9 @@ class ActionStimulusTooEarly(ActionStimulus):
         Union[int, str]
             The response issued by the participant, interpretable by the environment.
         """
+
+        input_handler = step_context.input_handler
+        logger = step_context.logger
 
         response_window_onset = logger.get_time()
 
@@ -379,7 +379,7 @@ class ActionStimulusTooEarly(ActionStimulus):
         input_handler.key_strokes(logger=logger)
 
         response = self._response_handling(
-            input_handler, logger, response_window_onset, info=info
+            input_handler, logger, response_window_onset, info=step_context.info
         )
 
         if response is not None:
@@ -389,7 +389,7 @@ class ActionStimulusTooEarly(ActionStimulus):
                 response_key = self.timeout_action
                 self.text_stim.draw()
             else:
-                win.flip()
+                step_context.win.flip()
 
             return response_key, remaining
 
@@ -456,7 +456,7 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
                     )
                 )
 
-    def display(self, win, logger, input_handler, info, **kwargs):
+    def display(self, step_context: StepContext, **kwargs):
         if self.random_state.random() < self.flip_probability:
             flip = True
             flip_key_dict = {key: 1 - value for key, value in self.key_dict.items()}
@@ -464,6 +464,10 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
         else:
             flip_key_dict = self.key_dict
             flip = False
+
+        win = step_context.win
+        logger = step_context.logger
+        input_handler = step_context.input_handler
 
         self._draw_stimulus(
             win,
@@ -485,7 +489,7 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
             logger,
             response_window_onset,
             key_dict=flip_key_dict,
-            info=info,
+            info=step_context.info,
         )
 
         if response is not None:
@@ -504,12 +508,10 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
 
     def simulate(
         self,
-        logger: LoggerProtocol,
-        key: str | None = None,
-        rt: float | None = None,
-        info: dict | None = None,
+        step_context: StepContext,
         **kwargs,
     ):
+        logger = step_context.logger
         stim_onset = logger.get_time()
 
         simulation_wait(logger.clock, time=self.duration_phase1, start=stim_onset)
@@ -525,7 +527,11 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
 
         response_window_onset = logger.get_time()
         out = self._simulate_response(
-            logger, key, rt, response_window_onset=response_window_onset, info=info
+            logger,
+            step_context.key,
+            step_context.rt,
+            response_window_onset=response_window_onset,
+            info=step_context.info,
         )
 
         if out is None:
@@ -687,7 +693,11 @@ class StimuliWithResponse(ActionStimulus):
                     )
                 )
 
-    def display(self, win, logger, input_handler: InputProtocol, info, **kwargs):
+    def display(self, step_context: StepContext, **kwargs):
+        input_handler = step_context.input_handler
+        logger = step_context.logger
+        win = step_context.win
+
         input_handler.key_strokes(logger=logger)
 
         self._draw_stimulus(win, logger, input_handler=input_handler)
@@ -700,19 +710,17 @@ class StimuliWithResponse(ActionStimulus):
             logger,
             response_window_onset,
             key_dict=self.key_dict,
-            info=info,
+            info=step_context.info,
         )
 
         return response
 
     def simulate(
         self,
-        logger: LoggerProtocol,
-        key: str | None = None,
-        rt: float | None = None,
-        info: dict | None = None,
+        step_context: StepContext,
         **kwargs,
     ):
+        logger = step_context.logger
         stim_onset = logger.get_time()
 
         simulation_wait(logger.clock, time=self.target_duration, start=stim_onset)
@@ -729,10 +737,10 @@ class StimuliWithResponse(ActionStimulus):
 
         response = self._simulate_response(
             logger,
-            key,
-            rt,
+            step_context.key,
+            step_context.rt,
             response_window_onset=stim_onset,
-            info=info,
+            info=step_context.info,
         )
 
         return response
@@ -854,9 +862,11 @@ class LingeringAction(ActionStimulus):
                     )
                 )
 
-    def display(
-        self, win, logger: LoggerProtocol, input_handler: InputProtocol, info, **kwargs
-    ):
+    def display(self, step_context: StepContext, **kwargs):
+        win = step_context.win
+        logger = step_context.logger
+        input_handler = step_context.input_handler
+
         self._draw_stimulus(
             win,
             logger,
@@ -872,7 +882,7 @@ class LingeringAction(ActionStimulus):
         response_window_onset = logger.get_time()
 
         response = self._response_handling(
-            input_handler, logger, response_window_onset, info=info
+            input_handler, logger, response_window_onset, info=step_context.info
         )
 
         self._draw_stimulus(
@@ -889,12 +899,10 @@ class LingeringAction(ActionStimulus):
 
     def simulate(
         self,
-        logger: LoggerProtocol,
-        key: str | None = None,
-        rt: float | None = None,
-        info: dict | None = None,
+        step_context: StepContext,
         **kwargs,
     ):
+        logger = step_context.logger
         stim_onset = logger.get_time()
 
         simulation_wait(logger.clock, time=self.duration_phase1, start=stim_onset)
@@ -911,7 +919,11 @@ class LingeringAction(ActionStimulus):
         response_window_onset = logger.get_time()
 
         out = self._simulate_response(
-            logger, key, rt, response_window_onset=response_window_onset, info=info
+            logger,
+            step_context.key,
+            step_context.rt,
+            response_window_onset=response_window_onset,
+            info=step_context.info,
         )
 
         if out is None:
