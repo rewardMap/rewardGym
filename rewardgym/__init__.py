@@ -13,7 +13,7 @@ ASSETS_PATH = pathlib.Path(__file__).parent.resolve() / "assets"
 
 ENVIRONMENTS = list(_task_registry.keys())
 
-from . import agents, environments, handling, psychopy_render, runner, stimuli, tasks
+from . import agents, data_tools, environments, psychopy_render, runner, stimuli, tasks
 
 try:
     from . import pygame_render
@@ -24,11 +24,11 @@ __all__ = [
     "ENVIRONMENTS",
     "agents",
     "check_random_state",
+    "data_tools",
     "environments",
     "get_configs",
     "get_env",
     "get_psychopy_info",
-    "handling",
     "psychopy_render",
     "pygame_render",
     "run_single_episode",
