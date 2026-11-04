@@ -3,7 +3,7 @@ import warnings
 import pandas as pd
 import pytest
 
-from rewardgym.handling.data_tools import (  # replace with actual module path
+from rewardgym.data_tools import (
     prepare_data,
     prepare_data_for_rl,
     process_trial_for_rl,
