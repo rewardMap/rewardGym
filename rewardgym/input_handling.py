@@ -66,9 +66,12 @@ class BaseInputHandler(InputProtocol):
         else:
             return response
 
-    def key_strokes(self, logger, key_list: list[str] | None = None):
+    def key_strokes(
+        self, logger, key_list: list[str] | None = None
+    ) -> tuple[str, float] | None:
         responses = self.get_keys()
         response = self.interpret_keys(responses, logger=logger, key_list=key_list)
+
         return response
 
     def _close(self):

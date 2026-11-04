@@ -36,7 +36,7 @@ class InputProtocol(Protocol):
 
     def key_strokes(
         self, logger, key_list: None | list[str] = None
-    ) -> list[tuple[str, float]] | None: ...
+    ) -> tuple[str, float] | None: ...
 
 
 @runtime_checkable
@@ -46,6 +46,7 @@ class ClockProtocol(Protocol):
     def reset(self) -> None: ...
 
 
+@runtime_checkable
 class LoggerProtocol(Protocol):
     clock: ClockProtocol
     na: str
