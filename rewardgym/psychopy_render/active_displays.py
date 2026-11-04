@@ -118,6 +118,9 @@ class ActionStimulus(ActionRoutine):
 
         return response
 
+    def _setup(self, win: Window = None, **kwargs):
+        pass
+
 
 class ActionStimulusTooEarly(ActionStimulus):
     """
