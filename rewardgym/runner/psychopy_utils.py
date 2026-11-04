@@ -3,19 +3,18 @@ try:
     from psychopy.gui import Dlg, DlgFromDict
 except ModuleNotFoundError:
     from ..psychopy_render.psychopy_stubs import (
-        DlgFromDict,
         Dlg,
+        DlgFromDict,
         quit,
     )
 
 import os
-from typing import Dict
 
 from .. import ENVIRONMENTS
 from .file_utils import make_bids_name
 
 
-def check_plugin_entry(plugins: Dict, entry_point: str):
+def check_plugin_entry(plugins: dict, entry_point: str):
     if plugins is None:
         return []
 
@@ -27,15 +26,12 @@ def check_plugin_entry(plugins: Dict, entry_point: str):
 
 def apply_plugins(
     *,
-    plugins: Dict,
+    plugins: dict,
     entry_point: str,
     env,
-    logger,
     settings,
     episode,
     actions,
-    win,
-    input_handler,
     **kwargs,
 ):
     plugin_list = check_plugin_entry(plugins=plugins, entry_point=entry_point)
@@ -43,12 +39,12 @@ def apply_plugins(
     for pl in plugin_list:
         pl.modify(
             env=env,
-            logger=logger,
-            win=win,
+            logger=env.context.logger,
+            win=env.context.win,
             settings=settings,
             episode=episode,
             actions=actions,
-            input_handler=input_handler,
+            input_handler=env.context.input_handler,
         )
 
 
@@ -150,8 +146,8 @@ def update_psychopy_trials(settings, env, episode):
     # Update timings
     if settings["update"] is not None and len(settings["update"]) > 0:
         for k in settings["update"]:
-            for jj in env.info_dict.keys():
-                if "psychopy" in env.info_dict[jj].keys():
+            for jj in env.info_dict:
+                if "psychopy" in env.info_dict[jj]:
                     for ii in env.info_dict[jj]["psychopy"]:
                         if ii.name == k:
                             ii.duration = settings[k][episode]
