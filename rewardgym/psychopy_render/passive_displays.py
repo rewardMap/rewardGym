@@ -15,7 +15,6 @@ import numpy as np
 if TYPE_CHECKING:
     from ..environments import StepContext
 
-from ..protocols import InputProtocol, LoggerProtocol
 from ..render_base import PresentationRoutine
 from ..stimuli import (
     generate_stimulus_properties,
@@ -52,12 +51,9 @@ class BaseStimulus(PresentationRoutine):
         name : str, optional
             name of the object, will be used for logging, by default None
         """
-        self.duration = duration
-        self.name = name
+        super().__init__(name=name, duration=duration, rl_label=rl_label, noflip=noflip)
+
         self.poll_keys = poll_keys
-        self.is_setup = False
-        self.rl_label = rl_label
-        self.noflip = noflip
 
         if wait_no_keys is not None:
             warnings.warn(
@@ -65,9 +61,7 @@ class BaseStimulus(PresentationRoutine):
             )
             self.poll_keys = not wait_no_keys
 
-        self.entity = "base"
-
-    def setup(self, win: Window, **kwargs):
+    def _setup(self, win: Window, **kwargs):
         """
         Call this to setup the stimulus. This means associating the stimulus
         with a window (so there is something to flip).
@@ -109,7 +103,7 @@ class BaseStimulus(PresentationRoutine):
 
         self._log_event(logger=context.logger, stim_onset=stim_onset)
 
-    def simulate(self, context: StepContext, **kwargs) -> None:
+    def simulate(self, context: StepContext) -> None:
         """
         Function to pretend that a stimulus has been shown. Logging and creating
         timing.
@@ -128,30 +122,6 @@ class BaseStimulus(PresentationRoutine):
             stim_onset = None
 
         self._log_event(logger=context.logger, stim_onset=stim_onset)
-
-    def _simulate(
-        self, win, logger: LoggerProtocol, input_handler: InputProtocol, **kwargs
-    ):
-        pass
-
-    def _log_event(
-        self, logger: LoggerProtocol, stim_onset=None, extra_info=None, **kwargs
-    ):
-        if extra_info is None:
-            extra_info = {}
-
-        base_dict = {
-            "event_type": self.name,
-            "expected_duration": self.duration,
-            "rl_label": self.rl_label,
-        }
-
-        base_dict.update(extra_info)
-
-        logger.log_event(base_dict, onset=stim_onset)
-
-    def _setup(self, win: Window, **kwargs):
-        pass
 
     def _wait(self, logger, input_handler, onset):
         wait(
@@ -223,11 +193,7 @@ class TextStimulus(BaseStimulus):
             win=win, name=self.name, text=self.text, color=self.text_color
         )
 
-    def display(
-        self,
-        context: StepContext,
-        **kwargs,
-    ) -> None:
+    def display(self, context: StepContext) -> None:
         """
         Calls the stimulus object. In this case drawing the text stim, flipping the window,
         waiting and logging.
@@ -345,11 +311,7 @@ class ImageStimulus(BaseStimulus):
         for ip in self.imageStims:
             ip.autoDraw = self.autodraw
 
-    def display(
-        self,
-        context: StepContext,
-        **kwargs,
-    ):
+    def display(self, context: StepContext):
         """
         Calls the stimulus object. In this case drawing the images stims, flipping the window,
         waiting and logging.
@@ -555,11 +517,7 @@ class FeedBackStimulus(BaseStimulus):
                     size=self.feedback_stim[kk].shape[:2],
                 )
 
-    def display(
-        self,
-        context: StepContext,
-        **kwargs,
-    ) -> None:
+    def display(self, context: StepContext) -> None:
         """
         Calls the stimulus object, to display the reward. Uses reward or total_reward
         depending on the target that has been defined.
@@ -653,11 +611,7 @@ class FeedBackStimulus(BaseStimulus):
         self.total_reward_ind.setAutoDraw(True)
         self.total_reward_ind.draw()
 
-    def simulate(
-        self,
-        context: StepContext,
-        **kwargs,
-    ) -> None:
+    def simulate(self, context: StepContext) -> None:
         """
         Function to pretend that a stimulus has been shown. Logging and creating
         timing.
@@ -720,11 +674,7 @@ class ConditionBasedDisplay(BaseStimulus):
                     size=(self.image_map[kk].shape[1], self.image_map[kk].shape[0]),
                 )
 
-    def display(
-        self,
-        context: StepContext,
-        **kwargs,
-    ):
+    def display(self, context: StepContext):
         condition = context.condition
         win = context.win
         logger = context.logger
@@ -812,7 +762,6 @@ class TextWithBorder(BaseStimulus):
         textColor="white",
         target="reward",
         font_height=150,
-        position=(0, 0),
         name=None,
         rl_label: str | None = None,
     ):
@@ -832,7 +781,7 @@ class TextWithBorder(BaseStimulus):
         self.condition_text = condition_text
         self.font_height = font_height
 
-    def setup(self, win, **kwargs):
+    def _setup(self, win, **kwargs):
         self.textStim = TextStim(
             win=win,
             name=self.name + "_text",
@@ -851,11 +800,7 @@ class TextWithBorder(BaseStimulus):
             name=self.name + "_rect",
         )
 
-    def display(
-        self,
-        context: StepContext,
-        **kwargs,
-    ):
+    def display(self, context: StepContext):
         reward = context.reward
         action = context.previous_action
         input_handler = context.input_handler

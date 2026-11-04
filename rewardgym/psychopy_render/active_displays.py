@@ -63,11 +63,7 @@ class ActionStimulus(ActionRoutine):
 
         self.key_list = list(key_dict.keys())
 
-    def display(
-        self,
-        context: StepContext,
-        **kwargs,
-    ) -> tuple[int | None, float | None] | None:
+    def display(self, context: StepContext) -> tuple[int | None, float | None] | None:
         """
         Calls the stimulus object. In this case waiting for a specific response,
         returning it and logging the process. Flipping the window in the end.
@@ -101,11 +97,7 @@ class ActionStimulus(ActionRoutine):
 
         return response
 
-    def simulate(
-        self,
-        context: StepContext,
-        **kwargs,
-    ):
+    def simulate(self, context: StepContext):
         logger = context.logger
         response_window_onset = logger.get_time()
         response = self._simulate_response(
@@ -118,7 +110,7 @@ class ActionStimulus(ActionRoutine):
 
         return response
 
-    def _setup(self, win: Window = None, **kwargs):
+    def _setup(self, win: Window, **kwargs):
         pass
 
 
@@ -162,6 +154,7 @@ class ActionStimulusTooEarly(ActionStimulus):
             }
         if key_dict is None:
             key_dict = {"left": 0, "right": 1}
+
         super().__init__(
             name=name,
             duration=duration,
@@ -174,7 +167,7 @@ class ActionStimulusTooEarly(ActionStimulus):
         self.name_tooearly = name_tooearly
         self.text_tooearly = text_tooearly
 
-    def _setup(self, win: Window = None, **kwargs):
+    def _setup(self, win: Window, **kwargs):
         """
         Does not need a special setup, including the function, to make easy looping possible.
 
@@ -189,7 +182,6 @@ class ActionStimulusTooEarly(ActionStimulus):
     def display(
         self,
         context: StepContext,
-        **kwargs,
     ) -> int | str:
         """
         Calls the stimulus object. In this case waiting for a specific response,
@@ -365,11 +357,7 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
 
         return response
 
-    def simulate(
-        self,
-        context: StepContext,
-        **kwargs,
-    ):
+    def simulate(self, context: StepContext):
         logger = context.logger
         stim_onset = logger.get_time()
 
@@ -552,7 +540,7 @@ class StimuliWithResponse(ActionStimulus):
                     )
                 )
 
-    def display(self, context: StepContext, **kwargs):
+    def display(self, context: StepContext):
         input_handler = context.input_handler
         logger = context.logger
         win = context.win
@@ -574,11 +562,7 @@ class StimuliWithResponse(ActionStimulus):
 
         return response
 
-    def simulate(
-        self,
-        context: StepContext,
-        **kwargs,
-    ):
+    def simulate(self, context: StepContext):
         logger = context.logger
         stim_onset = logger.get_time()
 
@@ -721,7 +705,7 @@ class LingeringAction(ActionStimulus):
                     )
                 )
 
-    def display(self, context: StepContext, **kwargs):
+    def display(self, context: StepContext):
         win = context.win
         logger = context.logger
         input_handler = context.input_handler
@@ -756,11 +740,7 @@ class LingeringAction(ActionStimulus):
 
         return response
 
-    def simulate(
-        self,
-        context: StepContext,
-        **kwargs,
-    ):
+    def simulate(self, context: StepContext):
         logger = context.logger
         stim_onset = logger.get_time()
 
