@@ -5,13 +5,6 @@ from ..input_handling import BaseInputHandler, PsychoPyInput
 from ..logging import ExperimentLogger
 from ..protocols import InputProtocol, LoggerProtocol
 
-try:
-    from psychopy.visual import Window
-except ModuleNotFoundError:
-    from ..psychopy_render.psychopy_stubs import Window
-
-from ..psychopy_render import psychopy_stubs
-
 
 @dataclass
 class EnvironmentContext:
@@ -25,28 +18,50 @@ class EnvironmentContext:
             raise ValueError(
                 f"{self.mode} has to be 'psychopy' or 'psychopy-simulate'!"
             )
-        if self.logger is None:
-            self.logger = ExperimentLogger(file_name=None, clock=psychopy_stubs.Clock())
 
+        if self.mode == "psychopy":
+            self._setup_psychopy()
+
+        elif self.mode == "psychopy-simulate":
+            self._setup_psychopy_simulate()
+
+    def _setup_psychopy(self):
         if self.window is None:
-            if self.mode == "psychopy":
-                self.window = Window(
-                    size=[1680, 1050],
-                    fullscr=False,
-                    color=[-0.5, -0.5, -0.5],
-                    colorSpace="rgb",
-                    units="pix",
-                )
-            elif self.mode == "psychopy-simulate":
-                self.window = psychopy_stubs.Window()
+            from psychopy.visual import Window
+
+            self.window = Window(
+                size=[1680, 1050],
+                fullscr=False,
+                color=[-0.5, -0.5, -0.5],
+                colorSpace="rgb",
+                units="pix",
+            )
+
+        if self.logger is None:
+            from psychopy.core import Clock
+
+            self.logger = ExperimentLogger(file_name=None, clock=Clock())
 
         if self.input_handler is None:
-            if self.mode == "psychopy-simulate":
-                self.input_handler = BaseInputHandler()
-            elif self.mode == "psychopy":
-                self.input_handler = PsychoPyInput(self.logger.clock, win=self.window)
+            self.input_handler = PsychoPyInput(self.logger.clock, win=self.window)
 
-        self.win = self.window
+    def _setup_psychopy_simulate(self):
+        if self.window is None:
+            from ..psychopy_render.psychopy_stubs import Window
+
+            self.window = Window()
+
+        if self.input_handler is None:
+            self.input_handler = BaseInputHandler()
+
+        if self.logger is None:
+            from ..psychopy_render.psychopy_stubs import Clock
+
+            self.logger = ExperimentLogger(file_name=None, clock=Clock())
+
+    @property
+    def win(self):
+        return self.window
 
 
 @dataclass
