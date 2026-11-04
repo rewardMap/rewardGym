@@ -118,34 +118,34 @@ class PsychopyEnv(BaseEnv):
             info=info,
         )
 
-        if self.render_mode == "psychopy" and "psychopy" in info:
-            if not self.is_setup:
-                raise RuntimeError(
-                    "You have to setup the environment first, using env.setup_render()"
-                )
+        if not self.is_setup:
+            raise RuntimeError(
+                "You have to setup the environment first, using env.setup()"
+            )
 
-            for disp in info["psychopy"]:
-                out = disp.display(current_step)
-                self._check_output(out, info, remap=True)
+        if "psychopy" not in info:
+            pass
 
-        elif self.render_mode == "psychopy-simulate" and "psychopy" in info:
-            if not self.is_setup:
-                raise RuntimeError(
-                    "You have to setup the environment first, using env.setup_simulation()"
-                )
+        else:
             for disp in info["psychopy"]:
                 if not isinstance(disp, ActionRoutine) or not self.expose_last_stim:
-                    disp.simulate(current_step)
+                    disp.present(current_step)
+                elif not self.expose_last_stim:
+                    out = disp.present(current_step)
 
-            if not self.expose_last_stim:
+                self._check_output(out, info, remap=True)
+
+            if not self.expose_last_stim and self.context == "psychopy-simulate":
                 self.simulate_action(info, self.previous_action, self.reaction_time)
 
-        elif "psychopy" not in info:
-            pass
-        else:
-            raise NotImplementedError(
-                "Render needs to be psychopy or psychopy-simulate."
-            )
+                if not self.is_setup:
+                    raise RuntimeError(
+                        "You have to setup the environment first, using env.setup_render()"
+                    )
+
+                for disp in info["psychopy"]:
+                    out = disp.display(current_step)
+                    self._check_output(out, info, remap=True)
 
     def simulate_action(self, info, action, reaction_time):
         action_step = StepContext(
