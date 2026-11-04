@@ -7,15 +7,15 @@ PsychoPy version (tested on at least v2026.1.3).
 """
 
 from psychopy import core, event, visual
-
-from rewardgym.environments import PsychopyEnv
-from rewardgym.logging import ExperimentLogger
 from rewardgym.psychopy_render.psychopy_display import (
     ActionStimulus,
     BaseStimulus,
     FeedBackStimulus,
     TextStimulus,
 )
+
+from rewardgym.environments import PsychopyEnv
+from rewardgym.logging import ExperimentLogger
 from rewardgym.reward_classes import BaseReward
 
 # As in the pygame example, we create the graph, rewards and their locations:
