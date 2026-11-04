@@ -7,6 +7,7 @@ import numpy as np
 from ..protocols import InputProtocol, LoggerProtocol
 from .base_env import BaseEnv
 from .contexts import EnvironmentContext, StepContext
+from ..render_base import ActionRoutine
 
 
 class PsychopyEnv(BaseEnv):
@@ -133,7 +134,7 @@ class PsychopyEnv(BaseEnv):
                     "You have to setup the environment first, using env.setup_simulation()"
                 )
             for disp in info["psychopy"]:
-                if disp.entity != "action" or not self.expose_last_stim:
+                if not isinstance(disp, ActionRoutine) or not self.expose_last_stim:
                     disp.simulate(current_step)
 
             if not self.expose_last_stim:
