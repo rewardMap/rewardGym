@@ -1,4 +1,4 @@
-from ..logging import ExperimentLogger, SimulationLogger
+from ..logging import ExperimentLogger
 from .active_displays import (
     ActionStimulus,
     ActionStimulusTooEarly,

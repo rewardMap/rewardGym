@@ -1,4 +1,4 @@
-from psylog import BaseLogger, CategoryConfig, DictLogOutput, LogMode
+from psylog import BaseLogger, CategoryConfig, LogMode
 
 from .protocols import ClockProtocol, LoggerProtocol
 
@@ -26,7 +26,7 @@ class ExperimentLogger(BaseLogger, LoggerProtocol):
         Parameters
         ----------
         file_name : str
-            Name of the output file.
+            Name of the output file - if None writes to dictionary.
         global_clock : core.Clock
             Clock that is used by the experiment.
         participant_id : str
@@ -68,15 +68,6 @@ class ExperimentLogger(BaseLogger, LoggerProtocol):
                 and self.categories_dict[k].mode == LogMode.STATE
             ):
                 self.categories_dict[k].set_state(v)
-
-
-class SimulationLogger(ExperimentLogger, LoggerProtocol):
-    """Simulation version that stores data in memory instead of writing to file."""
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Override the output to use DictLogOutput
-        self._output = DictLogOutput()  # From codebase.txt
 
 
 def get_rewardmap_defaults():

@@ -1,5 +1,5 @@
 from rewardgym import get_env
-from rewardgym.psychopy_render import SimulationLogger
+from rewardgym.logging import ExperimentLogger
 from rewardgym.psychopy_render.psychopy_stubs import Clock, Window
 from rewardgym.runner import pspy_run_task
 
@@ -10,8 +10,8 @@ def simulate_task(envname):
     win = Window()
     globalClock = Clock()
 
-    Logger = SimulationLogger(
-        "",
+    Logger = ExperimentLogger(
+        None,
         globalClock,
         participant_id=exp_dict["participant_id"],
         run=exp_dict["run"],
