@@ -99,7 +99,7 @@ class BaseStimulus:
             stim_onset = step_context.logger.get_time()
 
             if not self.noflip:
-                stim_onset = step_context.win.flip()  # Improve timing!
+                step_context.win.flip()
 
             self._wait(
                 step_context.logger, step_context.input_handler, onset=stim_onset
