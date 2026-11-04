@@ -61,6 +61,8 @@ class BaseStimulus:
             )
             self.poll_keys = not wait_no_keys
 
+        self.entity = "base"
+
     def setup(self, win: Window, **kwargs):
         """
         Call this to setup the stimulus. This means associating the stimulus
