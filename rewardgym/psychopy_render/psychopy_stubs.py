@@ -1,9 +1,15 @@
-class Clock:
+from ..protocols import ClockProtocol
+
+
+class Clock(ClockProtocol):
     def __init__(self):
         self.time = 0
 
     def getTime(self):
         return self.time
+
+    def reset(self):
+        pass
 
 
 class Window:
