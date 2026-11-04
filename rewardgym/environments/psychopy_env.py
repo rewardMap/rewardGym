@@ -124,7 +124,7 @@ class PsychopyEnv(BaseEnv):
                 )
 
             for disp in info["psychopy"]:
-                out = disp.display(**current_step.get_display_inputs())
+                out = disp.display(current_step)
                 self._check_output(out, info, remap=True)
 
         elif self.render_mode == "psychopy-simulate" and "psychopy" in info:
@@ -134,7 +134,7 @@ class PsychopyEnv(BaseEnv):
                 )
             for disp in info["psychopy"]:
                 if disp.entity != "action" or not self.expose_last_stim:
-                    disp.simulate(**current_step.get_simulation_inputs())
+                    disp.simulate(current_step)
 
             if not self.expose_last_stim:
                 self.simulate_action(info, self.previous_action, self.reaction_time)
@@ -158,7 +158,7 @@ class PsychopyEnv(BaseEnv):
             info=info,
         )
 
-        out = info["psychopy"][-1].simulate(action_step.get_simulation_inputs())
+        out = info["psychopy"][-1].simulate(action_step)
 
         self._check_output(out, info)
 

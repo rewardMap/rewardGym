@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 from typing import Any
 
-from .. import psychopy_render as psrender
 from ..input_handling import BaseInputHandler, PsychoPyInput
 from ..logging import ExperimentLogger
 from ..protocols import InputProtocol, LoggerProtocol
@@ -10,6 +9,8 @@ try:
     from psychopy.visual import Window
 except ModuleNotFoundError:
     from ..psychopy_render.psychopy_stubs import Window
+
+from ..psychopy_render import psychopy_stubs
 
 
 @dataclass
@@ -25,9 +26,7 @@ class EnvironmentContext:
                 f"{self.mode} has to be 'psychopy' or 'psychopy-simulate'!"
             )
         if self.logger is None:
-            self.logger = ExperimentLogger(
-                file_name=None, clock=psrender.psychopy_stubs.Clock()
-            )
+            self.logger = ExperimentLogger(file_name=None, clock=psychopy_stubs.Clock())
 
         if self.window is None:
             if self.mode == "psychopy":
@@ -39,7 +38,7 @@ class EnvironmentContext:
                     units="pix",
                 )
             elif self.mode == "psychopy-simulate":
-                self.window = psrender.psychopy_stubs.Window()
+                self.window = psychopy_stubs.Window()
 
         if self.input_handler is None:
             if self.mode == "psychopy-simulate":
@@ -62,29 +61,22 @@ class StepContext:
 
     reaction_time: float | None = None
 
-    def get_display_inputs(self) -> dict:
-        return {
-            "condition": self.condition,
-            "total_reward": self.total_reward,
-            "reward": self.reward,
-            "location": self.location,
-            "action": self.previous_action,
-            "info": self.info,
-            "logger": self.env_context.logger,
-            "input_handler": self.env_context.input_handler,
-            "win": self.env_context.window,
-        }
+    @property
+    def win(self):
+        return self.env_context.window
 
-    def get_simulation_inputs(self) -> dict:
-        return {
-            "condition": self.condition,
-            "total_reward": self.total_reward,
-            "reward": self.reward,
-            "location": self.location,
-            "key": self.previous_action,
-            "info": self.info,
-            "logger": self.env_context.logger,
-            "input_handler": self.env_context.input_handler,
-            "win": self.env_context.window,
-            "rt": self.reaction_time,
-        }
+    @property
+    def logger(self):
+        return self.env_context.logger
+
+    @property
+    def input_handler(self):
+        return self.env_context.input_handler
+
+    @property
+    def rt(self):
+        return self.reaction_time
+
+    @property
+    def key(self):
+        return self.previous_action
