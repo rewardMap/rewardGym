@@ -4,17 +4,9 @@ from collections import defaultdict
 
 import numpy as np
 
-try:
-    from psychopy.visual import Window
-except ModuleNotFoundError:
-    from ..psychopy_render.psychopy_stubs import Window
-
-
-from .. import psychopy_render as psrender
-from ..input_handling import BaseInputHandler, PsychoPyInput
-from ..logging import ExperimentLogger, SimulationLogger
 from ..protocols import InputProtocol, LoggerProtocol
 from .base_env import BaseEnv
+from .contexts import EnvironmentContext, StepContext
 
 
 class PsychopyEnv(BaseEnv):
@@ -71,87 +63,30 @@ class PsychopyEnv(BaseEnv):
     def setup(
         self,
         window=None,
-        logger: LoggerProtocol = None,
-        expose_last_stim=False,
-        input_handler: InputProtocol = None,
+        logger: LoggerProtocol | None = None,
+        expose_last_stim: bool = False,
+        input_handler: InputProtocol | None = None,
     ):
-        if self.render_mode == "psychopy-simulate":
-            self._setup_simulation(
-                window,
-                logger,
-                expose_last_stim=expose_last_stim,
-                input_handler=input_handler,
-            )
-        elif self.render_mode == "psychopy":
-            self._setup_render(window, logger=logger, input_handler=input_handler)
+        self.context = EnvironmentContext(
+            window=window,
+            logger=logger,
+            input_handler=input_handler,
+            mode=self.render_mode,
+        )
 
-    def _setup_render(
-        self,
-        window=None,
-        logger: LoggerProtocol = None,
-        input_handler: InputProtocol = None,
-    ):
-        if window is None:
-            self.window = Window(
-                size=[1680, 1050],
-                fullscr=False,
-                color=[-0.5, -0.5, -0.5],
-                colorSpace="rgb",
-                units="pix",
-            )
-        else:
-            self.window = window
+        if self.render_mode == "psychopy":
+            for node in self.graph:
+                if "psychopy" in self.info_dict[node]:
+                    [
+                        stim.setup(self.context.window)
+                        for stim in self.info_dict[node]["psychopy"]
+                        if not stim.is_setup
+                    ]
 
-        if logger is None:
-            self.logger = ExperimentLogger(
-                file_name=None, clock=psrender.psychopy_stubs.Clock()
-            )
-        else:
-            self.logger = logger
-
-        for node in self.graph:
-            if "psychopy" in self.info_dict[node]:
-                [
-                    stim.setup(self.window)
-                    for stim in self.info_dict[node]["psychopy"]
-                    if not stim.is_setup
-                ]
-
-        if input_handler is None:
-            self.input_handler = PsychoPyInput(self.logger.clock, win=window)
-        else:
-            self.input_handler = input_handler
-
-        self.is_setup = True
-
-    def _setup_simulation(
-        self,
-        window=None,
-        logger: LoggerProtocol = None,
-        expose_last_stim=False,
-        input_handler: InputProtocol = None,
-    ):
         self.expose_last_stim = expose_last_stim
         self.reaction_time = None
 
-        if window is None:
-            self.window = psrender.psychopy_stubs.Window()
-        else:
-            self.window = window
-
-        if logger is None:
-            self.logger = SimulationLogger(
-                file_name=None, clock=psrender.psychopy_stubs.Clock()
-            )
-        else:
-            self.logger = logger
-
-        if input_handler is None:
-            self.input_handler = BaseInputHandler()
-        else:
-            self.input_handler = input_handler
-
-        self.sim_setup = True
+        self.is_setup = True
 
     def _render_frame(self, info: dict) -> None:
         """
@@ -167,8 +102,19 @@ class PsychopyEnv(BaseEnv):
         self.action = None
         out = None
 
-        self.logger.update_trial_info(
+        self.context.logger.update_trial_info(
             current_location=self.agent_location, avail_actions=info["avail-actions"]
+        )
+
+        current_step = StepContext(
+            env_context=self.context,
+            location=self.agent_location,
+            condition=self.condition,
+            total_reward=self.cumulative_reward,
+            reward=self.reward,
+            previous_action=self.previous_action,
+            reaction_time=self.reaction_time,
+            info=info,
         )
 
         if self.render_mode == "psychopy" and "psychopy" in info:
@@ -178,40 +124,17 @@ class PsychopyEnv(BaseEnv):
                 )
 
             for disp in info["psychopy"]:
-                out = disp.display(
-                    win=self.window,
-                    logger=self.logger,
-                    condition=self.condition,
-                    total_reward=self.cumulative_reward,
-                    reward=self.reward,
-                    location=self.agent_location,
-                    action=self.previous_action,
-                    input_handler=self.input_handler,
-                    info=info,
-                )
-
+                out = disp.display(**current_step.get_display_inputs())
                 self._check_output(out, info, remap=True)
 
         elif self.render_mode == "psychopy-simulate" and "psychopy" in info:
-            if not self.sim_setup:
+            if not self.is_setup:
                 raise RuntimeError(
                     "You have to setup the environment first, using env.setup_simulation()"
                 )
-
             for disp in info["psychopy"]:
                 if disp.entity != "action" or not self.expose_last_stim:
-                    disp.simulate(
-                        win=self.window,
-                        logger=self.logger,
-                        condition=self.condition,
-                        total_reward=self.cumulative_reward,
-                        reward=self.reward,
-                        location=self.agent_location,
-                        key=self.previous_action,
-                        rt=self.reaction_time,
-                        input_handler=self.input_handler,
-                        info=info,
-                    )
+                    disp.simulate(**current_step.get_simulation_inputs())
 
             if not self.expose_last_stim:
                 self.simulate_action(info, self.previous_action, self.reaction_time)
@@ -224,17 +147,18 @@ class PsychopyEnv(BaseEnv):
             )
 
     def simulate_action(self, info, action, reaction_time):
-        out = info["psychopy"][-1].simulate(
-            win=self.window,
-            logger=self.logger,
+        action_step = StepContext(
+            env_context=self.context,
+            location=self.agent_location,
             condition=self.condition,
             total_reward=self.cumulative_reward,
             reward=self.reward,
-            location=self.agent_location,
-            key=action,
-            rt=reaction_time,
+            previous_action=action,
+            reaction_time=reaction_time,
             info=info,
         )
+
+        out = info["psychopy"][-1].simulate(action_step.get_simulation_inputs())
 
         self._check_output(out, info)
 
@@ -260,9 +184,11 @@ class PsychopyEnv(BaseEnv):
         """
         Closes the pygame display and quits pygame.
         """
-        if self.window is not None:
-            self.logger.close()
-            self.window.close()
+        if self.context.window is not None:
+            self.context.window.close()
+
+        if self.context.logger is not None:
+            self.context.logger.close()
 
     def reset(
         self,
