@@ -111,7 +111,6 @@ class ActionStimulus(ActionRoutine):
         response = response_handling(
             self, context, response_window_onset=response_window_onset
         )
-        print(response)
         return response
 
     def _setup(self, win: Window, **kwargs):

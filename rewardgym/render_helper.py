@@ -48,8 +48,8 @@ def response_handling(
         if response_time is not None and routine.duration is not None:
             if response_time > routine.duration:
                 timeout = True
-        else:
-            response_present = True
+            else:
+                response_present = True
 
         logger.clock.time += min([response_time, routine.duration])
 
@@ -101,10 +101,8 @@ def response_handling(
 
         remaining = routine.duration - reaction_time
 
-        print("Output readings:", response_button, env_action, key_action)
 
     elif response_present is False:
-        print("no response")
         key_action = routine.timeout_action
 
         if key_action is None:
