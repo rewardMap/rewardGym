@@ -5,6 +5,14 @@ from .protocols import LoggerProtocol
 from .render_base import ActionRoutine, PresentationRoutine
 from .utils import get_key_from_dict
 
+from enum import Enum
+
+
+class PollStatus(Enum):
+    WAITING = "waiting"
+    RECEIVED = "received"
+    TIMEOUT = "timeout"
+
 
 def log_event(
     routine: ActionRoutine | PresentationRoutine,
@@ -40,12 +48,13 @@ def response_handling(
 
     # Values to be set:
     response = None
-    polling_state = "waiting"
+    polling_state = PollStatus.WAITING
     remaining = None
     response_window = response_window_onset + routine.duration
-    key_list = list(key_dict.keys())
     env_action = None
-    key_action = None
+
+    if routine.duration is None:
+        raise ValueError(f"{routine.duration} needs to be defined.")
 
     if "simulate" in context.env_context.mode:
         action = context.previous_action
@@ -55,27 +64,30 @@ def response_handling(
             if response_time > routine.duration:
                 polling_state = "timeout"
             else:
-                polling_state = "received"
+                polling_state = PollStatus.RECEIVED
                 env_action = get_response_from_action(action, info)
                 key_action = get_key_from_dict(key_dict, env_action)[
                     0
                 ]  # TODO: More safeguarding.
                 response = (key_action, response_time + response_window_onset)
 
-        logger.clock.time += min([response_time, routine.duration])
+        advance = routine.duration
+        if response_time is not None:
+            advance = min([response_time, routine.duration])
 
-    if routine.duration is None:
-        raise ValueError(f"{routine.duration} needs to be defined.")
+        logger.clock.time += advance
 
-    while polling_state == "waiting":
-        response = input_handler.key_strokes(logger=logger, key_list=key_list)
+    while polling_state == PollStatus.WAITING:
+        response = input_handler.key_strokes(
+            logger=logger, key_list=list(key_dict.keys())
+        )
 
         if response_window <= logger.get_time():
-            polling_state = "timeout"
+            polling_state = PollStatus.TIMEOUT
         if response:
-            polling_state = "received"
+            polling_state = PollStatus.RECEIVED
 
-    if polling_state == "received" and response is not None:
+    if polling_state == PollStatus.RECEIVED:
         response_button, response_time = response
         # Casting response time to reaction time:
         reaction_time = response_time - response_window_onset
@@ -98,7 +110,7 @@ def response_handling(
 
         remaining = routine.duration - reaction_time
 
-    elif polling_state == "timeout":
+    elif polling_state == PollStatus.TIMEOUT:
         key_action = routine.timeout_action
 
         if key_action is None:
