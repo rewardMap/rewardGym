@@ -3,6 +3,7 @@ from typing import Any
 from .environments import StepContext
 from .protocols import LoggerProtocol
 from .render_base import ActionRoutine, PresentationRoutine
+from .utils import get_key_from_dict
 
 
 def log_event(
@@ -34,16 +35,20 @@ def response_handling(
     logger = context.logger
     info = context.info
 
+    if key_dict is None:
+        key_dict = routine.key_dict
+
     # Values to be set:
     response = None
     response_present = False
     remaining = None
     timeout = False
+    response_window = response_window_onset + routine.duration
+    key_list = list(key_dict.keys())
 
     if "simulate" in context.env_context.mode:
-        key_action = context.previous_action
+        action = context.previous_action
         response_time = context.reaction_time
-        env_action = key_action
 
         if response_time is not None and routine.duration is not None:
             if response_time > routine.duration:
@@ -53,6 +58,12 @@ def response_handling(
 
         logger.clock.time += min([response_time, routine.duration])
 
+        env_action = get_response_from_action(action, info)
+        key_action = get_key_from_dict(key_dict, env_action)[
+            0
+        ]  # TODO: More safeguarding.
+        response = (key_action, response_time + response_window_onset)
+
     else:
         key_action = None
         response_time = None
@@ -61,14 +72,6 @@ def response_handling(
     if routine.duration is None:
         raise ValueError(f"{routine.duration} needs to be defined.")
 
-    response_window = response_window_onset + routine.duration
-
-    if key_dict is None:
-        key_dict = routine.key_dict
-
-    key_list = list(key_dict.keys())
-
-    # Polling until response is being registered.
     while not timeout and not response_present:
         response = input_handler.key_strokes(logger=logger, key_list=key_list)
 
@@ -81,9 +84,7 @@ def response_handling(
         # Casting response time to reaction time:
         reaction_time = response_time - response_window_onset
 
-        if "simulate" in context.env_context.mode:
-            response_button = get_response_from_action(context.previous_action, info)
-        else:
+        if env_action is None:
             env_action = get_action_from_response_key(response_button, info, key_dict)
 
         key_action = key_dict[response_button]
@@ -100,7 +101,6 @@ def response_handling(
         )
 
         remaining = routine.duration - reaction_time
-
 
     elif response_present is False:
         key_action = routine.timeout_action

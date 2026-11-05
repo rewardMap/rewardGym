@@ -148,8 +148,9 @@ class PsychopyEnv(BaseEnv):
             reaction_time=reaction_time,
             info=info,
         )
+
         out = info["psychopy"][-1].present(action_step)
-        self._check_output(out, info)
+        self._check_output(out, info, remap=True)
 
     def _check_output(self, out, info, remap=False):
         if out is not None:
