@@ -19,6 +19,8 @@ from ..utils import check_random_state
 if TYPE_CHECKING:
     from ..environments import StepContext
 
+from ..render_helper import log_event
+
 
 class ActionStimulus(ActionRoutine):
     """
@@ -210,10 +212,7 @@ class ActionStimulusTooEarly(ActionStimulus):
         response_window_onset = logger.get_time()
 
         key_list = list(self.key_dict.keys())
-        responses = input_handler.get_keys()
-        response = input_handler.interpret_keys(
-            responses, logger=logger, key_list=key_list
-        )
+        response = input_handler.key_strokes(logger=logger, key_list=key_list)
 
         if response:
             RTE = response[1] - response_window_onset
@@ -470,10 +469,10 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
             start=stim_onset,
             poll_keys=self.poll_keys,
         )
-
-        self._log_event(
-            logger=logger,
-            stim_onset=stim_onset,
+        log_event(
+            self,
+            logger,
+            onset=stim_onset,
             extra_info={
                 "misc": f"flip-{flip}",
                 "event_type": name,
@@ -561,7 +560,8 @@ class StimuliWithResponse(ActionStimulus):
 
         simulation_wait(logger.clock, time=self.target_duration, start=stim_onset)
 
-        self._log_event(
+        log_event(
+            self,
             logger=logger,
             stim_onset=stim_onset,
             extra_info={
@@ -601,7 +601,8 @@ class StimuliWithResponse(ActionStimulus):
             input_handler=input_handler,
         )
 
-        self._log_event(
+        log_event(
+            self,
             logger=logger,
             stim_onset=stim_onset,
             extra_info={
@@ -800,7 +801,8 @@ class LingeringAction(ActionStimulus):
             poll_keys=self.poll_keys,
         )
 
-        self._log_event(
+        self.log_event(
+            self,
             logger=logger,
             stim_onset=stim_onset,
             extra_info={

@@ -24,6 +24,7 @@ from ..stimuli import (
     zero_cross,
 )
 from ..timing import simulation_wait, wait
+from ..render_helper import log_event
 
 
 class BaseStimulus(PresentationRoutine):
@@ -94,12 +95,17 @@ class BaseStimulus(PresentationRoutine):
             if not self.noflip:
                 context.win.flip()
 
-            self._wait(context.logger, context.input_handler, onset=stim_onset)
-
+            wait(
+                logger=context.logger,
+                input_handler=context.input_handler,
+                time=self.duration,
+                start=stim_onset,
+                poll_keys=self.poll_keys,
+            )
         else:
             stim_onset = None
 
-        self._log_event(logger=context.logger, stim_onset=stim_onset)
+        log_event(self, logger=context.logger, stim_onset=stim_onset)
 
     def simulate(self, context: StepContext) -> None:
         """
@@ -119,24 +125,7 @@ class BaseStimulus(PresentationRoutine):
         else:
             stim_onset = None
 
-        self._log_event(logger=context.logger, stim_onset=stim_onset)
-
-    def _wait(self, logger, input_handler, onset):
-        wait(
-            logger=logger,
-            input_handler=input_handler,
-            time=self.duration,
-            start=onset,
-            poll_keys=self.poll_keys,
-        )
-
-    def _wait_and_log(self, logger, input_handler, onset, extra_info=None):
-        self._wait(logger, input_handler, onset=onset)
-        self._log_event(
-            logger=logger,
-            stim_onset=onset,
-            extra_info=extra_info,
-        )
+        log_event(self, logger=context.logger, stim_onset=stim_onset)
 
 
 class TextStimulus(BaseStimulus):
@@ -221,7 +210,7 @@ class TextStimulus(BaseStimulus):
             poll_keys=self.poll_keys,
         )
 
-        self._log_event(logger=context.logger, stim_onset=stim_onset)
+        log_event(self, logger=context.logger, stim_onset=stim_onset)
 
 
 class ImageStimulus(BaseStimulus):
@@ -345,7 +334,7 @@ class ImageStimulus(BaseStimulus):
             poll_keys=self.poll_keys,
         )
 
-        self._log_event(logger=context.logger, stim_onset=stim_onset)
+        log_event(self, logger=context.logger, stim_onset=stim_onset)
 
 
 class FeedBackStimulus(BaseStimulus):
@@ -587,7 +576,8 @@ class FeedBackStimulus(BaseStimulus):
 
         win.flip()
 
-        self._log_event(
+        log_event(
+            self,
             logger=logger,
             stim_onset=stim_onset,
             extra_info={"total_reward": total_reward, "reward": reward},
@@ -623,7 +613,8 @@ class FeedBackStimulus(BaseStimulus):
 
         simulation_wait(context.logger.clock, time=self.duration, start=stim_onset)
 
-        self._log_event(
+        log_event(
+            self,
             logger=context.logger,
             stim_onset=stim_onset,
             extra_info={
@@ -743,7 +734,7 @@ class ConditionBasedDisplay(BaseStimulus):
             poll_keys=self.poll_keys,
         )
 
-        self._log_event(logger=logger, stim_onset=stim_onset)
+        log_event(self, logger=logger, stim_onset=stim_onset)
 
 
 class TextWithBorder(BaseStimulus):
@@ -830,4 +821,4 @@ class TextWithBorder(BaseStimulus):
             poll_keys=self.poll_keys,
         )
 
-        self._log_event(logger=logger, stim_onset=stim_onset)
+        log_event(self, logger=logger, stim_onset=stim_onset)
