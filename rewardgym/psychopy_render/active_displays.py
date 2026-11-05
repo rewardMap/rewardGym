@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
+import warnings
 
 try:
     from psychopy.visual import ImageStim, TextStim, Window
@@ -10,6 +11,7 @@ except ModuleNotFoundError:
 
 from ..protocols import InputProtocol
 from ..render_base import ActionRoutine
+from ..render_helper import response_handling
 from ..stimuli import generate_stimulus_properties, make_card_stimulus
 from ..timing import simulation_wait, wait
 from ..utils import check_random_state
@@ -32,6 +34,8 @@ class ActionStimulus(ActionRoutine):
         name_timeout="response-time-out",
         rl_label: str | None = None,
         noflip: bool = False,
+        poll_keys: bool = True,
+        wait_no_keys: bool = False,
     ):
         """
         Setting up the action object.
@@ -60,6 +64,13 @@ class ActionStimulus(ActionRoutine):
             timeout_action=timeout_action,
             name_timeout=name_timeout,
         )
+        self.poll_keys = poll_keys
+
+        if wait_no_keys is not None:
+            warnings.warn(
+                "wait_no_keys will be removed in favor of poll_keys", DeprecationWarning
+            )
+            self.poll_keys = not wait_no_keys
 
         self.key_list = list(key_dict.keys())
 
@@ -85,11 +96,8 @@ class ActionStimulus(ActionRoutine):
 
         response_window_onset = context.logger.get_time()
 
-        response = self._response_handling(
-            input_handler=context.input_handler,
-            logger=context.logger,
-            response_window_onset=response_window_onset,
-            info=context.info,
+        response = response_handling(
+            self, context, response_window_onset=response_window_onset
         )
 
         if not self.noflip:
@@ -100,14 +108,10 @@ class ActionStimulus(ActionRoutine):
     def simulate(self, context: StepContext):
         logger = context.logger
         response_window_onset = logger.get_time()
-        response = self._simulate_response(
-            logger,
-            context.key,
-            context.rt,
-            response_window_onset=response_window_onset,
-            info=context.info,
+        response = response_handling(
+            self, context, response_window_onset=response_window_onset
         )
-
+        print(response)
         return response
 
     def _setup(self, win: Window, **kwargs):
@@ -229,8 +233,8 @@ class ActionStimulusTooEarly(ActionStimulus):
         # clearing buffer
         input_handler.key_strokes(logger=logger)
 
-        response = self._response_handling(
-            input_handler, logger, response_window_onset, info=context.info
+        response = response_handling(
+            self, context, response_window_onset=response_window_onset
         )
 
         if response is not None:
@@ -335,12 +339,11 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
 
         response_window_onset = logger.get_time()
 
-        response = self._response_handling(
-            input_handler,
-            logger,
-            response_window_onset,
+        response = response_handling(
+            self,
+            context,
+            response_window_onset=response_window_onset,
             key_dict=flip_key_dict,
-            info=context.info,
         )
 
         if response is not None:
@@ -373,12 +376,8 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
         )
 
         response_window_onset = logger.get_time()
-        out = self._simulate_response(
-            logger,
-            context.key,
-            context.rt,
-            response_window_onset=response_window_onset,
-            info=context.info,
+        out = response_handling(
+            self, context, response_window_onset=response_window_onset
         )
 
         if out is None:
@@ -551,13 +550,8 @@ class StimuliWithResponse(ActionStimulus):
         win.flip()
 
         response_window_onset = logger.get_time()
-
-        response = self._response_handling(
-            input_handler,
-            logger,
-            response_window_onset,
-            key_dict=self.key_dict,
-            info=context.info,
+        response = response_handling(
+            self, context, response_window_onset=response_window_onset
         )
 
         return response
@@ -578,13 +572,7 @@ class StimuliWithResponse(ActionStimulus):
             },
         )
 
-        response = self._simulate_response(
-            logger,
-            context.key,
-            context.rt,
-            response_window_onset=stim_onset,
-            info=context.info,
-        )
+        response = response_handling(self, context, response_window_onset=stim_onset)
 
         return response
 
@@ -724,8 +712,8 @@ class LingeringAction(ActionStimulus):
 
         response_window_onset = logger.get_time()
 
-        response = self._response_handling(
-            input_handler, logger, response_window_onset, info=context.info
+        response = response_handling(
+            self, context, response_window_onset=response_window_onset
         )
 
         self._draw_stimulus(
@@ -757,12 +745,8 @@ class LingeringAction(ActionStimulus):
 
         response_window_onset = logger.get_time()
 
-        out = self._simulate_response(
-            logger,
-            context.key,
-            context.rt,
-            response_window_onset=response_window_onset,
-            info=context.info,
+        out = response_handling(
+            self, context, response_window_onset=response_window_onset
         )
 
         if out is None:

@@ -19,6 +19,7 @@ class PresentationRoutine(ABC):
         self.rl_label = rl_label
         self.is_setup = False
         self.noflip = noflip
+        self.returns_action = False
 
     def present(self, context: StepContext):
         """Public method that handles context-aware presentation"""
@@ -66,6 +67,7 @@ class ActionRoutine(PresentationRoutine):
         self.key_dict = key_dict
         self.timeout_action = timeout_action
         self.name_timeout = name_timeout
+        self.returns_action = True
 
     def _response_handling(
         self,

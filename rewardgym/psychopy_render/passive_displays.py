@@ -71,8 +71,6 @@ class BaseStimulus(PresentationRoutine):
         win : Window
             The psychopy window object that is used for displaying stimuli.
         """
-
-        self._setup(win, **kwargs)
         self.is_setup = True
 
     def display(

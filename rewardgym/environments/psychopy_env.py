@@ -7,7 +7,6 @@ import numpy as np
 from ..protocols import InputProtocol, LoggerProtocol
 from .base_env import BaseEnv
 from .contexts import EnvironmentContext, StepContext
-from ..render_base import ActionRoutine
 
 
 class PsychopyEnv(BaseEnv):
@@ -101,6 +100,8 @@ class PsychopyEnv(BaseEnv):
         """
         self.previous_action = self.action
         self.action = None
+
+        print(self.previous_action)
         out = None
 
         self.context.logger.update_trial_info(
@@ -125,27 +126,19 @@ class PsychopyEnv(BaseEnv):
 
         if "psychopy" not in info:
             pass
-
         else:
             for disp in info["psychopy"]:
-                if not isinstance(disp, ActionRoutine) or not self.expose_last_stim:
-                    disp.present(current_step)
-                elif not self.expose_last_stim:
+                print("Disp,", disp)
+                if disp.returns_action and not self.expose_last_stim:
                     out = disp.present(current_step)
+                    self._check_output(out, info, remap=True)
 
-                self._check_output(out, info, remap=True)
+                elif not disp.returns_action:
+                    disp.present(context=current_step)
 
             if not self.expose_last_stim and self.context == "psychopy-simulate":
+                print("I should not run")
                 self.simulate_action(info, self.previous_action, self.reaction_time)
-
-                if not self.is_setup:
-                    raise RuntimeError(
-                        "You have to setup the environment first, using env.setup_render()"
-                    )
-
-                for disp in info["psychopy"]:
-                    out = disp.display(current_step)
-                    self._check_output(out, info, remap=True)
 
     def simulate_action(self, info, action, reaction_time):
         action_step = StepContext(
@@ -158,12 +151,13 @@ class PsychopyEnv(BaseEnv):
             reaction_time=reaction_time,
             info=info,
         )
-
-        out = info["psychopy"][-1].simulate(action_step)
-
+        print(info["psychopy"][-1])
+        out = info["psychopy"][-1].present(action_step)
+        print(out)
         self._check_output(out, info)
 
     def _check_output(self, out, info, remap=False):
+        print("checking output", out)
         if out is not None:
             if remap:
                 tmp_action = info["behav_remap"][out[0]]
