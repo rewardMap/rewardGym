@@ -40,11 +40,12 @@ def response_handling(
 
     # Values to be set:
     response = None
-    response_present = False
+    polling_state = "waiting"
     remaining = None
-    timeout = False
     response_window = response_window_onset + routine.duration
     key_list = list(key_dict.keys())
+    env_action = None
+    key_action = None
 
     if "simulate" in context.env_context.mode:
         action = context.previous_action
@@ -52,34 +53,29 @@ def response_handling(
 
         if response_time is not None and routine.duration is not None:
             if response_time > routine.duration:
-                timeout = True
+                polling_state = "timeout"
             else:
-                response_present = True
+                polling_state = "received"
+                env_action = get_response_from_action(action, info)
+                key_action = get_key_from_dict(key_dict, env_action)[
+                    0
+                ]  # TODO: More safeguarding.
+                response = (key_action, response_time + response_window_onset)
 
         logger.clock.time += min([response_time, routine.duration])
-
-        env_action = get_response_from_action(action, info)
-        key_action = get_key_from_dict(key_dict, env_action)[
-            0
-        ]  # TODO: More safeguarding.
-        response = (key_action, response_time + response_window_onset)
-
-    else:
-        key_action = None
-        response_time = None
-        env_action = None
 
     if routine.duration is None:
         raise ValueError(f"{routine.duration} needs to be defined.")
 
-    while not timeout and not response_present:
+    while polling_state == "waiting":
         response = input_handler.key_strokes(logger=logger, key_list=key_list)
 
-        timeout = response_window <= logger.get_time()
+        if response_window <= logger.get_time():
+            polling_state = "timeout"
         if response:
-            response_present = True
+            polling_state = "received"
 
-    if response_present and response is not None:
+    if polling_state == "received" and response is not None:
         response_button, response_time = response
         # Casting response time to reaction time:
         reaction_time = response_time - response_window_onset
@@ -102,7 +98,7 @@ def response_handling(
 
         remaining = routine.duration - reaction_time
 
-    elif response_present is False:
+    elif polling_state == "timeout":
         key_action = routine.timeout_action
 
         if key_action is None:
