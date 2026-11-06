@@ -4,7 +4,7 @@ from psychopy import core, event, visual
 
 from rewardgym import get_configs, get_env, get_psychopy_info
 from rewardgym.logging import ExperimentLogger
-from rewardgym.runner import run_task, pspy_set_up_experiment
+from rewardgym.runner import pspy_set_up_experiment, run_task
 from rewardgym.runner.psychopy_instructions import show_instructions
 from rewardgym.tasks import FULLPOINTS
 
