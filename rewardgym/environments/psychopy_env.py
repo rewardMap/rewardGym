@@ -74,14 +74,13 @@ class PsychopyEnv(BaseEnv):
             mode=self.render_mode,
         )
 
-        if "psychopy" in self.render_mode:
-            for node in self.graph:
-                if "psychopy" in self.info_dict[node]:
-                    [
-                        stim.setup(self.context)
-                        for stim in self.info_dict[node]["psychopy"]
-                        if not stim.is_setup
-                    ]
+        for node in self.graph:
+            if "psychopy" in self.info_dict[node]:
+                [
+                    stim.setup(self.context)
+                    for stim in self.info_dict[node]["psychopy"]
+                    if not stim.is_setup
+                ]
 
         self.expose_last_stim = expose_last_stim
         self.reaction_time = None

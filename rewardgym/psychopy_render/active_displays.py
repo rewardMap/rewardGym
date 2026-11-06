@@ -637,7 +637,7 @@ class LingeringAction(ActionStimulus):
             else:
                 self.image_class_phase2.append(
                     context.stimuli.image(
-                        context.win,
+                        win=context.win,
                         image=img,
                         size=(img.shape[1], img.shape[0]),
                         pos=pos,
