@@ -10,6 +10,9 @@ class SimBaseStim:
     def setPos(self, new_pos):
         self.pos = new_pos
 
+    def draw(self):
+        pass
+
 
 class SimImageStim(SimBaseStim):
     def __init__(
@@ -67,9 +70,6 @@ class SimTextStim(SimBaseStim):
 
     def setText(self, new_text: str | None):
         self.text = new_text
-
-    def draw(self):
-        pass
 
 
 class SimRect(SimBaseStim):
