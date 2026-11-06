@@ -1,4 +1,3 @@
-from .play_pygame import play_task
 from .stimuli import BaseAction, BaseDisplay, BaseText, TimedAction
 from .task_stims import (
     FormatText,
@@ -16,5 +15,4 @@ __all__ = [
     "FormatTextRiskSensitive",
     "TimedAction",
     "feedback_block",
-    "play_task",
 ]
