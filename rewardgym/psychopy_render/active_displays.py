@@ -215,8 +215,10 @@ class ActionStimulusTooEarly(ActionStimulus):
 
         if response:
             RTE = response[1] - response_window_onset
-            logger.log_event(
-                {
+            log_event(
+                self,
+                logger=logger,
+                extra_info={
                     "event_type": self.name_tooearly,
                     "response_button": response[0],
                     "response_time": RTE,
@@ -363,8 +365,10 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
 
         simulation_wait(logger.clock, time=self.duration_phase1, start=stim_onset)
 
-        logger.log_event(
-            {
+        log_event(
+            self,
+            logger=logger,
+            extra_info={
                 "event_type": self.name_phase1,
                 "expected_duration": self.duration_phase1,
                 "rl_label": self.rl_label_phase1,
@@ -386,8 +390,10 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
 
         simulation_wait(logger.clock, time=self.duration_phase2, start=stim_onset)
 
-        logger.log_event(
-            {
+        log_event(
+            self,
+            logger=logger,
+            extra_info={
                 "event_type": self.name_phase2,
                 "expected_duration": self.duration_phase2,
                 "rl_label": self.rl_label_phase2,
@@ -470,7 +476,7 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
         )
         log_event(
             self,
-            logger,
+            logger=logger,
             onset=stim_onset,
             extra_info={
                 "misc": f"flip-{flip}",
@@ -562,7 +568,7 @@ class StimuliWithResponse(ActionStimulus):
         log_event(
             self,
             logger=logger,
-            stim_onset=stim_onset,
+            onset=stim_onset,
             extra_info={
                 "event_type": self.target_name,
                 "duration": self.target_duration,
@@ -603,7 +609,7 @@ class StimuliWithResponse(ActionStimulus):
         log_event(
             self,
             logger=logger,
-            stim_onset=stim_onset,
+            onset=stim_onset,
             extra_info={
                 "misc": f"flip-{flip}",
                 "event_type": self.target_name,
@@ -733,8 +739,10 @@ class LingeringAction(ActionStimulus):
 
         simulation_wait(logger.clock, time=self.duration_phase1, start=stim_onset)
 
-        logger.log_event(
-            {
+        log_event(
+            self,
+            logger=logger,
+            extra_info={
                 "event_type": self.name_phase1,
                 "expected_duration": self.duration_phase1,
                 "rl_label": self.rl_label_phase1,
@@ -757,8 +765,10 @@ class LingeringAction(ActionStimulus):
 
         simulation_wait(logger.clock, time=self.duration_phase2, start=stim_onset)
 
-        logger.log_event(
-            {
+        log_event(
+            self,
+            logger=logger,
+            extra_info={
                 "event_type": self.name_phase2,
                 "expected_duration": self.duration_phase2,
                 "rl_label": self.rl_label_phase2,
@@ -800,10 +810,10 @@ class LingeringAction(ActionStimulus):
             poll_keys=self.poll_keys,
         )
 
-        self.log_event(
+        log_event(
             self,
             logger=logger,
-            stim_onset=stim_onset,
+            onset=stim_onset,
             extra_info={
                 "event_type": name,
                 "rl_label": rl_label,

@@ -104,7 +104,7 @@ class BaseStimulus(PresentationRoutine):
         else:
             stim_onset = None
 
-        log_event(self, logger=context.logger, stim_onset=stim_onset)
+        log_event(self, logger=context.logger, onset=stim_onset)
 
     def simulate(self, context: StepContext) -> None:
         """
@@ -124,7 +124,7 @@ class BaseStimulus(PresentationRoutine):
         else:
             stim_onset = None
 
-        log_event(self, logger=context.logger, stim_onset=stim_onset)
+        log_event(self, logger=context.logger, onset=stim_onset)
 
 
 class TextStimulus(BaseStimulus):
@@ -209,7 +209,7 @@ class TextStimulus(BaseStimulus):
             poll_keys=self.poll_keys,
         )
 
-        log_event(self, logger=context.logger, stim_onset=stim_onset)
+        log_event(self, logger=context.logger, onset=stim_onset)
 
 
 class ImageStimulus(BaseStimulus):
@@ -333,7 +333,7 @@ class ImageStimulus(BaseStimulus):
             poll_keys=self.poll_keys,
         )
 
-        log_event(self, logger=context.logger, stim_onset=stim_onset)
+        log_event(self, logger=context.logger, onset=stim_onset)
 
 
 class FeedBackStimulus(BaseStimulus):
@@ -578,7 +578,7 @@ class FeedBackStimulus(BaseStimulus):
         log_event(
             self,
             logger=logger,
-            stim_onset=stim_onset,
+            onset=stim_onset,
             extra_info={"total_reward": total_reward, "reward": reward},
         )
 
@@ -615,7 +615,7 @@ class FeedBackStimulus(BaseStimulus):
         log_event(
             self,
             logger=context.logger,
-            stim_onset=stim_onset,
+            onset=stim_onset,
             extra_info={
                 "total_reward": context.total_reward,
                 "reward": context.reward,
@@ -733,7 +733,7 @@ class ConditionBasedDisplay(BaseStimulus):
             poll_keys=self.poll_keys,
         )
 
-        log_event(self, logger=logger, stim_onset=stim_onset)
+        log_event(self, logger=logger, onset=stim_onset)
 
 
 class TextWithBorder(BaseStimulus):
@@ -820,4 +820,4 @@ class TextWithBorder(BaseStimulus):
             poll_keys=self.poll_keys,
         )
 
-        log_event(self, logger=logger, stim_onset=stim_onset)
+        log_event(self, logger=logger, onset=stim_onset)
