@@ -1,28 +1,21 @@
 import numpy as np
 
-from ..timing import simulation_wait, wait
 from .psychopy_utils import update_psychopy_trials
 
 
 def draw_response_reminder(context, text_update, reminder_duration=1.0):
     text_update.setAutoDraw(True)
-    context.win.flip()
+    context.render.flip()
     reminder_onset = context.logger.get_time()
 
-    if context.mode == "psychopy-simulate":
-        simulation_wait(
-            context.logger.clock, time=reminder_duration, start=reminder_onset
-        )
-    else:
-        wait(
-            context.logger,
-            time=reminder_duration,
-            start=reminder_onset,
-            poll_keys=False,
-        )
-
+    context.render.wait(
+        logger=context.logger,
+        time=reminder_duration,
+        start=reminder_onset,
+        poll_keys=False,
+    )
     text_update.setAutoDraw(False)
-    context.win.flip()
+    context.render.flip()
 
     context.logger.log_event(
         {"event_type": "reminder", "expected_duration": reminder_duration},
@@ -42,18 +35,13 @@ def break_point(context, text_update, settings, episode, countdown_cutoff=30):
     ):
         break_onset = context.logger.get_time()
 
-        if context.mode == "psychopy-simulate":
-            simulation_wait(
-                context.logger.clock, settings["break_duration"], break_onset
-            )
-        else:
-            wait(
-                context.logger,
-                settings["break_duration"],
-                break_onset,
-                poll_keys=True,
-                input_handler=context.input_handler,
-            )
+        context.render.wait(
+            logger=context.logger,
+            time=settings["break_duration"],
+            start=break_onset,
+            poll_keys=True,
+            input_handler=context.input_handler,
+        )
 
         context.logger.log_event(
             {"event_type": "break", "expected_duration": settings["break_duration"]},
@@ -156,16 +144,13 @@ class AddRemainder(PsyPyPlugin):
         if env.remainder > 0 and settings["add_remainder"]:
             rm_onset = logger.get_time()
 
-            if env.context.mode == "psychopy-simulate":
-                simulation_wait(logger.clock, env.remainder, rm_onset)
-            else:
-                wait(
-                    logger,
-                    env.remainder,
-                    rm_onset,
-                    input_handler=input_handler,
-                    poll_keys=True,
-                )
+            env.context.render.wait(
+                logger=logger,
+                time=env.remainder,
+                start=rm_onset,
+                input_handler=input_handler,
+                poll_keys=True,
+            )
 
             logger.log_event(
                 {"event_type": "adjusting-time", "expected_duration": env.remainder},

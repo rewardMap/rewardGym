@@ -1,14 +1,7 @@
 from __future__ import annotations
 
-try:
-    from psychopy.visual import TextStim
-except ModuleNotFoundError:
-    from ..psychopy_render.psychopy_stubs import TextStim, Window
-
-
 import numpy as np
 
-from ..psychopy_render.psychopy_stubs import Window
 from ..tasks import get_configs
 from .psychopy_plugins import (
     AddRemainder,
@@ -53,7 +46,7 @@ def pspy_run_task(
         settings = get_configs(env.name)(random_state)
 
     if win is None:
-        win = Window()
+        win = env.context.win
 
     try:
         plugins = plugins[env.name]
@@ -68,14 +61,14 @@ def pspy_run_task(
     else:
         break_countdown_limit = 30
 
-    response_reminder = TextStim(
+    response_reminder = env.context.stimuli.text(
         win=win,
         text="Please respond faster!",
         color=[1, 1, 1],
         pos=(0, 100),
         height=25,
     )
-    break_text = TextStim(
+    break_text = env.context.stimuli.text(
         win=win,
         text="Have a break.",
         color=[1, 1, 1],
