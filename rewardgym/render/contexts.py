@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Any
 
-from ..input_handling import BaseInputHandler, PsychoPyInput
+from ..input_handling import SimulationInput, PsychoPyInput
 from ..logging import ExperimentLogger
 from ..protocols import DisplayProtocol, InputProtocol, LoggerProtocol
 from .backend_factories import PsychoPyFactory, SimulationFactory
@@ -61,7 +61,7 @@ class EnvironmentContext:
             self.window = Window()
 
         if self.input_handler is None:
-            self.input_handler = BaseInputHandler()
+            self.input_handler = SimulationInput()
 
         if self.logger is None:
             from ..psychopy_render.psychopy_stubs import Clock
@@ -113,3 +113,7 @@ class StepContext:
     @property
     def render(self):
         return self.env_context.render
+
+    @property
+    def stimuli(self):
+        return self.env_context.stimuli
