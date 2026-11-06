@@ -78,6 +78,11 @@ class BaseInputHandler(InputProtocol):
         pass
 
 
+class SimulationInput(BaseInputHandler):
+    def get_keys(self) -> list[tuple[str, float]]:
+        return []
+
+
 class PsychoPyInput(BaseInputHandler):
     def __init__(
         self,
