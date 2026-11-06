@@ -4,8 +4,8 @@ from typing import Any
 from ..input_handling import PsychoPyInput, SimulationInput
 from ..logging import ExperimentLogger
 from ..protocols import DisplayProtocol, InputProtocol, LoggerProtocol
-from .backend_factories import PsychoPyFactory, SimulationFactory
-from .render_backend import PsychoPyDisplay, SimulationDisplay
+from .backend_factories import PsychoPyFactory, SimulationFactory, PygameFactory
+from .render_backend import PsychoPyDisplay, SimulationDisplay, PygameDisplay
 
 
 @dataclass
@@ -18,7 +18,7 @@ class EnvironmentContext:
     stimuli: None = None
 
     def __post_init__(self):
-        if self.mode not in ["psychopy", "psychopy-simulate"]:
+        if self.mode not in ["psychopy", "psychopy-simulate", "pygame"]:
             raise ValueError(
                 f"{self.mode} has to be 'psychopy' or 'psychopy-simulate'!"
             )
@@ -28,6 +28,9 @@ class EnvironmentContext:
 
         elif self.mode == "psychopy-simulate":
             self._setup_psychopy_simulate()
+
+        elif self.mode == "pygame":
+            self._setup_pygame()
 
     def _setup_psychopy(self):
         if self.window is None:
@@ -61,7 +64,7 @@ class EnvironmentContext:
             self.window = Window()
 
         if self.input_handler is None:
-            self.input_handler = SimulationInput()
+            self.input_handler = SimulationInput(win=self.window)
 
         if self.logger is None:
             from ..psychopy_render.psychopy_stubs import Clock
@@ -72,6 +75,27 @@ class EnvironmentContext:
             self.render = SimulationDisplay()
 
         self.stimuli = SimulationFactory()
+
+    def _setup_pygame(self):
+        if self.window is None:
+            from ..pygame_render.compatibility_classes import PygameWindow
+
+            self.window = PygameWindow()
+
+        if self.input_handler is None:
+            from ..pygame_render.compatibility_classes import PygameInput
+
+            self.input_handler = PygameInput(win=self.window)
+
+        if self.logger is None:
+            from psylog.interfaces import SystemClock
+
+            self.logger = ExperimentLogger(file_name=None, clock=SystemClock())
+
+        if self.render is None:
+            self.render = PygameDisplay(self.window)
+
+        self.stimuli = PygameFactory()
 
     @property
     def win(self):
