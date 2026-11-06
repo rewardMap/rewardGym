@@ -32,7 +32,7 @@ plugin_registry = {
 }
 
 
-def pspy_run_task(
+def run_task(
     env,
     logger,
     win=None,

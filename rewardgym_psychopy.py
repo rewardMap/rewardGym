@@ -4,7 +4,7 @@ from psychopy import core, event, visual
 
 from rewardgym import get_configs, get_env, get_psychopy_info
 from rewardgym.logging import ExperimentLogger
-from rewardgym.runner import pspy_run_task, pspy_set_up_experiment
+from rewardgym.runner import run_task, pspy_set_up_experiment
 from rewardgym.runner.psychopy_instructions import show_instructions
 from rewardgym.tasks import FULLPOINTS
 
@@ -93,7 +93,7 @@ if __name__ == "__main__":
 
     env.setup(window=win, logger=Logger)
 
-    pspy_run_task(env=env, win=win, logger=Logger, settings=settings, n_episodes=None)
+    run_task(env=env, win=win, logger=Logger, settings=settings, n_episodes=None)
 
     win.to_Draw = []
     proportion = max([min([env.cumulative_reward / FULLPOINTS[task], 1.0]), 0])
