@@ -4,6 +4,7 @@ from typing import Any
 from ..input_handling import BaseInputHandler, PsychoPyInput
 from ..logging import ExperimentLogger
 from ..protocols import DisplayProtocol, InputProtocol, LoggerProtocol
+from .backend_factories import PsychoPyFactory, SimulationFactory
 from .render_backend import PsychoPyDisplay, SimulationDisplay
 
 
@@ -47,8 +48,10 @@ class EnvironmentContext:
         if self.input_handler is None:
             self.input_handler = PsychoPyInput(self.logger.clock, win=self.window)
 
-        if self.display_context is None:
-            self.display_context = PsychoPyDisplay(window=self.window)
+        if self.render is None:
+            self.render = PsychoPyDisplay(window=self.window)
+
+        self.stimuli = PsychoPyFactory()
 
     def _setup_psychopy_simulate(self):
         if self.window is None:
@@ -64,8 +67,10 @@ class EnvironmentContext:
 
             self.logger = ExperimentLogger(file_name=None, clock=Clock())
 
-        if self.display_context is None:
-            self.display_context = SimulationDisplay()
+        if self.render is None:
+            self.render = SimulationDisplay()
+
+        self.stimuli = SimulationFactory()
 
     @property
     def win(self):
@@ -105,5 +110,5 @@ class StepContext:
         return self.previous_action
 
     @property
-    def display_context(self):
-        return self.env_context.display_context
+    def render(self):
+        return self.env_context.render
