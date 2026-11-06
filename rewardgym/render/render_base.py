@@ -37,23 +37,6 @@ class PresentationRoutine(ABC):
     def display(self, context: StepContext):
         """Actual display implementation"""
 
-    @abstractmethod
-    def simulate(self, context: StepContext):
-        """Simulation implementation"""
-
-    def _log_event(self, logger, stim_onset=None, extra_info=None):
-        """Common logging functionality"""
-        base_dict = {
-            "event_type": self.name,
-            "expected_duration": self.duration,
-            "rl_label": self.rl_label,
-        }
-
-        if extra_info:
-            base_dict.update(extra_info)
-
-        logger.log_event(base_dict, onset=stim_onset)
-
 
 class ActionRoutine(PresentationRoutine):
     def __init__(

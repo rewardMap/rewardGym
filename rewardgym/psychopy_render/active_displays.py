@@ -11,7 +11,6 @@ from ..render import (
     response_handling,
 )
 from ..stimuli import generate_stimulus_properties, make_card_stimulus
-from ..timing import simulation_wait
 from ..utils import check_random_state
 
 
@@ -98,14 +97,6 @@ class ActionStimulus(ActionRoutine):
         if not self.noflip:
             context.render.flip()
 
-        return response
-
-    def simulate(self, context: StepContext):
-        logger = context.logger
-        response_window_onset = logger.get_time()
-        response = response_handling(
-            self, context, response_window_onset=response_window_onset
-        )
         return response
 
     def _setup(self, context: EnvironmentContext, **kwargs):
@@ -360,50 +351,6 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
 
         return response
 
-    def simulate(self, context: StepContext):
-        logger = context.logger
-        stim_onset = logger.get_time()
-
-        simulation_wait(logger.clock, time=self.duration_phase1, start=stim_onset)
-
-        log_event(
-            self,
-            logger=logger,
-            extra_info={
-                "event_type": self.name_phase1,
-                "expected_duration": self.duration_phase1,
-                "rl_label": self.rl_label_phase1,
-            },
-            onset=stim_onset,
-        )
-
-        response_window_onset = logger.get_time()
-        out = response_handling(
-            self, context, response_window_onset=response_window_onset
-        )
-
-        if out is None:
-            raise ValueError("Simulated response shouldn't be None")
-        else:
-            response_key, remaining = out
-
-        stim_onset = logger.get_time()
-
-        simulation_wait(logger.clock, time=self.duration_phase2, start=stim_onset)
-
-        log_event(
-            self,
-            logger=logger,
-            extra_info={
-                "event_type": self.name_phase2,
-                "expected_duration": self.duration_phase2,
-                "rl_label": self.rl_label_phase2,
-            },
-            onset=stim_onset,
-        )
-
-        return response_key, remaining
-
     def _draw_stimulus(
         self,
         win,
@@ -564,27 +511,6 @@ class StimuliWithResponse(ActionStimulus):
         response = response_handling(
             self, context, response_window_onset=response_window_onset
         )
-
-        return response
-
-    def simulate(self, context: StepContext):
-        logger = context.logger
-        stim_onset = logger.get_time()
-
-        simulation_wait(logger.clock, time=self.target_duration, start=stim_onset)
-
-        log_event(
-            self,
-            logger=logger,
-            onset=stim_onset,
-            extra_info={
-                "event_type": self.target_name,
-                "duration": self.target_duration,
-                "rl_label": self.target_rl_label,
-            },
-        )
-
-        response = response_handling(self, context, response_window_onset=stim_onset)
 
         return response
 
@@ -754,51 +680,6 @@ class LingeringAction(ActionStimulus):
         )
 
         return response
-
-    def simulate(self, context: StepContext):
-        logger = context.logger
-        stim_onset = logger.get_time()
-
-        simulation_wait(logger.clock, time=self.duration_phase1, start=stim_onset)
-
-        log_event(
-            self,
-            logger=logger,
-            extra_info={
-                "event_type": self.name_phase1,
-                "expected_duration": self.duration_phase1,
-                "rl_label": self.rl_label_phase1,
-            },
-            onset=stim_onset,
-        )
-
-        response_window_onset = logger.get_time()
-
-        out = response_handling(
-            self, context, response_window_onset=response_window_onset
-        )
-
-        if out is None:
-            raise ValueError("Output shouldn't be None")
-        else:
-            response_key, remaining = out
-
-        stim_onset = logger.get_time()
-
-        simulation_wait(logger.clock, time=self.duration_phase2, start=stim_onset)
-
-        log_event(
-            self,
-            logger=logger,
-            extra_info={
-                "event_type": self.name_phase2,
-                "expected_duration": self.duration_phase2,
-                "rl_label": self.rl_label_phase2,
-            },
-            onset=stim_onset,
-        )
-
-        return response_key, remaining
 
     def _draw_stimulus(
         self,

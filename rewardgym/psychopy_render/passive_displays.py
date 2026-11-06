@@ -13,7 +13,6 @@ from ..stimuli import (
     win_cross,
     zero_cross,
 )
-from ..timing import simulation_wait
 
 
 class BaseStimulus(PresentationRoutine):
@@ -91,26 +90,6 @@ class BaseStimulus(PresentationRoutine):
                 start=stim_onset,
                 poll_keys=self.poll_keys,
             )
-        else:
-            stim_onset = None
-
-        log_event(self, logger=context.logger, onset=stim_onset)
-
-    def simulate(self, context: StepContext) -> None:
-        """
-        Function to pretend that a stimulus has been shown. Logging and creating
-        timing.
-
-        Returns
-        -------
-        None
-            Does not return anything, but logs the stimulus.
-        """
-
-        if self.duration is not None:
-            stim_onset = context.logger.get_time()
-
-            simulation_wait(context.logger.clock, time=self.duration, start=stim_onset)
         else:
             stim_onset = None
 
@@ -591,30 +570,6 @@ class FeedBackStimulus(BaseStimulus):
         self.total_reward_ind.setPos((-self.bar_length // 2 + move_bar, 350))
         self.total_reward_ind.setAutoDraw(True)
         self.total_reward_ind.draw()
-
-    def simulate(self, context: StepContext) -> None:
-        """
-        Function to pretend that a stimulus has been shown. Logging and creating
-        timing.
-
-        Returns
-        -------
-        None
-            Does not return anything, but logs the stimulus.
-        """
-        stim_onset = context.logger.get_time()
-
-        simulation_wait(context.logger.clock, time=self.duration, start=stim_onset)
-
-        log_event(
-            self,
-            logger=context.logger,
-            onset=stim_onset,
-            extra_info={
-                "total_reward": context.total_reward,
-                "reward": context.reward,
-            },
-        )
 
 
 class ConditionBasedDisplay(BaseStimulus):
