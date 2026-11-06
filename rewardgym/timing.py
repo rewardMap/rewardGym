@@ -38,7 +38,7 @@ def wait(
             input_handler.interpret_keys(keys, key_list=None, logger=logger)
 
 
-def simulation_wait(clock, time: float, start: float | None = None):
+def simulation_wait(clock, time: float, start: float | None = None, **kwargs):
     """
     Wait for a given time.
 

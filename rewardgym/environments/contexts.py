@@ -3,7 +3,8 @@ from typing import Any
 
 from ..input_handling import BaseInputHandler, PsychoPyInput
 from ..logging import ExperimentLogger
-from ..protocols import InputProtocol, LoggerProtocol
+from ..protocols import InputProtocol, LoggerProtocol, DisplayProtocol
+from ..render import PsychoPyDisplay, SimulationDisplay
 
 
 @dataclass
@@ -12,6 +13,7 @@ class EnvironmentContext:
     input_handler: InputProtocol | None = None
     logger: LoggerProtocol | None = None
     mode: str = "psychopy-simulate"
+    display_context: DisplayProtocol | None = None
 
     def __post_init__(self):
         if self.mode not in ["psychopy", "psychopy-simulate"]:
@@ -45,6 +47,9 @@ class EnvironmentContext:
         if self.input_handler is None:
             self.input_handler = PsychoPyInput(self.logger.clock, win=self.window)
 
+        if self.display_context is None:
+            self.display_context = PsychoPyDisplay(window=self.window)
+
     def _setup_psychopy_simulate(self):
         if self.window is None:
             from ..psychopy_render.psychopy_stubs import Window
@@ -58,6 +63,9 @@ class EnvironmentContext:
             from ..psychopy_render.psychopy_stubs import Clock
 
             self.logger = ExperimentLogger(file_name=None, clock=Clock())
+
+        if self.display_context is None:
+            self.display_context = SimulationDisplay()
 
     @property
     def win(self):
@@ -95,3 +103,7 @@ class StepContext:
     @property
     def key(self):
         return self.previous_action
+
+    @property
+    def display_context(self):
+        return self.env_context.display_context

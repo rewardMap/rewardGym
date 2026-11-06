@@ -1,4 +1,4 @@
-from typing import Protocol, runtime_checkable
+from typing import Any, Protocol, runtime_checkable
 
 
 @runtime_checkable
@@ -56,3 +56,12 @@ class LoggerProtocol(Protocol):
     def log_event(self, info_dict: dict, onset: float | None = None) -> None: ...
 
     def close(self) -> None: ...
+
+
+@runtime_checkable
+class DisplayProtocol(Protocol):
+    def schedule_on_flip(self, callback, *args, **kwargs) -> Any: ...
+
+    def flip(self) -> Any: ...
+
+    def wait(self, **kwargs) -> Any: ...

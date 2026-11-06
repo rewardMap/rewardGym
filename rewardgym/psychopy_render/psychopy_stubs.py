@@ -1,3 +1,5 @@
+from collections.abc import Callable
+
 from ..protocols import ClockProtocol
 
 
@@ -20,6 +22,9 @@ class Window:
         pass
 
     def close(self):
+        pass
+
+    def callOnFlip(self, function: Callable, *args, **kwargs):
         pass
 
 
