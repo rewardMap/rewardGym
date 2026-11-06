@@ -6,7 +6,7 @@ from ..optional_dependencies import pygame, require_pygame
 class PygameWindow:
     def __init__(
         self,
-        size=(1680, 1050),
+        size=(1200, 800),
         color=(128, 128, 128),
         caption="Experiment",
     ):

@@ -21,9 +21,14 @@ def get_env(
     random_state: int | np.random.Generator = 1000,
     **kwargs,
 ):
+    if render_backend == "pygame":
+        rb = "psychopy"
+    else:
+        rb = render_backend
+
     environment_graph, reward_structure, info_dict = get_task(
         task_name,
-        render_backend=render_backend,
+        render_backend=rb,
         random_state=random_state,
     )
 
