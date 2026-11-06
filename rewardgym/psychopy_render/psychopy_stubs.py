@@ -1,6 +1,16 @@
 from collections.abc import Callable
 
 from ..protocols import ClockProtocol
+from ..render.stimulus_stubs import SimBaseStim
+from ..render.stimulus_stubs import SimImageStim as ImageStim
+from ..render.stimulus_stubs import SimRect as Rect
+from ..render.stimulus_stubs import SimTextStim as TextStim
+
+__all__ = [
+    "ImageStim",
+    "Rect",
+    "TextStim",
+]
 
 
 class Clock(ClockProtocol):
@@ -28,27 +38,11 @@ class Window:
         pass
 
 
-class ImageStim:
-    def __init__(self, *args, **kwargs) -> None:
-        pass
-
-    def setAutoDraw(*args):
-        pass
-
-
-class TextStim(ImageStim):
+class TextBox2(SimBaseStim):
     pass
 
 
-class TextBox2(ImageStim):
-    pass
-
-
-class Rect(ImageStim):
-    pass
-
-
-class Line(ImageStim):
+class Line(SimBaseStim):
     pass
 
 
