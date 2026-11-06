@@ -14,7 +14,7 @@ from rewardgym.psychopy_render.psychopy_display import (
     TextStimulus,
 )
 
-from rewardgym.environments import PsychopyEnv
+from rewardgym.environments import RenderEnv
 from rewardgym.logging import ExperimentLogger
 from rewardgym.reward_classes import BaseReward
 
@@ -27,8 +27,8 @@ reward2 = BaseReward(reward=[0, 1], p=[0.5, 0.5], random_state=3333)
 # This creates the reward dictionary necessary for the environment.
 reward_locs = {1: reward1, 2: reward2}
 
-# We then create the environment. Note that we use a PsychopyEnv.
-env = PsychopyEnv(environment_graph=env_graph, reward_locations=reward_locs)
+# We then create the environment. Note that we use a RenderEnv.
+env = RenderEnv(environment_graph=env_graph, reward_locations=reward_locs)
 
 # We then creat the stimuli we want to display. Here we use a very minimal example
 # as in the pygame example:

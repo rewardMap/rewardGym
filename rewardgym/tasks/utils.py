@@ -4,7 +4,7 @@ from typing import Any, Literal
 
 import numpy as np
 
-from ..environments import BaseEnv, PsychopyEnv
+from ..environments import BaseEnv, RenderEnv
 from .task_loader import get_task
 
 
@@ -45,7 +45,7 @@ def get_env(
         or render_backend == "psychopy-simulate"
         or render_backend == "pygame"
     ):
-        env = PsychopyEnv(
+        env = RenderEnv(
             environment_graph=environment_graph,
             reward_locations=reward_structure,
             render_mode=render_backend,
