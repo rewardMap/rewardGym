@@ -5,8 +5,8 @@ from collections import defaultdict
 import numpy as np
 
 from ..protocols import InputProtocol, LoggerProtocol
+from ..render import EnvironmentContext, StepContext
 from .base_env import BaseEnv
-from .contexts import EnvironmentContext, StepContext
 
 
 class PsychopyEnv(BaseEnv):

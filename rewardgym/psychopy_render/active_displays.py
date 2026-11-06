@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
 import warnings
 
 try:
@@ -10,15 +9,10 @@ except ModuleNotFoundError:
     from .psychopy_stubs import ImageStim, Rect, TextStim, Window
 
 from ..protocols import InputProtocol
-from ..render import ActionRoutine, response_handling
+from ..render import ActionRoutine, StepContext, log_event, response_handling
 from ..stimuli import generate_stimulus_properties, make_card_stimulus
 from ..timing import simulation_wait, wait
 from ..utils import check_random_state
-
-if TYPE_CHECKING:
-    from ..environments import StepContext
-
-from ..render.render_helper import log_event
 
 
 class ActionStimulus(ActionRoutine):

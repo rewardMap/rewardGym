@@ -3,8 +3,8 @@ from typing import Any
 
 from ..input_handling import BaseInputHandler, PsychoPyInput
 from ..logging import ExperimentLogger
-from ..protocols import InputProtocol, LoggerProtocol, DisplayProtocol
-from ..render import PsychoPyDisplay, SimulationDisplay
+from ..protocols import DisplayProtocol, InputProtocol, LoggerProtocol
+from .render_backend import PsychoPyDisplay, SimulationDisplay
 
 
 @dataclass
