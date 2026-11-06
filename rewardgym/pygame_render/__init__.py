@@ -7,7 +7,6 @@ from .task_stims import (
     feedback_block,
 )
 
-
 __all__ = [
     "BaseAction",
     "BaseDisplay",
