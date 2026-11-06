@@ -30,3 +30,29 @@ class PsychoPyDisplay(DisplayProtocol):
 
     def wait(self, **kwargs):
         return wait(**kwargs)
+
+
+class PygameDisplay(DisplayProtocol):
+    def __init__(self, window, **kwargs):
+        self.win = window
+
+    def flip(self):
+        self.win.flip()
+
+    def schedule_on_flip(
+        self,
+        callback,
+        *args,
+        **kwargs,
+    ):
+        self.win.callOnFlip(
+            callback,
+            *args,
+            **kwargs,
+        )
+
+    def wait(self, *args, **kwargs):
+        return wait(
+            *args,
+            **kwargs,
+        )
