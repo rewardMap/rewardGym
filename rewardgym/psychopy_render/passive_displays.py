@@ -20,7 +20,7 @@ from ..stimuli import (
     win_cross,
     zero_cross,
 )
-from ..timing import simulation_wait, wait
+from ..timing import simulation_wait
 
 
 class BaseStimulus(PresentationRoutine):
@@ -89,9 +89,9 @@ class BaseStimulus(PresentationRoutine):
             stim_onset = context.logger.get_time()
 
             if not self.noflip:
-                context.win.flip()
+                context.render.flip()
 
-            wait(
+            context.render.wait(
                 logger=context.logger,
                 input_handler=context.input_handler,
                 time=self.duration,
@@ -196,9 +196,9 @@ class TextStimulus(BaseStimulus):
         """
         stim_onset = context.logger.get_time()
         self.textStim.draw()
-        context.win.flip()
+        context.render.flip()
 
-        wait(
+        context.render.wait(
             logger=context.logger,
             input_handler=context.input_handler,
             time=self.duration,
@@ -317,12 +317,12 @@ class ImageStimulus(BaseStimulus):
         for ii in self.imageStims:
             ii.autoDraw = True
 
-        context.win.flip()
+        context.render.flip()
 
         for ii in self.imageStims:
             ii.autoDraw = self.autodraw
 
-        wait(
+        context.render.wait(
             logger=context.logger,
             input_handler=context.input_handler,
             time=self.duration,
@@ -553,8 +553,8 @@ class FeedBackStimulus(BaseStimulus):
                 self._update_reward_bar(total_reward=total_reward)
 
         stim_onset = logger.get_time()
-        win.flip()
-        wait(
+        context.render.flip()
+        context.render.wait(
             logger=logger,
             input_handler=context.input_handler,
             time=self.duration,
@@ -570,7 +570,7 @@ class FeedBackStimulus(BaseStimulus):
         if not self.simple:
             self.total_reward_ind.setAutoDraw(True)
 
-        win.flip()
+        context.render.flip()
 
         log_event(
             self,
@@ -720,10 +720,10 @@ class ConditionBasedDisplay(BaseStimulus):
         if imgB is not None:
             imgB.draw()
 
-        win.flip()
+        context.render.flip()
 
-        wait(
-            logger,
+        context.render.wait(
+            logger=logger,
             input_handler=input_handler,
             time=self.duration,
             start=stim_onset,
@@ -790,7 +790,6 @@ class TextWithBorder(BaseStimulus):
         action = context.previous_action
         input_handler = context.input_handler
         logger = context.logger
-        win = context.win
 
         if self.target == "action":
             reward = action
@@ -804,12 +803,12 @@ class TextWithBorder(BaseStimulus):
         self.rectStim.autoDraw = True
         self.textStim.autoDraw = True
         stim_onset = logger.get_time()
-        win.flip()
+        context.render.flip()
 
         self.rectStim.autoDraw = False
         self.textStim.autoDraw = False
 
-        wait(
+        context.render.wait(
             logger,
             time=self.duration,
             start=stim_onset,

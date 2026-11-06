@@ -14,7 +14,8 @@ class EnvironmentContext:
     input_handler: InputProtocol | None = None
     logger: LoggerProtocol | None = None
     mode: str = "psychopy-simulate"
-    display_context: DisplayProtocol | None = None
+    render: DisplayProtocol | None = None
+    stimuli: None = None
 
     def __post_init__(self):
         if self.mode not in ["psychopy", "psychopy-simulate"]:

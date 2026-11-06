@@ -11,7 +11,7 @@ except ModuleNotFoundError:
 from ..protocols import InputProtocol
 from ..render import ActionRoutine, StepContext, log_event, response_handling
 from ..stimuli import generate_stimulus_properties, make_card_stimulus
-from ..timing import simulation_wait, wait
+from ..timing import simulation_wait
 from ..utils import check_random_state
 
 
@@ -96,7 +96,7 @@ class ActionStimulus(ActionRoutine):
         )
 
         if not self.noflip:
-            context.win.flip()
+            context.render.flip()
 
         return response
 
@@ -237,7 +237,7 @@ class ActionStimulusTooEarly(ActionStimulus):
                 response_key = self.timeout_action
                 self.text_stim.draw()
             else:
-                context.win.flip()
+                context.render.flip()
 
             return response_key, remaining
 
@@ -319,7 +319,8 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
 
         self._draw_stimulus(
             win,
-            logger,
+            logger=logger,
+            context=context,
             input_handler=input_handler,
             action=None,
             name=self.name_phase1,
@@ -342,7 +343,8 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
         if response is not None:
             self._draw_stimulus(
                 win,
-                logger,
+                logger=logger,
+                context=context,
                 input_handler=input_handler,
                 action=response[0],
                 name=self.name_phase2,
@@ -400,6 +402,7 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
     def _draw_stimulus(
         self,
         win,
+        context,
         logger,
         input_handler,
         action,
@@ -459,15 +462,16 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
         for img in self.image_class[2:]:
             img.draw()
 
-        win.flip()
+        context.render.flip()
 
-        wait(
+        context.render.wait(
             logger=logger,
             input_handler=input_handler,
             time=duration,
             start=stim_onset,
             poll_keys=self.poll_keys,
         )
+
         log_event(
             self,
             logger=logger,
@@ -543,8 +547,8 @@ class StimuliWithResponse(ActionStimulus):
 
         input_handler.key_strokes(logger=logger)
 
-        self._draw_stimulus(win, logger, input_handler=input_handler)
-        win.flip()
+        self._draw_stimulus(win, context, logger, input_handler=input_handler)
+        context.render.flip()
 
         response_window_onset = logger.get_time()
         response = response_handling(
@@ -574,7 +578,9 @@ class StimuliWithResponse(ActionStimulus):
 
         return response
 
-    def _draw_stimulus(self, win, logger, input_handler: InputProtocol, flip=False):
+    def _draw_stimulus(
+        self, win, context, logger, input_handler: InputProtocol, flip=False
+    ):
         stim_onset = logger.get_time()
 
         flip = self.rng.random() < self.flip_probability
@@ -587,12 +593,12 @@ class StimuliWithResponse(ActionStimulus):
             elif self.flip_dir == "horiz":
                 ii.flip = [False, flip]
 
-        win.flip()
+        context.render.flip()
 
         for ii in self.imageStims:
             ii.autoDraw = False
 
-        wait(
+        context.render.wait(
             logger,
             time=self.target_duration,
             start=stim_onset,
@@ -699,6 +705,7 @@ class LingeringAction(ActionStimulus):
 
         self._draw_stimulus(
             win,
+            context,
             logger,
             input_handler=input_handler,
             phase=1,
@@ -717,6 +724,7 @@ class LingeringAction(ActionStimulus):
 
         self._draw_stimulus(
             win,
+            context,
             logger,
             input_handler=input_handler,
             phase=2,
@@ -773,7 +781,15 @@ class LingeringAction(ActionStimulus):
         return response_key, remaining
 
     def _draw_stimulus(
-        self, win, logger, input_handler, name, duration, phase=1, rl_label=None
+        self,
+        win,
+        context,
+        logger,
+        input_handler,
+        name,
+        duration,
+        phase=1,
+        rl_label=None,
     ):
         stim_onset = logger.get_time()
 
@@ -782,7 +798,7 @@ class LingeringAction(ActionStimulus):
             for ii in self.image_class_phase1:
                 ii.autoDraw = True
 
-            win.flip()
+            context.render.flip()
 
             for ii in self.image_class_phase1:
                 ii.autoDraw = self.autodraw
@@ -791,12 +807,12 @@ class LingeringAction(ActionStimulus):
             for ii in self.image_class_phase2:
                 ii.autoDraw = True
 
-            win.flip()
+            context.render.flip()
 
             for ii in self.image_class_phase2:
                 ii.autoDraw = self.autodraw
 
-        wait(
+        context.render.wait(
             logger,
             duration,
             stim_onset,

@@ -1,4 +1,4 @@
-from stimulus_stubs import SimImageStim, SimRect, SimTextStim
+from .stimulus_stubs import SimImageStim, SimRect, SimTextStim
 
 
 class SimulationFactory:
