@@ -74,11 +74,11 @@ class PsychopyEnv(BaseEnv):
             mode=self.render_mode,
         )
 
-        if self.render_mode == "psychopy":
+        if "psychopy" in self.render_mode:
             for node in self.graph:
                 if "psychopy" in self.info_dict[node]:
                     [
-                        stim.setup(self.context.window)
+                        stim.setup(self.context)
                         for stim in self.info_dict[node]["psychopy"]
                         if not stim.is_setup
                     ]
