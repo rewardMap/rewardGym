@@ -1,62 +1,24 @@
 from typing import Literal
 
-import pygame
-
-from ..environments.render_env import RenderEnv
-from ..pygame_render.stimuli import BaseAction, BaseText
-from ..tasks.utils import get_task
+from ..tasks.utils import get_env
+from ..logging import ExperimentLogger
+from psylog.interfaces import SystemClock
+from ..runner.psychopy_runner import pspy_run_task
 
 
 def play_task(
     task_name: Literal[
         "hcp", "mid", "two-step", "risk-sensitive", "posner", "gonogo"
     ] = "hcp",
-    window_size: int = 500,
-    n_episodes: int = 5,
 ):
-    pygame.init()
-    pygame.display.init()
-    window = pygame.display.set_mode((window_size, window_size))
-    clock = pygame.time.Clock()
+    env = get_env(task_name, seed=10, render_backend="pygame")
 
-    environment_graph, reward_structure, info_dict = get_task(
-        task_name, render_backend="pygame"
+    simlog = ExperimentLogger(
+        file_name=None, task=task_name, participant_id="test-agent", clock=SystemClock()
     )
 
-    env = RenderEnv(
-        environment_graph=environment_graph,
-        reward_locations=reward_structure,
-        render_mode="pygame",
-        info_dict=info_dict,
-    )
+    simlog.create()
 
-    env.setup_render(window_size=window_size, window=window, clock=clock)
+    env.setup(logger=simlog, window=None, expose_last_stim=False)
 
-    base_position = (window_size // 2, window_size // 2)
-
-    text = BaseText("Instruction", 1, textposition=base_position)
-    click = BaseAction()
-
-    text.display(window=window, clock=clock)
-    click.display(window=window, clock=clock)
-
-    actions = []
-    observations = []
-    rewards = []
-
-    for episode in range(n_episodes):
-        obs, _ = env.reset(0, condition=None)
-        done = False
-        observations.append(obs)
-        # play one episode
-        while not done:
-            action = env.human_action
-            next_obs, reward, terminated, truncated, _info = env.step(action)
-            actions.append(action)
-            rewards.append(reward)
-
-            done = terminated or truncated
-            obs = next_obs
-            observations.append(obs)
-
-    env.close()
+    df, _, _ = pspy_run_task(env, logger=simlog, agent=None, random_state=10)

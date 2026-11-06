@@ -13,11 +13,8 @@ def play_cli():
         default="hcp",
     )
 
-    parser.add_argument("--window", type=int, help="Window size", default=700)
-    parser.add_argument("--n", type=int, help="Number of trials.", default=5)
-
     args = parser.parse_args()
-    play_task(args.task, args.window, args.n)
+    play_task(args.task)
 
 
 if __name__ == "__main__":
