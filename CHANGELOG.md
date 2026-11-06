@@ -1,3 +1,15 @@
+# 0.10.0 (Fri Nov 06 2026)
+
+#### Breaking Change during development
+
+- Dealing with stimuli [#55](https://github.com/rewardMap/rewardGym/pull/55) ([@SRSteinkamp](https://github.com/SRSteinkamp))
+
+#### Authors: 1
+
+- SRSteinkamp ([@SRSteinkamp](https://github.com/SRSteinkamp))
+
+---
+
 # 0.9.0 (Tue Nov 03 2026)
 
 #### Breaking Change during development
