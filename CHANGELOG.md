@@ -1,3 +1,15 @@
+# 0.11.0 (Fri Nov 06 2026)
+
+#### Breaking Change during development
+
+- Pygame is back in - Reordering file structure [#56](https://github.com/rewardMap/rewardGym/pull/56) ([@SRSteinkamp](https://github.com/SRSteinkamp))
+
+#### Authors: 1
+
+- SRSteinkamp ([@SRSteinkamp](https://github.com/SRSteinkamp))
+
+---
+
 # 0.10.0 (Fri Nov 06 2026)
 
 #### Breaking Change during development
