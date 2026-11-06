@@ -54,9 +54,9 @@ There might be cases, where you want to use this package purely for data collect
 In releases 0.7.1 and up, ``rewardGym`` relies on `psylog <https://github.com/SRSteinkamp/psylog>`_ to abstract logging
 in both simulation mode and data collection mode.
 
-These releases are also not a thoroughly tested as previous versions (as they've been used for extensive data collection).
+These releases are also not as thoroughly tested as previous versions (as they've been used for extensive data collection).
 
-But 0.7.1 is now properly compatible with Pyhon 3.10+. And work with PsychoPy 2026.1.3 and PsychoPy-Studio 2026.1.3
+But 0.7.1 is now properly compatible with Pyhon 3.10+. And works with PsychoPy 2026.1.3 and PsychoPy-Studio 2026.1.3
 
 For this clone or download the repository.
 
@@ -122,17 +122,28 @@ Before you make an enhancement, please open an issue first, where we will discus
 
 Finally, if you want to add a new task, also open an issue, and we will help you with implementing it in the toolbox.
 
-
-
-Play a task (currently out of order)
+AI Disclosure
 ********************************************************************************
 
-To play one of the tasks using a simplified pygame implementation, you can e.g.
+Chat-GPT and a few other models have been used in the development in this toolbox.
+Most heavily in the creation of tests, the entire pygame layer, some of the utilities to register tasks in the
+toolbox, and to create boilerplates to generate stimuli from. Additionally, some doc strings have been AI created
+as well.
+Next to generated text, several design decisions are AI informed.
+However, most of the core functionality, e.g., for data collection have been written by me or were used inspired from
+other toolboxes (see notes above). Data collection functionality using PsychoPy has been thoroughly tested and validated.
+
+
+
+Play a task with pygame
+********************************************************************************
+
+To play one of the tasks using an experimental pygame implementation, you can e.g.
 run::
 
-    rg_play hcp --window 700 --n 5
+    rewardgym_play hcp
 
-To play the gambling task from the human connectome project, in a window of 700 x 700 pixels for 5 trials.
+To play the gambling task from the human connectome project in the implementation of the rewardMap project.
 
 The available tasks are:
 
