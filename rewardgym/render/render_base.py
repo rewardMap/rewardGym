@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from .contexts import StepContext
+from .contexts import StepContext, EnvironmentContext
 
 
 class PresentationRoutine(ABC):
@@ -22,17 +22,15 @@ class PresentationRoutine(ABC):
 
     def present(self, context: StepContext):
         """Public method that handles context-aware presentation"""
-        if "simulate" in context.env_context.mode:
-            return self.simulate(context)
         return self.display(context)
 
-    def setup(self, win, **kwargs):
+    def setup(self, context: EnvironmentContext, **kwargs):
         """Setup the stimulus with required resources"""
-        self._setup(win, **kwargs)
+        self._setup(context, **kwargs)
         self.is_setup = True
 
     @abstractmethod
-    def _setup(self, win, **kwargs):
+    def _setup(self, context: EnvironmentContext, **kwargs):
         """Internal setup implementation"""
 
     @abstractmethod

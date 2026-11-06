@@ -1,18 +1,11 @@
 from __future__ import annotations
 
-from typing import Literal
-
-try:
-    from psychopy.visual import ImageStim, TextStim, Window
-    from psychopy.visual.rect import Rect
-except ModuleNotFoundError:
-    from .psychopy_stubs import ImageStim, Rect, TextStim, Window
-
 import warnings
+from typing import Literal
 
 import numpy as np
 
-from ..render import PresentationRoutine, StepContext, log_event
+from ..render import EnvironmentContext, PresentationRoutine, StepContext, log_event
 from ..stimuli import (
     generate_stimulus_properties,
     lose_cross,
@@ -58,7 +51,7 @@ class BaseStimulus(PresentationRoutine):
             )
             self.poll_keys = not wait_no_keys
 
-    def _setup(self, win: Window, **kwargs):
+    def _setup(self, context: EnvironmentContext, **kwargs):
         """
         Call this to setup the stimulus. This means associating the stimulus
         with a window (so there is something to flip).
@@ -161,7 +154,7 @@ class TextStimulus(BaseStimulus):
         self.position = position
         self.text_color = text_color
 
-    def _setup(self, win: Window, **kwargs):
+    def _setup(self, context: EnvironmentContext, **kwargs):
         """
         Performs the setup for the stimulus object. Initiating a PsychoPy.TextStim,
         object, using the parameters given parameters.
@@ -172,8 +165,8 @@ class TextStimulus(BaseStimulus):
             The psychopy window object that is used for displaying stimuli.
         """
 
-        self.textStim = TextStim(
-            win=win, name=self.name, text=self.text, color=self.text_color
+        self.textStim = context.stimuli.text(
+            win=context.win, name=self.name, text=self.text, color=self.text_color
         )
 
     def display(self, context: StepContext) -> None:
@@ -262,7 +255,7 @@ class ImageStimulus(BaseStimulus):
         self.height = height
         self.autodraw = autodraw
 
-    def _setup(self, win: Window, image_paths=None, **kwargs):
+    def _setup(self, context: EnvironmentContext, image_paths=None, **kwargs):
         """
         Performs the setup for the stimulus object. Initiating PsychoPy.ImageStim objects,
         given the provides paths and positions.
@@ -282,13 +275,17 @@ class ImageStimulus(BaseStimulus):
         self.imageStims = []
         for ip, pos in zip(self.image_paths, self.positions):
             if isinstance(ip, str):
-                self.imageStims.append(ImageStim(win, image=ip, pos=pos))
+                self.imageStims.append(
+                    context.stimuli.image(win=context.win, image=ip, pos=pos)
+                )
 
             else:
                 width = ip.shape[1] if self.width is None else self.width
                 height = ip.shape[0] if self.height is None else self.height
                 self.imageStims.append(
-                    ImageStim(win, image=ip, size=(width, height), pos=pos)
+                    context.stimuli.image(
+                        win=context.win, image=ip, size=(width, height), pos=pos
+                    )
                 )
 
         for ip in self.imageStims:
@@ -410,10 +407,10 @@ class FeedBackStimulus(BaseStimulus):
         self.bar_length = 400
         self.bar_height = 50
 
-    def _setup(self, win, **kwargs):
+    def _setup(self, context, **kwargs):
         self.is_setup = True
-        self.reward_text = TextStim(
-            win=win,
+        self.reward_text = context.stimuli.text(
+            win=context.win,
             name=self.name,
             text=self.text,
             color=self.text_color,
@@ -426,8 +423,8 @@ class FeedBackStimulus(BaseStimulus):
         )
 
         if self.bar_total is None:
-            self.total_reward_ind = TextStim(
-                win=win,
+            self.total_reward_ind = context.stimuli.text(
+                win=context.win,
                 name=self.name + "2",
                 text="Total: 0.0",
                 font="arial",
@@ -441,8 +438,8 @@ class FeedBackStimulus(BaseStimulus):
             self.total_reward_ind.autoDraw = True
 
         else:
-            self.point_bar = Rect(
-                win=win,
+            self.point_bar = context.stimuli.rectangle(
+                win=context.win,
                 name=self.name + "-total_bar",
                 width=self.bar_length,
                 height=self.bar_height,
@@ -453,8 +450,8 @@ class FeedBackStimulus(BaseStimulus):
                 units="pix",
             )
 
-            self.total_reward_ind = Rect(
-                win=win,
+            self.total_reward_ind = context.stimuli.rectangle(
+                win=context.win,
                 name=self.name + "-total_indicator",
                 width=10,
                 height=self.bar_height + 10,
@@ -464,16 +461,16 @@ class FeedBackStimulus(BaseStimulus):
                 pos=(-self.bar_length // 2, 350),
             )
 
-            self.text_left = TextStim(
-                win=win,
+            self.text_left = context.stimuli.text(
+                win=context.win,
                 name="label_left",
                 text=self.bar_labels["left"],
                 color="white",
                 height=25,
                 pos=(-self.bar_length // 2 - 40, 350),
             )
-            self.text_right = TextStim(
-                win=win,
+            self.text_right = context.stimuli.text(
+                win=context.win,
                 name="label_right",
                 text=self.bar_labels["right"],
                 color="white",
@@ -490,12 +487,12 @@ class FeedBackStimulus(BaseStimulus):
 
         for kk in self.feedback_stim:
             if isinstance(self.feedback_stim[kk], str):
-                self.feedback_image[kk] = ImageStim(
-                    win=win, image=self.feedback_stim[kk]
+                self.feedback_image[kk] = context.stimuli.image(
+                    win=context.win, image=self.feedback_stim[kk]
                 )
             else:
-                self.feedback_image[kk] = ImageStim(
-                    win,
+                self.feedback_image[kk] = context.stimuli.image(
+                    win=context.win,
                     image=self.feedback_stim[kk],
                     size=self.feedback_stim[kk].shape[:2],
                 )
@@ -646,22 +643,23 @@ class ConditionBasedDisplay(BaseStimulus):
         self.image_shift = image_shift
         self.with_action = with_action
 
-    def _setup(self, win, **kwargs):
+    def _setup(self, context, **kwargs):
         self.image_dict = {}
 
         for kk in self.image_map:
             if isinstance(self.image_map[kk], str):
-                self.image_dict[kk] = ImageStim(win=win, image=self.image_map[kk])
+                self.image_dict[kk] = context.stimuli.image(
+                    win=context.win, image=self.image_map[kk]
+                )
             else:
-                self.image_dict[kk] = ImageStim(
-                    win,
+                self.image_dict[kk] = context.stimuli.image(
+                    win=context.win,
                     image=self.image_map[kk],
                     size=(self.image_map[kk].shape[1], self.image_map[kk].shape[0]),
                 )
 
     def display(self, context: StepContext):
         condition = context.condition
-        win = context.win
         logger = context.logger
         input_handler = context.input_handler
 
@@ -687,8 +685,8 @@ class ConditionBasedDisplay(BaseStimulus):
 
         if self.with_action:
             if context.previous_action == next(iter(condition[0].keys())):
-                feedback = Rect(
-                    win=win,
+                feedback = context.stimuli.rectangle(
+                    win=context.win,
                     width=imgA.size[0],
                     height=imgA.size[1],
                     lineColor="white",
@@ -700,8 +698,8 @@ class ConditionBasedDisplay(BaseStimulus):
                     imgB.setOpacity(0.25)
 
             else:
-                feedback = Rect(
-                    win=win,
+                feedback = context.stimuli.rectangle(
+                    win=context.win,
                     width=imgB.size[0],
                     height=imgB.size[1],
                     lineColor="white",
@@ -766,17 +764,17 @@ class TextWithBorder(BaseStimulus):
         self.condition_text = condition_text
         self.font_height = font_height
 
-    def _setup(self, win, **kwargs):
-        self.textStim = TextStim(
-            win=win,
+    def _setup(self, context, **kwargs):
+        self.textStim = context.stimuli.text(
+            win=context.win,
             name=self.name + "_text",
             text=self.text,
             color=self.textColor,
             height=self.font_height,
         )
 
-        self.rectStim = Rect(
-            win=win,
+        self.rectStim = context.stimuli.rectangle(
+            win=context.win,
             width=self.width,
             height=self.height,
             fillColor=self.fillColor,
@@ -809,7 +807,7 @@ class TextWithBorder(BaseStimulus):
         self.textStim.autoDraw = False
 
         context.render.wait(
-            logger,
+            logger=logger,
             time=self.duration,
             start=stim_onset,
             input_handler=input_handler,

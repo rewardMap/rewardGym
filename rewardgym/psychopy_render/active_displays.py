@@ -2,14 +2,14 @@ from __future__ import annotations
 
 import warnings
 
-try:
-    from psychopy.visual import ImageStim, TextStim, Window
-    from psychopy.visual.rect import Rect
-except ModuleNotFoundError:
-    from .psychopy_stubs import ImageStim, Rect, TextStim, Window
-
 from ..protocols import InputProtocol
-from ..render import ActionRoutine, StepContext, log_event, response_handling
+from ..render import (
+    ActionRoutine,
+    EnvironmentContext,
+    StepContext,
+    log_event,
+    response_handling,
+)
 from ..stimuli import generate_stimulus_properties, make_card_stimulus
 from ..timing import simulation_wait
 from ..utils import check_random_state
@@ -108,7 +108,7 @@ class ActionStimulus(ActionRoutine):
         )
         return response
 
-    def _setup(self, win: Window, **kwargs):
+    def _setup(self, context: EnvironmentContext, **kwargs):
         pass
 
 
@@ -165,7 +165,7 @@ class ActionStimulusTooEarly(ActionStimulus):
         self.name_tooearly = name_tooearly
         self.text_tooearly = text_tooearly
 
-    def _setup(self, win: Window, **kwargs):
+    def _setup(self, context: EnvironmentContext, **kwargs):
         """
         Does not need a special setup, including the function, to make easy looping possible.
 
@@ -175,7 +175,7 @@ class ActionStimulusTooEarly(ActionStimulus):
             The psychopy window object that is used for displaying stimuli, by default None
         """
 
-        self.text_stim = TextStim(win=win, **self.text_tooearly)
+        self.text_stim = context.stimuli.text(win=context.win, **self.text_tooearly)
 
     def display(
         self,
@@ -292,15 +292,20 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
         self.flip_probability = flip_probability
         self.random_state = check_random_state(random_state)
 
-    def _setup(self, win, **kwargs):
+    def _setup(self, context: EnvironmentContext, **kwargs):
         self.image_class = []
         for img, pos in zip(self.images, self.positions):
             if isinstance(img, str):
-                self.image_class.append(ImageStim(win=win, image=img, pos=pos))
+                self.image_class.append(
+                    context.stimuli.image(win=context.win, image=img, pos=pos)
+                )
             else:
                 self.image_class.append(
-                    ImageStim(
-                        win, image=img, size=(img.shape[1], img.shape[0]), pos=pos
+                    context.stimuli.image(
+                        win=context.win,
+                        image=img,
+                        size=(img.shape[1], img.shape[0]),
+                        pos=pos,
                     )
                 )
 
@@ -430,8 +435,8 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
             imgB.setPos(posA)
 
         if action == 0:
-            feedback = Rect(
-                win=win,
+            feedback = context.stimuli.rectangle(
+                win=context.win,
                 width=imgA.size[0],
                 height=imgA.size[1],
                 lineColor="white",
@@ -443,8 +448,8 @@ class TwoStimuliWithResponseAndSelection(ActionStimulus):
             feedback.draw()
 
         elif action == 1:
-            feedback = Rect(
-                win=win,
+            feedback = context.stimuli.rectangle(
+                win=context.win,
                 width=imgB.size[0],
                 height=imgB.size[1],
                 lineColor="white",
@@ -528,15 +533,20 @@ class StimuliWithResponse(ActionStimulus):
         self.target_rl_label = target_rl_label
         self.rng = check_random_state(random_state)
 
-    def _setup(self, win, **kwargs):
+    def _setup(self, context: EnvironmentContext, **kwargs):
         self.imageStims = []
         for img, pos in zip(self.images, self.positions):
             if isinstance(img, str):
-                self.imageStims.append(ImageStim(win=win, image=img, pos=pos))
+                self.imageStims.append(
+                    context.stimuli.image(win=context.win, image=img, pos=pos)
+                )
             else:
                 self.imageStims.append(
-                    ImageStim(
-                        win, image=img, size=(img.shape[1], img.shape[0]), pos=pos
+                    context.stimuli.image(
+                        win=context.win,
+                        image=img,
+                        size=(img.shape[1], img.shape[0]),
+                        pos=pos,
                     )
                 )
 
@@ -675,26 +685,36 @@ class LingeringAction(ActionStimulus):
         self.random_state = check_random_state(random_state)
         self.autodraw = autodraw
 
-    def _setup(self, win, **kwargs):
+    def _setup(self, context: EnvironmentContext, **kwargs):
         self.image_class_phase1 = []
         for img, pos in zip(self.images_phase1, self.positions_phase1):
             if isinstance(img, str):
-                self.image_class_phase1.append(ImageStim(win=win, image=img, pos=pos))
+                self.image_class_phase1.append(
+                    context.stimuli.image(win=context.win, image=img, pos=pos)
+                )
             else:
                 self.image_class_phase1.append(
-                    ImageStim(
-                        win, image=img, size=(img.shape[1], img.shape[0]), pos=pos
+                    context.stimuli.image(
+                        win=context.win,
+                        image=img,
+                        size=(img.shape[1], img.shape[0]),
+                        pos=pos,
                     )
                 )
 
         self.image_class_phase2 = []
         for img, pos in zip(self.images_phase2, self.positions_phase2):
             if isinstance(img, str):
-                self.image_class_phase2.append(ImageStim(win=win, image=img, pos=pos))
+                self.image_class_phase2.append(
+                    context.stimuli.image(win=context.win, image=img, pos=pos)
+                )
             else:
                 self.image_class_phase2.append(
-                    ImageStim(
-                        win, image=img, size=(img.shape[1], img.shape[0]), pos=pos
+                    context.stimuli.image(
+                        context.win,
+                        image=img,
+                        size=(img.shape[1], img.shape[0]),
+                        pos=pos,
                     )
                 )
 
