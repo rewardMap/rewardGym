@@ -1,18 +1,18 @@
-from ..logging import ExperimentLogger, SimulationLogger
-from .advanced_display import (
+from . import psychopy_stubs
+from .active_displays import (
+    ActionStimulus,
     ActionStimulusTooEarly,
-    ConditionBasedDisplay,
     LingeringAction,
     StimuliWithResponse,
-    TextWithBorder,
     TwoStimuliWithResponseAndSelection,
 )
-from .psychopy_display import (
-    ActionStimulus,
+from .passive_displays import (
     BaseStimulus,
+    ConditionBasedDisplay,
     FeedBackStimulus,
     ImageStimulus,
     TextStimulus,
+    TextWithBorder,
 )
 
 __all__ = [
@@ -20,13 +20,12 @@ __all__ = [
     "ActionStimulusTooEarly",
     "BaseStimulus",
     "ConditionBasedDisplay",
-    "ExperimentLogger",
     "FeedBackStimulus",
     "ImageStimulus",
     "LingeringAction",
-    "SimulationLogger",
     "StimuliWithResponse",
     "TextStimulus",
     "TextWithBorder",
     "TwoStimuliWithResponseAndSelection",
+    "psychopy_stubs",
 ]

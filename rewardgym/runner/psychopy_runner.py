@@ -1,14 +1,7 @@
 from __future__ import annotations
 
-try:
-    from psychopy.visual import TextStim
-except ModuleNotFoundError:
-    from ..psychopy_render.psychopy_stubs import TextStim, Window
-
-
 import numpy as np
 
-from ..psychopy_render.psychopy_stubs import Window
 from ..tasks import get_configs
 from .psychopy_plugins import (
     AddRemainder,
@@ -53,7 +46,7 @@ def pspy_run_task(
         settings = get_configs(env.name)(random_state)
 
     if win is None:
-        win = Window()
+        win = env.context.win
 
     try:
         plugins = plugins[env.name]
@@ -68,14 +61,14 @@ def pspy_run_task(
     else:
         break_countdown_limit = 30
 
-    response_reminder = TextStim(
+    response_reminder = env.context.stimuli.text(
         win=win,
         text="Please respond faster!",
         color=[1, 1, 1],
         pos=(0, 100),
         height=25,
     )
-    break_text = TextStim(
+    break_text = env.context.stimuli.text(
         win=win,
         text="Have a break.",
         color=[1, 1, 1],
@@ -98,12 +91,9 @@ def pspy_run_task(
             plugins=plugins,
             entry_point="pre-trial",
             env=env,
-            logger=logger,
             settings=settings,
             episode=episode,
             actions=actions,
-            win=win,
-            input_handler=env.input_handler,
         )
 
         update_psychopy_trials(settings, env, episode)
@@ -117,7 +107,9 @@ def pspy_run_task(
             0, condition=settings["condition_dict"][settings["condition"][episode]]
         )
         if env.action is None and agent is None:
-            done = draw_response_reminder(win, response_reminder, logger)
+            done = draw_response_reminder(
+                context=env.context, text_update=response_reminder
+            )
 
         while not done:
             if agent is not None:
@@ -132,12 +124,9 @@ def pspy_run_task(
                 plugins=plugins,
                 entry_point="post-action",
                 env=env,
-                logger=logger,
                 settings=settings,
                 episode=episode,
                 actions=actions,
-                win=win,
-                input_handler=env.input_handler,
             )
 
             next_obs, reward, terminated, truncated, info = env.step(
@@ -150,7 +139,7 @@ def pspy_run_task(
             # TODO check if this should be action, not previous action!
             if agent is None:
                 if env.action is None and not done:
-                    done = draw_response_reminder(win, response_reminder, logger)
+                    done = draw_response_reminder(env.context, response_reminder)
 
             elif not (done and env.previous_action is None):
                 agent.update(
@@ -162,12 +151,9 @@ def pspy_run_task(
             plugins=plugins,
             entry_point="post-trial",
             env=env,
-            logger=logger,
             settings=settings,
             episode=episode,
             actions=actions,
-            win=win,
-            input_handler=env.input_handler,
         )
 
         logger.log_event(
@@ -179,13 +165,11 @@ def pspy_run_task(
         )
 
         break_point(
-            win=win,
+            env.context,
             text_update=break_text,
-            logger=logger,
             settings=settings,
             episode=episode,
             countdown_cutoff=break_countdown_limit,
-            input_handler=env.input_handler,
         )
 
     return logger, env, agent

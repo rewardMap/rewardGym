@@ -1,24 +1,23 @@
 import numpy as np
 
-from ..logging import SimulationLogger
-from ..timing import simulation_wait, wait
 from .psychopy_utils import update_psychopy_trials
 
 
-def draw_response_reminder(win, text_update, logger, reminder_duration=1.0):
+def draw_response_reminder(context, text_update, reminder_duration=1.0):
     text_update.setAutoDraw(True)
-    win.flip()
-    reminder_onset = logger.get_time()
+    context.render.flip()
+    reminder_onset = context.logger.get_time()
 
-    if isinstance(logger, SimulationLogger):
-        simulation_wait(logger.clock, time=reminder_duration, start=reminder_onset)
-    else:
-        wait(logger, time=reminder_duration, start=reminder_onset, poll_keys=False)
-
+    context.render.wait(
+        logger=context.logger,
+        time=reminder_duration,
+        start=reminder_onset,
+        poll_keys=False,
+    )
     text_update.setAutoDraw(False)
-    win.flip()
+    context.render.flip()
 
-    logger.log_event(
+    context.logger.log_event(
         {"event_type": "reminder", "expected_duration": reminder_duration},
         onset=reminder_onset,
     )
@@ -26,9 +25,7 @@ def draw_response_reminder(win, text_update, logger, reminder_duration=1.0):
     return True
 
 
-def break_point(
-    win, text_update, logger, input_handler, settings, episode, countdown_cutoff=30
-):
+def break_point(context, text_update, settings, episode, countdown_cutoff=30):
     if not ("breakpoints" in settings and "break_duration" in settings):
         pass
 
@@ -36,36 +33,35 @@ def break_point(
         episode in settings["breakpoints"]
         and settings["break_duration"] < countdown_cutoff
     ):
-        break_onset = logger.get_time()
+        break_onset = context.logger.get_time()
 
-        if isinstance(logger, SimulationLogger):
-            simulation_wait(logger.clock, settings["break_duration"], break_onset)
-        else:
-            wait(
-                logger,
-                settings["break_duration"],
-                break_onset,
-                poll_keys=True,
-                input_handler=input_handler,
-            )
+        context.render.wait(
+            logger=context.logger,
+            time=settings["break_duration"],
+            start=break_onset,
+            poll_keys=True,
+            input_handler=context.input_handler,
+        )
 
-        logger.log_event(
+        context.logger.log_event(
             {"event_type": "break", "expected_duration": settings["break_duration"]},
             onset=break_onset,
         )
 
     elif episode in settings["breakpoints"]:
-        break_onset = logger.get_time()
+        break_onset = context.logger.get_time()
         break_text = "Short break. Keep lying as still as possible!\n"
-        while logger.get_time() < (break_onset + settings["break_duration"]):
-            time_left = settings["break_duration"] - (logger.get_time() - break_onset)
+        while context.logger.get_time() < (break_onset + settings["break_duration"]):
+            time_left = settings["break_duration"] - (
+                context.logger.get_time() - break_onset
+            )
             minutes = int(time_left / 60)
             seconds = int(time_left - minutes * 60)
             text_update.setText(break_text + f"{minutes}:{seconds:02d}")
             text_update.draw()
-            win.flip()
+            context.win.flip()
 
-        logger.log_event(
+        context.logger.log_event(
             {"event_type": "break", "expected_duration": settings["break_duration"]},
             onset=break_onset,
         )
@@ -148,16 +144,13 @@ class AddRemainder(PsyPyPlugin):
         if env.remainder > 0 and settings["add_remainder"]:
             rm_onset = logger.get_time()
 
-            if isinstance(logger, SimulationLogger):
-                simulation_wait(logger.clock, env.remainder, rm_onset)
-            else:
-                wait(
-                    logger,
-                    env.remainder,
-                    rm_onset,
-                    input_handler=input_handler,
-                    poll_keys=True,
-                )
+            env.context.render.wait(
+                logger=logger,
+                time=env.remainder,
+                start=rm_onset,
+                input_handler=input_handler,
+                poll_keys=True,
+            )
 
             logger.log_event(
                 {"event_type": "adjusting-time", "expected_duration": env.remainder},

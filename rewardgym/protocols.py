@@ -1,4 +1,4 @@
-from typing import Protocol, runtime_checkable
+from typing import Any, Protocol, runtime_checkable
 
 
 @runtime_checkable
@@ -36,7 +36,7 @@ class InputProtocol(Protocol):
 
     def key_strokes(
         self, logger, key_list: None | list[str] = None
-    ) -> list[tuple[str, float]] | None: ...
+    ) -> tuple[str, float] | None: ...
 
 
 @runtime_checkable
@@ -46,6 +46,7 @@ class ClockProtocol(Protocol):
     def reset(self) -> None: ...
 
 
+@runtime_checkable
 class LoggerProtocol(Protocol):
     clock: ClockProtocol
     na: str
@@ -55,3 +56,12 @@ class LoggerProtocol(Protocol):
     def log_event(self, info_dict: dict, onset: float | None = None) -> None: ...
 
     def close(self) -> None: ...
+
+
+@runtime_checkable
+class DisplayProtocol(Protocol):
+    def schedule_on_flip(self, callback, *args, **kwargs) -> Any: ...
+
+    def flip(self) -> Any: ...
+
+    def wait(self, **kwargs) -> Any: ...
