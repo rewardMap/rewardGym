@@ -1,0 +1,5 @@
+gonogo
+===================
+
+.. relativeinclude:: ../../rewardgym/tasks/gonogo/README.md
+  :parser: myst_parser.sphinx_

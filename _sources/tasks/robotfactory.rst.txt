@@ -1,0 +1,5 @@
+robotfactory
+===================
+
+.. relativeinclude:: ../../rewardgym/tasks/robotfactory/README.md
+  :parser: myst_parser.sphinx_

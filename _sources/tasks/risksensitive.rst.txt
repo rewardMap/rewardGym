@@ -1,0 +1,5 @@
+risksensitive
+===================
+
+.. relativeinclude:: ../../rewardgym/tasks/risksensitive/README.md
+  :parser: myst_parser.sphinx_

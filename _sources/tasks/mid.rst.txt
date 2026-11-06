@@ -1,0 +1,5 @@
+mid
+===================
+
+.. relativeinclude:: ../../rewardgym/tasks/mid/README.md
+  :parser: myst_parser.sphinx_
