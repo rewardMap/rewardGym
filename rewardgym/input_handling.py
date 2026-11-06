@@ -1,8 +1,6 @@
-try:
-    from psychopy import core
-except ImportError:
-    core = None
+import time
 
+from .optional_dependencies import core, pygame, require_pygame
 from .protocols import InputProtocol, KeyboardProtocol
 
 
@@ -116,3 +114,48 @@ class PsychoPyInput(BaseInputHandler):
             self.win.close()
         if core is not None:
             core.quit()
+
+
+class PygameInput(BaseInputHandler):
+    def __init__(self, win=None, *args, **kwargs):
+        require_pygame()
+
+        super().__init__(*args, **kwargs)
+
+        self.start_time = time.perf_counter()
+        self.win = win
+
+    def get_keys(self):
+        out = []
+
+        now = time.perf_counter() - self.start_time
+
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                out.append(
+                    (
+                        pygame.key.name(event.key),
+                        now,
+                    )
+                )
+
+            elif event.type == pygame.QUIT:
+                out.append(
+                    (
+                        self.kill_switch,
+                        now,
+                    )
+                )
+
+        return out
+
+    def _close(self):
+        if self.win is not None:
+            self.win.close()
+        pygame.quit()
+
+        raise ExperimentQuit()
+
+
+class ExperimentQuit(Exception):
+    pass

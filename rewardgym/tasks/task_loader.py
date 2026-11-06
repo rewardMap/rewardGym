@@ -183,9 +183,14 @@ def get_pygame_info(task_name, **kwargs):
 
     if task_name not in _task_registry:
         raise ValueError(f"Task '{task_name}' not registered.")
-    get_configs_func = _task_registry[task_name]["get_pygame_info"]
+
+    warnings.warn(
+        "Backend specificity will be released and is not necessary anymore. Getting psychopy_info instead.",
+        DeprecationWarning,
+    )
+    get_configs_func = _task_registry[task_name]["get_psychopy_info"]
     if get_configs_func is None:
-        raise NotImplementedError(f"get_pygame_info not implemented for {task_name}")
+        raise NotImplementedError(f"get_psychopy_info not implemented for {task_name}")
     return get_configs_func(**kwargs)
 
 

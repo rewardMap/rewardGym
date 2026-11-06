@@ -1,12 +1,11 @@
-from . import psychopy_stubs
-from .active_displays import (
+from ..render.active_displays import (
     ActionStimulus,
     ActionStimulusTooEarly,
     LingeringAction,
     StimuliWithResponse,
     TwoStimuliWithResponseAndSelection,
 )
-from .passive_displays import (
+from ..render.passive_displays import (
     BaseStimulus,
     ConditionBasedDisplay,
     FeedBackStimulus,
@@ -14,6 +13,7 @@ from .passive_displays import (
     TextStimulus,
     TextWithBorder,
 )
+from . import psychopy_stubs
 
 __all__ = [
     "ActionStimulus",

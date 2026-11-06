@@ -3,15 +3,15 @@ from __future__ import annotations
 import warnings
 
 from ..protocols import InputProtocol
-from ..render import (
+from ..stimuli import generate_stimulus_properties, make_card_stimulus
+from ..utils import check_random_state
+from . import (
     ActionRoutine,
     EnvironmentContext,
     StepContext,
     log_event,
     response_handling,
 )
-from ..stimuli import generate_stimulus_properties, make_card_stimulus
-from ..utils import check_random_state
 
 
 class ActionStimulus(ActionRoutine):

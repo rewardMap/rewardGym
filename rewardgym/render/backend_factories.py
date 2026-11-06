@@ -27,3 +27,20 @@ class PsychoPyFactory:
         from psychopy.visual import TextStim
 
         return TextStim(**kwargs)
+
+
+class PygameFactory:
+    def image(self, **kwargs):
+        from ..pygame_render.pygame_stimuli import PygameImageStim
+
+        return PygameImageStim(**kwargs)
+
+    def rectangle(self, **kwargs):
+        from ..pygame_render.pygame_stimuli import PygameRect
+
+        return PygameRect(**kwargs)
+
+    def text(self, **kwargs):
+        from ..pygame_render.pygame_stimuli import PygameTextStim
+
+        return PygameTextStim(**kwargs)

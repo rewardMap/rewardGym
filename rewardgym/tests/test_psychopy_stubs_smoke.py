@@ -1,7 +1,7 @@
 from rewardgym import get_env
 from rewardgym.logging import ExperimentLogger
 from rewardgym.psychopy_render.psychopy_stubs import Clock, Window
-from rewardgym.runner import pspy_run_task
+from rewardgym.runner import run_task
 
 
 def simulate_task(envname):
@@ -24,7 +24,7 @@ def simulate_task(envname):
     env = get_env(task, render_backend="psychopy-simulate")
     env.setup(logger=Logger, window=win, expose_last_stim=True)
 
-    pspy_run_task(env=env, win=win, logger=Logger)
+    run_task(env=env, win=win, logger=Logger)
 
     return Logger.close()
 

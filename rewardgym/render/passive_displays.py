@@ -5,7 +5,6 @@ from typing import Literal
 
 import numpy as np
 
-from ..render import EnvironmentContext, PresentationRoutine, StepContext, log_event
 from ..stimuli import (
     generate_stimulus_properties,
     lose_cross,
@@ -13,6 +12,7 @@ from ..stimuli import (
     win_cross,
     zero_cross,
 )
+from . import EnvironmentContext, PresentationRoutine, StepContext, log_event
 
 
 class BaseStimulus(PresentationRoutine):

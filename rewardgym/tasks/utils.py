@@ -4,7 +4,7 @@ from typing import Any, Literal
 
 import numpy as np
 
-from ..environments import BaseEnv, PsychopyEnv, RenderEnv
+from ..environments import BaseEnv, RenderEnv
 from .task_loader import get_task
 
 
@@ -21,9 +21,14 @@ def get_env(
     random_state: int | np.random.Generator = 1000,
     **kwargs,
 ):
+    if render_backend == "pygame":
+        rb = "psychopy"
+    else:
+        rb = render_backend
+
     environment_graph, reward_structure, info_dict = get_task(
         task_name,
-        render_backend=render_backend,
+        render_backend=rb,
         random_state=random_state,
     )
 
@@ -40,16 +45,12 @@ def get_env(
             name=task_name,
             reduced_actions=reduced_actions,
         )
-    elif render_backend == "pygame":
+    elif (
+        render_backend == "psychopy"
+        or render_backend == "psychopy-simulate"
+        or render_backend == "pygame"
+    ):
         env = RenderEnv(
-            environment_graph=environment_graph,
-            reward_locations=reward_structure,
-            info_dict=info_dict,
-            random_state=random_state,
-            name=task_name,
-        )
-    elif render_backend == "psychopy" or render_backend == "psychopy-simulate":
-        env = PsychopyEnv(
             environment_graph=environment_graph,
             reward_locations=reward_structure,
             render_mode=render_backend,
