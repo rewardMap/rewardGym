@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 
 from ..tasks import get_configs
-from .psychopy_plugins import (
+from .plugins import (
     AddRemainder,
     DelayUpdateHcp,
     MiscUpdateMid,
