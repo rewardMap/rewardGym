@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Any
 
-from ..input_handling import SimulationInput, PsychoPyInput
+from ..input_handling import PsychoPyInput, SimulationInput
 from ..logging import ExperimentLogger
 from ..protocols import DisplayProtocol, InputProtocol, LoggerProtocol
 from .backend_factories import PsychoPyFactory, SimulationFactory

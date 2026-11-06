@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from .contexts import StepContext, EnvironmentContext
+from .contexts import EnvironmentContext, StepContext
 
 
 class PresentationRoutine(ABC):
