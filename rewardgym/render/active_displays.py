@@ -3,7 +3,7 @@ from __future__ import annotations
 import warnings
 
 from ..protocols import InputProtocol
-from ..render import (
+from . import (
     ActionRoutine,
     EnvironmentContext,
     StepContext,
