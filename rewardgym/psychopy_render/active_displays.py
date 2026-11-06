@@ -10,8 +10,7 @@ except ModuleNotFoundError:
     from .psychopy_stubs import ImageStim, Rect, TextStim, Window
 
 from ..protocols import InputProtocol
-from ..render_base import ActionRoutine
-from ..render_helper import response_handling
+from ..render import ActionRoutine, response_handling
 from ..stimuli import generate_stimulus_properties, make_card_stimulus
 from ..timing import simulation_wait, wait
 from ..utils import check_random_state
@@ -19,7 +18,7 @@ from ..utils import check_random_state
 if TYPE_CHECKING:
     from ..environments import StepContext
 
-from ..render_helper import log_event
+from ..render.render_helper import log_event
 
 
 class ActionStimulus(ActionRoutine):

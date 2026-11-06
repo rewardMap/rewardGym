@@ -15,7 +15,7 @@ import numpy as np
 if TYPE_CHECKING:
     from ..environments import StepContext
 
-from ..render_base import PresentationRoutine
+from ..render import PresentationRoutine, log_event
 from ..stimuli import (
     generate_stimulus_properties,
     lose_cross,
@@ -24,7 +24,6 @@ from ..stimuli import (
     zero_cross,
 )
 from ..timing import simulation_wait, wait
-from ..render_helper import log_event
 
 
 class BaseStimulus(PresentationRoutine):
