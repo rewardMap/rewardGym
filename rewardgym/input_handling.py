@@ -117,11 +117,13 @@ class PsychoPyInput(BaseInputHandler):
 
 
 class PygameInput(BaseInputHandler):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, win=None, *args, **kwargs):
         require_pygame()
+
         super().__init__(*args, **kwargs)
 
         self.start_time = time.perf_counter()
+        self.win = win
 
     def get_keys(self):
         out = []
@@ -148,4 +150,12 @@ class PygameInput(BaseInputHandler):
         return out
 
     def _close(self):
+        if self.win is not None:
+            self.win.close()
         pygame.quit()
+
+        raise ExperimentQuit()
+
+
+class ExperimentQuit(Exception):
+    pass
