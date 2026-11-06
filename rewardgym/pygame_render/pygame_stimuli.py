@@ -1,5 +1,6 @@
-from ..optional_dependencies import pygame
 import numpy as np
+
+from ..optional_dependencies import pygame
 
 
 def psychopy_color_to_pygame(color):
@@ -232,14 +233,18 @@ class PygameRect(PygameBaseStim):
             int(self.width),
             int(self.height),
         )
-
-        rect.center = (
-            int(x),
-            int(y),
-        )
+        rect.center = (int(x), int(y))
 
         if self.fillColor is not None:
-            pygame.draw
+            pygame.draw.rect(self.win.screen, self.fillColor, rect)
+
+        if self.lineColor is not None and self.lineWidth > 0:
+            pygame.draw.rect(
+                self.win.screen,
+                self.lineColor,
+                rect,
+                width=int(self.lineWidth),
+            )
 
 
 class PygameTextStim(PygameBaseStim):

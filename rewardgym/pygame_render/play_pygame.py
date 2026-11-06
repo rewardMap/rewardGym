@@ -1,9 +1,10 @@
 from typing import Literal
 
-from ..tasks.utils import get_env
-from ..logging import ExperimentLogger
 from psylog.interfaces import SystemClock
+
+from ..logging import ExperimentLogger
 from ..runner.task_runner import run_task
+from ..tasks.utils import get_env
 
 
 def play_task(
@@ -21,4 +22,4 @@ def play_task(
 
     env.setup(logger=simlog, window=None, expose_last_stim=False)
 
-    df, _, _ = run_task(env, logger=simlog, agent=None, random_state=10)
+    _df, _, _ = run_task(env, logger=simlog, agent=None, random_state=10)

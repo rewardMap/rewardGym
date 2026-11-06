@@ -4,8 +4,8 @@ from typing import Any
 from ..input_handling import PsychoPyInput, SimulationInput
 from ..logging import ExperimentLogger
 from ..protocols import DisplayProtocol, InputProtocol, LoggerProtocol
-from .backend_factories import PsychoPyFactory, SimulationFactory, PygameFactory
-from .render_backend import PsychoPyDisplay, SimulationDisplay, PygameDisplay
+from .backend_factories import PsychoPyFactory, PygameFactory, SimulationFactory
+from .render_backend import PsychoPyDisplay, PygameDisplay, SimulationDisplay
 
 
 @dataclass
@@ -64,7 +64,7 @@ class EnvironmentContext:
             self.window = Window()
 
         if self.input_handler is None:
-            self.input_handler = SimulationInput(win=self.window)
+            self.input_handler = SimulationInput()
 
         if self.logger is None:
             from ..psychopy_render.psychopy_stubs import Clock
@@ -83,7 +83,7 @@ class EnvironmentContext:
             self.window = PygameWindow()
 
         if self.input_handler is None:
-            from ..pygame_render.compatibility_classes import PygameInput
+            from ..input_handling import PygameInput
 
             self.input_handler = PygameInput(win=self.window)
 

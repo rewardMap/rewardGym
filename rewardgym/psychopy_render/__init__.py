@@ -1,4 +1,3 @@
-from . import psychopy_stubs
 from ..render.active_displays import (
     ActionStimulus,
     ActionStimulusTooEarly,
@@ -14,6 +13,7 @@ from ..render.passive_displays import (
     TextStimulus,
     TextWithBorder,
 )
+from . import psychopy_stubs
 
 __all__ = [
     "ActionStimulus",
