@@ -16,6 +16,7 @@ class EnvironmentContext:
     mode: str = "psychopy-simulate"
     render: DisplayProtocol | None = None
     stimuli: None = None
+    random_state: None = None
 
     def __post_init__(self):
         if self.mode not in ["psychopy", "psychopy-simulate", "pygame"]:

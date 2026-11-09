@@ -72,6 +72,7 @@ class RenderEnv(BaseEnv):
             logger=logger,
             input_handler=input_handler,
             mode=self.render_mode,
+            random_state=self.random_state,
         )
 
         for node in self.graph:
