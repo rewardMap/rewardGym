@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from .contexts import EnvironmentContext, StepContext
 
 
-class PresentationRoutine(ABC):
+class BaseRoutine(ABC):
     """Base class for all stimuli with context-aware presentation"""
 
     def __init__(
@@ -38,7 +38,7 @@ class PresentationRoutine(ABC):
         """Actual display implementation"""
 
 
-class ActionRoutine(PresentationRoutine):
+class ActionRoutine(BaseRoutine):
     def __init__(
         self, name, duration, key_dict, rl_label, timeout_action, name_timeout, noflip
     ):

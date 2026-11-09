@@ -4,7 +4,7 @@ from typing import Any
 from ..protocols import LoggerProtocol
 from ..utils import get_key_from_dict
 from .contexts import StepContext
-from .render_base import ActionRoutine, PresentationRoutine
+from .render_base import ActionRoutine, BaseRoutine
 
 
 class PollStatus(Enum):
@@ -14,7 +14,7 @@ class PollStatus(Enum):
 
 
 def log_event(
-    routine: ActionRoutine | PresentationRoutine,
+    routine: ActionRoutine | BaseRoutine,
     logger: LoggerProtocol,
     onset: float | None = None,
     extra_info: dict | None = None,

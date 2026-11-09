@@ -12,10 +12,10 @@ from ..stimuli import (
     win_cross,
     zero_cross,
 )
-from . import EnvironmentContext, PresentationRoutine, StepContext, log_event
+from . import EnvironmentContext, BaseRoutine, StepContext, log_event
 
 
-class BaseStimulus(PresentationRoutine):
+class BaseStimulus(BaseRoutine):
     """
     Base class for stimulus presentation. If called on its own it will flip the
     window.
