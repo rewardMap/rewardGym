@@ -2,7 +2,7 @@ from .backend_factories import setup_stimulus
 from .render_base import BaseRoutine, EnvironmentContext, StepContext
 from .render_helper import log_event
 from .stimulus_classes import StimulusDefinition, TextDefinition, RectangleDefinition
-from .routine_helpers import conditioned_text
+from .routine_helpers import conditioned_text, state_selection_with_highlight
 
 
 class PresentationRoutine(BaseRoutine):
@@ -94,6 +94,7 @@ class DynamicRoutine(BaseRoutine):
         poll_keys=True,
         flip: bool = True,
         callback_before_draw=None,
+        callback_after_draw=None,
     ):
         super().__init__(
             name=name, duration=duration, rl_label=rl_label, poll_keys=poll_keys
@@ -105,6 +106,7 @@ class DynamicRoutine(BaseRoutine):
         self.stimulus_definitions = stimulus_definitions
         self.flip = flip
         self.callback_before_draw = callback_before_draw
+        self.callback_after_draw = callback_after_draw
 
     def _setup(self, context: EnvironmentContext, **kwargs):
         """
@@ -153,6 +155,9 @@ class DynamicRoutine(BaseRoutine):
         if self.flip:
             context.render.flip()
 
+        if self.callback_after_draw:
+            self.callback_after_draw(self, context)
+
         context.render.wait(
             logger=context.logger,
             input_handler=context.input_handler,
@@ -195,4 +200,49 @@ class ConditionedTextCard(DynamicRoutine):
             poll_keys=poll_keys,
             stimulus_definitions=stimulus_definitions,
             callback_before_draw=conditioned_text,
+        )
+
+
+class StateBasedDisplay(DynamicRoutine):
+    def __init__(
+        self,
+        duration: float | None,
+        state_definition_map: dict,
+        border_definition: RectangleDefinition | bool | None = True,
+        stimulus_shift: tuple = (350, 0),
+        rl_label: str | None = None,
+        name: str | None = None,
+        poll_keys=True,
+        flip: bool = True,
+        selection: bool = False,
+    ):
+        if border_definition is None or border_definition is True:
+            self.border_definition = RectangleDefinition(
+                name="border",
+                lineColor="white",
+                lineWidth=7,
+                height=0,
+                width=0,
+            )
+        else:
+            self.border_definition = None
+
+        self.state_definition_map = state_definition_map
+        self.stimulus_shift = stimulus_shift
+
+        stimulus_definitions = [i for i in self.state_definition_map.values()]
+        self.selection = selection
+        self.border_name = None
+
+        if self.border_definition is not None:
+            stimulus_definitions.append(self.border_definition)
+            self.border_name = self.border_definition.name
+
+        super().__init__(
+            name=name,
+            duration=duration,
+            rl_label=rl_label,
+            poll_keys=poll_keys,
+            stimulus_definitions=stimulus_definitions,
+            callback_before_draw=state_selection_with_highlight,
         )
