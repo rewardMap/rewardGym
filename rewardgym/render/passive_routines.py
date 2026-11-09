@@ -1,7 +1,7 @@
-from .stimulus_classes import StimulusDefinition
-from .render_base import EnvironmentContext, StepContext, BaseRoutine
 from .backend_factories import setup_stimulus
+from .render_base import BaseRoutine, EnvironmentContext, StepContext
 from .render_helper import log_event
+from .stimulus_classes import StimulusDefinition
 
 
 class PresentationRoutine(BaseRoutine):
@@ -13,8 +13,11 @@ class PresentationRoutine(BaseRoutine):
         | list[StimulusDefinition]
         | None = None,
         name: str | None = None,
+        poll_keys=True,
     ):
-        super().__init__(name=name, duration=duration, rl_label=rl_label)
+        super().__init__(
+            name=name, duration=duration, rl_label=rl_label, poll_keys=poll_keys
+        )
 
         if isinstance(stimulus_definitions, StimulusDefinition):
             stimulus_definitions = [stimulus_definitions]
@@ -31,13 +34,11 @@ class PresentationRoutine(BaseRoutine):
         win : Window
             The psychopy window object that is used for displaying stimuli.
         """
-        self.stimuli = []
+        self.stimuli = {}
 
         for stim in self.stimulus_definitions:
-            self.stimuli.append(
-                setup_stimulus(
-                    window=context.win, factory=context.stimuli, definition=stim
-                )
+            self.stimuli[stim.name] = setup_stimulus(
+                window=context.win, factory=context.stimuli, definition=stim
             )
 
     def display(self, context: StepContext) -> None:
@@ -58,6 +59,7 @@ class PresentationRoutine(BaseRoutine):
         Should return None
 
         """
+
         stim_onset = context.logger.get_time()
         for stim in self.stimuli:
             stim.draw()

@@ -14,7 +14,7 @@ class Stimuli(StrEnum):
 
 @dataclass(kw_only=True)
 class StimulusDefinition:
-    name: str | None
+    name: str
     autoDraw: bool | None = None
     opacity: float | None = None
     pos: tuple | None = None
