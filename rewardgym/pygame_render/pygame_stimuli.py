@@ -27,14 +27,15 @@ class PygameBaseStim:
         win,
         name=None,
         pos=(0, 0),
+        autoDraw: bool = False,
         **kwargs,
     ):
         self.win = win
         self.name = name
 
         self.pos = pos
-
         self._autoDraw = False
+        self.setAutoDraw(autoDraw)
 
     @property
     def autoDraw(self):
@@ -83,13 +84,10 @@ class PygameImageStim(PygameBaseStim):
         pos=(0, 0),
         size=None,
         name=None,
+        autoDraw: bool = False,
         **kwargs,
     ):
-        super().__init__(
-            win=win,
-            name=name,
-            pos=pos,
-        )
+        super().__init__(win=win, name=name, pos=pos, autoDraw=autoDraw)
 
         self.opacity = 1.0
 
@@ -203,13 +201,10 @@ class PygameRect(PygameBaseStim):
         fillColor=None,
         lineWidth=1,
         name=None,
+        autoDraw: bool = False,
         **kwargs,
     ):
-        super().__init__(
-            win=win,
-            name=name,
-            pos=pos,
-        )
+        super().__init__(win=win, name=name, pos=pos, autoDraw=autoDraw)
 
         self.width = width
         self.height = height
@@ -260,13 +255,10 @@ class PygameTextStim(PygameBaseStim):
         alignText=None,
         anchorHoriz=None,
         units=None,
+        autoDraw: bool = False,
         **kwargs,
     ):
-        super().__init__(
-            win=win,
-            name=name,
-            pos=pos,
-        )
+        super().__init__(win=win, name=name, pos=pos, autoDraw=autoDraw)
 
         self.text = text
 
