@@ -12,6 +12,7 @@ class BaseRoutine(ABC):
         duration: float | None = None,
         rl_label: str | None = None,
         noflip=False,
+        poll_keys=True,
     ):
         self.name = name
         self.duration = duration
@@ -19,6 +20,7 @@ class BaseRoutine(ABC):
         self.is_setup = False
         self.noflip = noflip
         self.returns_action = False
+        self.poll_keys = poll_keys
 
     def present(self, context: StepContext):
         """Public method that handles context-aware presentation"""
@@ -40,9 +42,23 @@ class BaseRoutine(ABC):
 
 class ActionRoutine(BaseRoutine):
     def __init__(
-        self, name, duration, key_dict, rl_label, timeout_action, name_timeout, noflip
+        self,
+        name,
+        duration,
+        key_dict,
+        rl_label,
+        timeout_action,
+        name_timeout,
+        noflip,
+        poll_keys=True,
     ):
-        super().__init__(name=name, duration=duration, rl_label=rl_label, noflip=noflip)
+        super().__init__(
+            name=name,
+            duration=duration,
+            rl_label=rl_label,
+            noflip=noflip,
+            poll_keys=poll_keys,
+        )
 
         self.key_dict = key_dict
         self.timeout_action = timeout_action
