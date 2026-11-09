@@ -68,7 +68,7 @@ class DisplayProtocol(Protocol):
 
 
 @runtime_checkable
-class FactoryProtocol:
+class FactoryProtocol(Protocol):
     def image(self, **kwargs) -> Any: ...
 
     def rectangle(self, **kwargs) -> Any: ...
@@ -77,7 +77,7 @@ class FactoryProtocol:
 
 
 @runtime_checkable
-class WindowProtocol:
+class WindowProtocol(Protocol):
     def flip(self, **kwargs) -> Any: ...
 
     def callOnFlip(self, **kwargs) -> Any: ...

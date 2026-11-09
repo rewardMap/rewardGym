@@ -1,50 +1,60 @@
-from dataclasses import dataclass
-from enum import Enum
+from dataclasses import dataclass, fields
+from enum import StrEnum, auto
+
+from typing import ClassVar
 
 from numpy.typing import ArrayLike
 
 from ..protocols import WindowProtocol
 
-Stimuli = Enum("stimuli", names="IMAGE RECTANGLE TEXT")
+
+class Stimuli(StrEnum):
+    IMAGE = auto()
+    RECTANGLE = auto()
+    TEXT = auto()
 
 
 @dataclass(kw_only=True)
 class StimulusDefinition:
     window: WindowProtocol
     name: str | None
-    autoDraw: bool = False
-    opacity: float = 1.0
-    pos: tuple | None = (0, 0)
+    autoDraw: bool | None = None
+    opacity: float | None = None
+    pos: tuple | None = None
     units: str | None = None
-    setup_protocol = None
+    setup_protocol: ClassVar[Stimuli] = None
 
-    def get_kwargs(self) -> dict | None:
-        pass
+    def get_kwargs(self):
+        return {
+            field.name: getattr(self, field.name)
+            for field in fields(self)
+            if getattr(self, field.name) is not None
+        }
 
 
 @dataclass(kw_only=True)
-class Image(StimulusDefinition):
+class ImageDefinition(StimulusDefinition):
     image: str | None | ArrayLike
     size: tuple | None = None
-    setup_protocol = Stimuli.IMAGE
+    setup_protocol: ClassVar[Stimuli] = Stimuli.IMAGE
 
 
 @dataclass(kw_only=True)
-class Text(StimulusDefinition):
+class TextDefinition(StimulusDefinition):
     text: str
     height: float | int | None
-    color: str | list | ArrayLike = "white"
+    color: str | list | ArrayLike | None = None
     font: str | None = None
-    alignText = None
-    anchorHoriz = None
-    setup_protocol = Stimuli.TEXT
+    alignText: str | None = None
+    anchorHoriz: str | None = None
+    setup_protocol: ClassVar[Stimuli] = Stimuli.TEXT
 
 
 @dataclass(kw_only=True)
-class Rectangle(StimulusDefinition):
-    width = None
-    height = None
-    lineColor = None
-    fillColor = None
-    lineWidth = None
-    setup_protocol = Stimuli.RECTANGLE
+class RectangleDefinition(StimulusDefinition):
+    width: float | None = None
+    height: float | None = None
+    lineColor: str | list | tuple | ArrayLike | None = None
+    fillColor: str | list | tuple | ArrayLike | None = None
+    lineWidth: float | None = None
+    setup_protocol: ClassVar[Stimuli] = Stimuli.RECTANGLE
