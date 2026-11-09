@@ -1,7 +1,25 @@
+from ..protocols import FactoryProtocol
+from .stimulus_classes import Stimuli, StimulusDefinition
 from .stimulus_stubs import SimImageStim, SimRect, SimTextStim
 
 
-class SimulationFactory:
+def setup_stimulus(factory: FactoryProtocol, definition: StimulusDefinition):
+    if definition.setup_protocol == Stimuli.IMAGE:
+        return factory.image(**definition.get_kwargs())
+
+    elif definition.setup_protocol == Stimuli.RECTANGLE:
+        return factory.rectangle(**definition.get_kwargs())
+
+    elif definition.setup_protocol == Stimuli.TEXT:
+        return factory.text(**definition.get_kwargs())
+
+    else:
+        raise NotImplementedError(
+            f"{definition.setup_protocol}, is not implemented in the present factory!"
+        )
+
+
+class SimulationFactory(FactoryProtocol):
     def image(self, **kwargs):
         return SimImageStim(**kwargs)
 
@@ -12,7 +30,7 @@ class SimulationFactory:
         return SimTextStim(**kwargs)
 
 
-class PsychoPyFactory:
+class PsychoPyFactory(FactoryProtocol):
     def image(self, **kwargs):
         from psychopy.visual import ImageStim
 
@@ -29,7 +47,7 @@ class PsychoPyFactory:
         return TextStim(**kwargs)
 
 
-class PygameFactory:
+class PygameFactory(FactoryProtocol):
     def image(self, **kwargs):
         from ..pygame_render.pygame_stimuli import PygameImageStim
 
