@@ -5,8 +5,6 @@ from typing import ClassVar
 
 from numpy.typing import ArrayLike
 
-from ..protocols import WindowProtocol
-
 
 class Stimuli(StrEnum):
     IMAGE = auto()
@@ -16,7 +14,6 @@ class Stimuli(StrEnum):
 
 @dataclass(kw_only=True)
 class StimulusDefinition:
-    window: WindowProtocol
     name: str | None
     autoDraw: bool | None = None
     opacity: float | None = None

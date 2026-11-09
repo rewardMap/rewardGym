@@ -1,17 +1,19 @@
-from ..protocols import FactoryProtocol
+from ..protocols import FactoryProtocol, WindowProtocol
 from .stimulus_classes import Stimuli, StimulusDefinition
 from .stimulus_stubs import SimImageStim, SimRect, SimTextStim
 
 
-def setup_stimulus(factory: FactoryProtocol, definition: StimulusDefinition):
+def setup_stimulus(
+    window: WindowProtocol, factory: FactoryProtocol, definition: StimulusDefinition
+):
     if definition.setup_protocol == Stimuli.IMAGE:
-        return factory.image(**definition.get_kwargs())
+        return factory.image(win=window, **definition.get_kwargs())
 
     elif definition.setup_protocol == Stimuli.RECTANGLE:
-        return factory.rectangle(**definition.get_kwargs())
+        return factory.rectangle(win=window, **definition.get_kwargs())
 
     elif definition.setup_protocol == Stimuli.TEXT:
-        return factory.text(**definition.get_kwargs())
+        return factory.text(win=window, **definition.get_kwargs())
 
     else:
         raise NotImplementedError(
