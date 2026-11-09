@@ -1,3 +1,15 @@
+# 0.11.1 (Mon Nov 09 2026)
+
+#### Bug Fix / Patch
+
+- Pygame Stimuli did not use AutoDraw [#57](https://github.com/rewardMap/rewardGym/pull/57) ([@SRSteinkamp](https://github.com/SRSteinkamp))
+
+#### Authors: 1
+
+- SRSteinkamp ([@SRSteinkamp](https://github.com/SRSteinkamp))
+
+---
+
 # 0.11.0 (Fri Nov 06 2026)
 
 #### Breaking Change during development
