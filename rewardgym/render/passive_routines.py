@@ -14,6 +14,7 @@ class PresentationRoutine(BaseRoutine):
         | None = None,
         name: str | None = None,
         poll_keys=True,
+        flip: bool = True,
     ):
         super().__init__(
             name=name, duration=duration, rl_label=rl_label, poll_keys=poll_keys
@@ -23,6 +24,7 @@ class PresentationRoutine(BaseRoutine):
             stimulus_definitions = [stimulus_definitions]
 
         self.stimulus_definitions = stimulus_definitions
+        self.flip = flip
 
     def _setup(self, context: EnvironmentContext, **kwargs):
         """
@@ -36,10 +38,11 @@ class PresentationRoutine(BaseRoutine):
         """
         self.stimuli = {}
 
-        for stim in self.stimulus_definitions:
-            self.stimuli[stim.name] = setup_stimulus(
-                window=context.win, factory=context.stimuli, definition=stim
-            )
+        if self.stimulus_definitions is not None:
+            for stim in self.stimulus_definitions:
+                self.stimuli[stim.name] = setup_stimulus(
+                    window=context.win, factory=context.stimuli, definition=stim
+                )
 
     def display(self, context: StepContext) -> None:
         """
@@ -61,10 +64,11 @@ class PresentationRoutine(BaseRoutine):
         """
 
         stim_onset = context.logger.get_time()
-        for stim in self.stimuli:
+        for stim in self.stimuli.values():
             stim.draw()
 
-        context.render.flip()
+        if self.flip:
+            context.render.flip()
 
         context.render.wait(
             logger=context.logger,
