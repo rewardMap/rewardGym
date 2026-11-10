@@ -1,5 +1,4 @@
-from .backend_factories import setup_stimulus
-from .render_base import BaseRoutine, EnvironmentContext, StepContext
+from .render_base import BaseRoutine, StepContext
 from .render_helper import log_event
 from .stimulus_classes import (
     StimulusDefinition,
@@ -51,24 +50,6 @@ class PresentationRoutine(BaseRoutine):
 
         self.stimulus_definitions = stimulus_definitions
         self.flip = flip
-
-    def _setup(self, context: EnvironmentContext, **kwargs):
-        """
-        Performs the setup for the stimulus object. Initiating a PsychoPy.TextStim,
-        object, using the parameters given parameters.
-
-        Parameters
-        ----------
-        win : Window
-            The psychopy window object that is used for displaying stimuli.
-        """
-        self.stimuli = {}
-
-        if self.stimulus_definitions is not None:
-            for stim in self.stimulus_definitions:
-                self.stimuli[stim.name] = setup_stimulus(
-                    window=context.win, factory=context.stimuli, definition=stim
-                )
 
     def display(self, context: StepContext) -> None:
         """
@@ -133,24 +114,6 @@ class DynamicRoutine(BaseRoutine):
         self.flip = flip
         self.callback_before_draw = callback_before_draw
         self.callback_after_draw = callback_after_draw
-
-    def _setup(self, context: EnvironmentContext, **kwargs):
-        """
-        Performs the setup for the stimulus object. Initiating a PsychoPy.TextStim,
-        object, using the parameters given parameters.
-
-        Parameters
-        ----------
-        win : Window
-            The psychopy window object that is used for displaying stimuli.
-        """
-        self.stimuli = {}
-
-        if self.stimulus_definitions is not None:
-            for stim in self.stimulus_definitions:
-                self.stimuli[stim.name] = setup_stimulus(
-                    window=context.win, factory=context.stimuli, definition=stim
-                )
 
     def display(self, context: StepContext) -> None:
         """

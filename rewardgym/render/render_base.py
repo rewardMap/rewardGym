@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 
 from .contexts import EnvironmentContext, StepContext
+from .backend_factories import setup_stimulus
 
 
 class BaseRoutine(ABC):
@@ -31,9 +32,23 @@ class BaseRoutine(ABC):
         self._setup(context, **kwargs)
         self.is_setup = True
 
-    @abstractmethod
     def _setup(self, context: EnvironmentContext, **kwargs):
-        """Internal setup implementation"""
+        """
+        Performs the setup for the stimulus object. Initiating a PsychoPy.TextStim,
+        object, using the parameters given parameters.
+
+        Parameters
+        ----------
+        win : Window
+            The psychopy window object that is used for displaying stimuli.
+        """
+        self.stimuli = {}
+
+        if self.stimulus_definitions is not None:
+            for stim in self.stimulus_definitions:
+                self.stimuli[stim.name] = setup_stimulus(
+                    window=context.win, factory=context.stimuli, definition=stim
+                )
 
     @abstractmethod
     def display(self, context: StepContext):
