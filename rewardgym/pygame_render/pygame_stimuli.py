@@ -28,6 +28,7 @@ class PygameBaseStim:
         name=None,
         pos=(0, 0),
         autoDraw: bool = False,
+        opacity: float = 1.0,
         **kwargs,
     ):
         self.win = win
@@ -36,6 +37,7 @@ class PygameBaseStim:
         self.pos = pos
         self._autoDraw = False
         self.setAutoDraw(autoDraw)
+        self.opacity = opacity
 
     @property
     def autoDraw(self):
@@ -85,11 +87,12 @@ class PygameImageStim(PygameBaseStim):
         size=None,
         name=None,
         autoDraw: bool = False,
+        opacity: float = 1.0,
         **kwargs,
     ):
-        super().__init__(win=win, name=name, pos=pos, autoDraw=autoDraw)
-
-        self.opacity = 1.0
+        super().__init__(
+            win=win, name=name, pos=pos, autoDraw=autoDraw, opacity=opacity
+        )
 
         if isinstance(image, str):
             surface = pygame.image.load(image).convert_alpha()
@@ -202,9 +205,12 @@ class PygameRect(PygameBaseStim):
         lineWidth=1,
         name=None,
         autoDraw: bool = False,
+        opacity: float = 1.0,
         **kwargs,
     ):
-        super().__init__(win=win, name=name, pos=pos, autoDraw=autoDraw)
+        super().__init__(
+            win=win, name=name, pos=pos, autoDraw=autoDraw, opacity=opacity
+        )
 
         self.width = width
         self.height = height
@@ -222,6 +228,12 @@ class PygameRect(PygameBaseStim):
     def _render(self):
         x, y = self.win.psychopy_to_pygame(self.pos)
 
+        rect_surface = pygame.Surface(
+            (int(self.width), int(self.height)),
+            pygame.SRCALPHA,
+        )
+        alpha = int(self.opacity * 255)
+
         rect = pygame.Rect(
             0,
             0,
@@ -231,15 +243,36 @@ class PygameRect(PygameBaseStim):
         rect.center = (int(x), int(y))
 
         if self.fillColor is not None:
-            pygame.draw.rect(self.win.screen, self.fillColor, rect)
+            fill_color = (
+                *self.fillColor[:3],
+                alpha,
+            )
+
+            pygame.draw.rect(
+                rect_surface,
+                fill_color,
+                rect_surface.get_rect(),
+            )
 
         if self.lineColor is not None and self.lineWidth > 0:
+            line_color = (
+                *self.lineColor[:3],
+                alpha,
+            )
+
             pygame.draw.rect(
-                self.win.screen,
-                self.lineColor,
-                rect,
+                rect_surface,
+                line_color,
+                rect_surface.get_rect(),
                 width=int(self.lineWidth),
             )
+
+        rect = rect_surface.get_rect(center=(int(x), int(y)))
+
+        self.win.screen.blit(
+            rect_surface,
+            rect,
+        )
 
 
 class PygameTextStim(PygameBaseStim):
@@ -256,9 +289,12 @@ class PygameTextStim(PygameBaseStim):
         anchorHoriz=None,
         units=None,
         autoDraw: bool = False,
+        opacity: float = 1.0,
         **kwargs,
     ):
-        super().__init__(win=win, name=name, pos=pos, autoDraw=autoDraw)
+        super().__init__(
+            win=win, name=name, pos=pos, autoDraw=autoDraw, opacity=opacity
+        )
 
         self.text = text
 
@@ -287,14 +323,12 @@ class PygameTextStim(PygameBaseStim):
             self.color,
         )
 
+        alpha = int(self.opacity * 255)
+        surface.set_alpha(alpha)
+
         x, y = self.win.psychopy_to_pygame(self.pos)
 
-        rect = surface.get_rect(
-            center=(
-                int(x),
-                int(y),
-            )
-        )
+        rect = surface.get_rect(center=(int(x), int(y)))
 
         self.win.screen.blit(
             surface,
