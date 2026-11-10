@@ -104,7 +104,8 @@ class PresentationRoutine(BaseRoutine):
             poll_keys=self.poll_keys,
         )
 
-        log_event(self, logger=context.logger, onset=stim_onset)
+        extra_info = self.get_log_info(context=context)
+        log_event(self, logger=context.logger, onset=stim_onset, extra_info=extra_info)
 
 
 class DynamicRoutine(BaseRoutine):
@@ -345,6 +346,12 @@ class FeedBackRoutine(DynamicRoutine):
 
         stimulus_definitions = []
 
+        if show_bar and bar_total is None:
+            warnings.warn(
+                "Cannot display reward bar if no maximum is set - reward bar is set to False"
+            )
+            show_bar = False
+
         if show_total_reward and show_bar:
             show_bar = True
             show_total_reward = False
@@ -479,3 +486,6 @@ class FeedBackRoutine(DynamicRoutine):
             callback_before_draw=reward_update_routine,
             callback_after_draw=autodraw_false,
         )
+
+    def get_log_info(self, context: StepContext):
+        return {"reward": context.reward, "total_reward": context.total_reward}

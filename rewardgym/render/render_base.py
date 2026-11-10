@@ -39,6 +39,12 @@ class BaseRoutine(ABC):
     def display(self, context: StepContext):
         """Actual display implementation"""
 
+    def get_log_info(
+        self,
+        context: StepContext,
+    ) -> dict:
+        return {}
+
 
 class ActionRoutine(BaseRoutine):
     def __init__(
