@@ -27,9 +27,8 @@ class SimImageStim(SimBaseStim):
         pos: tuple | None = None,
         size: tuple | None = None,
         opacity: float = 1.0,
-        autoDraw=None,
     ) -> None:
-        super().__init__(win=win, name=name, autoDraw=autoDraw, opacity=opacity)
+        super().__init__(win=win, name=name, opacity=opacity)
 
         self.image = image
 
@@ -57,10 +56,9 @@ class SimTextStim(SimBaseStim):
         alignText=None,
         anchorHoriz=None,
         units=None,
-        autoDraw=None,
         opacity: float = 1.0,
     ):
-        super().__init__(win=win, name=name, autoDraw=autoDraw, opacity=opacity)
+        super().__init__(win=win, name=name, opacity=opacity)
 
         self.text = text
         self.color = color
@@ -87,10 +85,9 @@ class SimRect(SimBaseStim):
         lineWidth=None,
         pos=None,
         units=None,
-        autoDraw=None,
         opacity: float = 1.0,
     ):
-        super().__init__(win=win, name=name, autoDraw=autoDraw, opacity=opacity)
+        super().__init__(win=win, name=name, opacity=opacity)
 
         self.width = width
         self.height = height

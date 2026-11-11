@@ -27,7 +27,6 @@ class PygameBaseStim:
         win,
         name=None,
         pos=(0, 0),
-        autoDraw: bool = False,
         opacity: float = 1.0,
         **kwargs,
     ):
@@ -36,7 +35,7 @@ class PygameBaseStim:
 
         self.pos = pos
         self._autoDraw = False
-        self.setAutoDraw(autoDraw)
+        self.setAutoDraw(False)
         self.opacity = opacity
 
     @property
@@ -86,13 +85,10 @@ class PygameImageStim(PygameBaseStim):
         pos=(0, 0),
         size=None,
         name=None,
-        autoDraw: bool = False,
         opacity: float = 1.0,
         **kwargs,
     ):
-        super().__init__(
-            win=win, name=name, pos=pos, autoDraw=autoDraw, opacity=opacity
-        )
+        super().__init__(win=win, name=name, pos=pos, opacity=opacity)
 
         if isinstance(image, str):
             surface = pygame.image.load(image).convert_alpha()
@@ -204,13 +200,10 @@ class PygameRect(PygameBaseStim):
         fillColor=None,
         lineWidth=1,
         name=None,
-        autoDraw: bool = False,
         opacity: float = 1.0,
         **kwargs,
     ):
-        super().__init__(
-            win=win, name=name, pos=pos, autoDraw=autoDraw, opacity=opacity
-        )
+        super().__init__(win=win, name=name, pos=pos, opacity=opacity)
 
         self.width = width
         self.height = height
@@ -288,13 +281,10 @@ class PygameTextStim(PygameBaseStim):
         alignText=None,
         anchorHoriz=None,
         units=None,
-        autoDraw: bool = False,
         opacity: float = 1.0,
         **kwargs,
     ):
-        super().__init__(
-            win=win, name=name, pos=pos, autoDraw=autoDraw, opacity=opacity
-        )
+        super().__init__(win=win, name=name, pos=pos, opacity=opacity)
 
         self.text = text
 
