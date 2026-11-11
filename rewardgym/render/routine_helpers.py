@@ -19,6 +19,7 @@ def set_border(border, stim, opacity=0.25):
 
 
 def state_selection_with_highlight(routine, context):
+    routine.draw_list = []
     condition = context.condition
 
     actions = list(condition[0].keys())
@@ -26,12 +27,8 @@ def state_selection_with_highlight(routine, context):
     left_action = actions[0]
     right_action = actions[1]
 
-    for stim in routine.state_definition_map:
-        routine.stimuli[stim].setOpacity(0.0)
-
     if routine.border_name is not None:
         border = routine.stimuli[routine.border_name]
-        border.setOpacity(0.0)
 
     state1 = condition[0][left_action]
     state2 = condition[0][right_action]
@@ -40,18 +37,19 @@ def state_selection_with_highlight(routine, context):
         stim_name_left = routine.state_definition_map[state1].name
         stim_left = routine.stimuli[stim_name_left]
         stim_left.pos = (-routine.stimulus_shift[0], stim_left.pos[1])
-        stim_left.setOpacity(1.0)
+        routine.draw_list.append(stim_name_left)
 
     if state2 is not None:
         stim_name_right = routine.state_definition_map[state2].name
         stim_right = routine.stimuli[stim_name_right]
         stim_right.pos = (routine.stimulus_shift[0], stim_right.pos[1])
-        stim_right.setOpacity(1.0)
+        routine.draw_list.append(stim_name_right)
 
     if routine.selection:
         if context.previous_action == left_action:
             if routine.border_name is not None:
                 set_border(border, stim_left)
+
             if state2 is not None:
                 stim_right.setOpacity(0.25)
 
@@ -62,8 +60,12 @@ def state_selection_with_highlight(routine, context):
             if state1 is not None:
                 stim_left.setOpacity(0.25)
 
+        routine.draw_list.append(routine.border_name)
+
 
 def reward_update_routine(routine, context):
+    routine.draw_list = []
+
     reward = context.reward
     reward_outcome = f"+{reward:5.1f}" if reward > 0 else f"{reward:5.1f}"
 
@@ -87,16 +89,16 @@ def reward_update_routine(routine, context):
         feedback_img = "stim_zero"
 
     routine.stimuli[routine.component_names["reward"]].setText(reward_string)
-    routine.stimuli[routine.component_names["reward"]].setAutoDraw(True)
+    routine.draw_list.append(routine.component_names["reward"])
 
     if routine.component_names["reward_total"] is not None:
         routine.stimuli[routine.component_names["reward_total"]].setText(
             total_reward_string
         )
-        routine.stimuli[routine.component_names["reward_total"]].setAutoDraw(True)
+        routine.draw_list.append(routine.component_names["reward_total"])
 
     if routine.component_names[feedback_img] is not None:
-        routine.stimuli[routine.component_names[feedback_img]].setAutoDraw(True)
+        routine.draw_list.append(routine.component_names[feedback_img])
 
     if routine.component_names["bar"] is not None:
         bar = routine.stimuli[routine.component_names["bar"]]
@@ -104,9 +106,3 @@ def reward_update_routine(routine, context):
         move_bar = int((total_reward / routine.bar_total) * bar.width)
         move_bar = min([max([move_bar, 0]), bar.width])
         bar_indicator.setPos((-bar.width // 2 + move_bar, 350))
-
-
-def autodraw_false(routine, context):
-    for ii in routine.tear_down_stimuli:
-        if ii in routine.stimuli:
-            routine.stimuli[ii].setAutoDraw(False)
