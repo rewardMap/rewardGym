@@ -155,6 +155,7 @@ class ActionStimulusTooEarly(ActionStimulus):
 
         self.name_tooearly = name_tooearly
         self.text_tooearly = text_tooearly
+        self.returns_action = True
 
     def _setup(self, context: EnvironmentContext, **kwargs):
         """
