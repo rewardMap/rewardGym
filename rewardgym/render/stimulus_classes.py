@@ -1,12 +1,12 @@
 from dataclasses import dataclass, fields
-from enum import StrEnum, auto
+from enum import Enum, auto
 
 from typing import ClassVar
 
 from numpy.typing import ArrayLike
 
 
-class Stimuli(StrEnum):
+class Stimuli(Enum):
     IMAGE = auto()
     RECTANGLE = auto()
     TEXT = auto()
@@ -25,7 +25,7 @@ class StimulusDefinition:
         return {
             field.name: getattr(self, field.name)
             for field in fields(self)
-            if getattr(self, field.name) is not None
+            if (getattr(self, field.name) is not None and field.name != "autoDraw")
         }
 
 
