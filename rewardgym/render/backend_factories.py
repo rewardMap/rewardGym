@@ -7,18 +7,23 @@ def setup_stimulus(
     window: WindowProtocol, factory: FactoryProtocol, definition: StimulusDefinition
 ):
     if definition.setup_protocol == Stimuli.IMAGE:
-        return factory.image(win=window, **definition.get_kwargs())
+        stim = factory.image(win=window, **definition.get_kwargs())
 
     elif definition.setup_protocol == Stimuli.RECTANGLE:
-        return factory.rectangle(win=window, **definition.get_kwargs())
+        stim = factory.rectangle(win=window, **definition.get_kwargs())
 
     elif definition.setup_protocol == Stimuli.TEXT:
-        return factory.text(win=window, **definition.get_kwargs())
+        stim = factory.text(win=window, **definition.get_kwargs())
 
     else:
         raise NotImplementedError(
             f"{definition.setup_protocol}, is not implemented in the present factory!"
         )
+
+    if definition.autoDraw:
+        stim.setAutoDraw(True)
+
+    return stim
 
 
 class SimulationFactory(FactoryProtocol):
@@ -35,6 +40,11 @@ class SimulationFactory(FactoryProtocol):
 class PsychoPyFactory(FactoryProtocol):
     def image(self, **kwargs):
         from psychopy.visual import ImageStim
+
+        if not isinstance(kwargs["image"], str):
+            img = kwargs["image"]
+            if "size" not in kwargs:
+                kwargs["size"] = (img.shape[1], img.shape[0])
 
         return ImageStim(**kwargs)
 
