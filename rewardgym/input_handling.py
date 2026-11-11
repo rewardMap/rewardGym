@@ -50,6 +50,7 @@ class BaseInputHandler(InputProtocol):
                 elif (key_list is not None) and (resp[0] in key_list):
                     # Potentially dangerous - if press is in list, return!
                     response = (resp[0], resp[1])
+                    return response
 
                 else:
                     logger.log_event(
@@ -60,7 +61,6 @@ class BaseInputHandler(InputProtocol):
                         },
                     )
 
-            return response
         else:
             return response
 
