@@ -59,29 +59,3 @@ class BaseRoutine(ABC):
         context: StepContext,
     ) -> dict:
         return {}
-
-
-class ActionRoutine(BaseRoutine):
-    def __init__(
-        self,
-        name,
-        duration,
-        key_dict,
-        rl_label,
-        timeout_action,
-        name_timeout,
-        noflip,
-        poll_keys=True,
-    ):
-        super().__init__(
-            name=name,
-            duration=duration,
-            rl_label=rl_label,
-            noflip=noflip,
-            poll_keys=poll_keys,
-        )
-
-        self.key_dict = key_dict
-        self.timeout_action = timeout_action
-        self.name_timeout = name_timeout
-        self.returns_action = True
