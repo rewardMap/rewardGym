@@ -29,66 +29,6 @@ class FeedbackStimuli(TypedDict, total=False):
     zero: StimulusDefinition
 
 
-class PresentationRoutine(BaseRoutine):
-    def __init__(
-        self,
-        duration: float,
-        rl_label: str | None = None,
-        stimulus_definitions: StimulusDefinition
-        | list[StimulusDefinition]
-        | None = None,
-        name: str | None = None,
-        poll_keys=True,
-        flip: bool = True,
-    ):
-        super().__init__(
-            name=name, duration=duration, rl_label=rl_label, poll_keys=poll_keys
-        )
-
-        if isinstance(stimulus_definitions, StimulusDefinition):
-            stimulus_definitions = [stimulus_definitions]
-
-        self.stimulus_definitions = stimulus_definitions
-        self.flip = flip
-
-    def display(self, context: StepContext) -> None:
-        """
-        Calls the stimulus object. In this case drawing the text stim, flipping the window,
-        waiting and logging.
-
-        Parameters
-        ----------
-        win : Window
-            The psychopy window object that is used for displaying stimuli.
-        logger : LoggerProtocol
-            The logger associated with the experiment.
-
-        Returns
-        -------
-        None
-        Should return None
-
-        """
-
-        stim_onset = context.logger.get_time()
-        for stim in self.stimuli.values():
-            stim.draw()
-
-        if self.flip:
-            context.render.flip()
-
-        context.render.wait(
-            logger=context.logger,
-            input_handler=context.input_handler,
-            time=self.duration,
-            start=stim_onset,
-            poll_keys=self.poll_keys,
-        )
-
-        extra_info = self.get_log_info(context=context)
-        log_event(self, logger=context.logger, onset=stim_onset, extra_info=extra_info)
-
-
 class DynamicRoutine(BaseRoutine):
     def __init__(
         self,
@@ -156,6 +96,30 @@ class DynamicRoutine(BaseRoutine):
         )
 
         log_event(self, logger=context.logger, onset=stim_onset)
+
+
+class PresentationRoutine(DynamicRoutine):
+    def __init__(
+        self,
+        duration: float,
+        rl_label: str | None = None,
+        stimulus_definitions: StimulusDefinition
+        | list[StimulusDefinition]
+        | None = None,
+        name: str | None = None,
+        poll_keys=True,
+        flip: bool = True,
+    ):
+        super().__init__(
+            name=name,
+            duration=duration,
+            rl_label=rl_label,
+            poll_keys=poll_keys,
+            stimulus_definitions=stimulus_definitions,
+            flip=flip,
+            callback_before_draw=None,
+            callback_after_draw=None,
+        )
 
 
 class ConditionedTextCard(DynamicRoutine):
