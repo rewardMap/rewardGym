@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 
 from .contexts import EnvironmentContext, StepContext
 from .backend_factories import setup_stimulus
+from .stimulus_classes import StimulusDefinition
 
 
 class BaseRoutine(ABC):
@@ -14,6 +15,7 @@ class BaseRoutine(ABC):
         rl_label: str | None = None,
         flip=True,
         poll_keys=True,
+        stimulus_definitions: list[StimulusDefinition] | None = None,
     ):
         self.name = name
         self.duration = duration
@@ -22,6 +24,7 @@ class BaseRoutine(ABC):
         self.flip = flip
         self.returns_action = False
         self.poll_keys = poll_keys
+        self.draw_list = None
 
     def present(self, context: StepContext):
         """Public method that handles context-aware presentation"""

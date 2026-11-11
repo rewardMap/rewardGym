@@ -10,7 +10,6 @@ from .routine_helpers import (
     conditioned_text,
     state_selection_with_highlight,
     reward_update_routine,
-    autodraw_false,
 )
 from typing import TypedDict
 
@@ -75,17 +74,19 @@ class DynamicRoutine(BaseRoutine):
         """
 
         if self.callback_before_draw:
-            self.callback_before_draw(self, context)
+            state = self.callback_before_draw(self, context) or {}
 
         stim_onset = context.logger.get_time()
-        for stim in self.stimuli.values():
-            stim.draw()
+
+        if self.draw_list is None:
+            self.draw_list = self.stimuli.keys()
+
+        for stim_name in self.draw_list:
+            if self.stimuli[stim_name].opacity > 0:
+                self.stimuli[stim_name].draw()
 
         if self.flip:
             context.render.flip()
-
-        if self.callback_after_draw:
-            self.callback_after_draw(self, context)
 
         context.render.wait(
             logger=context.logger,
@@ -96,6 +97,12 @@ class DynamicRoutine(BaseRoutine):
         )
 
         log_event(self, logger=context.logger, onset=stim_onset)
+
+        if self.callback_after_draw:
+            self.callback_after_draw(self, context, state=state)
+
+        # Tear down
+        self.draw_list = None
 
 
 class PresentationRoutine(DynamicRoutine):
@@ -292,21 +299,21 @@ class FeedBackRoutine(DynamicRoutine):
             reward_text = TextDefinition(
                 name="reward",
                 text="",
-                opacity=0.0,
                 pos=(0, 125),
                 color="white",
                 height=50,
                 font="arial",
                 alignText="center",
                 anchorHoriz="center",
+                units="pix",
             )
+
         add_component("reward", reward_text)
 
         if show_total_reward:
             if total_reward_text is None:
                 total_reward_text = TextDefinition(
                     name="total-reward",
-                    opacity=0.0,
                     text="",
                     pos=(0, 250),
                     color="white",
@@ -314,6 +321,7 @@ class FeedBackRoutine(DynamicRoutine):
                     font="arial",
                     alignText="center",
                     anchorHoriz="center",
+                    units="pix",
                 )
 
             add_component("reward_total", total_reward_text)
@@ -367,7 +375,7 @@ class FeedBackRoutine(DynamicRoutine):
                         TextDefinition(
                             name=f"label-{ll}",
                             color="white",
-                            height="25",
+                            height=25,
                             pos=pos,
                             text=ll,
                             autoDraw=True,
@@ -388,21 +396,16 @@ class FeedBackRoutine(DynamicRoutine):
                 for fs_nam, stim in zip(
                     ["win", "lose", "zero"], [win_cross(), lose_cross(), zero_cross()]
                 ):
-                    feedback_stim[name] = ImageDefinition(
+                    feedback_stim[fs_nam] = ImageDefinition(
                         name="feedback-" + fs_nam,
                         image=stim,
                         pos=(0, 0),
-                        opacity=0.0,
                     )
 
             for fs_k, fs_def in feedback_stim.items():
                 add_component("stim_" + fs_k, fs_def)
 
         self.bar_total = bar_total
-        self.tear_down_stimuli = [
-            self.component_names[i]
-            for i in ["stim_win", "stim_lose", "stim_zero", "reward", "reward_total"]
-        ]
 
         super().__init__(
             name=name,
@@ -411,7 +414,6 @@ class FeedBackRoutine(DynamicRoutine):
             poll_keys=poll_keys,
             stimulus_definitions=stimulus_definitions,
             callback_before_draw=reward_update_routine,
-            callback_after_draw=autodraw_false,
         )
 
     def get_log_info(self, context: StepContext):
