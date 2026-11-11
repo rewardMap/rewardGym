@@ -12,14 +12,14 @@ class BaseRoutine(ABC):
         name: str | None = None,
         duration: float | None = None,
         rl_label: str | None = None,
-        noflip=False,
+        flip=True,
         poll_keys=True,
     ):
         self.name = name
         self.duration = duration
         self.rl_label = rl_label
         self.is_setup = False
-        self.noflip = noflip
+        self.flip = flip
         self.returns_action = False
         self.poll_keys = poll_keys
 

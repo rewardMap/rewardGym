@@ -27,7 +27,7 @@ class ActionStimulus(ActionRoutine):
         timeout_action: int | None = None,
         name_timeout="response-time-out",
         rl_label: str | None = None,
-        noflip: bool = False,
+        flip: bool = False,
         poll_keys: bool = True,
         wait_no_keys: bool = False,
     ):
@@ -53,7 +53,7 @@ class ActionStimulus(ActionRoutine):
             name=name,
             duration=duration,
             rl_label=rl_label,
-            noflip=noflip,
+            flip=flip,
             key_dict=key_dict,
             timeout_action=timeout_action,
             name_timeout=name_timeout,
@@ -94,7 +94,7 @@ class ActionStimulus(ActionRoutine):
             self, context, response_window_onset=response_window_onset
         )
 
-        if not self.noflip:
+        if not self.flip:
             context.render.flip()
 
         return response

@@ -27,7 +27,7 @@ class BaseStimulus(BaseRoutine):
         name: str | None = None,
         poll_keys=True,
         rl_label=None,
-        noflip=False,
+        flip=True,
         wait_no_keys=None,
     ):
         """
@@ -40,7 +40,7 @@ class BaseStimulus(BaseRoutine):
         name : str, optional
             name of the object, will be used for logging, by default None
         """
-        super().__init__(name=name, duration=duration, rl_label=rl_label, noflip=noflip)
+        super().__init__(name=name, duration=duration, rl_label=rl_label, flip=flip)
 
         self.poll_keys = poll_keys
 
@@ -80,7 +80,7 @@ class BaseStimulus(BaseRoutine):
         if self.duration is not None:
             stim_onset = context.logger.get_time()
 
-            if not self.noflip:
+            if self.flip:
                 context.render.flip()
 
             context.render.wait(
