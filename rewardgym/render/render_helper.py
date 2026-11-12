@@ -2,7 +2,6 @@ from enum import Enum
 from typing import Any
 
 from ..protocols import LoggerProtocol
-from ..utils import get_key_from_dict
 from .contexts import StepContext
 from .render_base import BaseRoutine
 
@@ -40,10 +39,12 @@ def response_handling(
 ) -> tuple[int | None, float | None] | None | Any:
     input_handler = context.input_handler
     logger = context.logger
-    info = context.info
+    layout = context.info["action-layout"]
 
     if key_dict is None:
         key_dict = routine.key_dict
+
+    layout.add(key_dict)
 
     # Values to be set:
     response = None
@@ -64,10 +65,9 @@ def response_handling(
                 polling_state = "timeout"
             else:
                 polling_state = PollStatus.RECEIVED
-                env_action = get_response_from_action(action, info)
-                key_action = get_key_from_dict(key_dict, env_action)[
-                    0
-                ]  # TODO: More safeguarding.
+                env_action = layout.action_to_graph[action]
+                key_action = layout.graph_to_key[env_action][0]
+
                 response = (key_action, response_time + response_window_onset)
 
         advance = routine.duration
@@ -92,7 +92,7 @@ def response_handling(
         reaction_time = response_time - response_window_onset
 
         if env_action is None:
-            env_action = get_action_from_response_key(response_button, info, key_dict)
+            env_action = layout.key_to_graph[response_button]
 
         key_action = key_dict[response_button]
 
@@ -131,27 +131,3 @@ def response_handling(
             return None
 
     return key_action, remaining
-
-
-def get_action_from_response_key(
-    response_key: int | str, info: dict | None, key_dict: dict
-):
-    if info is None or "behav_remap" not in info:
-        return None
-    else:
-        return info["behav_remap"][key_dict[response_key]]
-
-
-def get_response_from_action(action: int | str, info: dict | None):
-    if info is None or "behav_remap" not in info:
-        return action
-
-    else:
-        response_button = [n for n, b in enumerate(info["behav_remap"]) if b == action]
-
-        if len(response_button) == 1:
-            response_button = response_button[0]
-        else:
-            response_button = action
-
-    return response_button

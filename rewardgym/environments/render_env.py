@@ -155,7 +155,7 @@ class RenderEnv(BaseEnv):
     def _check_output(self, out, info, remap=False):
         if out is not None:
             if remap:
-                tmp_action = info["behav_remap"][out[0]]
+                tmp_action = info["action-layout"].action_to_graph[out[0]]
             else:
                 tmp_action = out[0]
 
