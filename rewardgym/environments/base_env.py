@@ -61,7 +61,7 @@ class ActionLayout:
     def add_keys(self, key_dict: dict[str, int]):
         self.key_dict = key_dict
 
-        for v in key_dict.values:
+        for v in key_dict.values():
             assert v in self.action_to_graph, (
                 f"Action index {v} not available "
                 f"in layout {list(self.action_to_graph)}"

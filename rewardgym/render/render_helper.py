@@ -44,7 +44,7 @@ def response_handling(
     if key_dict is None:
         key_dict = routine.key_dict
 
-    layout.add(key_dict)
+    layout.add_keys(key_dict)
 
     # Values to be set:
     response = None
