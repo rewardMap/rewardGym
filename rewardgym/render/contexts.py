@@ -58,7 +58,7 @@ class EnvironmentContext:
 
     def _setup_simulation(self):
         if self.window is None:
-            from ..psychopy_render.psychopy_stubs import Window
+            from ..stubs import Window
 
             self.window = Window()
 
@@ -66,7 +66,7 @@ class EnvironmentContext:
             self.input_handler = SimulationInput()
 
         if self.logger is None:
-            from ..psychopy_render.psychopy_stubs import Clock
+            from ..stubs import Clock
 
             self.logger = ExperimentLogger(file_name=None, clock=Clock())
 

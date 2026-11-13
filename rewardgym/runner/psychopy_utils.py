@@ -2,7 +2,7 @@ try:
     from psychopy.core import quit
     from psychopy.gui import Dlg, DlgFromDict
 except ModuleNotFoundError:
-    from ..psychopy_render.psychopy_stubs import (
+    from ..stubs import (
         Dlg,
         DlgFromDict,
         quit,

@@ -1,6 +1,6 @@
 from rewardgym import get_env
 from rewardgym.logging import ExperimentLogger
-from rewardgym.psychopy_render.psychopy_stubs import Clock, Window
+from rewardgym.stubs import Clock, Window
 from rewardgym.runner import run_task
 
 

@@ -6,7 +6,7 @@ try:
     from gymnasium import Env
     from gymnasium.spaces import Discrete
 except ModuleNotFoundError:
-    from .gymnasium_stubs import Discrete, Env
+    from ..stubs import Discrete, Env
 
 from collections import defaultdict
 

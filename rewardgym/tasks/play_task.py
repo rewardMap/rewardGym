@@ -5,7 +5,6 @@ from typing import Literal
 from ..logging import ExperimentLogger
 from ..runner.task_runner import run_task
 from ..tasks.utils import get_env
-from ..psychopy_render import psychopy_stubs
 
 from ..agents import QAgent
 
@@ -24,7 +23,9 @@ def play_task(
 
         clock = Clock()
     else:
-        clock = psychopy_stubs.Clock()
+        from ..stubs import Clock
+
+        clock = Clock()
 
     file_name = out
 
