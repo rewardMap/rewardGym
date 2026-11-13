@@ -23,7 +23,7 @@ def state_selection_with_highlight(routine, context):
     routine.draw_list = []
 
     layout = context.info["action-layout"]
-    actions = layout.available_actions
+    actions = layout.graph_available_actions
 
     for name in routine.state_definition_map.values():
         routine.stimuli[name.name].setOpacity(1.0)
@@ -102,6 +102,7 @@ def draw_subset_after(routine, context, state, action):
 
 
 def nfc_setup(routine, context):
+    routine.draw_list = []
     state = {}
     available_actions = context.info["avail-actions"]
 

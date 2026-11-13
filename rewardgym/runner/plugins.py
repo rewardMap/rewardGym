@@ -68,8 +68,8 @@ def break_point(context, text_update, settings, episode, countdown_cutoff=30):
 
 
 def simple_rt_simulation(agent, env, obs, info):
-    key = agent.get_action(obs, info["avail-actions"])
-    probs = agent.get_probs(obs, info["avail-actions"])
+    key = agent.get_action(obs, info["action-layout"].avail_actions)
+    probs = agent.get_probs(obs, info["action-layout"].avail_actions)
     probs = probs[key]
 
     if env.name in ["gonogo", "robotfactory"]:

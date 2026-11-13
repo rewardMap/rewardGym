@@ -78,8 +78,8 @@ class ActionLayout:
             self.action_to_key[v].append(k)
 
     @property
-    def available_actions(self):
-        return self.available_graph_actions
+    def avail_actions(self):
+        return [i for i in self.available_graph_actions if i is not None]
 
 
 class BaseEnv(Env):

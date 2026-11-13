@@ -114,7 +114,9 @@ def run_task(
         while not done:
             if agent is not None:
                 if hasattr(agent, "get_rt_action") and callable(agent.get_rt_action):
-                    key, rt = agent.get_rt_action(obs, info["avail-actions"])
+                    key, rt = agent.get_rt_action(
+                        obs, info["action-layout"].avail_actions
+                    )
                 else:
                     key, rt = simple_rt_simulation(agent, env, obs, info)
 

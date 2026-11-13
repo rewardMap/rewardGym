@@ -15,11 +15,6 @@ ENVIRONMENTS = list(_task_registry.keys())
 
 from . import agents, data_tools, environments, psychopy_render, runner, stimuli, tasks
 
-try:
-    from . import pygame_render
-except ImportError:
-    print("no pygame")
-
 __all__ = [
     "ENVIRONMENTS",
     "agents",

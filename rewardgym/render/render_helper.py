@@ -24,7 +24,7 @@ def log_event(
         "expected_duration": routine.duration,
         "rl_label": routine.rl_label,
     }
-
+    print("while logging", extra_info)
     if extra_info:
         base_dict.update(extra_info)
 
@@ -63,18 +63,16 @@ def response_handling(
     if routine.duration is None:
         raise ValueError(f"{routine.duration} needs to be defined.")
 
-    if "simulate" in context.env_context.mode:
-        action = context.previous_action
+    if "simulation" in context.env_context.mode:
+        env_action = context.previous_action
         response_time = context.reaction_time
-
         if response_time is not None and routine.duration is not None:
             if response_time > routine.duration:
                 polling_state = PollStatus.TIMEOUT
             else:
                 polling_state = PollStatus.RECEIVED
-                env_action = layout.action_to_graph[action]
+                action = layout.graph_to_action[env_action]
                 response_button = layout.graph_to_key[env_action][0]
-
                 response = (response_button, response_time + response_window_onset)
 
         advance = routine.duration
