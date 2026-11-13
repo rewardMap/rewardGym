@@ -21,7 +21,7 @@ def simulate_task(envname):
 
     task = exp_dict["task"]
 
-    env = get_env(task, render_backend="psychopy-simulate")
+    env = get_env(task, render_backend="simulation")
     env.setup(logger=Logger, window=win, expose_last_stim=True)
 
     run_task(env=env, win=win, logger=Logger)

@@ -12,7 +12,7 @@ def play_task(
     task_name: Literal[
         "hcp", "mid", "two-step", "risk-sensitive", "posner", "gonogo"
     ] = "hcp",
-    backend: Literal["pygame", "psychopy", "psychopy-simulate"] = "pygame",
+    backend: Literal["pygame", "psychopy", "simulation"] = "pygame",
 ):
     env = get_env(task_name, seed=10, render_backend=backend)
 
@@ -47,7 +47,7 @@ def play_cli():
         "backend",
         type=str,
         help="The backend for the task, choose one of:"
-        + "'pygame', 'psychopy', 'psychopy-simulate'",
+        + "'pygame', 'psychopy', 'simulation'",
         default="pygame",
     )
 
