@@ -77,11 +77,9 @@ class RenderEnv(BaseEnv):
 
         for node in self.graph:
             if "render" in self.info_dict[node]:
-                [
-                    stim.setup(self.context)
-                    for stim in self.info_dict[node]["render"]
-                    if not stim.is_setup
-                ]
+                for stim in self.info_dict[node]["render"]:
+                    if not stim.is_setup:
+                        stim.setup(self.context)
 
         self.expose_last_stim = expose_last_stim
         self.reaction_time = None
