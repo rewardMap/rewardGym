@@ -129,7 +129,7 @@ class RenderEnv(BaseEnv):
             for disp in info["psychopy"]:
                 if disp.returns_action and not self.expose_last_stim:
                     out = disp.present(current_step)
-                    self._check_output(out, info, remap=True)
+                    self._check_output(out, info)
 
                 elif not disp.returns_action:
                     disp.present(context=current_step)
@@ -150,14 +150,11 @@ class RenderEnv(BaseEnv):
         )
 
         out = info["psychopy"][-1].present(action_step)
-        self._check_output(out, info, remap=True)
+        self._check_output(out, info)
 
-    def _check_output(self, out, info, remap=False):
+    def _check_output(self, out, info):
         if out is not None:
-            if remap:
-                tmp_action = info["action-layout"].action_to_graph[out[0]]
-            else:
-                tmp_action = out[0]
+            tmp_action = info["action-layout"].action_to_graph[out[0]]
 
             if tmp_action in info["avail-actions"]:
                 self.action = tmp_action

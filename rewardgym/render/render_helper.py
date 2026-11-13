@@ -44,6 +44,13 @@ def response_handling(
     if key_dict is None:
         key_dict = routine.key_dict
 
+    tmp = {}
+
+    for k, v in key_dict.items():
+        if v in layout.action_to_graph and layout.action_to_graph[v] is not None:
+            tmp[k] = v
+
+    key_dict = tmp
     layout.add_keys(key_dict)
 
     # Values to be set:
@@ -62,13 +69,13 @@ def response_handling(
 
         if response_time is not None and routine.duration is not None:
             if response_time > routine.duration:
-                polling_state = "timeout"
+                polling_state = PollStatus.TIMEOUT
             else:
                 polling_state = PollStatus.RECEIVED
                 env_action = layout.action_to_graph[action]
-                key_action = layout.graph_to_key[env_action][0]
+                response_button = layout.graph_to_key[env_action][0]
 
-                response = (key_action, response_time + response_window_onset)
+                response = (response_button, response_time + response_window_onset)
 
         advance = routine.duration
         if response_time is not None:
@@ -91,10 +98,10 @@ def response_handling(
         # Casting response time to reaction time:
         reaction_time = response_time - response_window_onset
 
-        if env_action is None:
+        if env_action is None and response_button in layout.key_to_graph:
             env_action = layout.key_to_graph[response_button]
 
-        key_action = key_dict[response_button]
+        action = layout.key_to_action[response_button]
 
         log_event(
             routine=routine,
@@ -110,10 +117,12 @@ def response_handling(
         remaining = routine.duration - reaction_time
 
     elif polling_state == PollStatus.TIMEOUT:
-        key_action = routine.timeout_action
+        action = routine.timeout_action
 
-        if key_action is None:
-            key_action = logger.na
+        if action is None:
+            action = logger.na
+        else:
+            env_action = layout.action_to_graph[action]
 
         log_event(
             routine=routine,
@@ -122,12 +131,12 @@ def response_handling(
             extra_info={
                 "response_button": logger.na,
                 "response_late": True,
-                "action": key_action,
+                "action": env_action,
                 "event_type": routine.name_timeout,
             },
         )
 
-        if key_action == logger.na:
+        if action == logger.na:
             return None
 
-    return key_action, remaining
+    return action, remaining

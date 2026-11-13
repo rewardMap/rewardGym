@@ -61,19 +61,19 @@ class ActionLayout:
     def add_keys(self, key_dict: dict[str, int]):
         self.key_dict = key_dict
 
-        for v in key_dict.values():
-            assert v in self.action_to_graph, (
-                f"Action index {v} not available "
-                f"in layout {list(self.action_to_graph)}"
-            )
+        self.key_to_graph = {}
+        for k, v in self.key_dict.items():
+            if v in self.action_to_graph:
+                self.key_to_graph[k] = self.action_to_graph[v]
 
-        self.key_to_graph = {k: self.action_to_graph[v] for k, v in key_dict.items()}
         self.graph_to_key = defaultdict(list)
         self.action_to_key = defaultdict(list)
         self.key_to_action = key_dict
 
         for k, v in self.key_dict.items():
-            self.graph_to_key[self.action_to_graph[v]].append(k)
+            if v in self.action_to_graph:
+                self.graph_to_key[self.action_to_graph[v]].append(k)
+
             self.action_to_key[v].append(k)
 
     @property
@@ -197,8 +197,8 @@ class BaseEnv(Env):
         else:
             avail_actions = list(self.full_graph[self.agent_location].keys())
 
-        node_info_dict["avail-actions"] = [i for i in avail_actions if i is not None]
-        node_info_dict["action-layout"] = ActionLayout(node_info_dict["avail-actions"])
+        node_info_dict["avail-actions"] = avail_actions
+        node_info_dict["action-layout"] = ActionLayout(avail_actions)
 
         node_info_dict["obs"] = self.agent_location
 
