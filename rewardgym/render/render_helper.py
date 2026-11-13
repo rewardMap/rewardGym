@@ -24,7 +24,6 @@ def log_event(
         "expected_duration": routine.duration,
         "rl_label": routine.rl_label,
     }
-    print("while logging", extra_info)
     if extra_info:
         base_dict.update(extra_info)
 
