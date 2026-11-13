@@ -1,9 +1,9 @@
 from .render_base import BaseRoutine
 from typing import Any
-from .stimulus_classes import StimulusDefinition, TextDefinition
+from .stimulus_classes import StimulusDefinition, TextDefinition, RectangleDefinition
 from .contexts import StepContext
 from .render_helper import log_event, response_handling
-from ..environments.base_env import ActionLayout
+from .routine_helpers import nfc_selection, nfc_setup
 from typing import TypedDict
 
 
@@ -117,21 +117,20 @@ class ActionRoutine(BaseRoutine):
         if self.flip:
             context.render.flip()
 
-        response = response_handling(
-            self, context, response_window_onset=response_window_onset
-        )
-
         if self.presentation_settings["name_before"]:
             log_event(
                 self,
                 logger=context.logger,
-                onset=response_window_onset,
                 extra_info={
                     "event_type": self.presentation_settings["name_before"],
                     "rl_label": self.presentation_settings["rl_label_before"],
                     **state["extra_info"],
                 },
             )
+
+        response = response_handling(
+            self, context, response_window_onset=response_window_onset
+        )
 
         if self.detect_too_early and too_early:
             _action, remaining = response
@@ -217,6 +216,7 @@ class NAFCRoutine(ActionRoutine):
         positions: dict[int, tuple[float | int, float | int]] | None = None,
         randomize_positions: bool = False,
         highlight_selected: bool = True,
+        highlight_definition: RectangleDefinition | None = None,
     ):
         self.presentation_settings: PresentationSettings = {
             "duration_after": None,
@@ -244,6 +244,23 @@ class NAFCRoutine(ActionRoutine):
         else:
             self.scene_stimuli = []
 
+        if highlight_selected:
+            if highlight_definition is None:
+                highlight_definition = RectangleDefinition(
+                    name="border",
+                    lineColor="white",
+                    lineWidth=10,
+                    height=0,
+                    width=0,
+                )
+            else:
+                highlight_definition = highlight_definition
+
+            stimulus_definitions.append(highlight_definition)
+            self.highlight_name = highlight_definition.name
+        else:
+            self.highlight_name = None
+
         super().__init__(
             name=name,
             duration=duration,
@@ -268,51 +285,51 @@ class NAFCRoutine(ActionRoutine):
             }
 
 
-def nfc_setup(routine, context):
-    state = {}
-    available_actions = context.info["avail-actions"]
+class ChangeSceneAfterAction(ActionRoutine):
+    def __init__(
+        self,
+        name,
+        duration: float,
+        key_dict: dict,
+        rl_label: str | None = None,
+        stimulus_definitions: list[StimulusDefinition] | None = None,
+        timeout_action: Any | None = None,
+        name_timeout: str | None = None,
+        flip: bool = True,
+        poll_keys=True,
+        presentation_settings: PresentationSettings | None = None,
+        before_action_callback: None = None,
+        after_action_callback: None = None,
+        detect_too_early: bool = False,
+        too_early_action: Any | None = None,
+        too_early_warning: StimulusDefinition | None = None,
+        draw_stims_before: list[str] | None = None,
+        draw_stims_after: list[str] | None = None,
+    ):
+        self.draw_stims_before = draw_stims_before
 
-    if routine.randomize_positions:
-        available_actions = context.env_context.random_state.choice(
-            available_actions, size=len(available_actions), replace=False
+        if self.draw_stims_before is None:
+            self.draw_stims_before = [i.name for i in stimulus_definitions]
+
+        self.draw_stims_after = draw_stims_after
+
+        if self.draw_stims_after is None:
+            self.draw_stims_after = [i.name for i in stimulus_definitions]
+
+        super().__init__(
+            name=name,
+            duration=duration,
+            rl_label=rl_label,
+            flip=flip,
+            poll_keys=poll_keys,
+            stimulus_definitions=stimulus_definitions,
+            before_action_callback=draw_stims_before,
+            after_action_callback=draw_stims_after,
+            timeout_action=timeout_action,
+            name_timeout=name_timeout,
+            key_dict=key_dict,
+            detect_too_early=detect_too_early,
+            too_early_action=too_early_action,
+            too_early_warning=too_early_warning,
+            presentation_settings=presentation_settings,
         )
-
-    state["extra_info"] = {"misc": available_actions}
-    state["randomized_actions"] = available_actions
-
-    layout = ActionLayout(available_actions)
-    layout.add_keys(routine.key_dict)
-
-    for av in available_actions:
-        temp_stim = routine.stimuli[routine.stimulus_mapping[av]]
-        temp_stim.setOpacity(1.0)
-        temp_stim.pos = routine.positions[layout.graph_to_action[av]]
-        routine.draw_list.append(temp_stim.name)
-
-    for rs in routine.scene_stimuli:
-        routine.draw_list.append(rs)
-
-    return state
-
-
-def nfc_selection(routine, context, state, response):
-    routine.draw_list = []
-
-    available_actions = state["randomized_actions"]
-
-    layout = ActionLayout(available_actions)
-    layout.add_keys(routine.key_dict)
-
-    for av in available_actions:
-        temp_stim = routine.stimuli[routine.stimulus_mapping[av]]
-        temp_stim.pos = routine.positions[layout.graph_to_action[av]]
-
-        if response[0] != layout.graph_to_action[av]:
-            temp_stim.setOpacity(0.25)
-
-        routine.draw_list.append(temp_stim.name)
-
-    for rs in routine.scene_stimuli:
-        routine.draw_list.append(rs)
-
-    return state
