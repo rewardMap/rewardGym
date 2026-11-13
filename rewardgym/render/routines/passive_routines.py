@@ -13,7 +13,7 @@ from .routine_callbacks import (
     conditioned_text,
     reward_update_routine,
 )
-from ..stimulus_classes import (
+from ..stimulus_definitions import (
     ImageDefinition,
     RectangleDefinition,
     StimulusDefinition,

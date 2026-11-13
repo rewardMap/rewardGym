@@ -1,5 +1,5 @@
 from ..protocols import FactoryProtocol, WindowProtocol
-from .stimulus_classes import Stimuli, StimulusDefinition
+from .stimulus_definitions import Stimuli, StimulusDefinition
 from .stimulus_stubs import SimImageStim, SimRect, SimTextStim
 
 

@@ -9,7 +9,11 @@ from .routine_callbacks import (
     nfc_selection,
     nfc_setup,
 )
-from ..stimulus_classes import RectangleDefinition, StimulusDefinition, TextDefinition
+from ..stimulus_definitions import (
+    RectangleDefinition,
+    StimulusDefinition,
+    TextDefinition,
+)
 
 
 class PresentationSettings(TypedDict, total=False):
