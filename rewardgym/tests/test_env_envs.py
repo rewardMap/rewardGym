@@ -19,7 +19,6 @@ def test_reset():
     env = BaseEnv(environment_graph, reward_locations)
     obs, info = env.reset(agent_location=0)
 
-    print(info)
     assert obs == 0
     assert info == {
         "avail-actions": [0, 1],
