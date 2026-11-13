@@ -1,18 +1,18 @@
 from .base_agent import (
     QAgent,
-    QAgent_eligibility,
+    QAgentEligibility,
     RandomAgent,
     ValenceQAgent,
-    ValenceQAgent_eligibility,
+    ValenceQAgentEligibility,
 )
 from .modelbased_agents import HybridAgent, ValenceHybridAgent
 
 __all__ = [
     "HybridAgent",
     "QAgent",
-    "QAgent_eligibility",
+    "QAgentEligibility",
     "RandomAgent",
     "ValenceHybridAgent",
     "ValenceQAgent",
-    "ValenceQAgent_eligibility",
+    "ValenceQAgentEligibility",
 ]
