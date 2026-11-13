@@ -6,10 +6,10 @@ any installation of other packages into the PsychoPy env.
 from collections.abc import Callable
 
 from .protocols import ClockProtocol
-from .render.stimulus_stubs import SimBaseStim
-from .render.stimulus_stubs import SimImageStim as ImageStim
-from .render.stimulus_stubs import SimRect as Rect
-from .render.stimulus_stubs import SimTextStim as TextStim
+from .render.simulation_backend import SimBaseStim
+from .render.simulation_backend import SimImageStim as ImageStim
+from .render.simulation_backend import SimRect as Rect
+from .render.simulation_backend import SimTextStim as TextStim
 
 
 __all__ = [

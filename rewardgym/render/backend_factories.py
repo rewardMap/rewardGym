@@ -1,6 +1,6 @@
 from ..protocols import FactoryProtocol, WindowProtocol
 from .stimulus_definitions import Stimuli, StimulusDefinition
-from .stimulus_stubs import SimImageStim, SimRect, SimTextStim
+from .simulation_backend import SimImageStim, SimRect, SimTextStim
 
 
 def setup_stimulus(
