@@ -13,22 +13,20 @@ class EnvironmentContext:
     window: Any | None = None
     input_handler: InputProtocol | None = None
     logger: LoggerProtocol | None = None
-    mode: str = "psychopy-simulate"
+    mode: str = "simulation"
     render: DisplayProtocol | None = None
     stimuli: None = None
     random_state: None = None
 
     def __post_init__(self):
-        if self.mode not in ["psychopy", "psychopy-simulate", "pygame"]:
-            raise ValueError(
-                f"{self.mode} has to be 'psychopy' or 'psychopy-simulate'!"
-            )
+        if self.mode not in ["psychopy", "simulation", "pygame"]:
+            raise ValueError(f"{self.mode} has to be 'psychopy' or 'simulation'!")
 
         if self.mode == "psychopy":
             self._setup_psychopy()
 
-        elif self.mode == "psychopy-simulate":
-            self._setup_psychopy_simulate()
+        elif self.mode == "simulation":
+            self._setup_simulation()
 
         elif self.mode == "pygame":
             self._setup_pygame()
@@ -58,7 +56,7 @@ class EnvironmentContext:
 
         self.stimuli = PsychoPyFactory()
 
-    def _setup_psychopy_simulate(self):
+    def _setup_simulation(self):
         if self.window is None:
             from ..psychopy_render.psychopy_stubs import Window
 

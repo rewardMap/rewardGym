@@ -118,7 +118,7 @@ class BaseEnv(Env):
         # It should be possible to use wrapper for one-hot, so no box and other handling necessary (might need an
         # implementation though).
 
-        self.metadata = {"render_modes": ["pygame", "psychopy", "psychopy-simulate"]}
+        self.metadata = {"render_modes": ["pygame", "psychopy", "simulation"]}
 
         if n_actions is None:
             self.n_actions = max(
@@ -248,7 +248,7 @@ class BaseEnv(Env):
         observation = self._get_obs()
 
         info = self._get_info()
-        if self.render_mode in ["psychopy", "pygame", "psychopy-simulate"]:
+        if self.render_mode in ["psychopy", "pygame", "simulation"]:
             self._render_frame(info)
 
         if info["skip-node"]:
@@ -323,7 +323,7 @@ class BaseEnv(Env):
 
         self.cumulative_reward += self.reward
 
-        if self.render_mode in ["psychopy", "pygame", "psychopy-simulate"]:
+        if self.render_mode in ["psychopy", "pygame", "simulation"]:
             self._render_frame(info)
 
         return observation, self.reward, terminated, False, info

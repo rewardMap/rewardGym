@@ -1,7 +1,7 @@
 import pathlib
 
 from . import _version
-from .tasks import TaskRegistry, get_configs, get_env, get_psychopy_info, task_loader
+from .tasks import TaskRegistry, get_configs, get_env, get_render_info, task_loader
 from .utils import check_random_state, run_single_episode
 
 TASKS_DIR = pathlib.Path(__file__).resolve().parent
@@ -28,7 +28,7 @@ __all__ = [
     "environments",
     "get_configs",
     "get_env",
-    "get_psychopy_info",
+    "get_render_info",
     "psychopy_render",
     "pygame_render",
     "run_single_episode",

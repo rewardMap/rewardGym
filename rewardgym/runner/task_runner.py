@@ -56,7 +56,7 @@ def run_task(
     if n_episodes is None:
         n_episodes = settings["ntrials"]
 
-    if env.render_mode == "psychopy-simulate":
+    if env.render_mode == "simulation":
         break_countdown_limit = np.inf
     else:
         break_countdown_limit = 30

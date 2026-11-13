@@ -60,9 +60,9 @@ earnings = FeedBackStimulus(
 
 # We then augment the nodes in the info dict with the stimuli.
 info_dict = {
-    0: {"psychopy": [flip_screen, fixation, selection, action]},
-    1: {"psychopy": [flip_screen, reward, earnings]},
-    2: {"psychopy": [flip_screen, reward, earnings]},
+    0: {"render": [flip_screen, fixation, selection, action]},
+    1: {"render": [flip_screen, reward, earnings]},
+    2: {"render": [flip_screen, reward, earnings]},
 }
 
 env.info_dict.update(info_dict)

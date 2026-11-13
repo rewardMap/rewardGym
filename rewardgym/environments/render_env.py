@@ -76,10 +76,10 @@ class RenderEnv(BaseEnv):
         )
 
         for node in self.graph:
-            if "psychopy" in self.info_dict[node]:
+            if "render" in self.info_dict[node]:
                 [
                     stim.setup(self.context)
-                    for stim in self.info_dict[node]["psychopy"]
+                    for stim in self.info_dict[node]["render"]
                     if not stim.is_setup
                 ]
 
@@ -123,10 +123,10 @@ class RenderEnv(BaseEnv):
                 "You have to setup the environment first, using env.setup()"
             )
 
-        if "psychopy" not in info:
+        if "render" not in info:
             pass
         else:
-            for disp in info["psychopy"]:
+            for disp in info["render"]:
                 if disp.returns_action and not self.expose_last_stim:
                     out = disp.present(current_step)
                     self._check_output(out, info)
@@ -134,7 +134,7 @@ class RenderEnv(BaseEnv):
                 elif not disp.returns_action:
                     disp.present(context=current_step)
 
-            if not self.expose_last_stim and self.context == "psychopy-simulate":
+            if not self.expose_last_stim and self.context == "simulation":
                 self.simulate_action(info, self.previous_action, self.reaction_time)
 
     def simulate_action(self, info, action, reaction_time):
@@ -149,7 +149,7 @@ class RenderEnv(BaseEnv):
             info=info,
         )
 
-        out = info["psychopy"][-1].present(action_step)
+        out = info["render"][-1].present(action_step)
         self._check_output(out, info)
 
     def _check_output(self, out, info):
