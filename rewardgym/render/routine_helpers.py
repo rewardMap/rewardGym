@@ -98,7 +98,7 @@ def draw_subset_before(routine, context):
 
 
 def draw_subset_after(routine, context, state, action):
-    routine.draw_list = routine.draw_stims_before
+    routine.draw_list = routine.draw_stims_after
 
 
 def nfc_setup(routine, context):

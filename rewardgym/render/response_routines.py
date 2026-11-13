@@ -3,7 +3,12 @@ from typing import Any
 from .stimulus_classes import StimulusDefinition, TextDefinition, RectangleDefinition
 from .contexts import StepContext
 from .render_helper import log_event, response_handling
-from .routine_helpers import nfc_selection, nfc_setup
+from .routine_helpers import (
+    nfc_selection,
+    nfc_setup,
+    draw_subset_after,
+    draw_subset_before,
+)
 from typing import TypedDict
 
 
@@ -89,12 +94,13 @@ class ActionRoutine(BaseRoutine):
         self.returns_action = True
 
     def display(self, context: StepContext):
-        state = {}
+        state = {"extra_info": {}}
         self.draw_list = []
 
         if self.before_action_callback:
             out = self.before_action_callback(self, context)
-            state = {} if out is None else out
+            if out is not None:
+                state.update(out)
 
         response_window_onset = context.logger.get_time()
 
@@ -323,8 +329,8 @@ class ChangeSceneAfterAction(ActionRoutine):
             flip=flip,
             poll_keys=poll_keys,
             stimulus_definitions=stimulus_definitions,
-            before_action_callback=draw_stims_before,
-            after_action_callback=draw_stims_after,
+            before_action_callback=draw_subset_before,
+            after_action_callback=draw_subset_after,
             timeout_action=timeout_action,
             name_timeout=name_timeout,
             key_dict=key_dict,
