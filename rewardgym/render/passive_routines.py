@@ -11,7 +11,6 @@ from .render_helper import log_event
 from .routine_helpers import (
     conditioned_text,
     reward_update_routine,
-    state_selection_with_highlight,
 )
 from .stimulus_classes import (
     ImageDefinition,
@@ -159,51 +158,6 @@ class ConditionedTextCard(DynamicRoutine):
             poll_keys=poll_keys,
             stimulus_definitions=stimulus_definitions,
             callback_before_draw=conditioned_text,
-        )
-
-
-class StateBasedDisplay(DynamicRoutine):
-    def __init__(
-        self,
-        duration: float | None,
-        state_definition_map: dict,
-        position_map: dict,
-        border_definition: RectangleDefinition | bool | None = True,
-        rl_label: str | None = None,
-        name: str | None = None,
-        poll_keys=True,
-        flip: bool = True,
-        selection: bool = False,
-    ):
-        if border_definition is None or border_definition is True:
-            self.border_definition = RectangleDefinition(
-                name="border",
-                lineColor="white",
-                lineWidth=7,
-                height=0,
-                width=0,
-            )
-        else:
-            self.border_definition = None
-
-        self.state_definition_map = state_definition_map
-        self.position_map = position_map
-
-        stimulus_definitions = list(self.state_definition_map.values())
-        self.selection = selection
-        self.border_name = None
-
-        if self.border_definition is not None:
-            stimulus_definitions.append(self.border_definition)
-            self.border_name = self.border_definition.name
-
-        super().__init__(
-            name=name,
-            duration=duration,
-            rl_label=rl_label,
-            poll_keys=poll_keys,
-            stimulus_definitions=stimulus_definitions,
-            callback_before_draw=state_selection_with_highlight,
         )
 
 
