@@ -3,6 +3,25 @@ import pathlib
 from . import _version
 from .tasks import TaskRegistry, get_configs, get_env, get_render_info, task_loader
 from .utils import check_random_state, run_single_episode
+from .render import stimuli
+from . import agents, data_tools, environments, runner, tasks, render
+
+ENVIRONMENTS = []
+__all__ = [
+    "ENVIRONMENTS",
+    "check_random_state",
+    "environments",
+    "get_configs",
+    "get_env",
+    "get_render_info",
+    "run_single_episode",
+    "runner",
+    "stimuli",
+    "render",
+    "tasks",
+    "agents",
+    "data_tools",
+]
 
 TASKS_DIR = pathlib.Path(__file__).resolve().parent
 
@@ -13,22 +32,6 @@ ASSETS_PATH = pathlib.Path(__file__).parent.resolve() / "assets"
 
 ENVIRONMENTS = list(_task_registry.keys())
 
-from . import agents, data_tools, environments, runner, stimuli, tasks
-
-__all__ = [
-    "ENVIRONMENTS",
-    "agents",
-    "check_random_state",
-    "data_tools",
-    "environments",
-    "get_configs",
-    "get_env",
-    "get_render_info",
-    "run_single_episode",
-    "runner",
-    "stimuli",
-    "tasks",
-]
 
 __version__ = _version.get_versions()["version"]
 

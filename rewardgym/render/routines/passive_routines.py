@@ -1,7 +1,7 @@
 import warnings
 from typing import TypedDict
 
-from ...stimuli import (
+from ..stimuli import (
     lose_cross,
     win_cross,
     zero_cross,
