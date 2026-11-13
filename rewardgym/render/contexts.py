@@ -77,7 +77,7 @@ class EnvironmentContext:
 
     def _setup_pygame(self):
         if self.window is None:
-            from ..pygame_render.compatibility_classes import PygameWindow
+            from .pygame_backend import PygameWindow
 
             self.window = PygameWindow()
 

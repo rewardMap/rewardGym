@@ -24,7 +24,6 @@ __all__ = [
     "get_configs",
     "get_env",
     "get_render_info",
-    "pygame_render",
     "run_single_episode",
     "runner",
     "stimuli",

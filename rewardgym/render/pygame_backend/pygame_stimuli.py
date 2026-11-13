@@ -1,6 +1,6 @@
 import numpy as np
 
-from ..optional_dependencies import pygame
+from ...optional_dependencies import pygame
 
 
 def psychopy_color_to_pygame(color):

@@ -61,16 +61,16 @@ class PsychoPyFactory(FactoryProtocol):
 
 class PygameFactory(FactoryProtocol):
     def image(self, **kwargs):
-        from ..pygame_render.pygame_stimuli import PygameImageStim
+        from .pygame_backend import PygameImageStim
 
         return PygameImageStim(**kwargs)
 
     def rectangle(self, **kwargs):
-        from ..pygame_render.pygame_stimuli import PygameRect
+        from .pygame_backend import PygameRect
 
         return PygameRect(**kwargs)
 
     def text(self, **kwargs):
-        from ..pygame_render.pygame_stimuli import PygameTextStim
+        from .pygame_backend import PygameTextStim
 
         return PygameTextStim(**kwargs)
