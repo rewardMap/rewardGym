@@ -1,24 +1,23 @@
-from .render_base import BaseRoutine, StepContext
-from .render_helper import log_event
-from .stimulus_classes import (
-    StimulusDefinition,
-    TextDefinition,
-    RectangleDefinition,
-    ImageDefinition,
-)
-from .routine_helpers import (
-    conditioned_text,
-    state_selection_with_highlight,
-    reward_update_routine,
-)
-from typing import TypedDict
-
 import warnings
+from typing import TypedDict
 
 from ..stimuli import (
     lose_cross,
     win_cross,
     zero_cross,
+)
+from .render_base import BaseRoutine, StepContext
+from .render_helper import log_event
+from .routine_helpers import (
+    conditioned_text,
+    reward_update_routine,
+    state_selection_with_highlight,
+)
+from .stimulus_classes import (
+    ImageDefinition,
+    RectangleDefinition,
+    StimulusDefinition,
+    TextDefinition,
 )
 
 
@@ -169,7 +168,7 @@ class StateBasedDisplay(DynamicRoutine):
         duration: float | None,
         state_definition_map: dict,
         border_definition: RectangleDefinition | bool | None = True,
-        stimulus_shift: tuple = (350, 0),
+        position_map: dict = {0: (-350, 0), 1: (350, 0)},
         rl_label: str | None = None,
         name: str | None = None,
         poll_keys=True,
@@ -188,9 +187,9 @@ class StateBasedDisplay(DynamicRoutine):
             self.border_definition = None
 
         self.state_definition_map = state_definition_map
-        self.stimulus_shift = stimulus_shift
+        self.position_map = position_map
 
-        stimulus_definitions = [i for i in self.state_definition_map.values()]
+        stimulus_definitions = list(self.state_definition_map.values())
         self.selection = selection
         self.border_name = None
 

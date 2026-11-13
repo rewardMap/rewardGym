@@ -1,4 +1,5 @@
 from .contexts import StepContext
+from ..environments.base_env import ActionLayout
 
 
 def conditioned_text(routine, context: StepContext):
@@ -23,44 +24,29 @@ def state_selection_with_highlight(routine, context):
     condition = context.condition
 
     actions = list(condition[0].keys())
+    layout = ActionLayout(actions)  # context.info['action-layout']
 
-    left_action = actions[0]
-    right_action = actions[1]
+    for name in routine.state_definition_map.values():
+        routine.stimuli[name.name].setOpacity(1.0)
 
     if routine.border_name is not None:
         border = routine.stimuli[routine.border_name]
 
-    state1 = condition[0][left_action]
-    state2 = condition[0][right_action]
+    for _, act in enumerate(actions):
+        if act is not None:
+            state_name = routine.state_definition_map[act].name
+            stim = routine.stimuli[state_name]
+            stim.pos = routine.position_map[layout.graph_to_action[act]]
+            routine.draw_list.append(state_name)
 
-    if state1 is not None:
-        stim_name_left = routine.state_definition_map[state1].name
-        stim_left = routine.stimuli[stim_name_left]
-        stim_left.pos = (-routine.stimulus_shift[0], stim_left.pos[1])
-        routine.draw_list.append(stim_name_left)
+            if routine.selection:
+                if context.previous_action == act:
+                    if routine.border_name is not None:
+                        set_border(border, stim)
+                        routine.draw_list.append(routine.border_name)
 
-    if state2 is not None:
-        stim_name_right = routine.state_definition_map[state2].name
-        stim_right = routine.stimuli[stim_name_right]
-        stim_right.pos = (routine.stimulus_shift[0], stim_right.pos[1])
-        routine.draw_list.append(stim_name_right)
-
-    if routine.selection:
-        if context.previous_action == left_action:
-            if routine.border_name is not None:
-                set_border(border, stim_left)
-
-            if state2 is not None:
-                stim_right.setOpacity(0.25)
-
-        else:
-            if routine.border_name is not None:
-                set_border(border, stim_right)
-
-            if state1 is not None:
-                stim_left.setOpacity(0.25)
-
-        routine.draw_list.append(routine.border_name)
+                else:
+                    stim.setOpacity(0.25)
 
 
 def reward_update_routine(routine, context):
