@@ -95,7 +95,7 @@ class ActionRoutine(BaseRoutine):
 
     def display(self, context: StepContext):
         state = {"extra_info": {}}
-        self.draw_list = []
+        self.draw_list = None
 
         if self.before_action_callback:
             out = self.before_action_callback(self, context)
