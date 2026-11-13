@@ -1,15 +1,15 @@
 from typing import Any, TypedDict
 
-from .contexts import StepContext
-from .render_base import BaseRoutine
-from .render_helper import log_event, response_handling
+from ..contexts import StepContext
+from .base_routine import BaseRoutine
+from ..render_helper import log_event, response_handling
 from .routine_callbacks import (
     draw_subset_after,
     draw_subset_before,
     nfc_selection,
     nfc_setup,
 )
-from .stimulus_classes import RectangleDefinition, StimulusDefinition, TextDefinition
+from ..stimulus_classes import RectangleDefinition, StimulusDefinition, TextDefinition
 
 
 class PresentationSettings(TypedDict, total=False):

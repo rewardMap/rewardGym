@@ -1,7 +1,7 @@
 import time
 
-from .optional_dependencies import core, pygame, require_pygame
-from .protocols import InputProtocol, KeyboardProtocol
+from ..optional_dependencies import core, pygame, require_pygame
+from ..protocols import InputProtocol, KeyboardProtocol
 
 
 class BaseInputHandler(InputProtocol):

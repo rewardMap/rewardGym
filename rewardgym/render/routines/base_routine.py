@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 
-from .backend_factories import setup_stimulus
-from .contexts import EnvironmentContext, StepContext
-from .stimulus_classes import StimulusDefinition
+from ..backend_factories import setup_stimulus
+from ..contexts import EnvironmentContext, StepContext
+from ..stimulus_classes import StimulusDefinition
 
 
 class BaseRoutine(ABC):

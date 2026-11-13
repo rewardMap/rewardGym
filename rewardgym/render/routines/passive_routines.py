@@ -1,18 +1,19 @@
 import warnings
 from typing import TypedDict
 
-from ..stimuli import (
+from ...stimuli import (
     lose_cross,
     win_cross,
     zero_cross,
 )
-from .render_base import BaseRoutine, StepContext
-from .render_helper import log_event
+from .base_routine import BaseRoutine
+from ..contexts import StepContext
+from ..render_helper import log_event
 from .routine_callbacks import (
     conditioned_text,
     reward_update_routine,
 )
-from .stimulus_classes import (
+from ..stimulus_classes import (
     ImageDefinition,
     RectangleDefinition,
     StimulusDefinition,

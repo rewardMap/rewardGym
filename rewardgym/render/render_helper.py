@@ -3,7 +3,6 @@ from typing import Any
 
 from ..protocols import LoggerProtocol
 from .contexts import StepContext
-from .render_base import BaseRoutine
 
 
 class PollStatus(Enum):
@@ -13,7 +12,7 @@ class PollStatus(Enum):
 
 
 def log_event(
-    routine: BaseRoutine,
+    routine,
     logger: LoggerProtocol,
     onset: float | None = None,
     extra_info: dict | None = None,
@@ -31,7 +30,7 @@ def log_event(
 
 
 def response_handling(
-    routine: BaseRoutine,
+    routine,
     context: StepContext,
     response_window_onset: float,
     key_dict=None,
