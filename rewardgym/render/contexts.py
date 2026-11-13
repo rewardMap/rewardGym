@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Any
 
-from ..input_handling import PsychoPyInput, SimulationInput
+from .input_handling import PsychoPyInput, SimulationInput
 from ..logging import ExperimentLogger
 from ..protocols import DisplayProtocol, InputProtocol, LoggerProtocol
 from .backend_factories import PsychoPyFactory, PygameFactory, SimulationFactory
@@ -82,7 +82,7 @@ class EnvironmentContext:
             self.window = PygameWindow()
 
         if self.input_handler is None:
-            from ..input_handling import PygameInput
+            from .input_handling import PygameInput
 
             self.input_handler = PygameInput(win=self.window)
 
