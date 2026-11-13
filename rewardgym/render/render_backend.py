@@ -1,7 +1,7 @@
 from typing import Any
 
 from ..protocols import DisplayProtocol
-from ..timing import simulation_wait, wait
+from .timing import simulation_wait, wait
 
 
 class SimulationDisplay(DisplayProtocol):

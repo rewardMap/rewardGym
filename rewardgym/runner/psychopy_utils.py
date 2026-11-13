@@ -2,7 +2,7 @@ try:
     from psychopy.core import quit
     from psychopy.gui import Dlg, DlgFromDict
 except ModuleNotFoundError:
-    from ..psychopy_render.psychopy_stubs import (
+    from ..stubs import (
         Dlg,
         DlgFromDict,
         quit,
@@ -10,7 +10,6 @@ except ModuleNotFoundError:
 
 import os
 
-from .. import ENVIRONMENTS
 from .file_utils import make_bids_name
 
 
@@ -61,6 +60,8 @@ def overwrite_warning(filename):
 
 
 def pspy_set_up_experiment(outdir="data/"):
+    from .. import ENVIRONMENTS
+
     exp_dict = {
         "participant_id": "001",
         "run": 1,

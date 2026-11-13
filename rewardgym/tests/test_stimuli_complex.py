@@ -1,4 +1,4 @@
-from rewardgym.stimuli import draw_alien, draw_robot, draw_spaceship
+from rewardgym.render.stimuli import draw_alien, draw_robot, draw_spaceship
 
 
 def test_draw_robot():

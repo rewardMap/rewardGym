@@ -1,6 +1,6 @@
 from collections import deque
 
-from ..optional_dependencies import pygame, require_pygame
+from ...optional_dependencies import pygame, require_pygame
 
 
 class PygameWindow:

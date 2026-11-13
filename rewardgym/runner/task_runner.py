@@ -56,7 +56,7 @@ def run_task(
     if n_episodes is None:
         n_episodes = settings["ntrials"]
 
-    if env.render_mode == "psychopy-simulate":
+    if env.render_mode == "simulation":
         break_countdown_limit = np.inf
     else:
         break_countdown_limit = 30
@@ -114,7 +114,9 @@ def run_task(
         while not done:
             if agent is not None:
                 if hasattr(agent, "get_rt_action") and callable(agent.get_rt_action):
-                    key, rt = agent.get_rt_action(obs, info["avail-actions"])
+                    key, rt = agent.get_rt_action(
+                        obs, info["action-layout"].avail_actions
+                    )
                 else:
                     key, rt = simple_rt_simulation(agent, env, obs, info)
 

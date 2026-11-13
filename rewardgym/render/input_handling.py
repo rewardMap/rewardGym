@@ -1,7 +1,7 @@
 import time
 
-from .optional_dependencies import core, pygame, require_pygame
-from .protocols import InputProtocol, KeyboardProtocol
+from ..optional_dependencies import core, pygame, require_pygame
+from ..protocols import InputProtocol, KeyboardProtocol
 
 
 class BaseInputHandler(InputProtocol):
@@ -50,6 +50,7 @@ class BaseInputHandler(InputProtocol):
                 elif (key_list is not None) and (resp[0] in key_list):
                     # Potentially dangerous - if press is in list, return!
                     response = (resp[0], resp[1])
+                    return response
 
                 else:
                     logger.log_event(
@@ -60,7 +61,6 @@ class BaseInputHandler(InputProtocol):
                         },
                     )
 
-            return response
         else:
             return response
 

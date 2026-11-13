@@ -17,18 +17,13 @@ def get_env(
         "posner",
         "gonogo",
     ],
-    render_backend: Literal["pygame", "psychopy", "psychopy-simulate"] | None = None,
+    render_backend: Literal["pygame", "psychopy", "simulation"] | None = None,
     random_state: int | np.random.Generator = 1000,
     **kwargs,
 ):
-    if render_backend == "pygame":
-        rb = "psychopy"
-    else:
-        rb = render_backend
-
     environment_graph, reward_structure, info_dict = get_task(
         task_name,
-        render_backend=rb,
+        render_backend=render_backend,
         random_state=random_state,
     )
 
@@ -47,7 +42,7 @@ def get_env(
         )
     elif (
         render_backend == "psychopy"
-        or render_backend == "psychopy-simulate"
+        or render_backend == "simulation"
         or render_backend == "pygame"
     ):
         env = RenderEnv(
@@ -59,6 +54,8 @@ def get_env(
             name=task_name,
             reduced_actions=reduced_actions,
         )
+    else:
+        raise ValueError("Backend Issues")
 
     return env
 

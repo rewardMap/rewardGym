@@ -1,16 +1,36 @@
+"""
+Stubs, so that environments can be used together with PsychoPy, not requiring
+any installation of other packages into the PsychoPy env.
+"""
+
 from collections.abc import Callable
 
-from ..protocols import ClockProtocol
-from ..render.stimulus_stubs import SimBaseStim
-from ..render.stimulus_stubs import SimImageStim as ImageStim
-from ..render.stimulus_stubs import SimRect as Rect
-from ..render.stimulus_stubs import SimTextStim as TextStim
+from .protocols import ClockProtocol
+from .render.simulation_backend import SimBaseStim
+from .render.simulation_backend import SimImageStim as ImageStim
+from .render.simulation_backend import SimRect as Rect
+from .render.simulation_backend import SimTextStim as TextStim
+
 
 __all__ = [
     "ImageStim",
     "Rect",
     "TextStim",
 ]
+
+
+class Env:
+    def __init__(self):
+        pass
+
+
+class Discrete:
+    def __init__(self, n_states):
+        self.n_states = n_states
+
+
+class Surface:
+    pass
 
 
 class Clock(ClockProtocol):

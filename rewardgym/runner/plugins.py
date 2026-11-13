@@ -68,8 +68,8 @@ def break_point(context, text_update, settings, episode, countdown_cutoff=30):
 
 
 def simple_rt_simulation(agent, env, obs, info):
-    key = agent.get_action(obs, info["avail-actions"])
-    probs = agent.get_probs(obs, info["avail-actions"])
+    key = agent.get_action(obs, info["action-layout"].avail_actions)
+    probs = agent.get_probs(obs, info["action-layout"].avail_actions)
     probs = probs[key]
 
     if env.name in ["gonogo", "robotfactory"]:
@@ -90,7 +90,7 @@ class PsyPyPlugin:
 
 class MiscUpdateMid(PsyPyPlugin):
     def modify(self, *, env, logger, **kwargs):
-        misc = env.info_dict[1]["psychopy"][-1].duration
+        misc = env.info_dict[1]["render"][-1].duration
         logger.update_trial_info(
             misc=misc,
         )
@@ -107,7 +107,7 @@ class MiscUpdateTwoStep(PsyPyPlugin):
 class TimeUpdateMid(PsyPyPlugin):
     def modify(self, *, episode, settings, env, **kwargs):
         settings["reward"][episode] = (
-            settings["reward"][episode] - env.info_dict[1]["psychopy"][-1].duration
+            settings["reward"][episode] - env.info_dict[1]["render"][-1].duration
         )
 
 
@@ -134,9 +134,9 @@ class StairCaseMid(PsyPyPlugin):
 
             # Duration is at minimum 150 ms and at max 500 ms, need to only update first occurence
             # of first stimulus, as it's reused
-            new_duration = env.info_dict[1]["psychopy"][-1].duration + adjustment
+            new_duration = env.info_dict[1]["render"][-1].duration + adjustment
             new_duration = np.max([np.min([new_duration, 0.5]), 0.20])
-            env.info_dict[1]["psychopy"][-1].duration = new_duration
+            env.info_dict[1]["render"][-1].duration = new_duration
 
 
 class AddRemainder(PsyPyPlugin):
