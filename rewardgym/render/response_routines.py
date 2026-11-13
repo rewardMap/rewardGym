@@ -1,15 +1,15 @@
-from .render_base import BaseRoutine
-from typing import Any
-from .stimulus_classes import StimulusDefinition, TextDefinition, RectangleDefinition
+from typing import Any, TypedDict
+
 from .contexts import StepContext
+from .render_base import BaseRoutine
 from .render_helper import log_event, response_handling
 from .routine_helpers import (
-    nfc_selection,
-    nfc_setup,
     draw_subset_after,
     draw_subset_before,
+    nfc_selection,
+    nfc_setup,
 )
-from typing import TypedDict
+from .stimulus_classes import RectangleDefinition, StimulusDefinition, TextDefinition
 
 
 class PresentationSettings(TypedDict, total=False):
@@ -259,8 +259,6 @@ class NAFCRoutine(ActionRoutine):
                     height=0,
                     width=0,
                 )
-            else:
-                highlight_definition = highlight_definition
 
             stimulus_definitions.append(highlight_definition)
             self.highlight_name = highlight_definition.name

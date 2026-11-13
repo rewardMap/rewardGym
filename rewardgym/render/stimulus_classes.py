@@ -1,6 +1,5 @@
 from dataclasses import dataclass, fields
 from enum import Enum, auto
-
 from typing import ClassVar
 
 from numpy.typing import ArrayLike

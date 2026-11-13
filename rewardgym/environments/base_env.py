@@ -9,6 +9,7 @@ except ModuleNotFoundError:
     from .gymnasium_stubs import Discrete, Env
 
 from collections import defaultdict
+
 import numpy as np
 
 from ..utils import check_random_state
