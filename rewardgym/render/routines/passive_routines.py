@@ -8,7 +8,7 @@ from ..stimuli import (
 )
 from .base_routine import BaseRoutine
 from ..contexts import StepContext
-from ..render_helper import log_event
+from ..events import log_event
 from .routine_callbacks import (
     conditioned_text,
     reward_update_routine,

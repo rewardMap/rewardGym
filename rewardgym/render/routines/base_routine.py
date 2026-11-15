@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from ..backend_factories import setup_stimulus
+from ..backends import setup_stimulus
 from ..contexts import EnvironmentContext, StepContext
 from ..stimulus_definitions import StimulusDefinition
 

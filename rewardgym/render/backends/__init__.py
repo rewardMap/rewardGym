@@ -1,3 +1,8 @@
+from .backend_base import setup_stimulus, RewardGymBackend
+
+__all__ = ["setup_stimulus", "RewardGymBackend"]
+
+
 def get_backends():
     registry = {}
 
