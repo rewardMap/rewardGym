@@ -1,5 +1,5 @@
-from .stimuli_simulation import SimImageStim, SimRect, SimTextStim
 from ....protocols import FactoryProtocol
+from .stimuli_simulation import SimImageStim, SimRect, SimTextStim
 
 
 class SimulationFactory(FactoryProtocol):

@@ -1,12 +1,10 @@
 import argparse
 from typing import Literal
 
-
+from ..agents import QAgent
 from ..logging import ExperimentLogger
 from ..runner.task_runner import run_task
 from ..tasks.utils import get_env
-
-from ..agents import QAgent
 
 
 def play_task(

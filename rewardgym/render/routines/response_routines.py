@@ -1,18 +1,18 @@
 from typing import Any, TypedDict
 
 from ..contexts import StepContext
-from .base_routine import BaseRoutine
 from ..events import log_event, response_handling
+from ..stimulus_definitions import (
+    RectangleDefinition,
+    StimulusDefinition,
+    TextDefinition,
+)
+from .base_routine import BaseRoutine
 from .routine_callbacks import (
     draw_subset_after,
     draw_subset_before,
     nfc_selection,
     nfc_setup,
-)
-from ..stimulus_definitions import (
-    RectangleDefinition,
-    StimulusDefinition,
-    TextDefinition,
 )
 
 

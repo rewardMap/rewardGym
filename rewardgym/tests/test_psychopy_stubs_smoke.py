@@ -1,7 +1,7 @@
 from rewardgym import get_env
 from rewardgym.logging import ExperimentLogger
-from rewardgym.stubs import Clock, Window
 from rewardgym.runner import run_task
+from rewardgym.stubs import Clock, Window
 
 
 def simulate_task(envname):

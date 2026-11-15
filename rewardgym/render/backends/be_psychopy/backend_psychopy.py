@@ -1,15 +1,15 @@
 from typing import Any
 
-from ....protocols import DisplayProtocol, KeyboardProtocol
-from ...timing import wait
-from ...input_handling import BaseInputHandler
 from psychopy import core
 from psychopy.visual import Window
 
-from ..backend_base import RewardGymBackend
-from ...contexts import EnvironmentContext
-from .factory_psychopy import PsychoPyFactory
 from ....logging import ExperimentLogger
+from ....protocols import DisplayProtocol, KeyboardProtocol
+from ...contexts import EnvironmentContext
+from ...input_handling import BaseInputHandler
+from ...timing import wait
+from ..backend_base import RewardGymBackend
+from .factory_psychopy import PsychoPyFactory
 
 
 class PsychoPyBackend(RewardGymBackend):

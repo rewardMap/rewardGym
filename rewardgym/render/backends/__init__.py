@@ -1,6 +1,6 @@
-from .backend_base import setup_stimulus, RewardGymBackend
+from .backend_base import RewardGymBackend, setup_stimulus
 
-__all__ = ["setup_stimulus", "RewardGymBackend"]
+__all__ = ["RewardGymBackend", "setup_stimulus"]
 
 
 def get_backends():

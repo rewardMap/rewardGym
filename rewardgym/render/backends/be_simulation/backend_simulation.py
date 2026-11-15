@@ -1,13 +1,13 @@
-from typing import Any
 from collections.abc import Callable
+from typing import Any
 
-from ....protocols import DisplayProtocol, ClockProtocol
+from ....logging import ExperimentLogger
+from ....protocols import ClockProtocol, DisplayProtocol
+from ...contexts import EnvironmentContext
+from ...input_handling import BaseInputHandler
 from ...timing import simulation_wait
 from ..backend_base import RewardGymBackend
-from ...contexts import EnvironmentContext
 from .factory_simulation import SimulationFactory
-from ....logging import ExperimentLogger
-from ...input_handling import BaseInputHandler
 
 
 class SimulationBackend(RewardGymBackend):

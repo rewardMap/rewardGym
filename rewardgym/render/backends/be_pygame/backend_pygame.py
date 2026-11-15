@@ -1,13 +1,14 @@
-from ....protocols import DisplayProtocol
-from ...timing import wait
-from collections import deque
-import pygame
-from ...input_handling import BaseInputHandler
 import time
-from ..backend_base import RewardGymBackend
-from .factory_pygame import PygameFactory
+from collections import deque
+
+import pygame
+
 from ....logging import ExperimentLogger
-from ..backend_base import EnvironmentContext
+from ....protocols import DisplayProtocol
+from ...input_handling import BaseInputHandler
+from ...timing import wait
+from ..backend_base import EnvironmentContext, RewardGymBackend
+from .factory_pygame import PygameFactory
 
 
 class PygameBackend(RewardGymBackend):

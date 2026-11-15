@@ -1,23 +1,23 @@
 import warnings
 from typing import TypedDict
 
+from ..contexts import StepContext
+from ..events import log_event
 from ..stimuli import (
     lose_cross,
     win_cross,
     zero_cross,
-)
-from .base_routine import BaseRoutine
-from ..contexts import StepContext
-from ..events import log_event
-from .routine_callbacks import (
-    conditioned_text,
-    reward_update_routine,
 )
 from ..stimulus_definitions import (
     ImageDefinition,
     RectangleDefinition,
     StimulusDefinition,
     TextDefinition,
+)
+from .base_routine import BaseRoutine
+from .routine_callbacks import (
+    conditioned_text,
+    reward_update_routine,
 )
 
 

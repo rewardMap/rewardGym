@@ -3,13 +3,13 @@ Stubs, so that environments can be used together with PsychoPy, not requiring
 any installation of other packages into the PsychoPy env.
 """
 
+from .render.backends.be_simulation.backend_simulation import Clock, Window
 from .render.backends.be_simulation.stimuli_simulation import SimBaseStim
 from .render.backends.be_simulation.stimuli_simulation import SimImageStim as ImageStim
 from .render.backends.be_simulation.stimuli_simulation import SimRect as Rect
 from .render.backends.be_simulation.stimuli_simulation import SimTextStim as TextStim
-from .render.backends.be_simulation.backend_simulation import Clock, Window
 
-__all__ = ["ImageStim", "Rect", "TextStim", "Clock", "Window"]
+__all__ = ["Clock", "ImageStim", "Rect", "TextStim", "Window"]
 
 
 class Env:

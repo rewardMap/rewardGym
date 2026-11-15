@@ -1,5 +1,5 @@
-from ..contexts import EnvironmentContext
 from ...protocols import FactoryProtocol, WindowProtocol
+from ..contexts import EnvironmentContext
 from ..stimulus_definitions import Stimuli, StimulusDefinition
 
 
