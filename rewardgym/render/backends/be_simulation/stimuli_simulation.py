@@ -1,8 +1,9 @@
 class SimBaseStim:
-    def __init__(self, win=None, name=None, **kwargs):
+    def __init__(self, win=None, name=None, opacity: float = 1.0, **kwargs):
         self.autoDraw = False
         self.win = win
         self.name = name
+        self.opacity = 1.0
 
     def setAutoDraw(self, auto_draw: bool):
         self.autoDraw = auto_draw
@@ -13,6 +14,9 @@ class SimBaseStim:
     def draw(self):
         pass
 
+    def setOpacity(self, new_opacity):
+        self.opacity = new_opacity
+
 
 class SimImageStim(SimBaseStim):
     def __init__(
@@ -22,8 +26,9 @@ class SimImageStim(SimBaseStim):
         image: str | None = None,
         pos: tuple | None = None,
         size: tuple | None = None,
+        opacity: float = 1.0,
     ) -> None:
-        super().__init__(win=win, name=name)
+        super().__init__(win=win, name=name, opacity=opacity)
 
         self.image = image
 
@@ -36,11 +41,6 @@ class SimImageStim(SimBaseStim):
             self.size = (100, 100)
         else:
             self.size = size
-
-        self.opacity = 1.0
-
-    def setOpacity(self, newOpacity):
-        self.opacity = newOpacity
 
 
 class SimTextStim(SimBaseStim):
@@ -56,8 +56,9 @@ class SimTextStim(SimBaseStim):
         alignText=None,
         anchorHoriz=None,
         units=None,
+        opacity: float = 1.0,
     ):
-        super().__init__(win=win, name=name)
+        super().__init__(win=win, name=name, opacity=opacity)
 
         self.text = text
         self.color = color
@@ -84,8 +85,9 @@ class SimRect(SimBaseStim):
         lineWidth=None,
         pos=None,
         units=None,
+        opacity: float = 1.0,
     ):
-        super().__init__(win=win, name=name)
+        super().__init__(win=win, name=name, opacity=opacity)
 
         self.width = width
         self.height = height

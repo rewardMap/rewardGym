@@ -72,15 +72,14 @@ class RenderEnv(BaseEnv):
             logger=logger,
             input_handler=input_handler,
             mode=self.render_mode,
+            random_state=self.random_state,
         )
 
         for node in self.graph:
-            if "psychopy" in self.info_dict[node]:
-                [
-                    stim.setup(self.context)
-                    for stim in self.info_dict[node]["psychopy"]
-                    if not stim.is_setup
-                ]
+            if "render" in self.info_dict[node]:
+                for stim in self.info_dict[node]["render"]:
+                    if not stim.is_setup:
+                        stim.setup(self.context)
 
         self.expose_last_stim = expose_last_stim
         self.reaction_time = None
@@ -122,18 +121,18 @@ class RenderEnv(BaseEnv):
                 "You have to setup the environment first, using env.setup()"
             )
 
-        if "psychopy" not in info:
+        if "render" not in info:
             pass
         else:
-            for disp in info["psychopy"]:
+            for disp in info["render"]:
                 if disp.returns_action and not self.expose_last_stim:
                     out = disp.present(current_step)
-                    self._check_output(out, info, remap=True)
+                    self._check_output(out, info)
 
                 elif not disp.returns_action:
                     disp.present(context=current_step)
 
-            if not self.expose_last_stim and self.context == "psychopy-simulate":
+            if not self.expose_last_stim and self.context == "simulation":
                 self.simulate_action(info, self.previous_action, self.reaction_time)
 
     def simulate_action(self, info, action, reaction_time):
@@ -148,15 +147,12 @@ class RenderEnv(BaseEnv):
             info=info,
         )
 
-        out = info["psychopy"][-1].present(action_step)
-        self._check_output(out, info, remap=True)
+        out = info["render"][-1].present(action_step)
+        self._check_output(out, info)
 
-    def _check_output(self, out, info, remap=False):
+    def _check_output(self, out, info):
         if out is not None:
-            if remap:
-                tmp_action = info["behav_remap"][out[0]]
-            else:
-                tmp_action = out[0]
+            tmp_action = info["action-layout"].action_to_graph[out[0]]
 
             if tmp_action in info["avail-actions"]:
                 self.action = tmp_action

@@ -167,30 +167,14 @@ def get_configs(task_name):
     return get_configs_func
 
 
-def get_psychopy_info(task_name, **kwargs):
+def get_render_info(task_name, **kwargs):
     from .. import _task_registry
 
     if task_name not in _task_registry:
         raise ValueError(f"Task '{task_name}' not registered.")
-    get_configs_func = _task_registry[task_name]["get_psychopy_info"]
+    get_configs_func = _task_registry[task_name]["get_render_info"]
     if get_configs_func is None:
-        raise NotImplementedError(f"get_psychopy_info not implemented for {task_name}")
-    return get_configs_func(**kwargs)
-
-
-def get_pygame_info(task_name, **kwargs):
-    from .. import _task_registry
-
-    if task_name not in _task_registry:
-        raise ValueError(f"Task '{task_name}' not registered.")
-
-    warnings.warn(
-        "Backend specificity will be released and is not necessary anymore. Getting psychopy_info instead.",
-        DeprecationWarning,
-    )
-    get_configs_func = _task_registry[task_name]["get_psychopy_info"]
-    if get_configs_func is None:
-        raise NotImplementedError(f"get_psychopy_info not implemented for {task_name}")
+        raise NotImplementedError(f"get_render_info not implemented for {task_name}")
     return get_configs_func(**kwargs)
 
 

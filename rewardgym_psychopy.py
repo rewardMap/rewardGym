@@ -2,7 +2,7 @@ import json
 
 from psychopy import core, event, visual
 
-from rewardgym import get_configs, get_env, get_psychopy_info
+from rewardgym import get_configs, get_env, get_render_info
 from rewardgym.logging import ExperimentLogger
 from rewardgym.runner import pspy_set_up_experiment, run_task
 from rewardgym.runner.psychopy_instructions import show_instructions
@@ -41,7 +41,7 @@ if __name__ == "__main__":
     )
     Logger.create()
 
-    info_dict, stimulus_info = get_psychopy_info(
+    info_dict, stimulus_info = get_render_info(
         task, seed=stimulus_set, key_dict=key_dict
     )
     settings = get_configs(task)(stimulus_set)

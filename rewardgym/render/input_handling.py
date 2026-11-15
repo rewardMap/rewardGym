@@ -1,7 +1,4 @@
-import time
-
-from .optional_dependencies import core, pygame, require_pygame
-from .protocols import InputProtocol, KeyboardProtocol
+from ..protocols import InputProtocol
 
 
 class BaseInputHandler(InputProtocol):
@@ -50,6 +47,7 @@ class BaseInputHandler(InputProtocol):
                 elif (key_list is not None) and (resp[0] in key_list):
                     # Potentially dangerous - if press is in list, return!
                     response = (resp[0], resp[1])
+                    return response
 
                 else:
                     logger.log_event(
@@ -60,7 +58,6 @@ class BaseInputHandler(InputProtocol):
                         },
                     )
 
-            return response
         else:
             return response
 
@@ -74,88 +71,3 @@ class BaseInputHandler(InputProtocol):
 
     def _close(self):
         pass
-
-
-class SimulationInput(BaseInputHandler):
-    def get_keys(self) -> list[tuple[str, float]]:
-        return []
-
-
-class PsychoPyInput(BaseInputHandler):
-    def __init__(
-        self,
-        clock,
-        keyboard: KeyboardProtocol | None = None,
-        kill_switch: str = "q",
-        mr_trigger: str = "5",
-        repetition_time: float = 2,
-        win=None,
-    ) -> None:
-        if keyboard is None:
-            from psychopy.hardware.keyboard import Keyboard
-
-            keyboard = Keyboard(clock=clock)
-
-        super().__init__(
-            kill_switch=kill_switch,
-            mr_trigger=mr_trigger,
-            repetition_time=repetition_time,
-        )
-
-        self.interface = keyboard
-        self.win = win
-
-    def get_keys(self) -> list[tuple[str, float]]:
-        keys = [(i.name, i.rt) for i in self.interface.getKeys()]
-        return keys
-
-    def _close(self):
-        if self.win is not None:
-            self.win.close()
-        if core is not None:
-            core.quit()
-
-
-class PygameInput(BaseInputHandler):
-    def __init__(self, win=None, *args, **kwargs):
-        require_pygame()
-
-        super().__init__(*args, **kwargs)
-
-        self.start_time = time.perf_counter()
-        self.win = win
-
-    def get_keys(self):
-        out = []
-
-        now = time.perf_counter() - self.start_time
-
-        for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN:
-                out.append(
-                    (
-                        pygame.key.name(event.key),
-                        now,
-                    )
-                )
-
-            elif event.type == pygame.QUIT:
-                out.append(
-                    (
-                        self.kill_switch,
-                        now,
-                    )
-                )
-
-        return out
-
-    def _close(self):
-        if self.win is not None:
-            self.win.close()
-        pygame.quit()
-
-        raise ExperimentQuit()
-
-
-class ExperimentQuit(Exception):
-    pass

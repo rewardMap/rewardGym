@@ -250,7 +250,7 @@ class RandomAgent(QAgent):
         pass
 
 
-class ValenceQAgent_eligibility(ValenceQAgent):
+class ValenceQAgentEligibility(ValenceQAgent):
     def __init__(
         self,
         learning_rate_pos: float,
@@ -345,7 +345,7 @@ class ValenceQAgent_eligibility(ValenceQAgent):
         self.eligibility_traces = np.zeros((self.state_space, self.action_space))
 
 
-class QAgent_eligibility(ValenceQAgent_eligibility):
+class QAgentEligibility(ValenceQAgentEligibility):
     def __init__(
         self,
         learning_rate: float,

@@ -5,7 +5,7 @@ import warnings
 import numpy as np
 
 from ..utils import check_random_state
-from .base_agent import ValenceQAgent, ValenceQAgent_eligibility
+from .base_agent import ValenceQAgent, ValenceQAgentEligibility
 
 
 class ValenceHybridAgent(ValenceQAgent):
@@ -100,7 +100,7 @@ class ValenceHybridAgent(ValenceQAgent):
 
         self.discount_factor = discount_factor
 
-        self.q_agent = ValenceQAgent_eligibility(
+        self.q_agent = ValenceQAgentEligibility(
             learning_rate_neg=learning_rate_mf_neg,
             learning_rate_pos=learning_rate_mf_pos,
             temperature=temperature,

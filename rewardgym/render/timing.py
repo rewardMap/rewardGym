@@ -1,5 +1,5 @@
 # Will be used later on - it's
-from .protocols import InputProtocol
+from ..protocols import InputProtocol
 
 
 def wait(

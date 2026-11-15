@@ -163,7 +163,6 @@ ax.set(
 
 # %%
 import pygame
-
 from rewardgym.pygame_render.stimuli import BaseAction, BaseDisplay, BaseText
 
 # State / Step1:

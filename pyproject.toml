@@ -101,7 +101,6 @@ quiet-level = 3
 "rewardgym/tests/*" = ["E712"]
 "notebooks/*" = ["E402"]
 "rewardgym/__init__.py" = ["E402"]
-"rewardgym/psychopy_render/logger.py" = ["SIM115"]
 "rewardgym/tasks/task_loader.py" = ["BLE001"]
 
 [tool.ruff]

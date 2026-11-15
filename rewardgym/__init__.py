@@ -1,8 +1,26 @@
 import pathlib
 
-from . import _version
-from .tasks import TaskRegistry, get_configs, get_env, get_psychopy_info, task_loader
+from . import _version, agents, data_tools, environments, render, runner, tasks
+from .render import stimuli
+from .tasks import TaskRegistry, get_configs, get_env, get_render_info, task_loader
 from .utils import check_random_state, run_single_episode
+
+ENVIRONMENTS = []
+__all__ = [
+    "ENVIRONMENTS",
+    "agents",
+    "check_random_state",
+    "data_tools",
+    "environments",
+    "get_configs",
+    "get_env",
+    "get_render_info",
+    "render",
+    "run_single_episode",
+    "runner",
+    "stimuli",
+    "tasks",
+]
 
 TASKS_DIR = pathlib.Path(__file__).resolve().parent
 
@@ -13,29 +31,6 @@ ASSETS_PATH = pathlib.Path(__file__).parent.resolve() / "assets"
 
 ENVIRONMENTS = list(_task_registry.keys())
 
-from . import agents, data_tools, environments, psychopy_render, runner, stimuli, tasks
-
-try:
-    from . import pygame_render
-except ImportError:
-    print("no pygame")
-
-__all__ = [
-    "ENVIRONMENTS",
-    "agents",
-    "check_random_state",
-    "data_tools",
-    "environments",
-    "get_configs",
-    "get_env",
-    "get_psychopy_info",
-    "psychopy_render",
-    "pygame_render",
-    "run_single_episode",
-    "runner",
-    "stimuli",
-    "tasks",
-]
 
 __version__ = _version.get_versions()["version"]
 
