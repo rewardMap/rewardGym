@@ -21,11 +21,14 @@ def play_task(
     if backend == "psychopy":
         from psychopy.core import Clock
 
-        clock = Clock()
+    elif backend == "pygame":
+        from psylog.interfaces import SystemClock as Clock
     else:
         from ..stubs import Clock
 
         clock = Clock()
+
+    clock = Clock()
 
     file_name = out
 
@@ -61,7 +64,7 @@ def play_cli():
         default="hcp",
     )
     parser.add_argument(
-        "backend",
+        "--backend",
         type=str,
         help="The backend for the task, choose one of:"
         + "'pygame', 'psychopy', 'simulation'",
@@ -69,7 +72,7 @@ def play_cli():
     )
 
     parser.add_argument(
-        "out",
+        "--out",
         type=str,
         help="out-path",
         default=None,

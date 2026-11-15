@@ -3,20 +3,13 @@ Stubs, so that environments can be used together with PsychoPy, not requiring
 any installation of other packages into the PsychoPy env.
 """
 
-from collections.abc import Callable
+from .render.backends.be_simulation.stimuli_simulation import SimBaseStim
+from .render.backends.be_simulation.stimuli_simulation import SimImageStim as ImageStim
+from .render.backends.be_simulation.stimuli_simulation import SimRect as Rect
+from .render.backends.be_simulation.stimuli_simulation import SimTextStim as TextStim
+from .render.backends.be_simulation.backend_simulation import Clock, Window
 
-from .protocols import ClockProtocol
-from .render.simulation_backend import SimBaseStim
-from .render.simulation_backend import SimImageStim as ImageStim
-from .render.simulation_backend import SimRect as Rect
-from .render.simulation_backend import SimTextStim as TextStim
-
-
-__all__ = [
-    "ImageStim",
-    "Rect",
-    "TextStim",
-]
+__all__ = ["ImageStim", "Rect", "TextStim", "Clock", "Window"]
 
 
 class Env:
@@ -31,31 +24,6 @@ class Discrete:
 
 class Surface:
     pass
-
-
-class Clock(ClockProtocol):
-    def __init__(self):
-        self.time = 0
-
-    def getTime(self):
-        return self.time
-
-    def reset(self):
-        pass
-
-
-class Window:
-    def __init__(self, **kwargs):
-        pass
-
-    def flip(self):
-        pass
-
-    def close(self):
-        pass
-
-    def callOnFlip(self, function: Callable, *args, **kwargs):
-        pass
 
 
 class TextBox2(SimBaseStim):
