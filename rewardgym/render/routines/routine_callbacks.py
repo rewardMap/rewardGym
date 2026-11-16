@@ -1,4 +1,4 @@
-from ...environments.base_env import ActionLayout
+from ...environments import ActionLayout
 from ..contexts import StepContext
 
 
