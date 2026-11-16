@@ -1,6 +1,13 @@
 from ...protocols import FactoryProtocol, WindowProtocol
 from ..contexts import EnvironmentContext
 from ..stimulus_definitions import Stimuli, StimulusDefinition
+from dataclasses import dataclass
+
+
+@dataclass
+class FlipValue:
+    timestamp: float | None = None
+    frame: float | None = None
 
 
 class RewardGymBackend:
