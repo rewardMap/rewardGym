@@ -61,7 +61,10 @@ def response_handling(
     if routine.duration is None:
         raise ValueError(f"{routine.duration} needs to be defined.")
 
-    if "simulation" in context.env_context.mode:
+    if (
+        "simulation" in context.env_context.mode
+        or "headless" in context.env_context.mode
+    ):
         env_action = context.previous_action
         response_time = context.reaction_time
         if response_time is not None and routine.duration is not None:
