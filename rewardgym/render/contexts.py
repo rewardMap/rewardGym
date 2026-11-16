@@ -40,8 +40,8 @@ class StepContext:
     location: Any
     previous_action: Any
     info: dict
-
     reaction_time: float | None = None
+    tracker: Any | None = None
 
     @property
     def win(self):

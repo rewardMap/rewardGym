@@ -15,6 +15,8 @@ from .routine_callbacks import (
     nfc_setup,
 )
 
+from ..backends.backend_base import FlipValue
+
 
 class PresentationSettings(TypedDict, total=False):
     duration_after: float | None
@@ -124,8 +126,9 @@ class ActionRoutine(BaseRoutine):
 
         self.draw_list = None
 
+        flip_value = FlipValue()
         if self.flip:
-            context.render.flip()
+            flip_value = context.render.flip()
 
         if self.presentation_settings["name_before"]:
             log_event(
@@ -140,6 +143,14 @@ class ActionRoutine(BaseRoutine):
 
         response = response_handling(
             self, context, response_window_onset=response_window_onset
+        )
+
+        context.tracker.add_event(
+            frame=flip_value.frame,
+            duration=self.duration,
+            action=response[0],
+            reaction_time=response[1],
+            name=self.rl_label,
         )
 
         if self.detect_too_early and too_early:
@@ -157,7 +168,7 @@ class ActionRoutine(BaseRoutine):
                 if self.stimuli[stim_name].opacity > 0:
                     self.stimuli[stim_name].draw()
 
-            context.render.flip()
+            flip_value = context.render.flip()
 
             context.render.wait(
                 logger=context.logger,
@@ -165,6 +176,11 @@ class ActionRoutine(BaseRoutine):
                 time=self.presentation_settings["duration_after"],
                 start=after_onset,
                 poll_keys=self.poll_keys,
+            )
+            context.tracker.add_event(
+                frame=flip_value.frame,
+                duration=self.duration,
+                name=self.presentation_settings["rl_label_after"],
             )
 
             log_event(

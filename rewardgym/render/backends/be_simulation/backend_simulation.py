@@ -33,8 +33,8 @@ class SimulationDisplay(DisplayProtocol):
     def __init__(self, **kwargs):
         pass
 
-    def flip(self) -> Any:
-        return None
+    def flip(self) -> FlipValue:
+        return FlipValue()
 
     def schedule_on_flip(self, callback, *args, **kwargs) -> Any:
         return None

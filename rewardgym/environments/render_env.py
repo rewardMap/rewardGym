@@ -114,6 +114,7 @@ class RenderEnv(BaseEnv):
             previous_action=self.previous_action,
             reaction_time=self.reaction_time,
             info=info,
+            tracker=self.tracker,
         )
 
         if not self.is_setup:
@@ -145,6 +146,7 @@ class RenderEnv(BaseEnv):
             previous_action=action,
             reaction_time=reaction_time,
             info=info,
+            tracker=self.tracker,
         )
 
         out = info["render"][-1].present(action_step)

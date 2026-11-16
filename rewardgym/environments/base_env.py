@@ -9,7 +9,7 @@ except ModuleNotFoundError:
 import numpy as np
 
 from ..utils import check_random_state
-from .env_parts import ActionLayout
+from .env_parts import ActionLayout, EnviromentTracker
 
 
 class BaseEnv(Env):
@@ -96,6 +96,7 @@ class BaseEnv(Env):
         self.clock = None
         self.reward = None
         self.name = name
+        self.tracker = EnviromentTracker()
 
     def _get_obs(self) -> int:
         """
@@ -177,7 +178,9 @@ class BaseEnv(Env):
             self.condition = None
 
         self.reward = 0
+
         observation = self._get_obs()
+        self.tracker.add_step(obs=observation)
 
         info = self._get_info()
         if self.render_mode in self.metadata["render_modes"]:
@@ -251,11 +254,14 @@ class BaseEnv(Env):
             self.reward = 0
 
         observation = self._get_obs()
+        self.tracker.finalize_step(reward=self.reward, next_obs=observation)
+        self.tracker.add_step(obs=observation)
+
         info = self._get_info()
 
         self.cumulative_reward += self.reward
 
-        if self.render_mode in ["psychopy", "pygame", "simulation"]:
+        if self.render_mode in self.metadata["render_modes"]:
             self._render_frame(info)
 
         return observation, self.reward, terminated, False, info

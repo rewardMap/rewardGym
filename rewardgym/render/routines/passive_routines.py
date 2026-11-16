@@ -19,6 +19,7 @@ from .routine_callbacks import (
     conditioned_text,
     reward_update_routine,
 )
+from ..backends.backend_base import FlipValue
 
 
 class FeedbackStimuli(TypedDict, total=False):
@@ -84,8 +85,9 @@ class DynamicRoutine(BaseRoutine):
             if self.stimuli[stim_name].opacity > 0:
                 self.stimuli[stim_name].draw()
 
+        flip_value = FlipValue()
         if self.flip:
-            context.render.flip()
+            flip_value = context.render.flip()
 
         context.render.wait(
             logger=context.logger,
@@ -93,6 +95,12 @@ class DynamicRoutine(BaseRoutine):
             time=self.duration,
             start=stim_onset,
             poll_keys=self.poll_keys,
+        )
+
+        context.tracker.add_event(
+            frame=flip_value.frame,
+            duration=self.duration,
+            name=self.rl_label,
         )
 
         log_event(self, logger=context.logger, onset=stim_onset)

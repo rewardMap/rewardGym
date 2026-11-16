@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from collections import defaultdict
+from typing import Any
 
 
 @dataclass
@@ -67,3 +68,69 @@ class ActionLayout:
     @property
     def avail_actions(self):
         return [i for i in self.available_graph_actions if i is not None]
+
+
+@dataclass
+class Step:
+    """
+    Dataclass to keep track of steps in the environment - and addition to
+    info for now.
+    """
+
+    events: list | None = None
+    obs: Any | None = None
+    next_obs: Any | None = None
+    reward: Any | None = None
+    action: Any | None = None
+    reaction_time: Any | None = None
+
+    def __post_init__(self):
+        if self.events is None:
+            self.events = []
+
+
+@dataclass
+class Event:
+    """
+    Dataclass to keep track of a single event
+    """
+
+    frame: Any | None = None
+    duration: Any | None = None
+    reaction_time: float | None = None
+    action: Any | None = None
+    name: str | None = None
+
+
+class EnviromentTracker:
+    def __init__(self):
+        self.steps = []
+
+    def add_step(self, obs: Any | None = None):
+        self.steps.append(Step(obs=obs))
+
+    def add_event(
+        self, action=None, frame=None, reaction_time=None, duration=None, name=None
+    ):
+        current_step = self.steps[-1]
+        event = Event(
+            frame=frame,
+            action=action,
+            reaction_time=reaction_time,
+            duration=duration,
+            name=name,
+        )
+        current_step.events.append(event)
+
+        if event.action is not None and current_step.action is None:
+            current_step.action = event.action
+
+        if event.reaction_time is not None and current_step.reaction_time is None:
+            current_step.action = event.action
+
+    def finalize_step(
+        self, reward: int | float or None = None, next_obs: Any | None = None
+    ):
+        current_step = self.steps[-1]
+        current_step.reward = reward
+        current_step.next_obs = next_obs
