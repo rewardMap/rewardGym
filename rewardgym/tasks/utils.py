@@ -6,6 +6,7 @@ import numpy as np
 
 from ..environments import BaseEnv, RenderEnv
 from .task_loader import get_task
+from ..render.backends import get_backends
 
 
 def get_env(
@@ -27,6 +28,8 @@ def get_env(
         random_state=random_state,
     )
 
+    backends = get_backends()
+
     if "meta" in info_dict and "reduced_actions" in info_dict["meta"]:
         reduced_actions = info_dict["meta"]["reduced_actions"]
 
@@ -40,11 +43,7 @@ def get_env(
             name=task_name,
             reduced_actions=reduced_actions,
         )
-    elif (
-        render_backend == "psychopy"
-        or render_backend == "simulation"
-        or render_backend == "pygame"
-    ):
+    elif render_backend in backends:
         env = RenderEnv(
             environment_graph=environment_graph,
             reward_locations=reward_structure,
@@ -55,7 +54,7 @@ def get_env(
             reduced_actions=reduced_actions,
         )
     else:
-        raise ValueError("Backend Issues")
+        raise ValueError("Backend is not defined!")
 
     return env
 
