@@ -1,5 +1,3 @@
-from .backend_pygame import PygameBackend
+from .backend_pygame import PygameBackend, PygameBackendHeadless
 
-__all__ = [
-    "PygameBackend",
-]
+__all__ = ["PygameBackend", "PygameBackendHeadless"]

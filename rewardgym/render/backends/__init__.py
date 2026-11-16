@@ -22,6 +22,14 @@ def get_backends():
     except ImportError:
         pass
 
+    try:
+        from .be_pygame import PygameBackendHeadless
+
+        registry["pygame-headless"] = PygameBackendHeadless
+
+    except ImportError:
+        pass
+
     from .be_simulation import SimulationBackend
 
     registry["simulation"] = SimulationBackend

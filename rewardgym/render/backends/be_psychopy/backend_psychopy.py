@@ -8,7 +8,7 @@ from ....protocols import DisplayProtocol, KeyboardProtocol
 from ...contexts import EnvironmentContext
 from ...input_handling import BaseInputHandler
 from ...timing import wait
-from ..backend_base import RewardGymBackend
+from ..backend_base import RewardGymBackend, FlipValue
 from .factory_psychopy import PsychoPyFactory
 
 
@@ -45,8 +45,8 @@ class PsychoPyDisplay(DisplayProtocol):
     def __init__(self, *, window, **kwargs):
         self.win = window
 
-    def flip(self) -> Any:
-        return self.win.flip()
+    def flip(self) -> FlipValue:
+        return FlipValue(timestamp=self.win.flip())
 
     def schedule_on_flip(self, callback, *args, **kwargs) -> Any:
         return self.win.callOnFlip(callable, *args, **kwargs)

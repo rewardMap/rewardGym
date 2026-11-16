@@ -6,7 +6,7 @@ from ....protocols import ClockProtocol, DisplayProtocol
 from ...contexts import EnvironmentContext
 from ...input_handling import BaseInputHandler
 from ...timing import simulation_wait
-from ..backend_base import RewardGymBackend
+from ..backend_base import RewardGymBackend, FlipValue
 from .factory_simulation import SimulationFactory
 
 
@@ -63,8 +63,8 @@ class Window:
     def __init__(self, **kwargs):
         pass
 
-    def flip(self):
-        pass
+    def flip(self) -> FlipValue:
+        return FlipValue()
 
     def close(self):
         pass
