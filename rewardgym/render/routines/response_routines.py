@@ -176,7 +176,6 @@ class ActionRoutine(BaseRoutine):
                     "rl_label": self.presentation_settings["rl_label_after"],
                 },
             )
-        print(response)
 
         self.draw_list = None
 
