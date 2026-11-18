@@ -5,8 +5,8 @@ from typing import Any, Literal
 import numpy as np
 
 from ..environments import BaseEnv, RenderEnv
-from .task_loader import get_task
 from ..render.backends import get_backends
+from .task_loader import get_task
 
 
 def get_env(

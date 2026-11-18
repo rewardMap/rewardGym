@@ -1,16 +1,16 @@
 import time
 from collections import deque
 
+import numpy as np
 import pygame
 
 from ....logging import ExperimentLogger
 from ....protocols import DisplayProtocol
 from ...input_handling import BaseInputHandler
-from ...timing import wait, simulation_wait
+from ...timing import simulation_wait, wait
+from ..backend_base import EnvironmentContext, FlipValue, RewardGymBackend
 from ..be_simulation.backend_simulation import SimulationInput
-from ..backend_base import EnvironmentContext, RewardGymBackend, FlipValue
 from .factory_pygame import PygameFactory
-import numpy as np
 
 
 class PygameBackend(RewardGymBackend):

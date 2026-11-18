@@ -6,7 +6,7 @@ from ....protocols import ClockProtocol, DisplayProtocol
 from ...contexts import EnvironmentContext
 from ...input_handling import BaseInputHandler
 from ...timing import simulation_wait
-from ..backend_base import RewardGymBackend, FlipValue
+from ..backend_base import FlipValue, RewardGymBackend
 from .factory_simulation import SimulationFactory
 
 

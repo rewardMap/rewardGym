@@ -1,6 +1,7 @@
 import warnings
 from typing import TypedDict
 
+from ..backends.backend_base import FlipValue
 from ..contexts import StepContext
 from ..events import log_event
 from ..stimuli import (
@@ -19,7 +20,6 @@ from .routine_callbacks import (
     conditioned_text,
     reward_update_routine,
 )
-from ..backends.backend_base import FlipValue
 
 
 class FeedbackStimuli(TypedDict, total=False):

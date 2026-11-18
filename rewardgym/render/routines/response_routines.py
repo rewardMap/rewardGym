@@ -1,5 +1,6 @@
 from typing import Any, TypedDict
 
+from ..backends.backend_base import FlipValue
 from ..contexts import StepContext
 from ..events import log_event, response_handling
 from ..stimulus_definitions import (
@@ -14,8 +15,6 @@ from .routine_callbacks import (
     nfc_selection,
     nfc_setup,
 )
-
-from ..backends.backend_base import FlipValue
 
 
 class PresentationSettings(TypedDict, total=False):
