@@ -3,9 +3,8 @@ import matplotlib.pyplot as plt
 import networkx as nx
 from networkx import NetworkXException
 
-from ..utils import get_starting_nodes, get_stripped_graph
 from ..render import EnvironmentContext, StepContext
-
+from ..utils import get_starting_nodes, get_stripped_graph
 from .env_parts import EnviromentTracker, Event
 
 
