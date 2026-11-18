@@ -12,7 +12,7 @@ def test_initialization():
 
 
 def test_reset():
-    from rewardgym.environments.base_env import ActionLayout
+    from rewardgym.environments import ActionLayout
 
     environment_graph = {0: [1, 2], 1: [0], 2: [0]}
     reward_locations = {1: lambda: 1, 2: lambda: 2}

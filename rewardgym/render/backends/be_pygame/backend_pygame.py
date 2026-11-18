@@ -1,13 +1,15 @@
 import time
 from collections import deque
 
+import numpy as np
 import pygame
 
 from ....logging import ExperimentLogger
 from ....protocols import DisplayProtocol
 from ...input_handling import BaseInputHandler
-from ...timing import wait
-from ..backend_base import EnvironmentContext, RewardGymBackend
+from ...timing import simulation_wait, wait
+from ..backend_base import EnvironmentContext, FlipValue, RewardGymBackend
+from ..be_simulation.backend_simulation import SimulationInput
 from .factory_pygame import PygameFactory
 
 
@@ -32,12 +34,34 @@ class PygameBackend(RewardGymBackend):
         context.stimuli = PygameFactory()
 
 
+class PygameBackendHeadless(RewardGymBackend):
+    mode = "pygame-headless"
+
+    def setup(self, context: EnvironmentContext):
+        if context.window is None:
+            context.window = PygameWindow(capture_frames=True)
+
+        if context.input_handler is None:
+            context.input_handler = SimulationInput()
+
+        if context.logger is None:
+            from ....stubs import Clock
+
+            context.logger = ExperimentLogger(file_name=None, clock=Clock())
+
+        if context.render is None:
+            context.render = PygameDisplayHeadless(context.window)
+
+        context.stimuli = PygameFactory()
+
+
 class PygameDisplay(DisplayProtocol):
     def __init__(self, window, **kwargs):
         self.win = window
 
-    def flip(self):
-        self.win.flip()
+    def flip(self) -> FlipValue:
+        frame = self.win.flip()
+        return FlipValue(frame=frame)
 
     def schedule_on_flip(
         self,
@@ -58,12 +82,18 @@ class PygameDisplay(DisplayProtocol):
         )
 
 
+class PygameDisplayHeadless(PygameDisplay):
+    def wait(self, **kwargs):
+        return simulation_wait(**kwargs)
+
+
 class PygameWindow:
     def __init__(
         self,
         size=(1200, 800),
         color=(128, 128, 128),
         caption="Experiment",
+        capture_frames=False,
     ):
         pygame.init()
         pygame.font.init()
@@ -80,6 +110,7 @@ class PygameWindow:
         self._draw_queue = []
         self._auto_draw = []
         self._flip_callbacks = deque()
+        self.capture_frames = capture_frames
 
     def register_draw(self, stim):
         self._draw_queue.append(stim)
@@ -107,11 +138,19 @@ class PygameWindow:
 
         self._draw_queue.clear()
 
+        image = None
+
+        if self.capture_frames:
+            image = pygame.surfarray.array3d(self.screen)
+            image = np.transpose(image, (1, 0, 2))
+
         pygame.display.flip()
 
         while self._flip_callbacks:
             callback, args, kwargs = self._flip_callbacks.popleft()
             callback(*args, **kwargs)
+
+        return image
 
     def close(self):
         pygame.display.quit()

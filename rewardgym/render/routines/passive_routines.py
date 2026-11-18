@@ -1,6 +1,7 @@
 import warnings
 from typing import TypedDict
 
+from ..backends.backend_base import FlipValue
 from ..contexts import StepContext
 from ..events import log_event
 from ..stimuli import (
@@ -84,8 +85,9 @@ class DynamicRoutine(BaseRoutine):
             if self.stimuli[stim_name].opacity > 0:
                 self.stimuli[stim_name].draw()
 
+        flip_value = FlipValue()
         if self.flip:
-            context.render.flip()
+            flip_value = context.render.flip()
 
         context.render.wait(
             logger=context.logger,
@@ -93,6 +95,12 @@ class DynamicRoutine(BaseRoutine):
             time=self.duration,
             start=stim_onset,
             poll_keys=self.poll_keys,
+        )
+
+        context.tracker.add_event(
+            frame=flip_value.frame,
+            duration=self.duration,
+            name=self.rl_label,
         )
 
         log_event(self, logger=context.logger, onset=stim_onset)
