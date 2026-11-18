@@ -4,6 +4,9 @@ import networkx as nx
 from networkx import NetworkXException
 
 from ..utils import get_starting_nodes, get_stripped_graph
+from ..render import EnvironmentContext, StepContext
+
+from .env_parts import EnviromentTracker, Event
 
 
 def plot_env_graph(env):
@@ -51,3 +54,47 @@ def plot_env_graph(env):
     misc_patch = mpatches.Patch(color="tab:green", label="other")
 
     plt.legend(handles=[rew_patch, start_patch, misc_patch])
+
+
+def preview_routine(routine, mode="simulation", step_context=None) -> list[Event]:
+    """
+    Small functions, to return the values of a routine. Might be used
+    for documentation and later testing etc. Set's up a default environment
+    context and step_context can be populated.
+
+    Parameters
+    ----------
+    routine : _type_
+        _description_
+    mode : str, optional
+        _description_, by default "simulation"
+    step_context : _type_, optional
+        _description_, by default None
+
+    Returns
+    -------
+    list[Event]
+        Events that were triggered in that routine.
+    """
+    context_default = {
+        "condition": None,
+        "total_reward": None,
+        "reward": None,
+        "location": 0,
+        "previous_action": None,
+        "reaction_time": None,
+        "info": None,
+    }
+
+    if step_context is not None:
+        context_default.update(step_context)
+
+    tracker = EnviromentTracker()
+    ec = EnvironmentContext(mode=mode)
+    st = StepContext(env_context=ec, tracker=tracker, **context_default)
+
+    tracker.add_step()
+    routine.setup(ec)
+    routine.present(st)
+
+    return tracker.steps[-1]
