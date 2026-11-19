@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Literal
+from typing import Any
 
 import numpy as np
 
@@ -10,15 +10,8 @@ from .task_loader import get_task
 
 
 def get_env(
-    task_name: Literal[
-        "hcp",
-        "mid",
-        "two-step",
-        "risk-sensitive",
-        "posner",
-        "gonogo",
-    ],
-    render_backend: Literal["pygame", "psychopy", "simulation"] | None = None,
+    task_name: str,
+    render_backend: str | None = None,
     random_state: int | np.random.Generator = 1000,
     **kwargs,
 ):
@@ -29,6 +22,7 @@ def get_env(
     )
 
     backends = get_backends()
+    reduced_actions = None
 
     if "meta" in info_dict and "reduced_actions" in info_dict["meta"]:
         reduced_actions = info_dict["meta"]["reduced_actions"]
