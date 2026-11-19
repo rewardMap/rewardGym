@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import warnings
+
 import numpy as np
 
 from ..tasks import get_configs
@@ -9,8 +11,6 @@ from .plugins import (
     simple_rt_simulation,
 )
 from .psychopy_utils import apply_plugins, update_trials
-
-import warnings
 
 
 def run_task(
