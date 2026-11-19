@@ -1,6 +1,7 @@
 from collections import defaultdict
 from dataclasses import dataclass
 from typing import Any
+from ..render.contexts import StepContext
 
 
 @dataclass
@@ -134,3 +135,9 @@ class EnviromentTracker:
         current_step = self.steps[-1]
         current_step.reward = reward
         current_step.next_obs = next_obs
+
+
+@dataclass
+class ResponsePending:
+    index: int
+    step: StepContext

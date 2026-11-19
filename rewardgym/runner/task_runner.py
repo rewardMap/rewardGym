@@ -108,7 +108,7 @@ def run_task(
         )
 
         while not done:
-            if env.pending_index is not None:
+            if env.pending is not None:
                 if agent is not None:
                     if hasattr(agent, "get_rt_action") and callable(
                         agent.get_rt_action
@@ -120,9 +120,9 @@ def run_task(
                         action, rt = simple_rt_simulation(agent, env, obs, info)
                 else:
                     action = np.random.choice(
-                        env.pending_step.info["action-layout"].avail_actions
+                        env.pending.step.info["action-layout"].avail_actions
                     )
-                    rt = env.pending_step.info["render"][env.pending_index].duration / 2
+                    rt = env.pending.step.info["render"][env.pending.index].duration / 2
 
                 env.simulate_response(action, rt)
 
