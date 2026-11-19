@@ -5,8 +5,8 @@ from typing import Any
 from ....logging import ExperimentLogger
 from ....protocols import ClockProtocol, DisplayProtocol
 from ...contexts import EnvironmentContext
-from ...input_handling import BaseInputHandler
 from ...events import wait
+from ...input_handling import BaseInputHandler
 from ..backend_base import FlipValue, RewardGymBackend
 from .factory_simulation import SimulationFactory
 

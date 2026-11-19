@@ -6,8 +6,8 @@ import pygame
 
 from ....logging import ExperimentLogger
 from ....protocols import DisplayProtocol
-from ...input_handling import BaseInputHandler
 from ...events import wait
+from ...input_handling import BaseInputHandler
 from ..backend_base import EnvironmentContext, FlipValue, RewardGymBackend
 from ..be_simulation.backend_simulation import SimulationInput
 from .factory_pygame import PygameFactory

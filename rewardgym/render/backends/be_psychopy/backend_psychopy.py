@@ -6,8 +6,8 @@ from psychopy.visual import Window
 from ....logging import ExperimentLogger
 from ....protocols import DisplayProtocol, KeyboardProtocol
 from ...contexts import EnvironmentContext
-from ...input_handling import BaseInputHandler
 from ...events import wait
+from ...input_handling import BaseInputHandler
 from ..backend_base import FlipValue, RewardGymBackend
 from .factory_psychopy import PsychoPyFactory
 

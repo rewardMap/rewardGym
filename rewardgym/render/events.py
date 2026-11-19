@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import Any
 
-from ..protocols import LoggerProtocol, InputProtocol
+from ..protocols import InputProtocol, LoggerProtocol
 from .contexts import StepContext
 
 
