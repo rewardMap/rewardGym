@@ -7,7 +7,7 @@ import pygame
 from ....logging import ExperimentLogger
 from ....protocols import DisplayProtocol
 from ...input_handling import BaseInputHandler
-from ...timing import simulation_wait, wait
+from ...events import wait
 from ..backend_base import EnvironmentContext, FlipValue, RewardGymBackend
 from ..be_simulation.backend_simulation import SimulationInput
 from .factory_pygame import PygameFactory
@@ -85,7 +85,7 @@ class PygameDisplay(DisplayProtocol):
 
 class PygameDisplayHeadless(PygameDisplay):
     def wait(self, **kwargs):
-        return simulation_wait(**kwargs)
+        return wait(**kwargs)
 
 
 class PygameWindow:

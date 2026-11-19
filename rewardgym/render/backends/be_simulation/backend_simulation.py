@@ -6,7 +6,7 @@ from ....logging import ExperimentLogger
 from ....protocols import ClockProtocol, DisplayProtocol
 from ...contexts import EnvironmentContext
 from ...input_handling import BaseInputHandler
-from ...timing import simulation_wait
+from ...events import wait
 from ..backend_base import FlipValue, RewardGymBackend
 from .factory_simulation import SimulationFactory
 
@@ -42,7 +42,7 @@ class SimulationDisplay(DisplayProtocol):
         return None
 
     def wait(self, **kwargs) -> Any:
-        return simulation_wait(**kwargs)
+        return wait(**kwargs)
 
 
 @dataclass(order=True)
@@ -90,6 +90,9 @@ class Clock(ClockProtocol):
 
     def reset(self):
         pass
+
+    def advance_time(self, dt: float):
+        self.time += dt
 
 
 class Window:

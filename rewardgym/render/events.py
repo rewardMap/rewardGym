@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import Any
 
-from ..protocols import LoggerProtocol
+from ..protocols import LoggerProtocol, InputProtocol
 from .contexts import StepContext
 
 
@@ -61,22 +61,14 @@ def response_handling(
     if routine.duration is None:
         raise ValueError(f"{routine.duration} needs to be defined.")
 
-    if (
-        "simulation" in context.env_context.mode
-        or "headless" in context.env_context.mode
-    ):
-        if not hasattr(input_handler, "next_response_time"):
-            raise ValueError(
-                "Simulation and headless modes should use the appropriate input handler!"
-            )
-
+    if hasattr(logger.clock, "advance_time"):
         advance = input_handler.next_response_time()
 
         if advance is None:
             advance = routine.duration
 
         advance = min(advance, routine.duration)
-        logger.clock.time += advance
+        logger.clock.advance_time(advance)
 
     while polling_state == PollStatus.WAITING:
         response = input_handler.key_strokes(
@@ -135,3 +127,42 @@ def response_handling(
             return (None, None)
 
     return action, remaining
+
+
+def wait(
+    logger,
+    time: float | None,
+    start: float | None = None,
+    poll_keys: bool = True,
+    input_handler: InputProtocol | None = None,
+):
+    """
+    Wait for a given time.
+
+
+    Parameters
+    ----------
+    time : float
+        Time to wait, in seconds.
+    start : float, optional
+        Specify a different time, than the current one of the Logger, by default None
+    """
+    if poll_keys and input_handler is None:
+        raise ValueError("If poll_keys is True, an InputHandler has to be provided!")
+
+    if time is None:
+        return
+
+    if start is None:
+        start = logger.get_time()
+
+    t_wait = start + time
+
+    if hasattr(logger.clock, "advance_time"):
+        logger.clock.advance_time(time)
+
+    # Trying to avoid unnecessary checks
+    while t_wait > logger.get_time():
+        if poll_keys and input_handler:
+            keys = input_handler.get_keys()
+            input_handler.interpret_keys(keys, key_list=None, logger=logger)

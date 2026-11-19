@@ -7,7 +7,7 @@ from ....logging import ExperimentLogger
 from ....protocols import DisplayProtocol, KeyboardProtocol
 from ...contexts import EnvironmentContext
 from ...input_handling import BaseInputHandler
-from ...timing import wait
+from ...events import wait
 from ..backend_base import FlipValue, RewardGymBackend
 from .factory_psychopy import PsychoPyFactory
 
