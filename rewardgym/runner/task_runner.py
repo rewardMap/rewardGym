@@ -122,7 +122,7 @@ def run_task(
                     action = np.random.choice(
                         env.pending.step.info["action-layout"].avail_actions
                     )
-                    rt = env.pending.step.info["render"][env.pending.index].duration / 2
+                    rt = env.pending_routine.duration / 2
 
                 env.simulate_response(action, rt)
 

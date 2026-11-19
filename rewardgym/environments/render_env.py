@@ -204,7 +204,7 @@ class RenderEnv(BaseEnv):
         if self.pending is None:
             return False
 
-        routine = self.pending.step.info["render"][self.pending.index]
+        routine = self.pending_routine
 
         if rt > routine.duration:
             return False
@@ -216,3 +216,10 @@ class RenderEnv(BaseEnv):
             key = layout.graph_to_key[action][0]
             self.context.input_handler.add_response(key, rt)
             return True
+
+    @property
+    def pending_routine(self):
+        if self.pending is None:
+            return None
+
+        return self.pending.step.info["render"][self.pending.index]
