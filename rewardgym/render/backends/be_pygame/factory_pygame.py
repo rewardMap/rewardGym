@@ -4,7 +4,7 @@ from ....protocols import FactoryProtocol
 class PygameFactory(FactoryProtocol):
     def __init__(self):
         super().__init__()
-        from .stimuli_pygame import PygameImageStim, PygameTextStim, PygameRect
+        from .stimuli_pygame import PygameImageStim, PygameRect, PygameTextStim
 
         self.register("image", PygameImageStim)
         self.register("text", PygameTextStim)

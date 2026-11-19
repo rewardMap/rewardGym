@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 
 from ...protocols import FactoryProtocol, WindowProtocol
+from ...validation import UnknownStimulusError
 from ..contexts import EnvironmentContext
 from ..stimulus_definitions import StimulusDefinition
-from ...validation import UnknownStimulusError
 
 
 @dataclass
