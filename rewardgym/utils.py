@@ -327,3 +327,14 @@ def get_stripped_graph(graph: dict):
         stripped_graph[nd] = edges
 
     return stripped_graph
+
+
+class NameCounter:
+    def __init__(self):
+        self.counter = 0
+
+    @property
+    def name(self):
+        out = f"{self.counter}"
+        self.counter += 1
+        return out
