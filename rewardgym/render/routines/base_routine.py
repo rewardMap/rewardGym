@@ -22,9 +22,11 @@ class BaseRoutine(ABC):
         self.rl_label = rl_label
         self.is_setup = False
         self.flip = flip
+        self.requires_response = False
         self.returns_action = False
         self.poll_keys = poll_keys
         self.draw_list = None
+        self.stimulus_definitions = stimulus_definitions
 
     def present(self, context: StepContext):
         """Public method that handles context-aware presentation"""
