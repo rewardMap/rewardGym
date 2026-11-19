@@ -41,13 +41,14 @@ class PygameBackendHeadless(RewardGymBackend):
         if context.window is None:
             context.window = PygameWindow(capture_frames=True)
 
-        if context.input_handler is None:
-            context.input_handler = SimulationInput()
-
         if context.logger is None:
             from ....stubs import Clock
 
-            context.logger = ExperimentLogger(file_name=None, clock=Clock())
+            clock = Clock()
+            context.logger = ExperimentLogger(file_name=None, clock=clock)
+
+        if context.input_handler is None:
+            context.input_handler = SimulationInput(clock=context.logger.clock)
 
         if context.render is None:
             context.render = PygameDisplayHeadless(context.window)
