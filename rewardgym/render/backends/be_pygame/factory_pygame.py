@@ -2,17 +2,10 @@ from ....protocols import FactoryProtocol
 
 
 class PygameFactory(FactoryProtocol):
-    def image(self, **kwargs):
-        from .stimuli_pygame import PygameImageStim
+    def __init__(self):
+        super().__init__()
+        from .stimuli_pygame import PygameImageStim, PygameTextStim, PygameRect
 
-        return PygameImageStim(**kwargs)
-
-    def rectangle(self, **kwargs):
-        from .stimuli_pygame import PygameRect
-
-        return PygameRect(**kwargs)
-
-    def text(self, **kwargs):
-        from .stimuli_pygame import PygameTextStim
-
-        return PygameTextStim(**kwargs)
+        self.register("image", PygameImageStim)
+        self.register("text", PygameTextStim)
+        self.register("rectangle", PygameRect)
