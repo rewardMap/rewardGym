@@ -43,6 +43,7 @@ class TextDefinition(StimulusDefinition):
     font: str | None = None
     alignText: str | None = None
     anchorHoriz: str | None = None
+    ori: float | None = None
     setup_protocol: ClassVar[Stimuli] = Stimuli.TEXT
 
 
