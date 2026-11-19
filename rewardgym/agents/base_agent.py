@@ -156,6 +156,8 @@ class ValenceQAgent:
         temporal_difference = (
             reward + self.discount_factor * future_q_value - self.q_values[obs][action]
         )
+        q_update = 0
+
         if temporal_difference > 0:
             q_update = self.lr_pos * temporal_difference
         elif temporal_difference <= 0:
@@ -167,9 +169,7 @@ class ValenceQAgent:
         return self.q_values
 
     def reset(self):
-        self.q_values = (
-            np.zeros((self.state_space, self.action_space)) + 1 / self.action_space
-        )
+        self.q_values = np.zeros((self.n_states, self.n_actions)) + 1 / self.n_actions
         self.training_error = []
 
 
@@ -299,7 +299,7 @@ class ValenceQAgentEligibility(ValenceQAgent):
             seed=seed,
         )
 
-        self.eligibility_traces = np.zeros((self.state_space, self.action_space))
+        self.eligibility_traces = np.zeros((self.n_states, self.n_actions))
         self.eligibility_decay = eligibility_decay
         self.reset_traces = reset_traces
 
@@ -342,7 +342,7 @@ class ValenceQAgentEligibility(ValenceQAgent):
 
     def reset(self):
         super().reset()
-        self.eligibility_traces = np.zeros((self.state_space, self.action_space))
+        self.eligibility_traces = np.zeros((self.n_states, self.n_actions))
 
 
 class QAgentEligibility(ValenceQAgentEligibility):
