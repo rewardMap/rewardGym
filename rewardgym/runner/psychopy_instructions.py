@@ -7,7 +7,7 @@ except ImportError:
     from ..stubs import TextBox2, waitKeys
 
 from .. import ASSETS_PATH
-from ..tasks.task_loader import get_instructions_psychopy
+from ..tasks.task_loader import get_instructions
 
 
 def show_instructions(task, win, key_map=None):
@@ -35,7 +35,7 @@ def show_instructions(task, win, key_map=None):
         )
         end.draw()
 
-    instructions_list, instructions_dict = get_instructions_psychopy(task)
+    instructions_list, instructions_dict = get_instructions(task)
     instructions.update(instructions_dict)
 
     if instructions_list:

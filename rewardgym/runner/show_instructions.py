@@ -4,7 +4,7 @@ from .. import ASSETS_PATH
 from ..render.contexts import EnvironmentContext
 from ..render.routines.passive_routines import InstructionRoutine
 from ..render.stimulus_definitions import TextDefinition
-from ..tasks.task_loader import get_instructions_psychopy
+from ..tasks.task_loader import get_instructions
 
 
 def show_instructions(task, win, mode="pygame", key_map=None):
@@ -30,7 +30,7 @@ def show_instructions(task, win, mode="pygame", key_map=None):
         ],
     )
 
-    instructions_list, instructions_dict = get_instructions_psychopy(task)
+    instructions_list, instructions_dict = get_instructions(task)
     instructions.update(instructions_dict)
 
     if instructions_list:
