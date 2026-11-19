@@ -148,45 +148,36 @@ def _discover_external_plugins(task_folder: str | Path) -> dict:
     return task_registry
 
 
-def get_task(task_name, *args, **kwargs):
+def _get_registry_function(task_name: str, function_name: str):
     from .. import _task_registry
 
     if task_name not in _task_registry:
         raise ValueError(f"Task '{task_name}' not registered.")
-    return _task_registry[task_name]["get_task"](*args, **kwargs)
+
+    registry_func = _task_registry[task_name].get(function_name, None)
+
+    if registry_func is None:
+        raise NotImplementedError(f"{function_name} not implemented for {task_name}")
+
+    return registry_func
+
+
+def get_task(task_name, *args, **kwargs):
+    return _get_registry_function(task_name=task_name, function_name="get_task")(
+        *args, **kwargs
+    )
 
 
 def get_configs(task_name):
-    from .. import _task_registry
-
-    if task_name not in _task_registry:
-        raise ValueError(f"Task '{task_name}' not registered.")
-    get_configs_func = _task_registry[task_name]["get_configs"]
-    if get_configs_func is None:
-        raise NotImplementedError(f"get_configs not implemented for {task_name}")
-    return get_configs_func
+    return _get_registry_function(task_name=task_name, function_name="get_configs")
 
 
-def get_render_info(task_name, **kwargs):
-    from .. import _task_registry
-
-    if task_name not in _task_registry:
-        raise ValueError(f"Task '{task_name}' not registered.")
-    get_configs_func = _task_registry[task_name]["get_render_info"]
-    if get_configs_func is None:
-        raise NotImplementedError(f"get_render_info not implemented for {task_name}")
-    return get_configs_func(**kwargs)
+def get_render_info(task_name):
+    return _get_registry_function(task_name=task_name, function_name="get_render_info")
 
 
-def get_instructions(task_name, **kwargs):
-    from .. import _task_registry
-
-    if task_name not in _task_registry:
-        raise ValueError(f"Task '{task_name}' not registered.")
-    get_configs_func = _task_registry[task_name]["get_instructions"]
-    if get_configs_func is None:
-        raise NotImplementedError(f"get_instructions not implemented for {task_name}")
-    return get_configs_func(**kwargs)
+def get_instructions(task_name):
+    return _get_registry_function(task_name=task_name, function_name="get_instructions")
 
 
 class TaskRegistry:
