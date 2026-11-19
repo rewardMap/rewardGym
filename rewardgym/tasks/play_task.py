@@ -47,7 +47,7 @@ def play_task(
             seed=10,
         )
 
-    env.setup(logger=simlog, window=None, expose_last_stim=backend == "simulation")
+    env.setup(logger=simlog, window=None)
 
     _df, _, _ = run_task(env, logger=simlog, agent=agent, random_state=10)
 

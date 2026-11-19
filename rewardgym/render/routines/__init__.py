@@ -5,10 +5,16 @@ from .passive_routines import (
     FeedBackRoutine,
     PresentationRoutine,
 )
-from .response_routines import ActionRoutine, ChangeSceneAfterAction, NAFCRoutine
+from .response_routines import (
+    ActionRoutine,
+    AutoAction,
+    ChangeSceneAfterAction,
+    NAFCRoutine,
+)
 
 __all__ = [
     "ActionRoutine",
+    "AutoAction",
     "BaseRoutine",
     "ChangeSceneAfterAction",
     "ConditionedTextCard",

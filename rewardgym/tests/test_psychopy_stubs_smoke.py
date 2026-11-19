@@ -22,7 +22,7 @@ def simulate_task(envname):
     task = exp_dict["task"]
 
     env = get_env(task, render_backend="simulation")
-    env.setup(logger=Logger, window=win, expose_last_stim=True)
+    env.setup(logger=Logger, window=win)
 
     run_task(env=env, win=win, logger=Logger)
 
