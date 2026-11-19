@@ -1,6 +1,6 @@
 import numpy as np
 
-from .psychopy_utils import update_psychopy_trials
+from .psychopy_utils import update_trials
 
 
 def draw_response_reminder(context, text_update, reminder_duration=1.0):
@@ -114,7 +114,7 @@ class TimeUpdateMid(PsyPyPlugin):
 class DelayUpdateHcp(PsyPyPlugin):
     def modify(self, *, settings, env, episode, **kwargs):
         settings["delay"][episode] = env.remainder
-        update_psychopy_trials(settings, env, episode)
+        update_trials(settings, env, episode)
 
 
 class StairCaseMid(PsyPyPlugin):

@@ -14,7 +14,7 @@ from .plugins import (
     draw_response_reminder,
     simple_rt_simulation,
 )
-from .psychopy_utils import apply_plugins, update_psychopy_trials
+from .psychopy_utils import apply_plugins, update_trials
 
 plugin_registry = {
     "mid": {
@@ -96,7 +96,7 @@ def run_task(
             actions=actions,
         )
 
-        update_psychopy_trials(settings, env, episode)
+        update_trials(settings, env, episode)
 
         logger.set_trial_time()
         logger.update_trial_info(

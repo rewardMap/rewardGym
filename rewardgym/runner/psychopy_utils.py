@@ -143,12 +143,12 @@ def pspy_set_up_experiment(outdir="data/"):
     )
 
 
-def update_psychopy_trials(settings, env, episode):
+def update_trials(settings, env, episode):
     # Update timings
     if settings["update"] is not None and len(settings["update"]) > 0:
         for k in settings["update"]:
             for jj in env.info_dict:
-                if "psychopy" in env.info_dict[jj]:
-                    for ii in env.info_dict[jj]["psychopy"]:
+                if "render" in env.info_dict[jj]:
+                    for ii in env.info_dict[jj]["render"]:
                         if ii.name == k:
                             ii.duration = settings[k][episode]
