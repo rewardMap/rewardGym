@@ -4,32 +4,13 @@ import numpy as np
 
 from ..tasks import get_configs
 from .plugins import (
-    AddRemainder,
-    DelayUpdateHcp,
-    MiscUpdateMid,
-    MiscUpdateTwoStep,
-    StairCaseMid,
-    TimeUpdateMid,
     break_point,
     draw_response_reminder,
     simple_rt_simulation,
 )
 from .psychopy_utils import apply_plugins, update_trials
 
-plugin_registry = {
-    "mid": {
-        "pre-trial": [MiscUpdateMid(), TimeUpdateMid()],
-        "post-trial": [AddRemainder(), StairCaseMid(0)],
-    },
-    "hcp": {
-        "post-action": [DelayUpdateHcp()],
-    },
-    "risk-sensitive": {"post-trial": [AddRemainder()]},
-    "two-step": {"pre-trial": [MiscUpdateTwoStep()], "post-trial": [AddRemainder()]},
-    "posner": {"post-trial": [AddRemainder()]},
-    "gonogo": {"post-trial": [AddRemainder()]},
-    "robotfactory": {"post-trial": [AddRemainder()]},
-}
+import warnings
 
 
 def run_task(
@@ -40,7 +21,6 @@ def run_task(
     random_state=111,
     agent=None,
     n_episodes=None,
-    plugins: dict = plugin_registry,
 ):
     if settings is None:
         settings = get_configs(env.name)(random_state)
@@ -49,9 +29,9 @@ def run_task(
         win = env.context.win
 
     try:
-        plugins = plugins[env.name]
+        plugins = env.info_dict["plugins"]
     except KeyError:
-        plugins = {}
+        warnings.warn("Plugins not in environment.")
 
     if n_episodes is None:
         n_episodes = settings["ntrials"]
