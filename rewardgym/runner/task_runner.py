@@ -41,14 +41,14 @@ def run_task(
     else:
         break_countdown_limit = 30
 
-    response_reminder = env.context.stimuli.text(
+    response_reminder = env.context.stimuli["text"](
         win=win,
         text="Please respond faster!",
         color=[1, 1, 1],
         pos=(0, 100),
         height=25,
     )
-    break_text = env.context.stimuli.text(
+    break_text = env.context.stimuli["text"](
         win=win,
         text="Have a break.",
         color=[1, 1, 1],

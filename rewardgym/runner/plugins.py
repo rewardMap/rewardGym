@@ -4,7 +4,7 @@ from .psychopy_utils import update_trials
 
 
 def draw_response_reminder(context, text_update, reminder_duration=1.0):
-    text_update.setAutoDraw(True)
+    text_update.draw()
     context.render.flip()
     reminder_onset = context.logger.get_time()
 
@@ -14,7 +14,6 @@ def draw_response_reminder(context, text_update, reminder_duration=1.0):
         start=reminder_onset,
         poll_keys=False,
     )
-    text_update.setAutoDraw(False)
     context.render.flip()
 
     context.logger.log_event(
