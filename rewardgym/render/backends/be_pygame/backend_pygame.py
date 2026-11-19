@@ -6,8 +6,8 @@ import pygame
 
 from ....logging import ExperimentLogger
 from ....protocols import DisplayProtocol
+from ...events import wait
 from ...input_handling import BaseInputHandler
-from ...timing import simulation_wait, wait
 from ..backend_base import EnvironmentContext, FlipValue, RewardGymBackend
 from ..be_simulation.backend_simulation import SimulationInput
 from .factory_pygame import PygameFactory
@@ -41,13 +41,14 @@ class PygameBackendHeadless(RewardGymBackend):
         if context.window is None:
             context.window = PygameWindow(capture_frames=True)
 
-        if context.input_handler is None:
-            context.input_handler = SimulationInput()
-
         if context.logger is None:
             from ....stubs import Clock
 
-            context.logger = ExperimentLogger(file_name=None, clock=Clock())
+            clock = Clock()
+            context.logger = ExperimentLogger(file_name=None, clock=clock)
+
+        if context.input_handler is None:
+            context.input_handler = SimulationInput(clock=context.logger.clock)
 
         if context.render is None:
             context.render = PygameDisplayHeadless(context.window)
@@ -84,7 +85,7 @@ class PygameDisplay(DisplayProtocol):
 
 class PygameDisplayHeadless(PygameDisplay):
     def wait(self, **kwargs):
-        return simulation_wait(**kwargs)
+        return wait(**kwargs)
 
 
 class PygameWindow:

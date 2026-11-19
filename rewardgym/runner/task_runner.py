@@ -77,7 +77,7 @@ def run_task(
     )
 
     actions = []
-
+    print(env.name)
     for episode in range(n_episodes):
         done = False
 
@@ -106,21 +106,32 @@ def run_task(
         obs, info = env.reset(
             0, condition=settings["condition_dict"][settings["condition"][episode]]
         )
-        if env.action is None and agent is None:
-            done = draw_response_reminder(
-                context=env.context, text_update=response_reminder
-            )
 
         while not done:
-            if agent is not None:
-                if hasattr(agent, "get_rt_action") and callable(agent.get_rt_action):
-                    key, rt = agent.get_rt_action(
-                        obs, info["action-layout"].avail_actions
-                    )
+            if env.pending is not None:
+                if agent is not None:
+                    if hasattr(agent, "get_rt_action") and callable(
+                        agent.get_rt_action
+                    ):
+                        action, rt = agent.get_rt_action(
+                            obs, info["action-layout"].avail_actions
+                        )
+                    else:
+                        action, rt = simple_rt_simulation(agent, env, obs, info)
                 else:
-                    key, rt = simple_rt_simulation(agent, env, obs, info)
+                    action = np.random.choice(
+                        env.pending.step.info["action-layout"].avail_actions
+                    )
+                    rt = env.pending_routine.duration / 2
 
-                env.simulate_action(info, key, rt)
+                env.simulate_response(action, rt)
+
+            env.get_pending_action()
+
+            if env.action is None and agent is None:
+                done = draw_response_reminder(
+                    context=env.context, text_update=response_reminder
+                )
 
             apply_plugins(
                 plugins=plugins,

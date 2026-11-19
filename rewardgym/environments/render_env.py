@@ -7,6 +7,7 @@ import numpy as np
 from ..protocols import InputProtocol, LoggerProtocol
 from ..render import EnvironmentContext, StepContext
 from .base_env import BaseEnv
+from .env_parts import ResponsePending
 
 
 class RenderEnv(BaseEnv):
@@ -58,13 +59,17 @@ class RenderEnv(BaseEnv):
         )
 
         self.is_setup = False
-        self.action = False
+        self.action = None
+        self.pending = None
+        self.reaction_time = None
+        self.previous_action = None
+        self.remainder = 0
+        self.context = None
 
     def setup(
         self,
         window=None,
         logger: LoggerProtocol | None = None,
-        expose_last_stim: bool = False,
         input_handler: InputProtocol | None = None,
     ):
         self.context = EnvironmentContext(
@@ -81,9 +86,6 @@ class RenderEnv(BaseEnv):
                     if not stim.is_setup:
                         stim.setup(self.context)
 
-        self.expose_last_stim = expose_last_stim
-        self.reaction_time = None
-
         self.is_setup = True
 
     def _render_frame(self, info: dict) -> None:
@@ -98,8 +100,7 @@ class RenderEnv(BaseEnv):
         """
         self.previous_action = self.action
         self.action = None
-
-        out = None
+        self.pending = None
 
         self.context.logger.update_trial_info(
             current_location=self.agent_location, avail_actions=info["avail-actions"]
@@ -125,47 +126,55 @@ class RenderEnv(BaseEnv):
         if "render" not in info:
             pass
         else:
-            for disp in info["render"]:
-                if disp.returns_action and not self.expose_last_stim:
+            for n, disp in enumerate(info["render"]):
+                if not disp.returns_action:
+                    disp.present(current_step)
+                elif disp.requires_response:
+                    self.pending = ResponsePending(index=n, step=current_step)
+                    break
+                else:
                     out = disp.present(current_step)
-                    self._check_output(out, info)
+                    action, add_remainder = self._check_output(out, info)
+                    self.action = action
+                    self.remainder += add_remainder
 
-                elif not disp.returns_action:
-                    disp.present(context=current_step)
+    def get_pending_action(self):
+        if self.pending is None:
+            return self.action, self.remainder
 
-            if not self.expose_last_stim and self.context == "simulation":
-                self.simulate_action(info, self.previous_action, self.reaction_time)
+        info = self.pending.step.info
 
-    def simulate_action(self, info, action, reaction_time):
-        action_step = StepContext(
-            env_context=self.context,
-            location=self.agent_location,
-            condition=self.condition,
-            total_reward=self.cumulative_reward,
-            reward=self.reward,
-            previous_action=action,
-            reaction_time=reaction_time,
-            info=info,
-            tracker=self.tracker,
-        )
-
-        out = info["render"][-1].present(action_step)
-        self._check_output(out, info)
-
-    def _check_output(self, out, info):
-        if out is not None:
-            tmp_action = info["action-layout"].action_to_graph[out[0]]
-
-            if tmp_action in info["avail-actions"]:
-                self.action = tmp_action
+        for disp in info["render"][self.pending.index :]:
+            if disp.returns_action:
+                out = disp.present(self.pending.step)
+                action, add_remainder = self._check_output(out, info)
+                self.action = action
+                self.remainder += add_remainder
             else:
-                self.action = None
-                self.remainder = self.remainder
+                disp.present(self.pending.step)
 
-            if out[1] is not None:
-                self.remainder = self.remainder + out[1]
-        else:
-            self.action = None
+        self.pending = None
+
+        return self.action, self.remainder
+
+    @staticmethod
+    def _check_output(out, info):
+        if out is None:
+            return None, 0
+
+        action, remainder = out
+
+        add_remainder = 0 if remainder is None else remainder
+
+        if action is None:
+            return None, add_remainder
+
+        graph_action = info["action-layout"].action_to_graph[action]
+
+        if graph_action not in info["avail-actions"]:
+            return None, add_remainder
+
+        return action, add_remainder
 
     def close(self) -> None:
         """
@@ -183,8 +192,34 @@ class RenderEnv(BaseEnv):
         condition: int | None = None,
     ) -> tuple[int | np.array, dict]:
         self.action = None
-        self.remap_action = None
         self.remainder = 0
 
         observation, info = super().reset(agent_location, condition)
         return observation, info
+
+    def simulate_response(self, action, rt):
+        if not hasattr(self.context.input_handler, "add_response"):
+            return False
+
+        if self.pending is None:
+            return False
+
+        routine = self.pending_routine
+
+        if rt > routine.duration:
+            return False
+
+        layout = self.pending.step.info["action-layout"]
+        layout.add_keys(routine.key_dict)
+
+        if layout.graph_to_key[action]:
+            key = layout.graph_to_key[action][0]
+            self.context.input_handler.add_response(key, rt)
+            return True
+
+    @property
+    def pending_routine(self):
+        if self.pending is None:
+            return None
+
+        return self.pending.step.info["render"][self.pending.index]

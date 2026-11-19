@@ -220,38 +220,15 @@ class BaseEnv(Env):
         else:
             current_graph = self.full_graph[self.agent_location]
 
-        if action not in current_graph:
-            next_position = self.agent_location
-        elif isinstance(current_graph[action], tuple):
-            stochasticiy = current_graph[action][1]
-
-            if self.random_state.random() <= stochasticiy:
-                next_position = current_graph[action][0][0]
-            else:
-                possible_locs = current_graph[action][0][1:]
-                next_position = self.random_state.choice(possible_locs)
-        else:
-            next_position = current_graph[action]
+        next_position = self._transition(action=action, current_graph=current_graph)
 
         self.agent_location = next_position
 
-        if len(self.graph[next_position]) == 0:
-            terminated = True
-        else:
-            terminated = False
+        terminated = len(self.graph[next_position]) == 0
 
-        if terminated:
-            if self.condition is not None and "reward" in self.condition:
-                self.reward = self.condition["reward"]
-            else:
-                self.reward = self.reward_locations[self.agent_location]()
-            # Stepping rewards, e.g. if the whole environment changes (as in two-step task)
-            if step_reward:
-                for rw in self.reward_locations:
-                    if self.agent_location != rw:
-                        self.reward_locations[rw]()
-        else:
-            self.reward = 0
+        self.reward = self._reward_handling(
+            terminated=terminated, step_reward=step_reward
+        )
 
         observation = self._get_obs()
         self.tracker.finalize_step(reward=self.reward, next_obs=observation)
@@ -334,3 +311,33 @@ class BaseEnv(Env):
                     full_graph[node][0] = content
 
         return full_graph, skip_nodes
+
+    def _transition(self, action, current_graph):
+        if action not in current_graph:
+            return self.agent_location
+        elif isinstance(current_graph[action], tuple):
+            stochasticity = current_graph[action][1]
+
+            if self.random_state.random() <= stochasticity:
+                return current_graph[action][0][0]
+            else:
+                possible_locs = current_graph[action][0][1:]
+                return self.random_state.choice(possible_locs)
+        else:
+            return current_graph[action]
+
+    def _reward_handling(self, terminated, step_reward):
+        if terminated:
+            if self.condition is not None and "reward" in self.condition:
+                reward = self.condition["reward"]
+            else:
+                reward = self.reward_locations[self.agent_location]()
+            # Stepping rewards, e.g. if the whole environment changes (as in two-step task)
+            if step_reward:
+                for rw in self.reward_locations:
+                    if self.agent_location != rw:
+                        self.reward_locations[rw]()
+        else:
+            reward = 0
+
+        return reward

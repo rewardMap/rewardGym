@@ -97,6 +97,7 @@ class ActionRoutine(BaseRoutine):
         self.before_action_callback = before_action_callback
         self.after_action_callback = after_action_callback
         self.returns_action = True
+        self.requires_response = True
 
     def display(self, context: StepContext):
         state = {"extra_info": {}}
@@ -355,3 +356,45 @@ class ChangeSceneAfterAction(ActionRoutine):
             too_early_warning=too_early_warning,
             presentation_settings=presentation_settings,
         )
+
+
+class AutoAction(BaseRoutine):
+    def __init__(self, name: str, key_dict: dict, rl_label: str | None = None):
+        super().__init__(
+            name=name,
+            duration=None,
+            rl_label=rl_label,
+            flip=False,
+            poll_keys=False,
+            stimulus_definitions=None,
+        )
+        self.key_dict = key_dict
+        self.returns_action = True
+
+    def display(self, context: StepContext):
+        key, action = next(iter(self.key_dict.items()))
+        layout = context.info["action-layout"]
+
+        env_action = layout.action_to_graph[action]
+
+        response = (action, None)
+
+        context.tracker.add_event(
+            frame=None,
+            duration=None,
+            action=response[0],
+            reaction_time=response[1],
+            name=self.rl_label,
+        )
+
+        log_event(
+            self,
+            logger=context.logger,
+            extra_info={
+                "response_button": key,
+                "response_time": None,
+                "action": env_action,
+            },
+        )
+
+        return response
