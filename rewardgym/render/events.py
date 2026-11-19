@@ -65,28 +65,24 @@ def response_handling(
         "simulation" in context.env_context.mode
         or "headless" in context.env_context.mode
     ):
-        env_action = context.previous_action
-        response_time = context.reaction_time
-        if response_time is not None and routine.duration is not None:
-            if response_time > routine.duration:
-                polling_state = PollStatus.TIMEOUT
-            else:
-                polling_state = PollStatus.RECEIVED
-                action = layout.graph_to_action[env_action]
-                response_button = layout.graph_to_key[env_action][0]
-                response = (response_button, response_time + response_window_onset)
+        if not hasattr(input_handler, "next_response_time"):
+            raise ValueError(
+                "Simulation and headless modes should use the appropriate input handler!"
+            )
 
-        advance = routine.duration
-        if response_time is not None:
-            advance = min([response_time, routine.duration])
+        advance = input_handler.next_response_time()
 
+        if advance is None:
+            advance = routine.duration
+
+        advance = min(advance, routine.duration)
         logger.clock.time += advance
 
     while polling_state == PollStatus.WAITING:
         response = input_handler.key_strokes(
             logger=logger, key_list=list(key_dict.keys())
         )
-
+        # print("polling", response)
         if response_window <= logger.get_time():
             polling_state = PollStatus.TIMEOUT
         if response:
@@ -136,6 +132,6 @@ def response_handling(
         )
 
         if action == logger.na:
-            return None
+            return (None, None)
 
     return action, remaining
