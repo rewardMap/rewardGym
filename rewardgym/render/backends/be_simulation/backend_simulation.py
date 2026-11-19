@@ -1,5 +1,6 @@
 from collections.abc import Callable
 from typing import Any
+from dataclasses import dataclass
 
 from ....logging import ExperimentLogger
 from ....protocols import ClockProtocol, DisplayProtocol
@@ -14,14 +15,15 @@ class SimulationBackend(RewardGymBackend):
     mode = "simulation"
 
     def setup(self, context: EnvironmentContext):
+        clock = Clock()
         if context.window is None:
             context.window = Window()
 
-        if context.input_handler is None:
-            context.input_handler = SimulationInput()
-
         if context.logger is None:
-            context.logger = ExperimentLogger(file_name=None, clock=Clock())
+            context.logger = ExperimentLogger(file_name=None, clock=clock)
+
+        if context.input_handler is None:
+            context.input_handler = SimulationInput(context.logger.clock)
 
         if context.render is None:
             context.render = SimulationDisplay()
@@ -43,9 +45,40 @@ class SimulationDisplay(DisplayProtocol):
         return simulation_wait(**kwargs)
 
 
+@dataclass(order=True)
+class ScheduledResponse:
+    scheduled_time: float
+    key: str
+
+
 class SimulationInput(BaseInputHandler):
+    def __init__(self, clock):
+        super().__init__()
+        self.clock = clock
+        self.response_log = []
+
     def get_keys(self) -> list[tuple[str, float]]:
-        return []
+        responses = []
+
+        current_time = self.clock.getTime()
+        while self.response_log and self.response_log[0].scheduled_time <= current_time:
+            response = self.response_log.pop(0)
+
+            responses.append((response.key, response.scheduled_time))
+
+        return responses
+
+    def add_response(self, key, response_time):
+        self.response_log.append(
+            ScheduledResponse(response_time + self.clock.getTime(), key)
+        )
+        self.response_log.sort()
+
+    def next_response_time(self):
+        if not self.response_log:
+            return None
+
+        return max([self.response_log[0].scheduled_time - self.clock.getTime(), 0])
 
 
 class Clock(ClockProtocol):
