@@ -2,6 +2,7 @@ from typing import Any
 
 from psychopy import core
 from psychopy.visual import Window
+from psychopy.core import Clock
 
 from ....logging import ExperimentLogger
 from ....protocols import DisplayProtocol, KeyboardProtocol
@@ -10,12 +11,16 @@ from ...events import wait
 from ...input_handling import BaseInputHandler
 from ..backend_base import FlipValue, RewardGymBackend
 from .factory_psychopy import PsychoPyFactory
+import warnings
 
 
 class PsychoPyBackend(RewardGymBackend):
     mode = "psychopy"
 
     def setup(self, context: EnvironmentContext):
+        if context.clock is None:
+            context.clock = Clock()
+
         if context.window is None:
             context.window = Window(
                 size=[1680, 1050],
@@ -26,14 +31,10 @@ class PsychoPyBackend(RewardGymBackend):
             )
 
         if context.logger is None:
-            from psychopy.core import Clock
-
-            context.logger = ExperimentLogger(file_name=None, clock=Clock())
+            context.logger = ExperimentLogger(file_name=None, clock=context.clock)
 
         if context.input_handler is None:
-            context.input_handler = PsychoPyInput(
-                context.logger.clock, win=context.window
-            )
+            context.input_handler = PsychoPyInput(context.clock, win=context.window)
 
         if context.render is None:
             context.render = PsychoPyDisplay(window=context.window)
@@ -42,11 +43,28 @@ class PsychoPyBackend(RewardGymBackend):
 
 
 class PsychoPyDisplay(DisplayProtocol):
-    def __init__(self, *, window, **kwargs):
+    def __init__(self, *, window, clock, **kwargs):
         self.win = window
+        self.clock = clock
+        try:
+            from psychopy.core import monotonicClock
+
+            self.monotonic_clock = monotonicClock
+        except ImportError:
+            warnings.warn("Could not get monotonic Clock from psychopy!")
+            self.monotonic_clock = None
+
+    def _psychopy_window_adjust(self, tflip: float):
+        if self.monotonic_clock is not None:
+            offset = self.clock.getTime() - self.monotonic_clock.getTime()
+        else:
+            offset = 0
+
+        return tflip + offset
 
     def flip(self) -> FlipValue:
-        return FlipValue(timestamp=self.win.flip())
+        tflip = self.win.flip()
+        return FlipValue(timestamp=self._psychopy_window_adjust(tflip))
 
     def schedule_on_flip(self, callback, *args, **kwargs) -> Any:
         return self.win.callOnFlip(callable, *args, **kwargs)

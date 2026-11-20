@@ -306,20 +306,34 @@ class PygameTextStim(PygameBaseStim):
         self.text = text
 
     def _render(self):
-        surface = self.font.render(
-            str(self.text),
-            True,
-            self.color,
-        )
-
-        alpha = int(self.opacity * 255)
-        surface.set_alpha(alpha)
-
         x, y = self.win.psychopy_to_pygame(self.pos)
 
-        rect = surface.get_rect(center=(int(x), int(y)))
+        lines = str(self.text).split("\n")
 
-        self.win.screen.blit(
-            surface,
-            rect,
-        )
+        line_height = self.font.get_linesize()
+
+        total_height = line_height * len(lines)
+
+        start_y = y - total_height / 2
+
+        for n, line in enumerate(lines):
+            surface = self.font.render(
+                line,
+                True,
+                self.color,
+            )
+
+            alpha = int(self.opacity * 255)
+            surface.set_alpha(alpha)
+
+            rect = surface.get_rect(
+                center=(
+                    int(x),
+                    int(start_y + n * line_height + line_height / 2),
+                )
+            )
+
+            self.win.screen.blit(
+                surface,
+                rect,
+            )

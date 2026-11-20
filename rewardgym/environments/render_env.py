@@ -4,7 +4,7 @@ from collections import defaultdict
 
 import numpy as np
 
-from ..protocols import InputProtocol, LoggerProtocol
+from ..protocols import InputProtocol, LoggerProtocol, ClockProtocol
 from ..render import EnvironmentContext, StepContext
 from .base_env import BaseEnv
 from .env_parts import ResponsePending
@@ -15,7 +15,7 @@ class RenderEnv(BaseEnv):
         self,
         environment_graph: dict,
         reward_locations: dict,
-        render_mode: str = "psychopy",
+        render_backend: str = "psychopy",
         info_dict: dict | None = None,
         random_state: int | np.random.Generator = 1000,
         name: str | None = None,
@@ -31,7 +31,7 @@ class RenderEnv(BaseEnv):
             The main graph showing the association between states and actions.
         reward_locations : dict
             Which location in the graph are associated with a reward.
-        render_mode : str, optional
+        render_backend : str, optional
             If using rendering or not, by default None
         info_dict : dict, optional
             Additional information, that should be associated with a node, by default defaultdict(int)
@@ -50,7 +50,7 @@ class RenderEnv(BaseEnv):
         super().__init__(
             environment_graph=environment_graph,
             reward_locations=reward_locations,
-            render_mode=render_mode,
+            render_backend=render_backend,
             info_dict=info_dict,
             random_state=random_state,
             name=name,
@@ -71,13 +71,15 @@ class RenderEnv(BaseEnv):
         window=None,
         logger: LoggerProtocol | None = None,
         input_handler: InputProtocol | None = None,
+        clock: ClockProtocol | None = None,
     ):
         self.context = EnvironmentContext(
             window=window,
             logger=logger,
             input_handler=input_handler,
-            mode=self.render_mode,
+            mode=self.render_backend,
             random_state=self.random_state,
+            clock=clock,
         )
 
         for node in self.graph:
@@ -211,7 +213,6 @@ class RenderEnv(BaseEnv):
 
         layout = self.pending.step.info["action-layout"]
         layout.add_keys(routine.key_dict)
-
         if layout.graph_to_key[action]:
             key = layout.graph_to_key[action][0]
             self.context.input_handler.add_response(key, rt)

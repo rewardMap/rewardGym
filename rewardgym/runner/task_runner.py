@@ -1,35 +1,16 @@
 from __future__ import annotations
 
+import warnings
+
 import numpy as np
 
 from ..tasks import get_configs
 from .plugins import (
-    AddRemainder,
-    DelayUpdateHcp,
-    MiscUpdateMid,
-    MiscUpdateTwoStep,
-    StairCaseMid,
-    TimeUpdateMid,
     break_point,
     draw_response_reminder,
     simple_rt_simulation,
 )
-from .psychopy_utils import apply_plugins, update_psychopy_trials
-
-plugin_registry = {
-    "mid": {
-        "pre-trial": [MiscUpdateMid(), TimeUpdateMid()],
-        "post-trial": [AddRemainder(), StairCaseMid(0)],
-    },
-    "hcp": {
-        "post-action": [DelayUpdateHcp()],
-    },
-    "risk-sensitive": {"post-trial": [AddRemainder()]},
-    "two-step": {"pre-trial": [MiscUpdateTwoStep()], "post-trial": [AddRemainder()]},
-    "posner": {"post-trial": [AddRemainder()]},
-    "gonogo": {"post-trial": [AddRemainder()]},
-    "robotfactory": {"post-trial": [AddRemainder()]},
-}
+from .psychopy_utils import apply_plugins, update_trials
 
 
 def run_task(
@@ -40,7 +21,6 @@ def run_task(
     random_state=111,
     agent=None,
     n_episodes=None,
-    plugins: dict = plugin_registry,
 ):
     if settings is None:
         settings = get_configs(env.name)(random_state)
@@ -49,26 +29,23 @@ def run_task(
         win = env.context.win
 
     try:
-        plugins = plugins[env.name]
+        plugins = env.info_dict["plugins"]
     except KeyError:
-        plugins = {}
+        warnings.warn("Plugins not in environment.")
 
     if n_episodes is None:
         n_episodes = settings["ntrials"]
 
-    if env.render_mode == "simulation":
-        break_countdown_limit = np.inf
-    else:
-        break_countdown_limit = 30
+    break_countdown_limit = 30
 
-    response_reminder = env.context.stimuli.text(
+    response_reminder = env.context.stimuli["text"](
         win=win,
         text="Please respond faster!",
         color=[1, 1, 1],
         pos=(0, 100),
         height=25,
     )
-    break_text = env.context.stimuli.text(
+    break_text = env.context.stimuli["text"](
         win=win,
         text="Have a break.",
         color=[1, 1, 1],
@@ -96,7 +73,7 @@ def run_task(
             actions=actions,
         )
 
-        update_psychopy_trials(settings, env, episode)
+        update_trials(settings, env, episode)
 
         logger.set_trial_time()
         logger.update_trial_info(

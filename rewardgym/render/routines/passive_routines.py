@@ -72,11 +72,13 @@ class DynamicRoutine(BaseRoutine):
         Should return None
 
         """
+        state = {}
 
         if self.callback_before_draw:
-            state = self.callback_before_draw(self, context) or {}
+            temp = self.callback_before_draw(self, context) or {}
+            state.update(temp)
 
-        stim_onset = context.logger.get_time()
+        stim_onset = context.get_time()
 
         if self.draw_list is None:
             self.draw_list = self.stimuli.keys()
@@ -89,8 +91,12 @@ class DynamicRoutine(BaseRoutine):
         if self.flip:
             flip_value = context.render.flip()
 
+        stim_onset = (
+            flip_value.timestamp if flip_value.timestamp is not None else stim_onset
+        )
+
         context.render.wait(
-            logger=context.logger,
+            context=context,
             input_handler=context.input_handler,
             time=self.duration,
             start=stim_onset,
@@ -380,3 +386,25 @@ class FeedBackRoutine(DynamicRoutine):
 
     def get_log_info(self, context: StepContext):
         return {"reward": context.reward, "total_reward": context.total_reward}
+
+
+class InstructionRoutine(BaseRoutine):
+    def __init__(
+        self,
+        name: str,
+        stimulus_definitions,
+    ):
+        super().__init__(
+            name=name,
+            duration=None,
+            stimulus_definitions=stimulus_definitions,
+            flip=True,
+            poll_keys=False,
+        )
+
+    def display(self, context):
+        for stim in self.stimuli.values():
+            if stim.opacity > 0:
+                stim.draw()
+
+        context.render.flip()

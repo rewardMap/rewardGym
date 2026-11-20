@@ -10,6 +10,7 @@ import numpy as np
 
 from ..utils import check_random_state
 from .env_parts import ActionLayout, EnviromentTracker
+from ..validation import check_availability
 
 
 class BaseEnv(Env):
@@ -21,7 +22,7 @@ class BaseEnv(Env):
         self,
         environment_graph: dict,
         reward_locations: dict,
-        render_mode: str | None = None,
+        render_backend: str | None = None,
         info_dict: dict | None = None,
         random_state: int | np.random.Generator = 1000,
         name: str | None = None,
@@ -37,7 +38,7 @@ class BaseEnv(Env):
             The main graph showing the association between states and actions.
         reward_locations : dict
             Which location in the graph are associated with a reward.
-        render_mode : str, optional
+        render_backend : str, optional
             If using rendering or not, by default None
         info_dict : dict, optional
             Additional information, that should be associated with a node, by default defaultdict(int)
@@ -47,10 +48,6 @@ class BaseEnv(Env):
 
         # It should be possible to use wrapper for one-hot, so no box and other handling necessary (might need an
         # implementation though).
-
-        self.metadata = {
-            "render_modes": ["pygame", "psychopy", "simulation", "pygame-headless"]
-        }
 
         if n_actions is None:
             self.n_actions = max(
@@ -89,9 +86,11 @@ class BaseEnv(Env):
 
         self.cumulative_reward = 0
 
-        assert render_mode is None or render_mode in self.metadata["render_modes"]
+        self.rendering = False
+        if render_backend is not None:
+            self.rendering = check_availability(render_backend, "backend")
 
-        self.render_mode = render_mode
+        self.render_backend = render_backend
         self.window = None
         self.clock = None
         self.reward = None
@@ -183,7 +182,7 @@ class BaseEnv(Env):
         self.tracker.add_step(obs=observation)
 
         info = self._get_info()
-        if self.render_mode in self.metadata["render_modes"]:
+        if self.rendering:
             self._render_frame(info)
 
         if info["skip-node"]:
@@ -238,7 +237,7 @@ class BaseEnv(Env):
 
         self.cumulative_reward += self.reward
 
-        if self.render_mode in self.metadata["render_modes"]:
+        if self.rendering:
             self._render_frame(info)
 
         return observation, self.reward, terminated, False, info
@@ -341,3 +340,7 @@ class BaseEnv(Env):
             reward = 0
 
         return reward
+
+    @property
+    def is_simulation(self):
+        return "simulation" in self.render_backend or "headless" in self.render_backend

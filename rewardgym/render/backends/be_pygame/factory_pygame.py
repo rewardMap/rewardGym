@@ -1,18 +1,11 @@
-from ....protocols import FactoryProtocol
+from ..backend_base import BaseFactory
 
 
-class PygameFactory(FactoryProtocol):
-    def image(self, **kwargs):
-        from .stimuli_pygame import PygameImageStim
+class PygameFactory(BaseFactory):
+    def __init__(self):
+        super().__init__()
+        from .stimuli_pygame import PygameImageStim, PygameRect, PygameTextStim
 
-        return PygameImageStim(**kwargs)
-
-    def rectangle(self, **kwargs):
-        from .stimuli_pygame import PygameRect
-
-        return PygameRect(**kwargs)
-
-    def text(self, **kwargs):
-        from .stimuli_pygame import PygameTextStim
-
-        return PygameTextStim(**kwargs)
+        self.register("image", PygameImageStim)
+        self.register("text", PygameTextStim)
+        self.register("rectangle", PygameRect)

@@ -1,13 +1,10 @@
-from ....protocols import FactoryProtocol
+from ..backend_base import BaseFactory
 from .stimuli_simulation import SimImageStim, SimRect, SimTextStim
 
 
-class SimulationFactory(FactoryProtocol):
-    def image(self, **kwargs):
-        return SimImageStim(**kwargs)
-
-    def rectangle(self, **kwargs):
-        return SimRect(**kwargs)
-
-    def text(self, **kwargs):
-        return SimTextStim(**kwargs)
+class SimulationFactory(BaseFactory):
+    def __init__(self):
+        super().__init__()
+        self.register("image", SimImageStim)
+        self.register("text", SimTextStim)
+        self.register("rectangle", SimRect)
