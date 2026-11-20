@@ -6,9 +6,10 @@ import os
 import sys
 import types
 import warnings
-from pathlib import Path
-from ..validation import check_availability
 from collections import UserDict
+from pathlib import Path
+
+from ..validation import check_availability
 
 
 def load_task_plugin(folder_path: Path, namespace_root: str = "rewardgym_tasks"):

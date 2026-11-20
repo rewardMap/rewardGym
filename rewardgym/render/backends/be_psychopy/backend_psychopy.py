@@ -1,8 +1,9 @@
+import warnings
 from typing import Any
 
 from psychopy import core
-from psychopy.visual import Window
 from psychopy.core import Clock
+from psychopy.visual import Window
 
 from ....logging import ExperimentLogger
 from ....protocols import DisplayProtocol, KeyboardProtocol
@@ -11,7 +12,6 @@ from ...events import wait
 from ...input_handling import BaseInputHandler
 from ..backend_base import FlipValue, RewardGymBackend
 from .factory_psychopy import PsychoPyFactory
-import warnings
 
 
 class PsychoPyBackend(RewardGymBackend):

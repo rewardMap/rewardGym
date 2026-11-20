@@ -9,8 +9,8 @@ except ModuleNotFoundError:
 import numpy as np
 
 from ..utils import check_random_state
-from .env_parts import ActionLayout, EnviromentTracker
 from ..validation import check_availability
+from .env_parts import ActionLayout, EnviromentTracker
 
 
 class BaseEnv(Env):

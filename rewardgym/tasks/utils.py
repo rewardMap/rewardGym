@@ -5,8 +5,9 @@ from typing import Any
 import numpy as np
 
 from ..environments import BaseEnv, RenderEnv
-from .task_loader import get_task
 from ..validation import check_availability
+from .task_loader import get_task
+
 # TODO: I should implement a - is in registry function, returning possible tasks, same for backends.
 
 

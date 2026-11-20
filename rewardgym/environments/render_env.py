@@ -4,7 +4,7 @@ from collections import defaultdict
 
 import numpy as np
 
-from ..protocols import InputProtocol, LoggerProtocol, ClockProtocol
+from ..protocols import ClockProtocol, InputProtocol, LoggerProtocol
 from ..render import EnvironmentContext, StepContext
 from .base_env import BaseEnv
 from .env_parts import ResponsePending

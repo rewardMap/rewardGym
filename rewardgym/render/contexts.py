@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 from typing import Any
 
-from ..protocols import DisplayProtocol, InputProtocol, LoggerProtocol, ClockProtocol
-from ..validation import check_availability, ClockMismatchError
+from ..protocols import ClockProtocol, DisplayProtocol, InputProtocol, LoggerProtocol
+from ..validation import ClockMismatchError, check_availability
 
 
 @dataclass
