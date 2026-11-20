@@ -20,9 +20,9 @@ error_registry = {
 
 
 def available_backends():
-    from .render.backends import get_backends
+    from .render.backends import BACKENDS
 
-    return list(get_backends().keys())
+    return list(BACKENDS.keys())
 
 
 def available_tasks():

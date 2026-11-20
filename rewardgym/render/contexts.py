@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from ..protocols import DisplayProtocol, InputProtocol, LoggerProtocol
+from ..validation import check_availability
 
 
 @dataclass
@@ -15,16 +16,11 @@ class EnvironmentContext:
     random_state: None = None
 
     def __post_init__(self):
-        from .backends import get_backends
+        from .backends import BACKENDS
 
-        backend_registry = get_backends()
+        check_availability(self.mode, "backend")
 
-        if self.mode not in backend_registry:
-            raise ValueError(
-                f"{self.mode} has to be in {list(backend_registry.keys())}!"
-            )
-
-        backend_registry[self.mode]().setup(self)
+        BACKENDS[self.mode]().setup(self)
 
     @property
     def win(self):
