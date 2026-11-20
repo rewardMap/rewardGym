@@ -24,8 +24,6 @@ def play_task(
     else:
         from ..stubs import Clock
 
-        clock = Clock()
-
     clock = Clock()
 
     file_name = out
@@ -47,7 +45,7 @@ def play_task(
             seed=10,
         )
 
-    env.setup(logger=simlog, window=None)
+    env.setup(logger=simlog, window=None, clock=clock)
 
     _df, _, _ = run_task(env, logger=simlog, agent=agent, random_state=10)
 
