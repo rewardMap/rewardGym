@@ -75,7 +75,7 @@ def response_handling(
             logger=logger, key_list=list(key_dict.keys())
         )
         # print("polling", response)
-        if response_window <= logger.get_time():
+        if response_window <= context.get_time():
             polling_state = PollStatus.TIMEOUT
         if response:
             polling_state = PollStatus.RECEIVED
@@ -130,7 +130,7 @@ def response_handling(
 
 
 def wait(
-    logger,
+    context,
     time: float | None,
     start: float | None = None,
     poll_keys: bool = True,
@@ -154,15 +154,15 @@ def wait(
         return
 
     if start is None:
-        start = logger.get_time()
+        start = context.get_time()
 
     t_wait = start + time
 
-    if hasattr(logger.clock, "advance_time"):
-        logger.clock.advance_time(time)
+    if hasattr(context.clock, "advance_time"):
+        context.clock.advance_time(time)
 
     # Trying to avoid unnecessary checks
-    while t_wait > logger.get_time():
+    while t_wait > context.get_time():
         if poll_keys and input_handler:
             keys = input_handler.get_keys()
-            input_handler.interpret_keys(keys, key_list=None, logger=logger)
+            input_handler.interpret_keys(keys, key_list=None, logger=context.logger)

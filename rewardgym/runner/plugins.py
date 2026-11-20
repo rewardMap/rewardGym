@@ -6,10 +6,10 @@ from .psychopy_utils import update_trials
 def draw_response_reminder(context, text_update, reminder_duration=1.0):
     text_update.draw()
     context.render.flip()
-    reminder_onset = context.logger.get_time()
+    reminder_onset = context.get_time()
 
     context.render.wait(
-        logger=context.logger,
+        context=context,
         time=reminder_duration,
         start=reminder_onset,
         poll_keys=False,
@@ -32,10 +32,10 @@ def break_point(context, text_update, settings, episode, countdown_cutoff=30):
         episode in settings["breakpoints"]
         and settings["break_duration"] < countdown_cutoff
     ):
-        break_onset = context.logger.get_time()
+        break_onset = context.get_time()
 
         context.render.wait(
-            logger=context.logger,
+            context=context,
             time=settings["break_duration"],
             start=break_onset,
             poll_keys=True,
@@ -48,12 +48,10 @@ def break_point(context, text_update, settings, episode, countdown_cutoff=30):
         )
 
     elif episode in settings["breakpoints"]:
-        break_onset = context.logger.get_time()
+        break_onset = context.get_time()
         break_text = "Short break. Keep lying as still as possible!\n"
-        while context.logger.get_time() < (break_onset + settings["break_duration"]):
-            time_left = settings["break_duration"] - (
-                context.logger.get_time() - break_onset
-            )
+        while context.get_time() < (break_onset + settings["break_duration"]):
+            time_left = settings["break_duration"] - (context.get_time() - break_onset)
             minutes = int(time_left / 60)
             seconds = int(time_left - minutes * 60)
             text_update.setText(break_text + f"{minutes}:{seconds:02d}")
@@ -141,19 +139,19 @@ class StairCaseMid(PsyPyPlugin):
 
 
 class AddRemainder(PsyPyPlugin):
-    def modify(self, *, env, settings, logger, input_handler, **kwargs):
+    def modify(self, *, env, settings, context, input_handler, **kwargs):
         if env.remainder > 0 and settings["add_remainder"]:
-            rm_onset = logger.get_time()
+            rm_onset = context.get_time()
 
             env.context.render.wait(
-                logger=logger,
+                context=context,
                 time=env.remainder,
                 start=rm_onset,
                 input_handler=input_handler,
                 poll_keys=True,
             )
 
-            logger.log_event(
+            context.logger.log_event(
                 {"event_type": "adjusting-time", "expected_duration": env.remainder},
                 onset=rm_onset,
             )

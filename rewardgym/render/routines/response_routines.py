@@ -108,7 +108,7 @@ class ActionRoutine(BaseRoutine):
             if out is not None:
                 state.update(out)
 
-        response_window_onset = context.logger.get_time()
+        response_window_onset = context.get_time()
 
         if self.detect_too_early:
             too_early = self.check_too_early(
@@ -168,7 +168,7 @@ class ActionRoutine(BaseRoutine):
             self.after_action_callback(self, context, state, response)
 
         if self.presentation_settings["present_after"]:
-            after_onset = context.logger.get_time()
+            after_onset = context.get_time()
 
             for stim_name in self.draw_list:
                 if self.stimuli[stim_name].opacity > 0:
@@ -182,7 +182,7 @@ class ActionRoutine(BaseRoutine):
             )
 
             context.render.wait(
-                logger=context.logger,
+                context=context,
                 input_handler=context.input_handler,
                 time=self.presentation_settings["duration_after"],
                 start=after_onset,
