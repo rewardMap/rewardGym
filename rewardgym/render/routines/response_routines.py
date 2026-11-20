@@ -130,6 +130,12 @@ class ActionRoutine(BaseRoutine):
         if self.flip:
             flip_value = context.render.flip()
 
+        response_window_onset = (
+            flip_value.timestamp
+            if flip_value.timestamp is not None
+            else response_window_onset
+        )
+
         if self.presentation_settings["name_before"]:
             log_event(
                 self,
@@ -137,10 +143,10 @@ class ActionRoutine(BaseRoutine):
                 extra_info={
                     "event_type": self.presentation_settings["name_before"],
                     "rl_label": self.presentation_settings["rl_label_before"],
+                    "onset": response_window_onset,
                     **state["extra_info"],
                 },
             )
-
         response = response_handling(
             self, context, response_window_onset=response_window_onset
         )
@@ -169,6 +175,11 @@ class ActionRoutine(BaseRoutine):
                     self.stimuli[stim_name].draw()
 
             flip_value = context.render.flip()
+            after_onset = (
+                flip_value.timestamp
+                if flip_value.timestamp is not None
+                else after_onset
+            )
 
             context.render.wait(
                 logger=context.logger,

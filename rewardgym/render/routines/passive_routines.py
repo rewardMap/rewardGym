@@ -91,6 +91,10 @@ class DynamicRoutine(BaseRoutine):
         if self.flip:
             flip_value = context.render.flip()
 
+        stim_onset = (
+            flip_value.timestamp if flip_value.timestamp is not None else stim_onset
+        )
+
         context.render.wait(
             logger=context.logger,
             input_handler=context.input_handler,
