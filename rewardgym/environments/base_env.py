@@ -340,3 +340,7 @@ class BaseEnv(Env):
             reward = 0
 
         return reward
+
+    @property
+    def is_simulation(self):
+        return "simulation" in self.render_backend or "headless" in self.render_backend
