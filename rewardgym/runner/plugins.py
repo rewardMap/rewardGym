@@ -59,6 +59,8 @@ def break_point(context, text_update, settings, episode, countdown_cutoff=30):
             text_update.setText(break_text + f"{minutes}:{seconds:02d}")
             text_update.draw()
             context.win.flip()
+            if hasattr(context.logger.clock, "advance_time"):
+                context.logger.clock.advance_time(1.0)
 
         context.logger.log_event(
             {"event_type": "break", "expected_duration": settings["break_duration"]},

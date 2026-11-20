@@ -5,8 +5,9 @@ from typing import Any
 import numpy as np
 
 from ..environments import BaseEnv, RenderEnv
-from ..render.backends import get_backends
 from .task_loader import get_task
+from ..validation import check_availability
+# TODO: I should implement a - is in registry function, returning possible tasks, same for backends.
 
 
 def get_env(
@@ -15,13 +16,17 @@ def get_env(
     random_state: int | np.random.Generator = 1000,
     **kwargs,
 ):
+    check_availability(task_name, "task")
+
+    if render_backend is not None:
+        check_availability(render_backend, "backend")
+
     environment_graph, reward_structure, info_dict = get_task(
         task_name,
         render_backend=render_backend,
         random_state=random_state,
     )
 
-    backends = get_backends()
     reduced_actions = None
 
     if "meta" in info_dict and "reduced_actions" in info_dict["meta"]:
@@ -31,24 +36,22 @@ def get_env(
         env = BaseEnv(
             environment_graph=environment_graph,
             reward_locations=reward_structure,
-            render_mode=render_backend,
-            info_dict=info_dict,
-            random_state=random_state,
-            name=task_name,
-            reduced_actions=reduced_actions,
-        )
-    elif render_backend in backends:
-        env = RenderEnv(
-            environment_graph=environment_graph,
-            reward_locations=reward_structure,
-            render_mode=render_backend,
+            render_backend=render_backend,
             info_dict=info_dict,
             random_state=random_state,
             name=task_name,
             reduced_actions=reduced_actions,
         )
     else:
-        raise ValueError("Backend is not defined!")
+        env = RenderEnv(
+            environment_graph=environment_graph,
+            reward_locations=reward_structure,
+            render_backend=render_backend,
+            info_dict=info_dict,
+            random_state=random_state,
+            name=task_name,
+            reduced_actions=reduced_actions,
+        )
 
     return env
 

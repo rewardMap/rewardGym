@@ -15,7 +15,7 @@ class RenderEnv(BaseEnv):
         self,
         environment_graph: dict,
         reward_locations: dict,
-        render_mode: str = "psychopy",
+        render_backend: str = "psychopy",
         info_dict: dict | None = None,
         random_state: int | np.random.Generator = 1000,
         name: str | None = None,
@@ -31,7 +31,7 @@ class RenderEnv(BaseEnv):
             The main graph showing the association between states and actions.
         reward_locations : dict
             Which location in the graph are associated with a reward.
-        render_mode : str, optional
+        render_backend : str, optional
             If using rendering or not, by default None
         info_dict : dict, optional
             Additional information, that should be associated with a node, by default defaultdict(int)
@@ -50,7 +50,7 @@ class RenderEnv(BaseEnv):
         super().__init__(
             environment_graph=environment_graph,
             reward_locations=reward_locations,
-            render_mode=render_mode,
+            render_backend=render_backend,
             info_dict=info_dict,
             random_state=random_state,
             name=name,
@@ -76,7 +76,7 @@ class RenderEnv(BaseEnv):
             window=window,
             logger=logger,
             input_handler=input_handler,
-            mode=self.render_mode,
+            mode=self.render_backend,
             random_state=self.random_state,
         )
 
