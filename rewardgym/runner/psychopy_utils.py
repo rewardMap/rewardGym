@@ -43,6 +43,7 @@ def apply_plugins(
             settings=settings,
             episode=episode,
             actions=actions,
+            context=env.context,
             input_handler=env.context.input_handler,
         )
 
