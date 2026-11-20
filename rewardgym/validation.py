@@ -13,6 +13,10 @@ class UnknownStimulusError(ValueError):
     pass
 
 
+class ClockMismatchError(ValueError):
+    pass
+
+
 error_registry = {
     "backend": UnknownBackendError,
     "task": UnknownTaskError,

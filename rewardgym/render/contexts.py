@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from ..protocols import DisplayProtocol, InputProtocol, LoggerProtocol, ClockProtocol
-from ..validation import check_availability
+from ..validation import check_availability, ClockMismatchError
 
 
 @dataclass
@@ -23,6 +23,8 @@ class EnvironmentContext:
 
         BACKENDS[self.mode]().setup(self)
 
+        self.validate_clocks()
+
     @property
     def win(self):
         return self.window
@@ -32,6 +34,25 @@ class EnvironmentContext:
 
     def reset_time(self):
         self.clock.reset()
+
+    def validate_clocks(self):
+        if hasattr(self.logger, "clock") and self.logger.clock is not self.clock:
+            raise ClockMismatchError(
+                "Make sure the logger and environment use the same clock!"
+            )
+
+        if hasattr(self.render, "clock") and self.render.clock is not self.clock:
+            raise ClockMismatchError(
+                "Make sure the DisplayClass and the environment use the same clock!"
+            )
+
+        if (
+            hasattr(self.input_handler, "clock")
+            and self.input_handler.clock is not self.clock
+        ):
+            raise ClockMismatchError(
+                "Make sure the input_handler and the environment use the same clock!"
+            )
 
 
 @dataclass
@@ -73,3 +94,10 @@ class StepContext:
     @property
     def stimuli(self):
         return self.env_context.stimuli
+
+    def get_time(self):
+        return self.env_context.get_time()
+
+    @property
+    def clock(self):
+        return self.env_context.clock
