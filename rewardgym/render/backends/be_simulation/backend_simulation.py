@@ -15,15 +15,17 @@ class SimulationBackend(RewardGymBackend):
     mode = "simulation"
 
     def setup(self, context: EnvironmentContext):
-        clock = Clock()
+        if context.clock is None:
+            context.clock = Clock()
+
         if context.window is None:
             context.window = Window()
 
         if context.logger is None:
-            context.logger = ExperimentLogger(file_name=None, clock=clock)
+            context.logger = ExperimentLogger(file_name=None, clock=context.clock)
 
         if context.input_handler is None:
-            context.input_handler = SimulationInput(context.logger.clock)
+            context.input_handler = SimulationInput(context.clock)
 
         if context.render is None:
             context.render = SimulationDisplay()
