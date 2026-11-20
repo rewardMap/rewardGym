@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Any
 
-from ..protocols import DisplayProtocol, InputProtocol, LoggerProtocol
+from ..protocols import DisplayProtocol, InputProtocol, LoggerProtocol, ClockProtocol
 from ..validation import check_availability
 
 
@@ -14,6 +14,7 @@ class EnvironmentContext:
     render: DisplayProtocol | None = None
     stimuli: None = None
     random_state: None = None
+    clock: None | ClockProtocol = None
 
     def __post_init__(self):
         from .backends import BACKENDS
@@ -25,6 +26,12 @@ class EnvironmentContext:
     @property
     def win(self):
         return self.window
+
+    def get_time(self):
+        return self.clock.getTime()
+
+    def reset_time(self):
+        self.clock.reset()
 
 
 @dataclass

@@ -4,7 +4,7 @@ from collections import defaultdict
 
 import numpy as np
 
-from ..protocols import InputProtocol, LoggerProtocol
+from ..protocols import InputProtocol, LoggerProtocol, ClockProtocol
 from ..render import EnvironmentContext, StepContext
 from .base_env import BaseEnv
 from .env_parts import ResponsePending
@@ -71,6 +71,7 @@ class RenderEnv(BaseEnv):
         window=None,
         logger: LoggerProtocol | None = None,
         input_handler: InputProtocol | None = None,
+        clock: ClockProtocol | None = None,
     ):
         self.context = EnvironmentContext(
             window=window,
@@ -78,6 +79,7 @@ class RenderEnv(BaseEnv):
             input_handler=input_handler,
             mode=self.render_backend,
             random_state=self.random_state,
+            clock=clock,
         )
 
         for node in self.graph:
@@ -211,7 +213,6 @@ class RenderEnv(BaseEnv):
 
         layout = self.pending.step.info["action-layout"]
         layout.add_keys(routine.key_dict)
-
         if layout.graph_to_key[action]:
             key = layout.graph_to_key[action][0]
             self.context.input_handler.add_response(key, rt)
