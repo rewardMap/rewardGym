@@ -176,7 +176,7 @@ class RenderEnv(BaseEnv):
         if graph_action not in info["avail-actions"]:
             return None, add_remainder
 
-        return action, add_remainder
+        return graph_action, add_remainder
 
     def close(self) -> None:
         """
