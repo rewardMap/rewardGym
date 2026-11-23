@@ -11,16 +11,23 @@ rewardGym
 
 Ambitiously called ``rewardGym``, this is a part of the ``rewardMap`` project.
 
-The project's goal is to provide two things:
+``rewardGym``'s goal is to use principles from reinforcement learning to provide:
 
-1. A common language for reward tasks used in research.
-2. A common interface to display and collect data for these tasks.
+1. A common language for reward (and other cognitive) tasks used in cognitive neuroscience and psychology.
+2. A common interface for displaying and collecting data.
+3. A single definition for multiple backends, not only to use for RL experimentation, but also simulate realistic log-files.
 
-Under the hood this module uses the `gymnasium <https://github.com/Farama-Foundation/Gymnasium>`_ [cit1]_. The general package has
-been greatly inspired by `neuro-nav <https://github.com/awjuliani/neuro-nav>`_ [cit2]_, especially the use of a graph structure to represent the tasks.
+While the basic environments use `gymnasium <https://github.com/Farama-Foundation/Gymnasium>`_ [cit1]_ under the hood
+the package developed in it's own direction. By this I mean, I am not fully sure how much they are compatible.
+A major inspiration is `neuro-nav <https://github.com/awjuliani/neuro-nav>`_ [cit2]_, especially the use of a graph structure to represent the tasks.
+``rewardgym`` diverges from these reinforcement learning interfaces to be more suited for experiments with humans.
 
-Many thanks also to `physiopy <https://github.com/physiopy>`_, from where I took many of the workflows and
-automatization around the repository (such as workflows and PR labels)!
+This means ``rewardgym`` allows:
+
+* Complexity in handling of responses and randomization on the screen, including mapping from few responses to larger action spaces.
+* Detailed control over trial order and transitions.
+
+Many thanks to `physiopy <https://github.com/physiopy>`_, from where I copied many of the github actions, settings and workflows!
 
 .. image:: docs/images/rewardGym_structure.svg
 
@@ -32,7 +39,6 @@ I recommend creating a new python environment (using e.g. ``venv`` or ``conda``)
 Then install the package and all necessary dependencies using::
 
     pip install git+https://github.com/rewardMap/rewardGym
-
 
 Alternatively, download / clone the repository and install from there::
 
@@ -54,7 +60,7 @@ There might be cases, where you want to use this package purely for data collect
 In releases 0.7.1 and up, ``rewardGym`` relies on `psylog <https://github.com/SRSteinkamp/psylog>`_ to abstract logging
 in both simulation mode and data collection mode.
 
-These releases are also not as thoroughly tested as previous versions (as they've been used for extensive data collection).
+These releases are also not as thoroughly tested as previous versions, which have been used for extensive data collection).
 
 But 0.7.1 is now properly compatible with Pyhon 3.10+. And works with PsychoPy 2026.1.3 and PsychoPy-Studio 2026.1.3
 
@@ -71,7 +77,44 @@ Afterwards, you can use the PsychoPy coder to run ``rewardgym_psychopy.py``, whi
 Outputs of this program will be saved by default in the ``data`` directory.
 
 
-Run the environment and train an agent
+
+Play a task
+********************************************************************************
+
+To play one of the tasks you can use ``rewardgym_play`` from the terminal. You can
+set the backend using the ``--backend`` flag. By default ``pygame`` and ``simulation`` are
+available, as well as ``pygame-headless``, however, that does not really differ from ``simulation``
+in this scenario. You can also define a file to save the generated data to using ``--out``, where it will
+be saved as ``.tsv``. Of course there's also the ``--help`` option.
+
+To run experiments in ``psychopy``, it needs to be installed in the current environment.
+
+run::
+
+    rewardgym_play hcp
+
+To play the gambling task from the human connectome project in the implementation of the rewardMap project.
+
+The available tasks are:
+
+hcp
+    Gambling task from the human connectome project. Response buttons are: left + right.
+mid
+    Monetary incentive delay task. Response button is: space
+two-step
+    The classic two-step task. Response buttons are: left + right
+risk-sensitive
+    Risk sensitive decision making task, contains both decision tasks between to outcome and singular event. Response buttons are: Left + right
+posner
+    Posner task. Response buttons are left + right.
+gonogo
+    Go / No-Go task, different stimuli indicate go to win, go to punish etc. Response button is: space.
+robotfactory
+    Similarly to the Go / No-Go task, but context are explicit and there are more stimuli. Response button is: space.
+
+
+
+More classic RL experiments
 ********************************************************************************
 
 Running a task could look like the following
@@ -133,32 +176,6 @@ Next to generated text, several design decisions are AI informed.
 However, most of the core functionality, e.g., for data collection have been written by me or were used inspired from
 other toolboxes (see notes above). Data collection functionality using PsychoPy has been thoroughly tested and validated.
 
-
-
-Play a task with pygame
-********************************************************************************
-
-To play one of the tasks using an experimental pygame implementation, you can e.g.
-run::
-
-    rewardgym_play hcp
-
-To play the gambling task from the human connectome project in the implementation of the rewardMap project.
-
-The available tasks are:
-
-hcp
-    Gambling task from the human connectome project. Response buttons are: left + right.
-mid
-    Monetary incentive delay task. Response button is: space
-two-step
-    The classic two-step task. Response buttons are: left + right
-risk-sensitive
-    Risk sensitive decision making task, contains both decision tasks between to outcome and singular event. Response buttons are: Left + right
-posner
-    Posner task. Response buttons are left + right.
-gonogo
-    Go / No-Go task, different stimuli indicate go to win, go to punish etc. Response button is: space.
 
 
 Git submodules are added like this:
