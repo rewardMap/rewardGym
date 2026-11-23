@@ -35,7 +35,7 @@ class ActionRoutine(BaseRoutine):
         rl_label: str | None = None,
         stimulus_definitions: list[StimulusDefinition] | None = None,
         timeout_action: Any | None = None,
-        name_timeout: str | None = None,
+        name_timeout: str | None = "response-timeout",
         flip: bool = True,
         poll_keys=True,
         presentation_settings: PresentationSettings | None = None,

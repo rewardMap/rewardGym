@@ -72,7 +72,7 @@ class DynamicRoutine(BaseRoutine):
         Should return None
 
         """
-        state = {}
+        state = {"extra_info": {}}
 
         if self.callback_before_draw:
             temp = self.callback_before_draw(self, context) or {}
@@ -109,7 +109,12 @@ class DynamicRoutine(BaseRoutine):
             name=self.rl_label,
         )
 
-        log_event(self, logger=context.logger, onset=stim_onset)
+        log_event(
+            self,
+            logger=context.logger,
+            onset=stim_onset,
+            extra_info={**state["extra_info"]},
+        )
 
         if self.callback_after_draw:
             self.callback_after_draw(self, context, state=state)

@@ -20,6 +20,7 @@ def set_border(border, stim, opacity=0.25):
 
 
 def reward_update_routine(routine, context):
+    state = {"extra_info": {"reward": context.reward}}
     routine.draw_list = []
 
     reward = context.reward
@@ -62,6 +63,8 @@ def reward_update_routine(routine, context):
         move_bar = int((total_reward / routine.bar_total) * bar.width)
         move_bar = min([max([move_bar, 0]), bar.width])
         bar_indicator.setPos((-bar.width // 2 + move_bar, 350))
+
+    return state
 
 
 def draw_subset_before(routine, context):
