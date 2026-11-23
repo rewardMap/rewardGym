@@ -24,8 +24,6 @@ class InputProtocol(Protocol):
 
     def get_keys(self) -> list[tuple[str, float]]: ...
 
-    def simulate_keys(self, key, rt) -> list[tuple[str, float]]: ...
-
     def interpret_keys(
         self,
         key_presses: list[tuple[str, float]],

@@ -14,9 +14,6 @@ class BaseInputHandler(InputProtocol):
     def get_keys(self) -> list[tuple[str, float]]:
         raise NotImplementedError("Use one of the other classes to get keys")
 
-    def simulate_keys(self, key, rt) -> list[tuple[str, float]]:
-        return [(key, rt)]
-
     def interpret_keys(
         self, key_presses, logger, key_list: None | list[str] = None, **kwargs
     ) -> tuple[str, float] | None:

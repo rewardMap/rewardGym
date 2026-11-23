@@ -391,25 +391,3 @@ class FeedBackRoutine(DynamicRoutine):
 
     def get_log_info(self, context: StepContext):
         return {"reward": context.reward, "total_reward": context.total_reward}
-
-
-class InstructionRoutine(BaseRoutine):
-    def __init__(
-        self,
-        name: str,
-        stimulus_definitions,
-    ):
-        super().__init__(
-            name=name,
-            duration=None,
-            stimulus_definitions=stimulus_definitions,
-            flip=True,
-            poll_keys=False,
-        )
-
-    def display(self, context):
-        for stim in self.stimuli.values():
-            if stim.opacity > 0:
-                stim.draw()
-
-        context.render.flip()
