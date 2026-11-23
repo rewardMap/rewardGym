@@ -314,16 +314,17 @@ class BaseEnv(Env):
     def _transition(self, action, current_graph):
         if action not in current_graph:
             return self.agent_location
-        elif isinstance(current_graph[action], tuple):
+
+        if isinstance(current_graph[action], tuple):
             stochasticity = current_graph[action][1]
 
             if self.random_state.random() <= stochasticity:
                 return current_graph[action][0][0]
-            else:
-                possible_locs = current_graph[action][0][1:]
-                return self.random_state.choice(possible_locs)
-        else:
-            return current_graph[action]
+
+            possible_locs = current_graph[action][0][1:]
+            return self.random_state.choice(possible_locs)
+
+        return current_graph[action]
 
     def _reward_handling(self, terminated, step_reward):
         if terminated:
