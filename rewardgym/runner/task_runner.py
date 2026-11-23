@@ -6,11 +6,12 @@ import numpy as np
 
 from ..tasks import get_configs
 from .plugins import (
+    apply_plugins,
     break_point,
     draw_response_reminder,
     simple_rt_simulation,
+    update_trials,
 )
-from .psychopy_utils import apply_plugins, update_trials
 
 
 def run_task(

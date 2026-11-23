@@ -2,7 +2,7 @@ import json
 
 from .. import ASSETS_PATH
 from ..render.contexts import EnvironmentContext
-from ..render.routines.passive_routines import InstructionRoutine
+from ..render.routines import InstructionRoutine
 from ..render.stimulus_definitions import TextDefinition
 from ..tasks.task_loader import get_instructions
 

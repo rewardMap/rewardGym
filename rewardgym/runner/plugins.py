@@ -3,6 +3,41 @@ import numpy as np
 from .psychopy_utils import update_trials
 
 
+def check_plugin_entry(plugins: dict, entry_point: str):
+    if plugins is None:
+        return []
+
+    if entry_point in plugins:
+        return plugins[entry_point]
+    else:
+        return []
+
+
+def apply_plugins(
+    *,
+    plugins: dict,
+    entry_point: str,
+    env,
+    settings,
+    episode,
+    actions,
+    **kwargs,
+):
+    plugin_list = check_plugin_entry(plugins=plugins, entry_point=entry_point)
+
+    for pl in plugin_list:
+        pl.modify(
+            env=env,
+            logger=env.context.logger,
+            win=env.context.win,
+            settings=settings,
+            episode=episode,
+            actions=actions,
+            context=env.context,
+            input_handler=env.context.input_handler,
+        )
+
+
 def draw_response_reminder(context, text_update, reminder_duration=1.0):
     text_update.draw()
     context.render.flip()
