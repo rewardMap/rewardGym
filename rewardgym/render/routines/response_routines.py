@@ -201,6 +201,7 @@ class ActionRoutine(BaseRoutine):
                 extra_info={
                     "event_type": self.presentation_settings["name_after"],
                     "rl_label": self.presentation_settings["rl_label_after"],
+                    "expected_duration": self.presentation_settings["duration_after"],
                 },
             )
 
