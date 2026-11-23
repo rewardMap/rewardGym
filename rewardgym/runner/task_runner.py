@@ -101,7 +101,7 @@ def run_task(
                     )
                     rt = env.pending_routine.duration / 2
 
-                env.simulate_response(action, rt)
+                env.simulate_response(int(action), rt)
 
             env.get_pending_action()
 
@@ -128,7 +128,7 @@ def run_task(
             done = terminated or truncated
             # TODO check if this should be action, not previous action!
             if agent is None:
-                if env.action is None and not done:
+                if env.previous_action is None and not done:
                     done = draw_response_reminder(env.context, response_reminder)
 
             elif not (done and env.previous_action is None):
