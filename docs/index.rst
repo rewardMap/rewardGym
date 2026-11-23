@@ -6,45 +6,9 @@
 Welcome to rewardGym's documentation!
 =====================================
 
-.. relativeinclude:: ../README.rst
-
-docs/
-
 .. toctree::
-   :maxdepth: 2
-   :caption: Walkthrough
-
-   tutorials/tutorial
-   tutorials/psychopy.rst
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Deep Dive
-
-   deepdive/graph_structure.rst
-   deepdive/psychopy_stimuli.rst
-   deepdive/controlling_experiments.rst
-   deepdive/what_is_run_task.rst
-   deepdive/writing_agents.rst
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Tasks
-   :glob:
-
-   tasks/*
-
-.. toctree::
-   :maxdepth: 3
-   :caption: (limited) API reference
-
-   api/environments.rst
-   api/psychopy_stimuli.rst
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   getting_started.rst
+   tutorials/tutorials.rst
+   deepdive/deep_dive.rst
+   tasks/tasks.rst
+   api/api.rst

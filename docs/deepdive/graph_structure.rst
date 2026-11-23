@@ -94,14 +94,14 @@ leads with 70 % probability to which state (see the order of the possible endpoi
 
 In practice, you will not often use the full structure or only use it for very
 specific nodes. If necessary, you can call the static method of the ``BaseEnv``
-class ``_unpack_graph`` to create the full graph structure for you graph.
+class ``_unpack_graph`` to create the full graph structure for your graph.
 
 
 Utilizing skip connections
 ================================================================================
 
 You can also decide to skip certain connections, for example to use a primary node
-only for selecting the tasks current condition.
+only for selecting the task's current condition.
 
 This is done by using the ``skip`` argument.
 
@@ -111,5 +111,5 @@ This is done by using the ``skip`` argument.
 
 Adding ``skip`` to the graph tells the environment class to automatically jump to
 the next state, pretending to have pressed the indicated key (here ``0``).
-Essentially, this example would let you start in states ``1`` or ``2``, with even
+Essentially, this example would let you start in states ``1`` or ``2``, with equal
 probability.

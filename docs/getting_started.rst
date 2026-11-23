@@ -1,0 +1,1 @@
+.. relativeinclude:: ../README.rst
