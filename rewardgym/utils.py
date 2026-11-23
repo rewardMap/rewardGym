@@ -329,15 +329,12 @@ def get_stripped_graph(graph: dict):
     return stripped_graph
 
 
-def get_key_from_dict(dictionary, lookup_value):
-    keys = []
-    for key, value in dictionary.items():
-        if lookup_value == value:
-            keys.append(key)
+class NameCounter:
+    def __init__(self):
+        self.counter = 0
 
-    if not keys:
-        raise ValueError(f"{lookup_value} not in dictionary.")
-    return keys
-
-
-# https://stackoverflow.com/questions/483666/reverse-invert-a-dictionary-mapping
+    @property
+    def name(self):
+        out = f"{self.counter}"
+        self.counter += 1
+        return out

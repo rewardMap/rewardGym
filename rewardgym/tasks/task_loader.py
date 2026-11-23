@@ -6,7 +6,10 @@ import os
 import sys
 import types
 import warnings
+from collections import UserDict
 from pathlib import Path
+
+from ..validation import check_availability
 
 
 def load_task_plugin(folder_path: Path, namespace_root: str = "rewardgym_tasks"):
@@ -148,66 +151,51 @@ def _discover_external_plugins(task_folder: str | Path) -> dict:
     return task_registry
 
 
-def get_task(task_name, *args, **kwargs):
+def _get_registry_function(task_name: str, function_name: str):
     from .. import _task_registry
 
-    if task_name not in _task_registry:
-        raise ValueError(f"Task '{task_name}' not registered.")
-    return _task_registry[task_name]["get_task"](*args, **kwargs)
+    check_availability(task_name, "task")
+
+    registry_func = _task_registry[task_name].get(function_name, None)
+
+    if registry_func is None:
+        raise NotImplementedError(f"{function_name} not implemented for {task_name}")
+
+    return registry_func
+
+
+def get_task(task_name, *args, **kwargs):
+    return _get_registry_function(task_name=task_name, function_name="get_task")(
+        *args, **kwargs
+    )
 
 
 def get_configs(task_name):
-    from .. import _task_registry
-
-    if task_name not in _task_registry:
-        raise ValueError(f"Task '{task_name}' not registered.")
-    get_configs_func = _task_registry[task_name]["get_configs"]
-    if get_configs_func is None:
-        raise NotImplementedError(f"get_configs not implemented for {task_name}")
-    return get_configs_func
+    return _get_registry_function(task_name=task_name, function_name="get_configs")
 
 
-def get_render_info(task_name, **kwargs):
-    from .. import _task_registry
-
-    if task_name not in _task_registry:
-        raise ValueError(f"Task '{task_name}' not registered.")
-    get_configs_func = _task_registry[task_name]["get_render_info"]
-    if get_configs_func is None:
-        raise NotImplementedError(f"get_render_info not implemented for {task_name}")
-    return get_configs_func(**kwargs)
+def get_render_info(task_name):
+    return _get_registry_function(task_name=task_name, function_name="get_render_info")
 
 
-def get_instructions_psychopy(task_name, **kwargs):
-    from .. import _task_registry
-
-    if task_name not in _task_registry:
-        raise ValueError(f"Task '{task_name}' not registered.")
-    get_configs_func = _task_registry[task_name]["instructions_psychopy"]
-    if get_configs_func is None:
-        raise NotImplementedError(
-            f"instructions_psychopy not implemented for {task_name}"
-        )
-    return get_configs_func(**kwargs)
+def get_instructions(task_name):
+    return _get_registry_function(task_name=task_name, function_name="get_instructions")
 
 
-class TaskRegistry:
+class TaskRegistry(UserDict):
     """A composition-based task registry with conflict resolution."""
-
-    def __init__(self, initial_data=None):
-        self._data = {} if initial_data is None else dict(initial_data)
 
     def extend(self, other_dict, overwrite=True):
         """Extend the registry with another dictionary."""
         for key, value in other_dict.items():
-            if key in self._data:
+            if key in self.data:
                 if overwrite:
                     warnings.warn(
                         f"Task '{key}' already registered, overwriting.",
                         UserWarning,
                         stacklevel=2,
                     )
-                    self._data[key] = value
+                    self.data[key] = value
                 else:
                     warnings.warn(
                         f"Task '{key}' already registered, skipping.",
@@ -215,32 +203,4 @@ class TaskRegistry:
                         stacklevel=2,
                     )
             else:
-                self._data[key] = value
-
-    # Delegate dictionary methods to self._data
-    def __getitem__(self, key):
-        return self._data[key]
-
-    def __setitem__(self, key, value):
-        self._data[key] = value
-
-    def __contains__(self, key):
-        return key in self._data
-
-    def get(self, key, default=None):
-        return self._data.get(key, default)
-
-    def keys(self):
-        return self._data.keys()
-
-    def values(self):
-        return self._data.values()
-
-    def items(self):
-        return self._data.items()
-
-    def __len__(self):
-        return len(self._data)
-
-    def __repr__(self):
-        return repr(self._data)
+                self.data[key] = value

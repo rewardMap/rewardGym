@@ -1,34 +1,34 @@
 from __future__ import annotations
 
-from typing import Any, Literal
+from typing import Any
 
 import numpy as np
 
 from ..environments import BaseEnv, RenderEnv
-from ..render.backends import get_backends
+from ..validation import check_availability
 from .task_loader import get_task
+
+# TODO: I should implement a - is in registry function, returning possible tasks, same for backends.
 
 
 def get_env(
-    task_name: Literal[
-        "hcp",
-        "mid",
-        "two-step",
-        "risk-sensitive",
-        "posner",
-        "gonogo",
-    ],
-    render_backend: Literal["pygame", "psychopy", "simulation"] | None = None,
+    task_name: str,
+    render_backend: str | None = None,
     random_state: int | np.random.Generator = 1000,
     **kwargs,
 ):
+    check_availability(task_name, "task")
+
+    if render_backend is not None:
+        check_availability(render_backend, "backend")
+
     environment_graph, reward_structure, info_dict = get_task(
         task_name,
         render_backend=render_backend,
         random_state=random_state,
     )
 
-    backends = get_backends()
+    reduced_actions = None
 
     if "meta" in info_dict and "reduced_actions" in info_dict["meta"]:
         reduced_actions = info_dict["meta"]["reduced_actions"]
@@ -37,24 +37,22 @@ def get_env(
         env = BaseEnv(
             environment_graph=environment_graph,
             reward_locations=reward_structure,
-            render_mode=render_backend,
-            info_dict=info_dict,
-            random_state=random_state,
-            name=task_name,
-            reduced_actions=reduced_actions,
-        )
-    elif render_backend in backends:
-        env = RenderEnv(
-            environment_graph=environment_graph,
-            reward_locations=reward_structure,
-            render_mode=render_backend,
+            render_backend=render_backend,
             info_dict=info_dict,
             random_state=random_state,
             name=task_name,
             reduced_actions=reduced_actions,
         )
     else:
-        raise ValueError("Backend is not defined!")
+        env = RenderEnv(
+            environment_graph=environment_graph,
+            reward_locations=reward_structure,
+            render_backend=render_backend,
+            info_dict=info_dict,
+            random_state=random_state,
+            name=task_name,
+            reduced_actions=reduced_actions,
+        )
 
     return env
 

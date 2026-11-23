@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 from typing import Any
 
-from ..protocols import DisplayProtocol, InputProtocol, LoggerProtocol
+from ..protocols import ClockProtocol, DisplayProtocol, InputProtocol, LoggerProtocol
+from ..validation import ClockMismatchError, check_availability
 
 
 @dataclass
@@ -13,22 +14,45 @@ class EnvironmentContext:
     render: DisplayProtocol | None = None
     stimuli: None = None
     random_state: None = None
+    clock: None | ClockProtocol = None
 
     def __post_init__(self):
-        from .backends import get_backends
+        from .backends import BACKENDS
 
-        backend_registry = get_backends()
+        check_availability(self.mode, "backend")
 
-        if self.mode not in backend_registry:
-            raise ValueError(
-                f"{self.mode} has to be in {list(backend_registry.keys())}!"
-            )
+        BACKENDS[self.mode]().setup(self)
 
-        backend_registry[self.mode]().setup(self)
+        self.validate_clocks()
 
     @property
     def win(self):
         return self.window
+
+    def get_time(self):
+        return self.clock.getTime()
+
+    def reset_time(self):
+        self.clock.reset()
+
+    def validate_clocks(self):
+        if hasattr(self.logger, "clock") and self.logger.clock is not self.clock:
+            raise ClockMismatchError(
+                "Make sure the logger and environment use the same clock!"
+            )
+
+        if hasattr(self.render, "clock") and self.render.clock is not self.clock:
+            raise ClockMismatchError(
+                "Make sure the DisplayClass and the environment use the same clock!"
+            )
+
+        if (
+            hasattr(self.input_handler, "clock")
+            and self.input_handler.clock is not self.clock
+        ):
+            raise ClockMismatchError(
+                "Make sure the input_handler and the environment use the same clock!"
+            )
 
 
 @dataclass
@@ -70,3 +94,10 @@ class StepContext:
     @property
     def stimuli(self):
         return self.env_context.stimuli
+
+    def get_time(self):
+        return self.env_context.get_time()
+
+    @property
+    def clock(self):
+        return self.env_context.clock

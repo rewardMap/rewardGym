@@ -1,12 +1,11 @@
 import json
 
 from psychopy import core, event, visual
+from rewardgym.runner.psychopy_instructions import show_instructions
 
 from rewardgym import get_configs, get_env, get_render_info
 from rewardgym.logging import ExperimentLogger
 from rewardgym.runner import pspy_set_up_experiment, run_task
-from rewardgym.runner.psychopy_instructions import show_instructions
-from rewardgym.tasks import FULLPOINTS
 
 if __name__ == "__main__":
     (
@@ -96,11 +95,17 @@ if __name__ == "__main__":
     run_task(env=env, win=win, logger=Logger, settings=settings, n_episodes=None)
 
     win.to_Draw = []
-    proportion = max([min([env.cumulative_reward / FULLPOINTS[task], 1.0]), 0])
+
+    score = ""
+    if "fullpoints" in env.info_dict["meta"]:
+        proportion = max(
+            [min([env.cumulative_reward / env.info_dict["meta"]["fullpoints"], 1.0]), 0]
+        )
+        score = f"Which is a score of {proportion:4.2f} %!"
 
     final = visual.TextStim(
         win=win,
-        text=f"You are done!\nThank you!\nYou got {env.cumulative_reward} points!\nWhich is a score of {proportion:4.2f} %!",
+        text=f"You are done!\nThank you!\nYou got {env.cumulative_reward} points!\n{score}",
         color=[1, 1, 1],
         pos=(0, 150),
         height=24,

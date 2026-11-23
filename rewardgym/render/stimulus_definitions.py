@@ -1,14 +1,7 @@
 from dataclasses import dataclass, fields
-from enum import Enum, auto
 from typing import ClassVar
 
 from numpy.typing import ArrayLike
-
-
-class Stimuli(Enum):
-    IMAGE = auto()
-    RECTANGLE = auto()
-    TEXT = auto()
 
 
 @dataclass(kw_only=True)
@@ -18,7 +11,7 @@ class StimulusDefinition:
     opacity: float | None = None
     pos: tuple | None = None
     units: str | None = None
-    setup_protocol: ClassVar[Stimuli] = None
+    stimulus_type: ClassVar[str] = None
 
     def get_kwargs(self):
         return {
@@ -32,7 +25,7 @@ class StimulusDefinition:
 class ImageDefinition(StimulusDefinition):
     image: str | None | ArrayLike
     size: tuple | None = None
-    setup_protocol: ClassVar[Stimuli] = Stimuli.IMAGE
+    stimulus_type: ClassVar[str] = "image"
 
 
 @dataclass(kw_only=True)
@@ -43,7 +36,8 @@ class TextDefinition(StimulusDefinition):
     font: str | None = None
     alignText: str | None = None
     anchorHoriz: str | None = None
-    setup_protocol: ClassVar[Stimuli] = Stimuli.TEXT
+    ori: float | None = None
+    stimulus_type: ClassVar[str] = "text"
 
 
 @dataclass(kw_only=True)
@@ -53,4 +47,4 @@ class RectangleDefinition(StimulusDefinition):
     lineColor: str | list | tuple | ArrayLike | None = None
     fillColor: str | list | tuple | ArrayLike | None = None
     lineWidth: float | None = None
-    setup_protocol: ClassVar[Stimuli] = Stimuli.RECTANGLE
+    stimulus_type: ClassVar[str] = "rectangle"

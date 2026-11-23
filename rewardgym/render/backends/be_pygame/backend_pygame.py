@@ -17,6 +17,11 @@ class PygameBackend(RewardGymBackend):
     mode = "pygame"
 
     def setup(self, context: EnvironmentContext):
+        if context.clock is None:
+            from psylog.interfaces import SystemClock
+
+            context.clock = SystemClock()
+
         if context.window is None:
             context.window = PygameWindow()
 
@@ -24,9 +29,7 @@ class PygameBackend(RewardGymBackend):
             context.input_handler = PygameInput(win=context.window)
 
         if context.logger is None:
-            from psylog.interfaces import SystemClock
-
-            context.logger = ExperimentLogger(file_name=None, clock=SystemClock())
+            context.logger = ExperimentLogger(file_name=None, clock=context.clock)
 
         if context.render is None:
             context.render = PygameDisplay(context.window)
@@ -38,17 +41,19 @@ class PygameBackendHeadless(RewardGymBackend):
     mode = "pygame-headless"
 
     def setup(self, context: EnvironmentContext):
+        if context.clock is None:
+            from ....stubs import Clock
+
+            context.clock = Clock()
+
         if context.window is None:
             context.window = PygameWindow(capture_frames=True)
 
         if context.logger is None:
-            from ....stubs import Clock
-
-            clock = Clock()
-            context.logger = ExperimentLogger(file_name=None, clock=clock)
+            context.logger = ExperimentLogger(file_name=None, clock=context.clock)
 
         if context.input_handler is None:
-            context.input_handler = SimulationInput(clock=context.logger.clock)
+            context.input_handler = SimulationInput(clock=context.clock)
 
         if context.render is None:
             context.render = PygameDisplayHeadless(context.window)

@@ -36,7 +36,7 @@ dependencies = [
 
 [project.optional-dependencies]
 doc = [
-    "sphinx>=2.0",
+    "sphinx>=8",
     "sphinx-argparse",
     "sphinx_rtd_theme",
     "myst-parser[linkify]",
@@ -45,7 +45,8 @@ doc = [
     "sphinxcontrib-bibtex",
     "jupytext",
     "nbsphinx_link",
-    "sphinxcontrib-relativeinclude"
+    "sphinxcontrib-relativeinclude",
+    "numpydoc"
 ]
 style = [
     "ruff",

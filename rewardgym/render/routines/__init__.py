@@ -1,4 +1,5 @@
 from .base_routine import BaseRoutine
+from .extra_routines import AutoAction, InstructionRoutine
 from .passive_routines import (
     ConditionedTextCard,
     DynamicRoutine,
@@ -7,7 +8,6 @@ from .passive_routines import (
 )
 from .response_routines import (
     ActionRoutine,
-    AutoAction,
     ChangeSceneAfterAction,
     NAFCRoutine,
 )
@@ -20,6 +20,7 @@ __all__ = [
     "ConditionedTextCard",
     "DynamicRoutine",
     "FeedBackRoutine",
+    "InstructionRoutine",
     "NAFCRoutine",
     "PresentationRoutine",
 ]

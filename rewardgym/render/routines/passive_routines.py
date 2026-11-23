@@ -72,11 +72,13 @@ class DynamicRoutine(BaseRoutine):
         Should return None
 
         """
+        state = {"extra_info": {}}
 
         if self.callback_before_draw:
-            state = self.callback_before_draw(self, context) or {}
+            temp = self.callback_before_draw(self, context) or {}
+            state.update(temp)
 
-        stim_onset = context.logger.get_time()
+        stim_onset = context.get_time()
 
         if self.draw_list is None:
             self.draw_list = self.stimuli.keys()
@@ -89,8 +91,12 @@ class DynamicRoutine(BaseRoutine):
         if self.flip:
             flip_value = context.render.flip()
 
+        stim_onset = (
+            flip_value.timestamp if flip_value.timestamp is not None else stim_onset
+        )
+
         context.render.wait(
-            logger=context.logger,
+            context=context,
             input_handler=context.input_handler,
             time=self.duration,
             start=stim_onset,
@@ -103,7 +109,12 @@ class DynamicRoutine(BaseRoutine):
             name=self.rl_label,
         )
 
-        log_event(self, logger=context.logger, onset=stim_onset)
+        log_event(
+            self,
+            logger=context.logger,
+            onset=stim_onset,
+            extra_info={**state["extra_info"]},
+        )
 
         if self.callback_after_draw:
             self.callback_after_draw(self, context, state=state)

@@ -23,8 +23,8 @@ m = re.match(r"(\d+\.\d+)", release)
 version = m.group(1) if m else release
 
 project = "rewardGym"
-copyright = "2024, Simon R. Steinkamp"
-author = "Simon R. Steinkamp"
+copyright = "2024, SR Steinkamp"
+author = "SR Steinkamp"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -40,10 +40,10 @@ extensions = [
     "matplotlib.sphinxext.plot_directive",
     "sphinxcontrib.bibtex",
     "nbsphinx",
-    "nbsphinx_link",
     "myst_parser",
     "sphinx_copybutton",
     "sphinxcontrib.relativeinclude",
+    "numpydoc"
 ]
 
 autosummary_generate = True
@@ -53,7 +53,7 @@ autoclass_content = "class"
 autodoc_mock_imports = ["psychopy"]
 
 # The suffix(es) of source filenames.
-sourcesuffix = {".rst": "restructuredtext", ".md": "markdown"}
+source_suffix = {".rst": "restructuredtext", ".md": "markdown"}
 
 templates_path = ["_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
@@ -79,7 +79,14 @@ for ii in code_to_convert:
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = "sphinx_rtd_theme"
+html_theme = "pydata_sphinx_theme"
+
+html_theme_options = {
+    "collapse_navigation": False,
+    "navigation_depth": 4,
+    "show_nav_level": 2,
+}
+
 html_static_path = []
 plot_html_show_source_link = True
 plot_include_source = True
@@ -90,8 +97,9 @@ task_path = pathlib.Path("../rewardgym/tasks/")
 task_glob = list(task_path.glob("*/README*"))
 task_glob = sorted(task_glob)
 
+
 for i in task_glob:
-    string_template = i.parent.name + "\n===================\n\n"
+    string_template = ""
     string_template += (
         ".. relativeinclude:: "
         + "../"
@@ -102,4 +110,4 @@ for i in task_glob:
     if i.suffix == ".md":
         string_template += "  :parser: myst_parser.sphinx_"
 
-    (curr_file / "tasks" / f"{i.parent.name}.rst").write_text(string_template)
+    (curr_file / "tasks" / f"task_{i.parent.name}.rst").write_text(string_template)
